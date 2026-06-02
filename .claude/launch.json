@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "frontend",
-      "runtimeExecutable": "/bin/bash",
-      "runtimeArgs": ["/Users/ojja/Documents/Claude/Projects/MD-website-v1/frontend/.claude/dev.sh"],
-      "port": 3000
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "port": 3000,
+      "url": "https://mitchdesigns.localhost:1355"
     }
   ]
 }
