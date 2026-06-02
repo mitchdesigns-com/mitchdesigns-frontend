@@ -17,18 +17,23 @@ export const metadata: Metadata = {
   alternates: { canonical: "/talks" },
 };
 
-async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
+async function safe<T>(p: Promise<T[]>, fallback: T[], label: string): Promise<T[]> {
   try {
     const data = await p;
-    return data.length ? data : fallback;
-  } catch {
+    if (!data.length) {
+      console.warn(`[safe] ${label}: returned empty array — using fallback`);
+      return fallback;
+    }
+    return data;
+  } catch (err) {
+    console.error(`[safe] ${label}: threw error — using fallback\n`, err);
     return fallback;
   }
 }
 
 export default async function TalksIndexPage() {
   const [talks, talksPage] = await Promise.all([
-    safe(getTalks(), fixtureTalks),
+    safe(getTalks(), fixtureTalks, "getTalks"),
     getTalksPage(),
   ]);
 

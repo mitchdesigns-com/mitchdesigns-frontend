@@ -1,6 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import type { Talk } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
+
+const PAGE_SIZE = 8;
+const INITIAL = 9; // 1 featured + first 8 in grid
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -137,26 +143,42 @@ export interface TalksListProps {
 }
 
 export function TalksList({ talks }: TalksListProps) {
-  const featured = talks.find((t) => t.featured);
-  const rest = talks.filter((t) => !t.featured);
+  const [visible, setVisible] = useState(INITIAL);
+
+  const shown = talks.slice(0, visible);
+  const featured = shown.find((t) => t.featured) ?? shown[0];
+  const rest = shown.filter((t) => t !== featured);
 
   const rows: [Talk, Talk | undefined][] = [];
   for (let i = 0; i < rest.length; i += 2) {
     rows.push([rest[i]!, rest[i + 1]]);
   }
 
+  const hasMore = visible < talks.length;
+
   return (
     <Section className="py-[120px]">
       <div className="flex flex-col gap-10">
-          {featured && <FeaturedCard talk={featured} />}
+        {featured && <FeaturedCard talk={featured} />}
 
-          {rows.map(([a, b], i) => (
-            <div key={i} className="flex gap-10">
-              <TalkCard talk={a} />
-              {b && <TalkCard talk={b} />}
-            </div>
-          ))}
-        </div>
+        {rows.map(([a, b], i) => (
+          <div key={i} className="flex gap-10">
+            <TalkCard talk={a} />
+            {b && <TalkCard talk={b} />}
+          </div>
+        ))}
+
+        {hasMore && (
+          <div className="flex justify-center pt-6">
+            <button
+              onClick={() => setVisible((v) => v + PAGE_SIZE)}
+              className="text-[18px] font-medium text-fg underline underline-offset-4 transition-opacity hover:opacity-60"
+            >
+              Load more
+            </button>
+          </div>
+        )}
+      </div>
     </Section>
   );
 }

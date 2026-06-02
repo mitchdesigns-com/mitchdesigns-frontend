@@ -68,7 +68,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    authors: [{ name: talk.author ?? "Mitch", url: "https://mitchdesigns.com/about" }],
+    authors: [{ name: talk.author?.name ?? "Mitch", url: "https://mitchdesigns.com/about" }],
     alternates: { canonical: `/talks/${slug}` },
     openGraph: {
       title,

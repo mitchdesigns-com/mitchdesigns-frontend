@@ -52,7 +52,11 @@ export const getCaseStudy = async (
 export const getTalks = () =>
   getCollection<Talk>("/blogs", {
     revalidate: 120,
-    query: { populate: "cover", sort: "publishedAt:desc" },
+    query: {
+      "populate[cover]": "true",
+      "populate[author][populate][avatar]": "true",
+      sort: "publishedAt:desc",
+    },
   });
 
 export const getTalk = async (
@@ -63,6 +67,7 @@ export const getTalk = async (
     query: {
       "filters[slug][$eq]": slug,
       "populate[cover]": "true",
+      "populate[author][populate][avatar]": "true",
       "populate[sections][populate]": "*",
       "pagination[limit]": 1,
     },

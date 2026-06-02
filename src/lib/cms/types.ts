@@ -57,13 +57,18 @@ export type BlogSection =
   | { __component: "blocks.rich-text"; body: unknown }
   | { __component: "blocks.media-block"; file: StrapiImage; caption?: string | null };
 
+export type Author = {
+  name: string;
+  avatar?: StrapiImage;
+};
+
 export type Talk = {
   slug: string;
   title: string;
   excerpt: string;
   cover?: StrapiImage;
   sections?: BlogSection[];
-  author?: string;
+  author?: Author;
   publishedAt?: string;
   category?: "Design" | "Development" | "Marketing" | "SEO" | "Business";
   readTime?: number;
