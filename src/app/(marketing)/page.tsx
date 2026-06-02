@@ -157,15 +157,6 @@ export default async function HomePage() {
         faqs={faqs}
         title="Got Questions?"
         description="We've answered the most common ones to help you understand how we work and what to expect."
-        categories={[
-          "Mobile Apps",
-          "Corporate Websites",
-          "eCommerce",
-          "Booking Systems",
-          "Custom Software",
-          "Media Buying",
-          "SEO / AGO",
-        ]}
         defaultCategory="Corporate Websites"
       />
       <CTABanner />

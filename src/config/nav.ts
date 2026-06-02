@@ -4,7 +4,7 @@ export const NAV_LINKS = [
   { label: "Work", href: "/case-studies" },
   { label: "About", href: "/about" },
   { label: "Talks", href: "/talks" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
 ] as const;
 
@@ -13,7 +13,7 @@ export const COMPANY_LINKS = [
   { label: "Work", href: "/case-studies" },
   { label: "Agency", href: "/about" },
   { label: "Talks", href: "/talks" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
 ] as const;
 

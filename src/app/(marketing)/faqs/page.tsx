@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Section } from "@/components/layout/Section";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { FAQPageSection } from "@/features/faqs/FAQPageSection";
+import { Section } from "@/components/layout/Section";
+import { getFAQs } from "@/lib/cms/queries";
 import { fixtureFAQs } from "@/lib/cms/fixtures";
 
 export const metadata: Metadata = {
@@ -16,11 +18,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/faqs" },
 };
 
-export default function FAQsPage() {
+export default async function FAQsPage() {
+  const faqs = (await getFAQs()) ?? fixtureFAQs;
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: fixtureFAQs.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
       acceptedAnswer: {
@@ -33,9 +37,8 @@ export default function FAQsPage() {
   return (
     <>
       <JsonLd data={faqSchema} />
-      <Section className="pt-32 pb-24">
-        <h1 className="text-hero-2 font-bold">Frequently asked questions</h1>
-        {/* TODO: FAQSection (blocks/) */}
+      <Section theme="dark" className="py-24 md:py-32">
+        <FAQPageSection faqs={faqs} defaultOpenId={6} />
       </Section>
     </>
   );

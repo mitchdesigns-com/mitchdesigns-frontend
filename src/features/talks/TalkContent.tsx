@@ -97,7 +97,7 @@ function Inline({ nodes }: { nodes: InlineNode[] }) {
           el = (
             <code
               key={i}
-              className="rounded bg-[#f1f1f1] px-1 font-mono text-[0.85em]"
+              className="rounded-xs bg-panel px-1 font-mono text-code-inline"
             >
               {el}
             </code>
@@ -112,7 +112,7 @@ function Inline({ nodes }: { nodes: InlineNode[] }) {
 
 function BlockParagraph({ block }: { block: ParagraphBlock }) {
   return (
-    <p className="text-balance text-[24px] leading-[170%] text-black">
+    <p className="text-balance text-blog-body text-black">
       <Inline nodes={block.children} />
     </p>
   );
@@ -125,8 +125,8 @@ function BlockHeading({ block }: { block: HeadingBlock }) {
   const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   const className =
     block.level <= 2
-      ? "text-[40px] font-bold leading-[1.1] text-black"
-      : "text-[28px] font-bold leading-[1.2] text-black border-l-3 border-yellow pl-3";
+      ? "text-hero-4 text-black"
+      : "text-blog-h3 text-black border-l-[3px] border-yellow pl-3";
 
   return (
     <Tag id={id} className={className}>
@@ -138,7 +138,7 @@ function BlockHeading({ block }: { block: HeadingBlock }) {
 function BlockQuote({ block }: { block: QuoteBlock }) {
   return (
     <blockquote className="inline-flex items-center border-l-[3px] border-yellow px-3 py-1">
-      <span className="text-[40px] font-bold leading-[48px] text-black">
+      <span className="text-blog-quote text-black">
         <Inline nodes={block.children} />
       </span>
     </blockquote>
@@ -152,10 +152,10 @@ function BlockImage({ block }: { block: ImageBlock }) {
       <img
         src={block.image.url}
         alt={block.image.alternativeText ?? ""}
-        className="w-full rounded-[4px] object-cover"
+        className="w-full rounded-xs object-cover"
       />
       {caption && (
-        <figcaption className="text-[16px] leading-[125%] text-grey-500">
+        <figcaption className="text-base text-grey-500">
           {caption}
         </figcaption>
       )}
@@ -168,7 +168,7 @@ function BlockList({ block }: { block: ListBlock }) {
   const markerClass = block.format === "ordered" ? "list-decimal" : "list-disc";
   return (
     <Tag
-      className={`flex flex-col gap-2 pl-6 text-[24px] leading-[170%] text-black ${markerClass}`}
+      className={`flex flex-col gap-2 pl-6 text-blog-body text-black ${markerClass}`}
     >
       {block.children.map((item, i) => (
         <li key={i}>
@@ -181,7 +181,7 @@ function BlockList({ block }: { block: ListBlock }) {
 
 function BlockCode({ block }: { block: CodeBlock }) {
   return (
-    <pre className="overflow-x-auto rounded-[4px] bg-[#1d1d1b] p-6 text-[14px] leading-[1.6] text-[#f9f7f1]">
+    <pre className="overflow-x-auto rounded-xs bg-space-grey p-6 text-sm leading-[1.6] text-bej">
       <code>{blockText(block.children)}</code>
     </pre>
   );
@@ -231,10 +231,10 @@ function TalkSections({ sections }: { sections?: BlogSection[] }) {
               <img
                 src={section.file.url}
                 alt={section.file.alternativeText ?? section.caption ?? ""}
-                className="w-full rounded-[4px] object-cover"
+                className="w-full rounded-xs object-cover"
               />
               {section.caption && (
-                <figcaption className="text-[16px] leading-[125%] text-grey-500">
+                <figcaption className="text-base text-grey-500">
                   {section.caption}
                 </figcaption>
               )}
@@ -303,7 +303,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[14px] font-medium text-black">
+      <span className="text-sm font-medium text-black">
         Share Talk via:
       </span>
       <div className="flex gap-3">
@@ -314,7 +314,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Share on ${l.label}`}
-            className="flex size-10 items-center justify-center rounded-[6px] bg-black p-1"
+            className="flex size-10 items-center justify-center rounded-sm bg-black p-1"
           >
             {l.icon}
           </a>
@@ -338,7 +338,7 @@ function NavButton({
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-2 rounded-pill bg-space-grey px-9 py-4 text-[16px] font-medium text-white"
+      className="inline-flex items-center gap-2 rounded-pill bg-space-grey px-9 py-4 text-base font-medium text-white"
     >
       {direction === "prev" && <ArrowRight size={20} className="rotate-180" />}
       {label}
@@ -368,8 +368,8 @@ export function TalkContent({
     <Section className="py-10">
       <div className="flex gap-10">
         {/* Left sticky sidebar */}
-        <aside className="w-[439px] shrink-0">
-          <div className="sticky top-24 flex flex-col gap-[30px] py-10">
+        <aside className="w-blog-sidebar shrink-0">
+          <div className="sticky top-24 flex flex-col gap-7.5 py-10">
             <TocSidebar items={toc} />
             <ShareButtons url={pageUrl} title={talk.title} />
           </div>

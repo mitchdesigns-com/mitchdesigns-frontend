@@ -472,7 +472,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
   {
     id: 1,
     category: "Mobile Apps",
-    question: "Do you build for iOS, Android, or both?",
+    question: "Do you build for iOS, Android, or both? LOCAL FIXTURE",
     answer:
       "Both. We build cross-platform apps with React Native so you ship to iOS and Android from a single codebase — without sacrificing native feel.",
     order: 1,
@@ -514,7 +514,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
   {
     id: 6,
     category: "Corporate Websites",
-    question: "How long does it take to build a website with MitchDesigns?",
+    question: "How long does it take to build a website with OJJA?",
     answer:
       "It depends on the project scope. Most corporate websites take around 6–10 weeks from kickoff to launch, while e-commerce platforms can take 12–16 weeks, especially when integrations or custom features are involved. We work in clear, defined phases — design, development, testing, and launch — so you always know where your project stands.",
     order: 1,

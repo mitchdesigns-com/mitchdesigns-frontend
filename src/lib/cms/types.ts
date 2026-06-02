@@ -62,6 +62,17 @@ export type Author = {
   avatar?: StrapiImage;
 };
 
+export type Seo = {
+  metaTitle: string;
+  metaDescription: string;
+  canonicalURL?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: StrapiImage;
+  noIndex?: boolean;
+  structuredData?: unknown;
+};
+
 export type Talk = {
   slug: string;
   title: string;
@@ -69,6 +80,7 @@ export type Talk = {
   cover?: StrapiImage;
   sections?: BlogSection[];
   author?: Author;
+  seo?: Seo;
   publishedAt?: string;
   category?: "Design" | "Development" | "Marketing" | "SEO" | "Business";
   readTime?: number;

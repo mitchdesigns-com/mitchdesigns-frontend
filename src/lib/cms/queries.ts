@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "server-only";
-import { getCollection, getSingle } from "./strapi";
+import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
 import type {
   CaseStudy,
@@ -50,7 +50,7 @@ export const getCaseStudy = async (
  * Talks
  * ------------------------------------------------------------------ */
 export const getTalks = () =>
-  getCollection<Talk>("/blogs", {
+  getCollectionAll<Talk>("/blogs", {
     revalidate: 120,
     query: {
       "populate[cover]": "true",
@@ -58,6 +58,23 @@ export const getTalks = () =>
       sort: "publishedAt:desc",
     },
   });
+
+export const getRelatedTalks = async (
+  excludeSlug: string,
+  count = 2,
+): Promise<Talk[]> => {
+  const pool = await getCollection<Talk>("/blogs", {
+    revalidate: 120,
+    query: {
+      "populate[cover]": "true",
+      "filters[slug][$ne]": excludeSlug,
+      sort: "publishedAt:desc",
+      "pagination[limit]": 10,
+    },
+  });
+  // Shuffle and pick `count` random items
+  return pool.sort(() => Math.random() - 0.5).slice(0, count);
+};
 
 export const getTalk = async (
   slug: string,
@@ -69,6 +86,7 @@ export const getTalk = async (
       "populate[cover]": "true",
       "populate[author][populate][avatar]": "true",
       "populate[sections][populate]": "*",
+      "populate[seo][populate]": "*",
       "pagination[limit]": 1,
     },
   });
@@ -102,7 +120,7 @@ export const getCareer = async (
  * FAQs
  * ------------------------------------------------------------------ */
 export const getFAQs = (category?: string) =>
-  getCollection<FAQ>("/faqs", {
+  getCollectionAll<FAQ>("/faqs", {
     revalidate: 300,
     query: {
       sort: "order:asc",

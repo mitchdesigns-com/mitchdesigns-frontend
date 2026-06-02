@@ -86,6 +86,38 @@ export async function getCollection<T>(
   );
 }
 
+/**
+ * Fetch every page of a collection. Strapi caps pageSize (default max 100),
+ * so for collections larger than one page we loop until all pages are pulled.
+ */
+export async function getCollectionAll<T>(
+  path: string,
+  opts?: FetchOpts,
+): Promise<Array<T & { id: number }>> {
+  const pageSize = 100;
+  const out: Array<T & { id: number }> = [];
+  let page = 1;
+  let pageCount = 1;
+
+  do {
+    const json = await strapiFetch<StrapiCollection<T>>(path, {
+      ...opts,
+      query: {
+        ...opts?.query,
+        "pagination[page]": page,
+        "pagination[pageSize]": pageSize,
+      },
+    });
+    for (const item of json.data) {
+      out.push(flatten<T>(item as { id: number; attributes: T }));
+    }
+    pageCount = json.meta.pagination?.pageCount ?? 1;
+    page++;
+  } while (page <= pageCount);
+
+  return out;
+}
+
 export async function getSingle<T>(
   path: string,
   opts?: FetchOpts,

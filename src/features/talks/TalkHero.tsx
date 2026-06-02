@@ -49,12 +49,12 @@ export function TalkHero({ talk }: { talk: Talk }) {
   const readTime = talk.readTime ?? calcReadTime(talk.sections);
 
   return (
-    <Section theme="dark" className="pt-20 pb-10">
+    <Section theme="dark" className="pt-40 pb-10">
       <div className="flex flex-col gap-10">
         {/* Two-column header row — aligned to bottom */}
         <div className="flex items-end gap-10">
           {/* Left: go-back + title */}
-          <div className="flex w-1/2 shrink-0 flex-col justify-between gap-10">
+          <div className="flex w-1/2 shrink-0 flex-col justify-between gap-5">
             <Link
               href="/talks"
               className="inline-flex items-center gap-2 text-[16px] text-fg-muted"

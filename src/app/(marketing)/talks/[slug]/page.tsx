@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getTalk, getTalks } from "@/lib/cms";
+import { getTalk, getTalks, getRelatedTalks } from "@/lib/cms";
 import { fixtureTalks } from "@/lib/cms/fixtures";
 import { TalkHero, TalkContent, RelatedTalks } from "@/features/talks";
 import { extractToc } from "@/features/talks/TalkContent";
@@ -113,7 +113,11 @@ export default async function SingleTalkPage({
   const prev = idx < sorted.length - 1 ? sorted[idx + 1] : undefined;
   const next = idx > 0 ? sorted[idx - 1] : undefined;
 
-  const related = allTalks.filter((t) => t.slug !== slug).slice(0, 2);
+  let related: Talk[] = fixtureTalks.filter((t) => t.slug !== slug).sort(() => Math.random() - 0.5).slice(0, 2);
+  try {
+    const cms = await getRelatedTalks(slug, 2);
+    if (cms.length) related = cms;
+  } catch { /* fall through */ }
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",

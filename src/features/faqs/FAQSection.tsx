@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
-import { easeOutSoft } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import type { FAQ } from "@/lib/cms/types";
-import { RichText } from "@/components/ui/RichText";
+import { fixtureFAQs } from "@/lib/cms/fixtures";
+import { FAQCard } from "./FAQCard";
 
 type FAQSectionProps = {
-  faqs: Array<FAQ & { id: number }>;
+  faqs?: Array<FAQ & { id: number }>;
   title?: React.ReactNode;
   description?: string;
   categories?: string[];
@@ -19,26 +18,8 @@ type FAQSectionProps = {
   ctaHref?: string;
 };
 
-function ChevronRight() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M6.75 4.5 11.25 9l-4.5 4.5" />
-    </svg>
-  );
-}
-
 export function FAQSection({
-  faqs,
+  faqs = fixtureFAQs,
   title = "Got Questions?",
   description = "We've answered the most common ones to help you understand how we work and what to expect.",
   categories,
@@ -49,17 +30,21 @@ export function FAQSection({
   const derivedCategories =
     categories ??
     Array.from(new Set(faqs.map((f) => f.category).filter(Boolean) as string[]));
+  const categoryOptions = ["All FAQs", ...derivedCategories];
+  const initialCategory =
+    defaultCategory && categoryOptions.includes(defaultCategory)
+      ? defaultCategory
+      : categoryOptions[1] ?? categoryOptions[0];
 
-  const hasCategories = derivedCategories.length > 0;
-  const [activeCategory, setActiveCategory] = useState<string>(
-    defaultCategory ?? derivedCategories[0] ?? ""
-  );
+  const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
   const [openId, setOpenId] = useState<number | null>(defaultOpenId ?? null);
 
   const visibleFaqs =
-    hasCategories && activeCategory
-      ? faqs.filter((f) => !f.category || f.category === activeCategory)
-      : faqs;
+    activeCategory === "All FAQs"
+      ? faqs
+      : faqs.filter((f) => f.category === activeCategory);
+  const displayedFaqs = visibleFaqs.slice(0, 6);
+  const hasCategories = derivedCategories.length > 0;
 
   return (
     <Section theme="dark" className="py-24 md:py-32">
@@ -75,7 +60,7 @@ export function FAQSection({
         {/* Category tabs */}
         {hasCategories && (
           <div className="flex flex-wrap justify-center gap-3">
-            {derivedCategories.map((cat) => (
+            {categoryOptions.map((cat) => (
               <button
                 key={cat}
                 type="button"
@@ -98,47 +83,15 @@ export function FAQSection({
 
         {/* FAQ cards */}
         <div className="flex w-full max-w-2xl flex-col gap-3">
-          {visibleFaqs.map((faq) => {
+          {displayedFaqs.map((faq) => {
             const isOpen = openId === faq.id;
             return (
-              <div key={faq.id} className="rounded-card-sm bg-space-grey">
-                <button
-                  type="button"
-                  onClick={() => setOpenId(isOpen ? null : faq.id)}
-                  aria-expanded={isOpen}
-                  aria-controls={`faq-${faq.id}`}
-                  className="flex w-full items-center gap-4 px-6 py-5 text-left"
-                >
-                  <span
-                    className={cn(
-                      "shrink-0 text-fg-muted transition-transform duration-300",
-                      isOpen && "rotate-90"
-                    )}
-                  >
-                    <ChevronRight />
-                  </span>
-                  <span className="text-base font-medium text-white">
-                    {faq.question}
-                  </span>
-                </button>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      id={`faq-${faq.id}`}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: easeOutSoft }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 pl-14">
-                        <RichText content={faq.answer} className="text-sm leading-relaxed text-fg-muted" />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <FAQCard
+                key={faq.id}
+                faq={faq}
+                isOpen={isOpen}
+                onToggle={() => setOpenId(isOpen ? null : faq.id)}
+              />
             );
           })}
         </div>
