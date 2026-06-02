@@ -1,15 +1,16 @@
-/**
- * Pure URL helpers — safe in client components.
- * Keep this file free of `server-only` imports so the barrel doesn't drag
- * the Strapi fetch layer into client bundles.
- */
-
 const STRAPI_URL =
   process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 
-/** Resolve a Strapi media URL — handles both absolute and relative cases. */
+/** Resolve a media URL — handles absolute, local, and Strapi URLs. */
 export function strapiMedia(path: string | undefined | null): string | null {
   if (!path) return null;
+
+  // Absolute URL
   if (path.startsWith("http")) return path;
+
+  // Local public image
+  if (path.startsWith("/images/")) return path;
+
+  // Strapi media
   return `${STRAPI_URL}${path}`;
 }

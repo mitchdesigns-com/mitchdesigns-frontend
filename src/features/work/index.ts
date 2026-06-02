@@ -1,2 +1,8 @@
 export { FeaturedProjects } from "./FeaturedProjects";
 export { CaseStudyGrid } from "./CaseStudyGrid";
+export { CaseStudyHero } from "./CaseStudyHero";
+export { TextInRow } from "./TextInRow";
+export { TwoImagesInRow } from "./TwoImagesInRow";
+export { SingleImageInRow } from "./SingleImageInRow";
+export { ColorPalette } from "./ColorPalette";
+export { CenteredQuote } from "./CenteredQuote";

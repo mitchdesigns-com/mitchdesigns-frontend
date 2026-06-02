@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Talk } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
+import { TalkCard } from "./TalkCard";
 
 const PAGE = 9; // each page: 1 featured hero + 8 in grid
 const INITIAL = PAGE;
@@ -24,7 +25,7 @@ function formatDate(iso: string) {
 
 function TagPill({ label }: { label: string }) {
   return (
-    <span className="inline-flex items-center justify-center rounded-full bg-yellow px-4 py-2 text-[14px] font-bold uppercase leading-[1.3] tracking-[0.01em] text-black">
+    <span className="inline-flex items-center justify-center rounded-full bg-yellow px-4 py-2 text-sm font-bold uppercase tracking-1 text-black">
       {label}
     </span>
   );
@@ -32,11 +33,11 @@ function TagPill({ label }: { label: string }) {
 
 function Meta({ date, readTime }: { date: string; readTime?: number }) {
   return (
-    <div className="flex items-center gap-3 text-[16px] leading-tight tracking-[0.01em] text-[#515151]">
+    <div className="flex items-center gap-3 text-base tracking-1 text-grey-600">
       <span className="whitespace-nowrap">{formatDate(date)}</span>
       {readTime != null && (
         <>
-          <span className="size-1 rounded-full bg-[#515151]" aria-hidden />
+          <span className="size-1 rounded-full bg-grey-600" aria-hidden />
           <span className="whitespace-nowrap">{readTime} min read</span>
         </>
       )}
@@ -76,8 +77,8 @@ function FeaturedCard({
       }
     >
       <Link href={`/talks/${talk.slug}`} className="flex w-full items-start gap-10">
-        {/* Image — 55% width, 4:3 aspect */}
-        <div className="relative aspect-676/500 w-[55%] shrink-0 overflow-hidden rounded-[4px]">
+        {/* Image — 55% width, custom aspect */}
+        <div className="relative aspect-676/500 w-[55%] shrink-0 overflow-hidden rounded-xs">
           {talk.cover?.url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -86,7 +87,7 @@ function FeaturedCard({
               className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
             />
           ) : (
-            <div className="absolute inset-0 bg-[#e5e5e5]" />
+            <div className="absolute inset-0 bg-img-placeholder" />
           )}
         </div>
 
@@ -103,85 +104,10 @@ function FeaturedCard({
           </div>
 
           <div className="flex flex-col gap-2.5">
-            <h2 className="text-[40px] font-bold leading-[1.1] tracking-[0.01em] text-[#07020d] transition-opacity duration-200 group-hover:opacity-70">
+            <h2 className="text-hero-4 tracking-1 text-black transition-opacity duration-200 group-hover:opacity-70">
               {talk.title}
             </h2>
-            <p className="text-[16px] leading-6 tracking-[0.01em] text-[#515151] text-balance">
-              {talk.excerpt}
-            </p>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-// ── Regular card (used in 2-col grid) ─────────────────────────────────────
-
-function TalkCard({
-  talk,
-  delay = 0,
-  isLast = false,
-  onLastDone,
-}: {
-  talk: Talk;
-  delay?: number;
-  isLast?: boolean;
-  onLastDone?: () => void;
-}) {
-  const calledRef = useRef(false);
-
-  return (
-    <motion.div
-      className="group flex min-w-0 flex-1 flex-col gap-4"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -40% 0px" }}
-      transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1], delay }}
-      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
-      onViewportEnter={
-        isLast
-          ? () => {
-              if (!calledRef.current) {
-                calledRef.current = true;
-                setTimeout(() => onLastDone?.(), (0.4 + delay) * 1000 + 50);
-              }
-            }
-          : undefined
-      }
-    >
-      <Link href={`/talks/${talk.slug}`} className="flex flex-col gap-4">
-        {/* Image — natural 4:3 aspect, no fixed height */}
-        <div className="relative aspect-4/3 w-full overflow-hidden rounded-[2px]">
-          {talk.cover?.url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={talk.cover.url}
-              alt={talk.cover.alternativeText ?? talk.title}
-              className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-[#e5e5e5]" />
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="flex flex-col gap-8">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-wrap gap-2">
-              {talk.category
-                ? <TagPill label={talk.category} />
-                : talk.tags?.map((tag) => <TagPill key={tag} label={tag} />)
-              }
-            </div>
-            <Meta date={(talk.publishedAt ?? talk.date) ?? ""} readTime={talk.readTime} />
-          </div>
-
-          <div className="flex flex-col gap-2.5">
-            <h3 className="text-[20px] font-medium leading-[1.3] tracking-[0.01em] text-[#07020d] transition-opacity duration-200 group-hover:opacity-70">
-              {talk.title}
-            </h3>
-            <p className="text-[16px] leading-6 tracking-[0.01em] text-[#515151] text-balance">
+            <p className="text-base leading-6 tracking-1 text-grey-600 text-balance">
               {talk.excerpt}
             </p>
           </div>
@@ -222,7 +148,7 @@ export function TalksList({ talks }: TalksListProps) {
   const handleLastDone = () => setShowLoadMore(true);
 
   return (
-    <Section className="py-[120px]">
+    <Section className="py-30">
       <div className="flex flex-col gap-10">
         {pages.map(({ hero, rest }, p) => {
           const isLastPage = p === pages.length - 1;
@@ -273,7 +199,7 @@ export function TalksList({ talks }: TalksListProps) {
             >
               <button
                 onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                className="text-[18px] font-medium text-fg underline underline-offset-4 transition-opacity hover:opacity-60"
+                className="text-body-lg font-medium text-fg underline underline-offset-4 transition-opacity hover:opacity-60"
               >
                 Load more
               </button>

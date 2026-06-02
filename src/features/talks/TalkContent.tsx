@@ -3,6 +3,7 @@ import type { Talk, BlogSection } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { TocSidebar } from "./TocSidebar";
+import { BlockImage } from "./BlockImage";
 
 // ── Strapi Blocks types ────────────────────────────────────────────────────
 
@@ -16,7 +17,13 @@ type TextNode = {
   code?: boolean;
 };
 
-type InlineNode = TextNode;
+type LinkNode = {
+  type: "link";
+  url: string;
+  children: TextNode[];
+};
+
+type InlineNode = TextNode | LinkNode;
 
 type ParagraphBlock = { type: "paragraph"; children: InlineNode[] };
 type HeadingBlock = {
@@ -61,8 +68,35 @@ function headingId(text: string) {
     .replace(/^-|-$/g, "");
 }
 
+function normalizeRichTextHref(href: string) {
+  if (href.startsWith("/")) return href;
+
+  try {
+    const url = new URL(href);
+    if (url.hostname === "mitchdesigns.com" || url.hostname === "www.mitchdesigns.com") {
+      const path = url.pathname.replace(/\/+$/, "");
+      const segments = path.split("/").filter(Boolean);
+      if (path.startsWith("/talks/")) {
+        return `${path}${url.search}${url.hash}`;
+      }
+      if (segments.length && segments[0].startsWith("talks")) {
+        return `/talks/${segments[segments.length - 1]}${url.search}${url.hash}`;
+      }
+      return `${path}${url.search}${url.hash}`;
+    }
+  } catch {
+    // ignore invalid URLs and return original href
+  }
+
+  return href;
+}
+
 function blockText(children: InlineNode[]): string {
-  return children.map((c) => ("text" in c ? c.text : "")).join("");
+  return children
+    .map((c) =>
+      c.type === "text" ? c.text : c.type === "link" ? c.children.map((child) => child.text).join("") : ""
+    )
+    .join("");
 }
 
 export function extractToc(sections: BlogSection[] | undefined): TocItem[] {
@@ -87,7 +121,34 @@ function Inline({ nodes }: { nodes: InlineNode[] }) {
   return (
     <>
       {nodes.map((node, i) => {
-        if (node.type !== "text") return null;
+        if (node.type === "link") {
+          return (
+            <Link
+              key={i}
+              href={normalizeRichTextHref(node.url)}
+              className="underline underline-offset-2 hover:opacity-70"
+            >
+              {node.children.map((child, j) => {
+                let el: React.ReactNode = child.text;
+                if (child.bold) el = <strong key={j}>{el}</strong>;
+                if (child.italic) el = <em key={j}>{el}</em>;
+                if (child.underline) el = <u key={j}>{el}</u>;
+                if (child.strikethrough) el = <s key={j}>{el}</s>;
+                if (child.code)
+                  el = (
+                    <code
+                      key={j}
+                      className="rounded-xs bg-panel px-1 font-mono text-code-inline"
+                    >
+                      {el}
+                    </code>
+                  );
+                return <span key={j}>{el}</span>;
+              })}
+            </Link>
+          );
+        }
+
         let el: React.ReactNode = node.text;
         if (node.bold) el = <strong key={i}>{el}</strong>;
         if (node.italic) el = <em key={i}>{el}</em>;
@@ -112,7 +173,7 @@ function Inline({ nodes }: { nodes: InlineNode[] }) {
 
 function BlockParagraph({ block }: { block: ParagraphBlock }) {
   return (
-    <p className="text-balance text-blog-body text-black">
+    <p className="text-pretty text-blog-body text-black">
       <Inline nodes={block.children} />
     </p>
   );
@@ -125,7 +186,7 @@ function BlockHeading({ block }: { block: HeadingBlock }) {
   const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   const className =
     block.level <= 2
-      ? "text-hero-4 text-black"
+      ? "text-hero-4 text-black mt-10 text-pretty"
       : "text-blog-h3 text-black border-l-[3px] border-yellow pl-3";
 
   return (
@@ -145,23 +206,6 @@ function BlockQuote({ block }: { block: QuoteBlock }) {
   );
 }
 
-function BlockImage({ block }: { block: ImageBlock }) {
-  const caption = block.image.caption ?? block.image.alternativeText;
-  return (
-    <figure className="flex flex-col items-center gap-2">
-      <img
-        src={block.image.url}
-        alt={block.image.alternativeText ?? ""}
-        className="w-full rounded-xs object-cover"
-      />
-      {caption && (
-        <figcaption className="text-base text-grey-500">
-          {caption}
-        </figcaption>
-      )}
-    </figure>
-  );
-}
 
 function BlockList({ block }: { block: ListBlock }) {
   const Tag = block.format === "ordered" ? "ol" : "ul";
@@ -192,7 +236,7 @@ function BlockCode({ block }: { block: CodeBlock }) {
 function RichTextSection({ body }: { body: unknown }) {
   if (!Array.isArray(body)) return null;
   return (
-    <div className="flex flex-col gap-6 blog-content">
+    <div className="flex flex-col gap-5 blog-content">
       {(body as Block[]).map((block, i) => {
         switch (block.type) {
           case "paragraph":
@@ -202,7 +246,14 @@ function RichTextSection({ body }: { body: unknown }) {
           case "quote":
             return <BlockQuote key={i} block={block} />;
           case "image":
-            return <BlockImage key={i} block={block} />;
+            return (
+              <BlockImage
+                key={i}
+                url={block.image.url}
+                alt={block.image.alternativeText ?? ""}
+                caption={block.image.caption ?? block.image.alternativeText}
+              />
+            );
           case "list":
             return <BlockList key={i} block={block} />;
           case "code":
@@ -227,18 +278,12 @@ function TalkSections({ sections }: { sections?: BlogSection[] }) {
         }
         if (section.__component === "blocks.media-block") {
           return (
-            <figure key={i} className="flex flex-col items-center gap-2">
-              <img
-                src={section.file.url}
-                alt={section.file.alternativeText ?? section.caption ?? ""}
-                className="w-full rounded-xs object-cover"
-              />
-              {section.caption && (
-                <figcaption className="text-base text-grey-500">
-                  {section.caption}
-                </figcaption>
-              )}
-            </figure>
+            <BlockImage
+              key={i}
+              url={section.file.url}
+              alt={section.file.alternativeText ?? section.caption ?? ""}
+              caption={section.caption}
+            />
           );
         }
         return null;

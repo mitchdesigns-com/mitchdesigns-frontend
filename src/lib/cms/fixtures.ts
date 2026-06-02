@@ -199,10 +199,11 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
   {
     id: 1,
     slug: "el-gouna",
-    title: "El-Gouna\nDigital Revamp",
+    title: "El-Gouna\nDigital Revamp LOCAL FIX",
+    websiteUrl: "https://elgouna.com/",
     client: "Orascom Development",
-    tagline: "A digital roadmap for a destination brand.",
-    excerpt: "",
+    tagline: "Transforming Tourist Engagement through El Gouna's website design",
+    excerpt: "A renowned self-sufficient premier destination by the Red Sea, sought to unify its multiple service offerings—from hotels to community services—into one comprehensive website.",
     services: [
       "Digital roadmap & strategy",
       "Website design & development",
@@ -221,6 +222,43 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
       role: "Marketing specialist",
       avatar: { url: "/images/client-logos/gobus.png" },
     },
+    challenges: [
+      {
+        title: "Strategic Goal",
+        body: "The aim was to enhance brand visibility, streamline user engagement, and extend market reach.",
+      },
+      {
+        title: "Tech. Stack",
+        body: "Challenged with a vast dataset and the need for multifunctional capabilities, our web design and development solution incorporated cutting-edge technologies including Next.js, PHP, and Tailwind CSS.",
+      },
+      {
+        title: "Performance & Scalability",
+        body: "This approach ensured a robust and intuitive user experience with a backend supported by WordPress for streamlined content management and scalability.",
+      },
+    ],
+    imagePairs: [
+      [
+        { url: "/images/case-studies/el-gouna.webp", alternativeText: "El Gouna website" },
+        { url: "/images/case-studies/el-gouna.webp", alternativeText: "El Gouna website" },
+      ],
+    ],
+    impact: [
+      {
+        title: "Core Outcome",
+        body: "The new website significantly enhanced El Gouna's digital presence.",
+      },
+      {
+        title: "Seamless User Experience",
+        body: "It serves as a central hub for both visitors and residents, with a design that showcases El Gouna's attractions through a modern, visually captivating interface, promoting ease of exploration and interaction.",
+      },
+      {
+        title: "Unique User Interface",
+        body: "The project is successfully setting a new standard for online tourism platforms. The website now effectively supports El Gouna's mission to be recognized as the ultimate destination on the Red Sea.",
+      },
+    ],
+    colorPalette: [
+      { name: "Brick Ember", hex: "#b93524" },
+    ],
     featured: true,
     publishedAt: "2024-08-12",
   },

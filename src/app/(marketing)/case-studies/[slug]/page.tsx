@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/layout/Section";
 import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  CaseStudyHero,
+  TextInRow,
+  TwoImagesInRow,
+  SingleImageInRow,
+  ColorPalette,
+  CenteredQuote,
+} from "@/features/work";
 import { getCaseStudies, getCaseStudy } from "@/lib/cms";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
@@ -85,10 +93,46 @@ export default async function SingleCaseStudyPage({
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={creativeWorkSchema} />
-      <Section className="pt-32 pb-24">
-        <h1 className="text-hero-2 font-bold">{study.title}</h1>
-        {/* TODO: CaseStudyHero, content modules, related work */}
+
+      <Section data-theme="dark" className="pt-32 pb-24">
+        <CaseStudyHero study={study} />
       </Section>
+
+      {!!study.challenges?.length && (
+        <Section data-theme="dark" className="py-24">
+          <TextInRow heading="Challenge" items={study.challenges} />
+        </Section>
+      )}
+
+      {study.imagePairs?.map((pair, i) => (
+        <Section key={i} data-theme="dark" className="py-0">
+          <TwoImagesInRow left={pair[0]} right={pair[1]} />
+        </Section>
+      ))}
+
+      {study.singleImages?.map((img, i) => (
+        <Section key={i} data-theme="dark" className="py-0">
+          <SingleImageInRow image={img} />
+        </Section>
+      ))}
+
+      {!!study.impact?.length && (
+        <Section data-theme="dark" className="py-24">
+          <TextInRow heading="Impact" items={study.impact} />
+        </Section>
+      )}
+
+      {!!study.colorPalette?.length && (
+        <Section data-theme="dark" className="py-24">
+          <ColorPalette palettes={study.colorPalette} />
+        </Section>
+      )}
+
+      {study.testimonial && (
+        <Section data-theme="dark" className="py-24">
+          <CenteredQuote testimonial={study.testimonial} />
+        </Section>
+      )}
     </>
   );
 }

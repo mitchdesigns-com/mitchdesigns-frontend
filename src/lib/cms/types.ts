@@ -32,6 +32,16 @@ export type CaseStudyTestimonial = {
   avatar?: StrapiImage;
 };
 
+export type CaseStudyChallenge = {
+  title: string;
+  body: string;
+};
+
+export type CaseStudyPalette = {
+  name: string;
+  hex: string;
+};
+
 export type CaseStudy = {
   slug: string;
   title: string;
@@ -51,6 +61,12 @@ export type CaseStudy = {
   logo?: StrapiImage;
   /** Paired testimonial shown in the right panel of the grid card */
   testimonial?: CaseStudyTestimonial;
+  websiteUrl?: string;
+  challenges?: CaseStudyChallenge[];
+  impact?: CaseStudyChallenge[];
+  imagePairs?: Array<[StrapiImage, StrapiImage]>;
+  singleImages?: StrapiImage[];
+  colorPalette?: CaseStudyPalette[];
 };
 
 export type BlogSection =

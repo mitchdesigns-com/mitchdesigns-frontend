@@ -122,11 +122,13 @@ export function Header() {
         className={cn(
           "inset-x-0 top-0 z-60 transition-colors duration-300 ease-out-soft",
           sticky ? "fixed" : "absolute",
-          atTop
+          menuOpen
             ? "border-b border-transparent bg-transparent"
-            : isDark
-              ? "border-b border-white/10 bg-black/80 backdrop-blur-md"
-              : "border-b border-black/10 bg-white/80 backdrop-blur-md",
+            : atTop
+              ? "border-b border-transparent bg-transparent"
+              : isDark
+                ? "border-b border-white/10 bg-black/80 backdrop-blur-md"
+                : "border-b border-black/10 bg-white/80 backdrop-blur-md",
         )}
         style={{ height: HEADER_HEIGHT }}
       >

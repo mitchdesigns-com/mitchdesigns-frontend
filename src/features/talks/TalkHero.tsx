@@ -1,7 +1,16 @@
+"use client";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useRef, useEffect } from "react";
+
+const COVER_BLUR_URL =
+  "data:image/svg+xml;base64," +
+  btoa('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="1"><rect width="4" height="1" fill="#e5e5e5"/></svg>');
 import type { Talk, BlogSection } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { ArrowRight } from "@/components/icons/ArrowRight";
+import { resolveViewTransition, navigateWithTransition } from "@/lib/view-transition";
 
 function TagPill({ label }: { label: string }) {
   return (
@@ -47,6 +56,23 @@ function calcReadTime(sections: BlogSection[] | undefined): number {
 
 export function TalkHero({ talk }: { talk: Talk }) {
   const readTime = talk.readTime ?? calcReadTime(talk.sections);
+  const router = useRouter();
+  const imgRef = useRef<HTMLImageElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    resolveViewTransition();
+  }, []);
+
+  useEffect(() => {
+    imgRef.current?.style.setProperty("view-transition-name", `talk-image-${talk.slug}`);
+    titleRef.current?.style.setProperty("view-transition-name", `talk-title-${talk.slug}`);
+  }, [talk.slug]);
+
+  function goBack(e: React.MouseEvent) {
+    e.preventDefault();
+    navigateWithTransition(() => router.push("/talks"));
+  }
 
   return (
     <Section theme="dark" className="pt-40 pb-10">
@@ -57,12 +83,16 @@ export function TalkHero({ talk }: { talk: Talk }) {
           <div className="flex w-1/2 shrink-0 flex-col justify-between gap-5">
             <Link
               href="/talks"
+              onClick={goBack}
               className="inline-flex items-center gap-2 text-[16px] text-fg-muted"
             >
               <ArrowRight size={20} className="rotate-180" />
               Go Back
             </Link>
-            <h1 className="text-hero-2 font-bold text-white">
+            <h1
+              ref={titleRef}
+              className="text-hero-2 font-bold text-white"
+            >
               {talk.title}
             </h1>
           </div>
@@ -122,13 +152,17 @@ export function TalkHero({ talk }: { talk: Talk }) {
 
         {/* Cover image — full width */}
         {talk.cover?.url && (
-          <div className="relative aspect-[1392/450] w-full overflow-hidden rounded-[4px]">
-            <img
-              src={talk.cover.url}
-              alt={talk.cover.alternativeText ?? talk.title}
-              className="absolute inset-0 size-full object-cover"
-            />
-          </div>
+          <Image
+            ref={imgRef}
+            src={talk.cover.url}
+            alt={talk.cover.alternativeText ?? talk.title}
+            width={1392}
+            height={450}
+            className="w-full rounded-xs"
+            style={{ height: "auto" }}
+            placeholder="blur"
+            blurDataURL={COVER_BLUR_URL}
+          />
         )}
       </div>
     </Section>

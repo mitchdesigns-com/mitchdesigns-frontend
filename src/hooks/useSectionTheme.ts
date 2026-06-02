@@ -16,15 +16,14 @@ export function useSectionTheme(headerOffsetPx = 72): SectionTheme {
   const [theme, setTheme] = useState<SectionTheme>("light");
 
   useEffect(() => {
-    const sections = Array.from(
+    // Keep a mutable reference to the current themed sections so the
+    // update() closure can re-evaluate when the DOM changes (client nav).
+    let sections = Array.from(
       document.querySelectorAll<HTMLElement>("[data-theme]"),
     );
-    if (sections.length === 0) return;
 
     const update = () => {
       const probeY = headerOffsetPx + 1;
-      // Walk sections and find the one whose rect contains probeY.
-      // Falls back to "light" if nothing matches (e.g. user is above first themed section).
       let next: SectionTheme = "light";
       for (const el of sections) {
         const rect = el.getBoundingClientRect();
@@ -38,10 +37,25 @@ export function useSectionTheme(headerOffsetPx = 72): SectionTheme {
       setTheme((prev) => (prev === next ? prev : next));
     };
 
+    // MutationObserver will catch client-side route swaps and content
+    // changes so we can re-scan the DOM for [data-theme] sections.
+    const observer = new MutationObserver(() => {
+      sections = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-theme]"),
+      );
+      update();
+    });
+
+    // Watch the whole document for added/removed nodes.
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Initial run and conventional listeners for scroll/resize.
     update();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
