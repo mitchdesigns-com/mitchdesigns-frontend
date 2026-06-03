@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/layout/Section";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import {
   CaseStudyHero,
   TextInRow,
@@ -93,7 +92,6 @@ export default async function SingleCaseStudyPage({
 
   return (
     <>
-      <ScrollProgress />
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={creativeWorkSchema} />
 

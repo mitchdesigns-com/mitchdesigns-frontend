@@ -5,7 +5,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Media } from "@/components/ui/Media";
 import { strapiMedia } from "@/lib/cms/media";
 import type { StrapiImage } from "@/lib/cms/types";
-import { EASE_LUXE, EASE_CINEMA } from "@/components/motion/variants";
+import { EASE_LUXE } from "@/components/motion/variants";
 
 type Props = {
   image: StrapiImage;
@@ -20,27 +20,20 @@ export function SingleImageInRow({ image }: Props) {
   if (!src) return null;
 
   return (
-    <div ref={ref} className="w-full">
+    <div ref={ref} className="w-full overflow-hidden">
       <motion.div
-        className="w-full aspect-case-photo overflow-hidden"
-        initial={reduced ? false : { clipPath: "inset(100% 0 0 0)" }}
-        animate={inView || reduced ? { clipPath: "inset(0% 0 0 0)" } : { clipPath: "inset(100% 0 0 0)" }}
-        transition={{ duration: 1.2, ease: EASE_CINEMA }}
+        className="relative w-full aspect-case-photo"
+        initial={reduced ? false : { opacity: 0, scale: 1.04 }}
+        animate={inView || reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
+        transition={{ duration: 0.9, ease: EASE_LUXE }}
         whileHover={{ scale: 1.02 }}
       >
-        <motion.div
-          className="absolute inset-0"
-          initial={reduced ? false : { scale: 1.08 }}
-          animate={inView || reduced ? { scale: 1 } : { scale: 1.08 }}
-          transition={{ duration: 1.4, ease: EASE_LUXE }}
-        >
-          <Media
-            src={src}
-            alt={image.alternativeText ?? ""}
-            sizes="(max-width: 768px) 100vw, 1392px"
-            className="object-cover"
-          />
-        </motion.div>
+        <Media
+          src={src}
+          alt={image.alternativeText ?? ""}
+          sizes="(max-width: 768px) 100vw, 1392px"
+          className="object-cover"
+        />
       </motion.div>
     </div>
   );
