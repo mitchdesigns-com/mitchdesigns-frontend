@@ -102,14 +102,14 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
           ))}
         </Marquee>
 
-        {/* Edge fade gradients */}
+        {/* Edge fade gradients — desktop only */}
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-72"
+          className="pointer-events-none absolute inset-y-0 left-0 hidden w-72 sm:block"
           style={{ background: "linear-gradient(to right, #07020d 30%, transparent)" }}
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-72"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-72 sm:block"
           style={{ background: "linear-gradient(to left, #07020d 30%, transparent)" }}
           aria-hidden
         />

@@ -100,9 +100,9 @@ function LogoCard({
   }, [cardId, pool, rotY]);
 
   return (
-    <div className="min-w-0 flex-1" style={{ perspective: "900px" }}>
+    <div className="min-w-0" style={{ perspective: "900px" }}>
       <motion.div
-        className="flex h-[200px] w-full items-center justify-center rounded-[4px] border border-[#414141] px-6"
+        className="flex h-[110px] w-full items-center justify-center rounded-[4px] border border-[#414141] px-6 sm:h-[150px] lg:h-[200px]"
         style={{ rotateY: rotY }}
       >
         <Image src={logo.src} alt={logo.alt} width={200} height={80} className="max-h-[50%] max-w-[65%] object-contain" />
@@ -113,16 +113,12 @@ function LogoCard({
 
 function LogoGridSkeleton() {
   return (
-    <div className="flex flex-col gap-4">
-      {[0, 1, 2].map((ri) => (
-        <div key={ri} className="flex gap-4">
-          {[0, 1, 2, 3, 4].map((ci) => (
-            <div
-              key={ci}
-              className="min-w-0 flex-1 h-[200px] rounded-[4px] border border-[#414141] animate-pulse bg-white/5"
-            />
-          ))}
-        </div>
+    <div className="grid grid-cols-3 gap-4 lg:grid-cols-5">
+      {Array.from({ length: GRID_SIZE }).map((_, i) => (
+        <div
+          key={i}
+          className="h-[110px] rounded-[4px] border border-[#414141] animate-pulse bg-white/5 sm:h-[150px] lg:h-[200px]"
+        />
       ))}
     </div>
   );
@@ -141,12 +137,6 @@ export function ClientLogos() {
   const pool = logos ?? fallbackLogos;
   const initials = useMemo(() => buildInitial(pool), [pool]);
 
-  const rows = [
-    initials.slice(0, 5),
-    initials.slice(5, 10),
-    initials.slice(10, 15),
-  ] as const;
-
   return (
     <Section theme="dark">
       <div className="flex flex-col gap-[60px] py-20">
@@ -157,21 +147,9 @@ export function ClientLogos() {
         {logos === null ? (
           <LogoGridSkeleton />
         ) : (
-          <div className="flex flex-col gap-4">
-            {rows.map((row, ri) => (
-              <div key={ri} className="flex gap-4">
-                {row.map((initial, ci) => {
-                  const cardId = ri * 5 + ci;
-                  return (
-                    <LogoCard
-                      key={cardId}
-                      cardId={cardId}
-                      pool={pool}
-                      initial={initial}
-                    />
-                  );
-                })}
-              </div>
+          <div className="grid grid-cols-3 gap-4 lg:grid-cols-5">
+            {initials.map((initial, i) => (
+              <LogoCard key={i} cardId={i} pool={pool} initial={initial} />
             ))}
           </div>
         )}

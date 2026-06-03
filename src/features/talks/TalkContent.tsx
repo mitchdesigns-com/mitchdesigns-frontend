@@ -383,7 +383,7 @@ function NavButton({
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-2 rounded-pill bg-space-grey px-9 py-4 text-base font-medium text-white"
+      className="inline-flex items-center gap-2 whitespace-nowrap rounded-pill bg-space-grey px-9 py-4 text-base font-medium text-white"
     >
       {direction === "prev" && <ArrowRight size={20} className="rotate-180" />}
       {label}

@@ -196,8 +196,8 @@ export function CaseStudyGrid({
                 onClick={() => setActiveCategory(cat)}
                 className={
                   cat === activeCategory
-                    ? "rounded-pill bg-yellow px-6 py-3 text-base font-medium text-black"
-                    : "rounded-pill border border-grey-200 px-6 py-3 text-base font-medium text-grey-200"
+                    ? "whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-base font-medium text-black"
+                    : "whitespace-nowrap rounded-pill border border-grey-200 px-6 py-3 text-base font-medium text-grey-200"
                 }
               >
                 {cat}

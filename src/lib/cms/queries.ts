@@ -14,7 +14,9 @@ import type {
   Talk,
   TeamMember,
   TechItem,
+  TechStackSection,
   Testimonial,
+  TrustReason,
 } from "./types";
 
 /* ------------------------------------------------------------------
@@ -218,6 +220,15 @@ export async function getClientLogos(): Promise<
 }
 
 /* ------------------------------------------------------------------
+ * Trust reasons ("Reasons Clients Trust MitchDesigns")
+ * ------------------------------------------------------------------ */
+export const getTrustReasons = () =>
+  getCollection<TrustReason>("/trust-reasons", {
+    revalidate: 600,
+    query: { populate: "image", sort: "order:asc" },
+  });
+
+/* ------------------------------------------------------------------
  * Tech stack
  * ------------------------------------------------------------------ */
 export const getTechStack = () =>
@@ -225,6 +236,11 @@ export const getTechStack = () =>
     revalidate: 600,
     query: { populate: "logo" },
   });
+
+/** Single type — heading copy for the homepage tech stack section. */
+export const getTechStackSection = (): Promise<
+  (TechStackSection & { id: number }) | null
+> => getSingle<TechStackSection>("/tech-stack-section", { revalidate: 600 });
 
 /* ------------------------------------------------------------------
  * Service page data

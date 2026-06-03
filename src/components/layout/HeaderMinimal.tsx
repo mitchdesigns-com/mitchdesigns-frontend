@@ -246,7 +246,7 @@ export function HeaderMinimal() {
                 <Link
                   href="/quote"
                   onClick={closeAll}
-                  className="inline-flex rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
+                  className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
                 >
                   Get Detailed Proposal
                 </Link>

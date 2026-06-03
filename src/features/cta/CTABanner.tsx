@@ -19,7 +19,7 @@ export function CTABanner({
   return (
     <Section theme="dark" bleed>
       <div
-        className="relative flex min-h-[560px] items-center justify-center overflow-hidden py-25 bg-fixed"
+        className="relative flex min-h-[440px] items-center justify-center overflow-hidden bg-scroll py-16 sm:py-25 md:min-h-[560px] md:bg-fixed"
         style={
           bgImage
             ? {
@@ -34,7 +34,7 @@ export function CTABanner({
         <div className="absolute inset-0 bg-black/35" />
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center gap-8">
+        <div className="relative z-10 flex w-full max-w-2xl flex-col items-center gap-8 px-6 md:px-0">
           <svg
             width="48"
             height="48"
@@ -52,13 +52,13 @@ export function CTABanner({
           </svg>
 
           <div className="flex flex-col items-center gap-4 text-center">
-            <h2 className="max-w-2xl text-hero-3 font-bold leading-[1.1] text-white">
+            <h2 className="max-w-2xl text-balance text-hero-3 font-bold leading-[1.1] text-white">
               {title}
             </h2>
-            <p className="max-w-2xl text-lg text-grey-200">{description}</p>
+            <p className="max-w-2xl text-lg text-grey-200 max-md:text-base">{description}</p>
           </div>
 
-          <Button asChild size="lg" variant="primary">
+          <Button asChild size="lg" variant="primary" className="max-md:w-full">
             <Link href={cta.href} className="flex items-center gap-2">
               {cta.label}
               <ArrowRight />

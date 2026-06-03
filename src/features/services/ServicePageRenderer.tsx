@@ -61,6 +61,7 @@ export function ServicePageRenderer({
           <TechStackFetcher
             title="Our Technology Stack"
             description="The tools and frameworks we use to build custom platforms that scale."
+            highlight="Technology Stack"
           />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
@@ -97,6 +98,7 @@ export function ServicePageRenderer({
           <TechStackFetcher
             title="Our Technology Stack"
             description="The tools and frameworks we use to build custom platforms that scale."
+            highlight="Technology Stack"
           />
           <TestimonialMarqueeFetcher />
           {weGotYou && <WeGotYou {...weGotYou} />}

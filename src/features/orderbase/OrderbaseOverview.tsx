@@ -176,7 +176,7 @@ export function OrderbaseOverview() {
         <div style={{ paddingBlock: "clamp(1.5rem, 4dvh, 5rem)" }}>
           {/* Header */}
           <div
-            className="container-page flex items-center justify-between gap-8"
+            className="container-page flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8"
             style={{ marginBottom: "clamp(1.5rem, 3dvh, 3rem)" }}
           >
             <div className="flex flex-col gap-3">
@@ -424,10 +424,10 @@ export function OrderbaseOverview() {
           </div>
 
           {/* CTA */}
-          <div className="mt-10 flex justify-center">
+          <div className="mt-10 flex justify-center px-4 lg:px-0">
             <Link
               href="/orderbase"
-              className="rounded-full bg-yellow px-8 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90"
+              className="whitespace-nowrap rounded-full bg-yellow px-8 py-3 text-center text-base font-semibold text-black transition-opacity hover:opacity-90 max-md:w-full"
             >
               Know More →
             </Link>

@@ -1,19 +1,18 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Media } from "@/components/ui/Media";
 import { strapiMedia } from "@/lib/cms/media";
 import type { StrapiImage } from "@/lib/cms/types";
 import { EASE_LUXE } from "@/components/motion/variants";
+import { useReveal } from "@/components/motion/useReveal";
 
 type Props = {
   image: StrapiImage;
 };
 
 export function SingleImageInRow({ image }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
 
   const src = strapiMedia(image.url);

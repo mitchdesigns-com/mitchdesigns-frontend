@@ -112,13 +112,26 @@ export function TalksSection({ talks }: { talks: Talk[] }) {
 
   const featured = talks.find((t) => t.featured) ?? talks[0]!;
   const grid = talks.filter((t) => t !== featured).slice(0, 4);
+  const mobileTalks = [featured, ...grid];
 
   return (
     <Section className="py-20">
-      <div className="flex flex-col gap-[60px]">
-        <h2 className="text-[46px] font-bold leading-[1.1] text-black">Talks</h2>
+      <div className="flex flex-col gap-10 md:gap-[60px]">
+        <h2 className="text-[36px] font-bold leading-[1.1] text-black md:text-[46px]">
+          Talks
+        </h2>
 
-        <div className="flex flex-col gap-8">
+        {/* Mobile — horizontal scroll; left aligns with content, right bleeds to the edge */}
+        <div className="-mr-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
+          {mobileTalks.map((t) => (
+            <div key={t.slug} className="w-[80vw] shrink-0 snap-start">
+              <SmallTalkCard talk={t} />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop — featured + grid */}
+        <div className="hidden flex-col gap-8 md:flex">
           <FeaturedTalk talk={featured} />
           {grid.length > 0 && (
             <div className="flex gap-4">
@@ -131,7 +144,7 @@ export function TalksSection({ talks }: { talks: Talk[] }) {
 
         <Link
           href="/talks"
-          className="inline-flex items-center gap-2 self-start rounded-pill bg-space-grey px-9 py-6 text-[16px] font-medium text-white"
+          className="inline-flex items-center gap-2 self-start whitespace-nowrap rounded-pill bg-space-grey px-9 py-6 text-[16px] font-medium text-white max-md:w-full max-md:justify-center"
         >
           Explore All Talks
           <ArrowRight size={20} />

@@ -155,9 +155,25 @@ export type TechItem = {
   logo: StrapiImage;
 };
 
+/** Single type — heading copy for the homepage tech stack section. */
+export type TechStackSection = {
+  title: string;
+  description?: string | null;
+  /** Phrase(s) within `title` to underline in yellow; newline/comma separated. */
+  highlight?: string | null;
+};
+
 export type ClientLogo = {
   name: string;
   logo: StrapiImage;
+  order?: number;
+};
+
+/** Reason cards in the "Reasons Clients Trust MitchDesigns" section. */
+export type TrustReason = {
+  title: string;
+  body: string;
+  image?: StrapiImage | null;
   order?: number;
 };
 

@@ -52,7 +52,7 @@ export function CaseStudyHero({ study }: Props) {
             href={study.websiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-9 py-6 rounded-pill bg-space-grey text-white text-base font-medium shrink-0"
+            className="flex items-center gap-2 px-9 py-6 rounded-pill bg-space-grey text-white text-base font-medium shrink-0 whitespace-nowrap"
           >
             Visit Website
             <ArrowRight size={20} />

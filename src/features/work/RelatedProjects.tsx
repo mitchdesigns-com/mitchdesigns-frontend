@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { strapiMedia } from "@/lib/cms/media";
-import { useTransition } from "@/context/TransitionContext";
 import { staggerChildren, itemFadeUp } from "@/components/motion/variants";
+import { useReveal } from "@/components/motion/useReveal";
 import type { CaseStudy } from "@/lib/cms/types";
 
 type Study = Pick<CaseStudy, "slug" | "title" | "tagline" | "services" | "cover"> & { id: number };
@@ -15,14 +15,12 @@ type Props = {
 };
 
 function RelatedCard({ study }: { study: Study }) {
-  const { startTransition } = useTransition();
   const coverSrc = strapiMedia(study.cover?.url);
 
   return (
-    <button
-      type="button"
-      onClick={() => startTransition(`/case-studies/${study.slug}`)}
-      className="flex flex-col gap-10 w-full text-left"
+    <Link
+      href={`/case-studies/${study.slug}`}
+      className="group flex flex-col gap-10 w-full"
     >
       <div className="relative w-full aspect-case-photo overflow-hidden rounded-2xs">
         {coverSrc ? (
@@ -54,20 +52,19 @@ function RelatedCard({ study }: { study: Study }) {
           ))}
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 
 export function RelatedProjects({ studies }: Props) {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { ref, inView } = useReveal<HTMLElement>();
 
   if (!studies.length) return null;
 
   return (
-    <section ref={ref} className="bg-yellow px-section py-24 lg:py-32">
+    <section ref={ref} className="bg-yellow py-24 lg:py-32">
       <motion.div
-        className="flex flex-col gap-16"
+        className="container-page flex flex-col gap-16"
         variants={staggerChildren(0.12)}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}

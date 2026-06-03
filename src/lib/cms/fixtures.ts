@@ -11,7 +11,9 @@ import type {
   Service,
   Talk,
   TechItem,
+  TechStackSection,
   Testimonial,
+  TrustReason,
 } from "./types";
 
 type WithId<T> = T & { id: number };
@@ -402,6 +404,52 @@ export const fixtureTestimonials: Array<WithId<Testimonial>> = [
     },
   },
 ];
+
+export const fixtureTrustReasons: Array<WithId<TrustReason>> = [
+  {
+    id: 1,
+    title: "Expertise Led By The Founder",
+    body: "Every project is guided by direct founder insight — blending business strategy, UX design, and conversion logic to ensure every outcome feels intentional and high-performing.",
+    order: 1,
+  },
+  {
+    id: 2,
+    title: "Tailor-Made Digital Systems",
+    body: "We don't rely on templates. We build from the ground up — fully custom platforms that match how your business operates, not the other way around.",
+    order: 2,
+  },
+  {
+    id: 3,
+    title: "Smooth Tech Integration",
+    body: "From ERPs and CRMs to payments and logistics — we connect every moving part into a smooth, automated system.",
+    order: 3,
+  },
+  {
+    id: 4,
+    title: "Design That Drives Business",
+    body: "Our designs are not just beautiful — they're designed and built for growth, clarity, and conversion.",
+    order: 4,
+  },
+  {
+    id: 5,
+    title: "Partnership After Launch",
+    body: "We don't disappear after go-live. Our shared support team and monthly retainer model keep every website secure, updated, and optimized.",
+    order: 5,
+  },
+  {
+    id: 6,
+    title: "Performance Mindset",
+    body: "We measure success by real impact — conversions, traffic, and operational efficiency — not vanity metrics.",
+    order: 6,
+  },
+];
+
+export const fixtureTechStackSection: TechStackSection = {
+  title: "Craft seamless digital platforms with our modern tech stack",
+  description:
+    "More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client.",
+  highlight: "with our modern tech stack",
+};
 
 export const fixtureTechStack: Array<WithId<TechItem>> = [
   {

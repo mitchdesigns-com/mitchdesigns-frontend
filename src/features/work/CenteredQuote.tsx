@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { StrapiImage } from "@/lib/cms/types";
 import { staggerChildren, itemFadeUp, fadeUp } from "@/components/motion/variants";
+import { useReveal } from "@/components/motion/useReveal";
 
 type Props = {
   quote: string;
@@ -13,8 +13,7 @@ type Props = {
 };
 
 export function CenteredQuote({ quote, author, role }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
 
   const words = quote.split(" ");

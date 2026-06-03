@@ -21,14 +21,14 @@ const SOCIAL = [
 
 function NavCol({ title, links }: { title: string; links: { label: string; href: string; yellow?: boolean }[] }) {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-5 lg:gap-8">
       <p className="text-lg font-bold text-white">{title}</p>
-      <ul className="flex flex-col gap-6">
+      <ul className="flex flex-col gap-4 lg:gap-6">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className={`text-lg transition-opacity hover:opacity-80 ${link.yellow ? "text-yellow" : "text-fg-muted"}`}
+              className={`text-base transition-opacity hover:opacity-80 lg:text-lg ${link.yellow ? "text-yellow" : "text-fg-muted"}`}
             >
               {link.label}
             </Link>
@@ -41,14 +41,19 @@ function NavCol({ title, links }: { title: string; links: { label: string; href:
 
 export function Footer() {
   return (
-    <footer className="bg-black pt-20 pb-8">
-      <div className="container-page">
+    <footer className="relative overflow-hidden bg-black pt-12 pb-8 lg:pt-20">
+      {/* Dots pattern — bottom edge decoration (same as CreativeHero) */}
+      <div
+        className="dots-pattern pointer-events-none absolute inset-x-0 bottom-0 h-40 opacity-70"
+        aria-hidden
+      />
+      <div className="container-page relative">
 
         {/* Top: link columns + contact cards */}
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
 
           {/* Left: Company + Services columns */}
-          <div className="flex justify-center gap-15 lg:justify-start lg:gap-16">
+          <div className="flex justify-between gap-6 sm:justify-center sm:gap-12 lg:justify-start lg:gap-16">
             <NavCol
               title="Company"
               links={[
@@ -67,7 +72,7 @@ export function Footer() {
               href="https://wa.me/201014430669"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-5 rounded-card-md bg-space-grey px-9 py-6 transition-opacity hover:opacity-90"
+              className="flex items-center gap-4 rounded-card-md bg-space-grey px-6 py-5 transition-opacity hover:opacity-90 lg:gap-5 lg:px-9 lg:py-6"
             >
               <WhatsApp size={48} className="shrink-0 lg:hidden" />
               <WhatsApp size={80} className="hidden shrink-0 lg:block" />
@@ -100,7 +105,7 @@ export function Footer() {
         </div>
 
         {/* Divider + social links row */}
-        <div className="mt-15 border-t border-space-grey pt-3">
+        <div className="mt-12 border-t border-space-grey pt-3 lg:mt-15">
           <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
             <a href="https://linkedin.com/company/mitchdesigns" target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
@@ -111,25 +116,28 @@ export function Footer() {
         </div>
 
         {/* Wordmark */}
-        <div className="relative mt-15 overflow-hidden">
+        <div className="relative mt-12 lg:mt-20">
           <div className="footer-grid absolute inset-0" aria-hidden />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               {/* "Mitch" with signature overlay */}
               <div className="relative">
                 <span
-                  className="absolute left-1 top-0 whitespace-nowrap font-signature text-wordmark-sm text-yellow lg:text-wordmark-lg"
-                  style={{ rotate: "4deg", transformOrigin: "left center" }}
+                  className="absolute left-4 -top-8 whitespace-nowrap font-signature text-wordmark-sm text-yellow lg:text-signature-lg leading-[47px]"
+                  style={{ rotate: "-4deg", transformOrigin: "left center" }}
                   aria-hidden
                 >
                   webdesign agency
                 </span>
-                <p className="font-wordmark text-wordmark-sm font-bold leading-none text-white lg:text-wordmark-lg">
-                  Mitch<sup className="ml-1 align-super text-xl font-medium">TM</sup>
+                <p className="font-wordmark text-wordmark-sm font-bold leading-none text-white lg:text-wordmark-lg uppercase">
+                  Mitch
                 </p>
               </div>
-              <p className="font-wordmark text-wordmark-sm font-bold leading-none text-white lg:text-wordmark-lg">
+              <p className="font-wordmark text-wordmark-sm font-bold leading-none text-white lg:text-wordmark-lg uppercase">
                 Designs
+                <sup className="ml-1 align-super font-sans text-lg font-medium">
+                  TM
+                </sup>
               </p>
             </div>
             <p className="text-xl font-medium text-white lg:self-end">

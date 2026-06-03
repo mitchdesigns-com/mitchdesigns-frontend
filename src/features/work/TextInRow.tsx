@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { staggerChildren, itemFadeUp } from "@/components/motion/variants";
+import { useReveal } from "@/components/motion/useReveal";
 
 type Props = {
   heading: string;
@@ -10,8 +10,7 @@ type Props = {
 };
 
 export function TextInRow({ heading, items }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
 
   if (!items.length) return null;

@@ -47,8 +47,8 @@ export function FAQSection({
   const hasCategories = derivedCategories.length > 0;
 
   return (
-    <Section theme="dark" className="py-24 md:py-32">
-      <div className="flex flex-col items-center gap-12">
+    <Section theme="dark" className="pt-12 pb-24 md:py-32">
+      <div className="flex flex-col items-center gap-8 md:gap-12">
         {/* Header */}
         <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="text-hero-2 font-bold text-white">{title}</h2>
@@ -57,9 +57,9 @@ export function FAQSection({
           )}
         </div>
 
-        {/* Category tabs */}
+        {/* Category tabs — single scrolling row on mobile, centered wrap on desktop */}
         {hasCategories && (
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="-mr-4 flex w-full gap-3 overflow-x-auto [scrollbar-width:none] md:mr-0 md:w-auto md:flex-wrap md:justify-center md:overflow-visible [&::-webkit-scrollbar]:hidden">
             {categoryOptions.map((cat) => (
               <button
                 key={cat}
@@ -69,7 +69,7 @@ export function FAQSection({
                   setOpenId(null);
                 }}
                 className={cn(
-                  "rounded-pill border px-5 py-2.5 text-sm font-medium transition-colors",
+                  "shrink-0 whitespace-nowrap rounded-pill border px-5 py-2.5 text-sm font-medium transition-colors",
                   activeCategory === cat
                     ? "border-white bg-space-grey text-white"
                     : "border-border bg-space-grey text-fg-muted hover:text-white"
@@ -99,7 +99,7 @@ export function FAQSection({
         {/* CTA */}
         <Link
           href={ctaHref}
-          className="rounded-pill bg-space-grey px-8 py-4 text-sm font-medium text-white transition-colors hover:bg-bg-alt"
+          className="whitespace-nowrap rounded-pill bg-space-grey px-8 py-4 text-center text-sm font-medium text-white transition-colors hover:bg-bg-alt max-md:w-full"
         >
           Explore All FAQs
         </Link>

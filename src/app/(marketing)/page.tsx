@@ -3,7 +3,7 @@ import { HeaderConfig } from "@/context/HeaderConfigContext";
 import { CreativeHero } from "@/features/hero";
 import { AboutSection } from "@/features/about";
 import { ClientLogos } from "@/features/clients";
-import { ClientsTrust } from "@/features/ClientsTrust";
+import { ClientsTrustFetcher } from "@/features/ClientsTrust";
 import { FeaturedProjects } from "@/features/work";
 import { OurServices } from "@/features/services";
 import { OrderbaseOverview } from "@/features/orderbase";
@@ -136,7 +136,7 @@ export default async function HomePage() {
 
       <ClientLogos />
 
-      <ClientsTrust />
+      <ClientsTrustFetcher />
 
       <FeaturedProjects caseStudies={caseStudies} theme="dark" />
 
@@ -146,10 +146,7 @@ export default async function HomePage() {
 
       <TestimonialMarqueeFetcher />
 
-      <TechStackFetcher
-        title="Craft seamless digital platforms with our modern tech stack"
-        description="More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client."
-      />
+      <TechStackFetcher />
 
       <TalksSection talks={talks} />
 

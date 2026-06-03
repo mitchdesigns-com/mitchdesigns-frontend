@@ -41,6 +41,7 @@
 
   /* Wordmark scale (footer "Mitch Designs" logotype) */
   --text-wordmark-lg: 10.625rem; /* 170px — desktop */
+  --text-signature-lg: 10.25rem; /* 164px — desktop */
   --text-wordmark-lg--line-height: 1;
   --text-wordmark-sm: 5rem; /* 80px — mobile */
   --text-wordmark-sm--line-height: 1;
@@ -165,7 +166,9 @@
 }
 @font-face {
   font-family: "MungSignature";
-  src: url("/fonts/MungSignature.woff") format("woff");
+  src:
+    url("/fonts/MungSignature.woff2") format("woff2"),
+    url("/fonts/MungSignature.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -243,6 +246,72 @@
       linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     background-size: 50px 50px;
+  }
+
+  /* Square dot pattern — checkerboard squares (also used in CreativeHero) */
+  .dots-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='25' height='25' fill='%231d1d1b'/%3E%3C/svg%3E");
+    background-size: 50px 50px;
+  }
+
+  /* Full-bleed horizontal carousel: the scroll track spans the whole viewport
+     so cards crop at the screen edges (not the container), while the first card
+     stays aligned with the container content. The end bleeds to the edge. */
+  .bleed-carousel {
+    margin-inline: calc(50% - 50vw);
+    padding-inline-start: max(
+      var(--container-padding),
+      calc((100vw - var(--container-max)) / 2 + var(--container-padding))
+    );
+    padding-inline-end: 0;
+    scroll-padding-inline-start: max(
+      var(--container-padding),
+      calc((100vw - var(--container-max)) / 2 + var(--container-padding))
+    );
+  }
+  @media (min-width: 1024px) {
+    .bleed-carousel {
+      padding-inline-start: max(
+        var(--container-padding-lg),
+        calc((100vw - var(--container-max)) / 2 + var(--container-padding-lg))
+      );
+      scroll-padding-inline-start: max(
+        var(--container-padding-lg),
+        calc((100vw - var(--container-max)) / 2 + var(--container-padding-lg))
+      );
+    }
+  }
+}
+
+/* text-hero-2 / text-hero-3 — desktop keeps the @theme tokens (60px / 46px);
+   below 1024px every heading using these classes follows the Mobile Heading
+   spec. Unlayered so it overrides the generated utility (and alignment). */
+@media (max-width: 1023.98px) {
+  .text-hero-2 {
+    font-size: 2rem; /* 32px */
+    line-height: 1.1; /* 110% */
+    font-weight: 700;
+    text-align: center;
+  }
+  .text-hero-3 {
+    font-size: 1.75rem; /* 28px */
+    line-height: 1.1; /* 110% */
+    font-weight: 700;
+    text-align: center;
+  }
+  .text-hero-5 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 1.25; /* 125% */
+  }
+  .text-display {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.3; /* 130% */
+  }
+  /* Paragraphs using the large body size shrink to 16px on mobile. */
+  p.text-xl {
+    font-size: 1rem; /* 16px */
+    line-height: 1.25; /* 125% */
+    font-weight: 400;
   }
 }
 

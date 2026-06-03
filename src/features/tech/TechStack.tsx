@@ -1,11 +1,14 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import type { TechItem } from "@/lib/cms/types";
 
 type TechStackProps = {
   items: Array<TechItem & { id: number }>;
-  title: React.ReactNode;
+  title: string;
   description?: string;
+  /** Phrase(s) within `title` to underline in yellow; newline/comma separated. */
+  highlight?: string;
 };
 
 function formatCategory(category: string): string {
@@ -15,21 +18,62 @@ function formatCategory(category: string): string {
     .join(" ");
 }
 
-export function TechStack({ items, title, description }: TechStackProps) {
+// Yellow highlighter behind the lower portion of the text; clones across wrapped
+// lines so multi-word phrases keep the bar on every line they break onto.
+const MARK_STYLE: CSSProperties = {
+  background: "none",
+  backgroundImage:
+    "linear-gradient(to top, var(--color-yellow) 0.35em, transparent 0.35em)",
+  boxDecorationBreak: "clone",
+  WebkitBoxDecorationBreak: "clone",
+};
+
+function HighlightedTitle({
+  title,
+  highlight,
+}: {
+  title: string;
+  highlight?: string;
+}) {
+  const phrases = (highlight ?? "")
+    .split(/[\n,]+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (!phrases.length) return <>{title}</>;
+
+  const escaped = phrases.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const re = new RegExp(`(${escaped.join("|")})`, "gi");
+  const lookup = new Set(phrases.map((p) => p.toLowerCase()));
+
+  return (
+    <>
+      {title.split(re).map((part, i) =>
+        lookup.has(part.toLowerCase()) ? (
+          <mark key={i} className="text-inherit" style={MARK_STYLE}>
+            {part}
+          </mark>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
+export function TechStack({
+  items,
+  title,
+  description,
+  highlight,
+}: TechStackProps) {
   return (
     <Section className="py-20">
-      <div className="flex items-start justify-between gap-10">
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
         {/* Left: heading + description */}
-        <div className="flex max-w-[415px] shrink-0 flex-col gap-4">
-          <div className="relative">
-            <h2 className="relative z-10 text-hero-4 font-bold leading-[110%] text-space-grey">
-              {title}
-            </h2>
-            <span
-              aria-hidden
-              className="absolute bottom-1.5 left-0 h-3.5 w-5/6 bg-yellow"
-            />
-          </div>
+        <div className="flex flex-col gap-4 lg:max-w-[415px] lg:shrink-0">
+          <h2 className="text-center text-[1.5rem] font-bold leading-[1.3] text-space-grey lg:text-left lg:text-hero-4 lg:leading-[110%]">
+            <HighlightedTitle title={title} highlight={highlight} />
+          </h2>
           {description && (
             <p className="text-xl leading-[130%] text-fg-muted text-balance">
               {description}
@@ -37,15 +81,15 @@ export function TechStack({ items, title, description }: TechStackProps) {
           )}
         </div>
 
-        {/* Right: 3-col grid of tech cards */}
-        <div className="grid grid-cols-3 gap-6">
+        {/* Right: responsive grid of tech cards */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6">
           {items.map((t) => {
             // const logo = strapiMedia(t.logo?.url);
             const logo = t.logo?.url;
             return (
               <div
                 key={t.id}
-                className="flex h-[100px] w-[300px] items-center gap-5 rounded-card-sm border border-tech-card-border bg-white p-5 shadow-tech-card"
+                className="flex h-[88px] w-full items-center gap-3 rounded-card-sm border border-tech-card-border bg-white p-4 shadow-tech-card sm:gap-5 lg:h-[100px] lg:p-5"
               >
                 {logo ? (
                   <Image
@@ -53,16 +97,16 @@ export function TechStack({ items, title, description }: TechStackProps) {
                     alt={t.name}
                     width={60}
                     height={60}
-                    className="size-[60px] shrink-0 object-contain"
+                    className="size-[44px] shrink-0 object-contain lg:size-[60px]"
                   />
                 ) : (
-                  <span className="size-[60px] shrink-0 rounded-lg bg-bg-alt" />
+                  <span className="size-[44px] shrink-0 rounded-lg bg-bg-alt lg:size-[60px]" />
                 )}
-                <div className="flex flex-col">
-                  <span className="text-xl font-medium leading-[125%] text-space-grey">
+                <div className="flex min-w-0 flex-col">
+                  <span className="truncate text-base font-medium leading-[125%] text-space-grey lg:text-xl">
                     {t.name}
                   </span>
-                  <span className="text-base font-medium leading-[125%] text-fg-muted">
+                  <span className="truncate text-sm font-medium leading-[125%] text-fg-muted lg:text-base">
                     {formatCategory(t.category)}
                   </span>
                 </div>

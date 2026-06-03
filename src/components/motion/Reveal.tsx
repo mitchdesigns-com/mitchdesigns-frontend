@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { fadeUp, EASE_LUXE } from "./variants";
+import { useReveal } from "./useReveal";
 
 type Props = {
   children: React.ReactNode;
@@ -12,8 +12,7 @@ type Props = {
 };
 
 export function Reveal({ children, className, delay = 0, duration = 0.8 }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
 
   return (

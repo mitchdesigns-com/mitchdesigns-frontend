@@ -52,7 +52,7 @@ export function FAQPageSection({
                                         setOpenId(null);
                                     }}
                                     className={cn(
-                                        "rounded-pill border px-5 py-2.5 text-sm font-medium transition-colors",
+                                        "whitespace-nowrap rounded-pill border px-5 py-2.5 text-sm font-medium transition-colors",
                                         isActive
                                             ? "border-yellow bg-yellow text-black"
                                             : "border-white/20 bg-space-grey/50 text-white hover:border-white/40 hover:bg-space-grey/70"

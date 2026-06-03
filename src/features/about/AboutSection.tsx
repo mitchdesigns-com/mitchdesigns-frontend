@@ -67,14 +67,14 @@ export function AboutSection() {
 
   return (
     <Section theme="dark" bleed>
-      <div className="container-page flex items-start justify-between gap-16 bg-black py-14">
+      <div className="container-page flex flex-col-reverse items-center gap-14 bg-black py-14 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
         {/* Left — stats + CTA */}
-        <div className="flex shrink-0 flex-col items-start justify-between self-stretch gap-11">
+        <div className="flex w-full shrink-0 flex-col items-center justify-between gap-11 lg:w-auto lg:items-start lg:self-stretch">
           <ul className="flex flex-col gap-11">
             {STATS.map(({ value, unit, label }) => (
-              <li key={value} className="flex flex-col items-start">
+              <li key={value} className="flex flex-col items-center lg:items-start">
                 <div className="flex items-baseline gap-2.5">
-                  <span className="font-bold text-[4rem] leading-none text-white">
+                  <span className="font-bold text-[3.5rem] leading-none text-white sm:text-[4rem]">
                     {value}
                   </span>
                   <span className="font-light text-xl text-white">{unit}</span>
@@ -88,7 +88,7 @@ export function AboutSection() {
 
           <Link
             href="/about"
-            className="inline-flex items-center gap-2 rounded-full bg-[#373737] px-9 py-4 text-sm font-medium text-white transition-colors hover:bg-[#444]"
+            className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#373737] px-9 py-4 text-sm font-medium text-white transition-colors hover:bg-[#444] lg:inline-flex lg:w-auto"
           >
             About Us
             <svg
@@ -110,8 +110,11 @@ export function AboutSection() {
         </div>
 
         {/* Right — body copy + signature */}
-        <div ref={ref} className="flex max-w-[895px] flex-col gap-10">
-          <p className="text-[2rem] leading-normal tracking-[0.01em]">
+        <div
+          ref={ref}
+          className="flex max-w-[895px] flex-col items-center gap-10 text-center lg:items-start lg:text-left"
+        >
+          <p className="text-[1.5rem] leading-normal tracking-[0.01em] sm:text-[1.75rem] lg:text-[2rem]">
             <span className="text-white">
               Since 2005, I&apos;ve built Mitch Designs in Egypt with one
               belief, businesses deserve more than templates. As a website
@@ -129,7 +132,7 @@ export function AboutSection() {
 
           <span
             className="font-signature"
-            style={{ fontSize: "clamp(6rem, 10vw, 10rem)", lineHeight: 1 }}
+            style={{ fontSize: "clamp(5rem, 10vw, 10rem)", lineHeight: 1 }}
             aria-hidden
           >
             {sigChars.map((char, i) => (

@@ -14,62 +14,44 @@ const DRAG_THRESHOLD = 50;
 const CENTER_W = 928; // 58rem
 const SIDE_W = 560; // 35rem
 const GAP = 24; // 1.5rem
-const SIDE_OFFSET = CENTER_W / 2 + GAP + SIDE_W / 2; // ~768px from center
+const CARD_AR = 911 / 800; // image width / height
+const META_H = 96; // title + year row below the image
 
 type Slot = "left" | "center" | "right" | "hiddenLeft" | "hiddenRight";
 
-const SLOT: Record<
-  Slot,
-  {
-    x: number;
-    rotate: number;
-    scale: number;
-    opacity: number;
-    zIndex: number;
-    width: number;
-  }
-> = {
-  left: {
-    x: -SIDE_OFFSET,
-    rotate: -5,
-    scale: 1,
-    opacity: 1,
-    zIndex: 1,
-    width: SIDE_W,
-  },
-  center: {
-    x: 0,
-    rotate: 0,
-    scale: 1,
-    opacity: 1,
-    zIndex: 10,
-    width: CENTER_W,
-  },
-  right: {
-    x: SIDE_OFFSET,
-    rotate: 5,
-    scale: 1,
-    opacity: 1,
-    zIndex: 1,
-    width: SIDE_W,
-  },
-  hiddenLeft: {
-    x: -1600,
-    rotate: -8,
-    scale: 0.7,
-    opacity: 0,
-    zIndex: 0,
-    width: SIDE_W,
-  },
-  hiddenRight: {
-    x: 1600,
-    rotate: 8,
-    scale: 0.7,
-    opacity: 0,
-    zIndex: 0,
-    width: SIDE_W,
-  },
+type SlotGeom = {
+  x: number;
+  rotate: number;
+  scale: number;
+  opacity: number;
+  zIndex: number;
+  width: number;
 };
+
+type Dims = { center: number; side: number; offset: number; height: number };
+
+// Coverflow geometry derived from the viewport so the center card always fits
+// with the side cards peeking at the edges (desktop keeps the design values).
+function getDims(vw: number): Dims {
+  const desktop = vw >= 1024;
+  const center = desktop ? CENTER_W : Math.max(240, vw * 0.82);
+  const side = center * (SIDE_W / CENTER_W);
+  const gap = desktop ? GAP : 16;
+  const offset = center / 2 + gap + side / 2;
+  const height = center / CARD_AR + META_H;
+  return { center, side, offset, height };
+}
+
+function buildSlotMap(d: Dims): Record<Slot, SlotGeom> {
+  const off = d.offset;
+  return {
+    left: { x: -off, rotate: -5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
+    center: { x: 0, rotate: 0, scale: 1, opacity: 1, zIndex: 10, width: d.center },
+    right: { x: off, rotate: 5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
+    hiddenLeft: { x: -off * 2.4, rotate: -8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
+    hiddenRight: { x: off * 2.4, rotate: 8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
+  };
+}
 
 function getSlot(idx: number, active: number, n: number): Slot {
   const diff = (((idx - active) % n) + n) % n;
@@ -102,13 +84,14 @@ function CategoryPill({
 interface CardProps {
   project: CaseStudy;
   slot: Slot;
+  geom: SlotGeom;
   theme: "dark" | "light";
   onNext: () => void;
   onPrev: () => void;
 }
 
-function Card({ project, slot, theme, onNext, onPrev }: CardProps) {
-  const s = SLOT[slot];
+function Card({ project, slot, geom, theme, onNext, onPrev }: CardProps) {
+  const s = geom;
   const isCenter = slot === "center";
   const isLeft = slot === "left";
   const isRight = slot === "right";
@@ -224,6 +207,19 @@ export function FeaturedProjects({
   const [isHovering, setIsHovering] = useState(false);
   const n = caseStudies.length;
 
+  // Viewport-derived coverflow geometry (lazy init avoids a desktop→mobile flash)
+  const [vw, setVw] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth : 1512,
+  );
+  useEffect(() => {
+    const update = () => setVw(window.innerWidth);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  const dims = getDims(vw);
+  const slotMap = buildSlotMap(dims);
+
   // Custom cursor position
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
@@ -286,7 +282,7 @@ export function FeaturedProjects({
       <div className="py-20">
         {/* Heading */}
         <h2
-          className={`mb-15 text-center text-hero-2 font-bold ${
+          className={`mb-10 text-center text-hero-2 font-bold lg:mb-15 ${
             theme === "dark" ? "text-white" : "text-black"
           }`}
         >
@@ -297,7 +293,7 @@ export function FeaturedProjects({
         <div
           ref={stageRef}
           className="relative select-none"
-          style={{ height: "56rem", cursor: "none" }}
+          style={{ height: `${dims.height}px`, cursor: "none" }}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => {
             setIsHovering(false);
@@ -309,16 +305,20 @@ export function FeaturedProjects({
         >
           {/* Cards — clipped separately */}
           <div className="absolute inset-0 overflow-hidden">
-            {caseStudies.map((project, i) => (
-              <Card
-                key={project.slug}
-                project={project}
-                slot={getSlot(i, activeIndex, n)}
-                theme={theme}
-                onNext={goNext}
-                onPrev={goPrev}
-              />
-            ))}
+            {caseStudies.map((project, i) => {
+              const slot = getSlot(i, activeIndex, n);
+              return (
+                <Card
+                  key={project.slug}
+                  project={project}
+                  slot={slot}
+                  geom={slotMap[slot]}
+                  theme={theme}
+                  onNext={goNext}
+                  onPrev={goPrev}
+                />
+              );
+            })}
           </div>
 
           {/* Custom drag cursor */}

@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { staggerChildren, itemFadeUp } from "./variants";
+import { useReveal } from "./useReveal";
 
 type Props = {
   text: string;
@@ -12,8 +12,7 @@ type Props = {
 };
 
 export function AnimatedText({ text, className, as = "p", delay = 0 }: Props) {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { ref, inView } = useReveal<HTMLElement>();
   const reduced = useReducedMotion();
 
   const words = text.split(" ");

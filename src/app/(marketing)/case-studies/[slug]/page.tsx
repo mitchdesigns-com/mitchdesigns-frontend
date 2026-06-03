@@ -123,13 +123,13 @@ export default async function SingleCaseStudyPage({
             );
           case "blocks.image-pair":
             return (
-              <Section key={i} data-theme="dark" className="py-0">
+              <Section key={i} data-theme="dark" className="py-10">
                 <TwoImagesInRow left={block.left} right={block.right} />
               </Section>
             );
           case "blocks.media-block":
             return (
-              <Section key={i} data-theme="dark" className="py-0">
+              <Section key={i} data-theme="dark" className="py-10">
                 <SingleImageInRow image={block.file} />
               </Section>
             );

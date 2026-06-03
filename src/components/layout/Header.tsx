@@ -155,7 +155,7 @@ export function Header() {
             <Link
               href="/quote"
               className={cn(
-                "hidden rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
+                "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
                 menuOpen && "opacity-0 pointer-events-none",
               )}
             >
@@ -312,7 +312,7 @@ export function Header() {
                 <Link
                   href="/quote"
                   onClick={closeAll}
-                  className="inline-flex rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
+                  className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
                 >
                   Get Detailed Proposal
                 </Link>

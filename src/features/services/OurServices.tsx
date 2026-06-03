@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   useMotionValue,
@@ -35,6 +35,19 @@ function toServiceItem(s: CmsService, index: number): ServiceItem {
   };
 }
 
+// True only on devices with a real hover-capable pointer (excludes touch).
+function useHasHover() {
+  const [hasHover, setHasHover] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setHasHover(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setHasHover(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return hasHover;
+}
+
 interface ServiceRowProps {
   service: ServiceItem;
   isOpen: boolean;
@@ -44,9 +57,11 @@ interface ServiceRowProps {
 function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
   const { num, label, description, body, href, imgSrc } = service;
 
+  const canHover = useHasHover();
   const [isHovered, setIsHovered] = useState(false);
-  const active = isHovered || isOpen;
-  const charVariant = isHovered && !isOpen ? "hovered" : "idle";
+  const hovering = canHover && isHovered;
+  const active = hovering || isOpen;
+  const charVariant = hovering && !isOpen ? "hovered" : "idle";
 
   const rowRef = useRef<HTMLButtonElement>(null);
   const x = useMotionValue(0);
@@ -57,14 +72,14 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
   const imgLeft = useTransform(mouseXSpring, [0.5, -0.5], ["70%", "60%"]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLButtonElement>) {
-    if (isOpen) return;
+    if (!canHover || isOpen) return;
     const rect = rowRef.current!.getBoundingClientRect();
     x.set((e.clientX - rect.left) / rect.width - 0.5);
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   }
 
   function handleMouseEnter() {
-    if (!isOpen) setIsHovered(true);
+    if (canHover && !isOpen) setIsHovered(true);
   }
 
   function handleMouseLeave() {
@@ -105,11 +120,11 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         aria-expanded={isOpen}
         onClick={onToggle}
         onMouseMove={handleMouseMove}
-        className="relative z-10 flex w-full items-center justify-between px-10 py-10 text-left"
+        className="relative z-10 flex w-full items-center justify-between px-5 py-7 text-left md:px-10 md:py-10"
         style={{ overflow: "visible" }}
       >
         {/* Number + label */}
-        <div className="flex items-center gap-15">
+        <div className="flex items-center gap-5 md:gap-15">
           <span
             className={`shrink-0 font-medium text-base transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
           >
@@ -124,7 +139,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               staggerChildren: 0.08,
               delayChildren: 0.05,
             }}
-            className={`block text-display font-black transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
+            className={`block font-black transition-colors duration-300 text-display ${active ? "text-black" : "text-fg-muted"}`}
           >
             {label.split(" ").map((word, i) => (
               <motion.span
@@ -140,7 +155,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         </div>
 
         {/* Hover: description */}
-        {!isOpen && (
+        {canHover && !isOpen && (
           <motion.p
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.2 }}
@@ -165,7 +180,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         )}
 
         {/* Hover: mouse-following image */}
-        {!isOpen && (
+        {canHover && !isOpen && (
           <motion.div
             style={{
               top: imgTop,
@@ -206,7 +221,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="relative z-10 overflow-hidden"
           >
-            <div className="flex gap-10 px-10 pb-10">
+            <div className="flex gap-10 px-5 pb-6 md:px-10 md:pb-10">
               <div
                 className="relative hidden w-88 shrink-0 overflow-hidden rounded-2xl lg:block"
                 style={{ aspectRatio: "345 / 519" }}
@@ -215,16 +230,16 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               </div>
               <div className="flex flex-1 flex-col justify-between gap-16">
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
-                <div className="flex items-center gap-4 self-end">
+                <div className="flex flex-wrap items-center justify-end gap-4 self-end">
                   <Link
                     href="/quote"
-                    className="inline-flex items-center gap-2 rounded-full bg-yellow px-9 py-4 text-base font-medium text-black transition-opacity hover:opacity-80"
+                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
                   >
                     Get Detailed Proposal
                   </Link>
                   <Link
                     href={href}
-                    className="inline-flex items-center gap-2 rounded-full bg-space-grey px-9 py-4 text-base font-medium text-white transition-opacity hover:opacity-80"
+                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-space-grey px-6 py-4 text-base font-medium text-white transition-opacity hover:opacity-80 md:px-9"
                   >
                     Learn More
                   </Link>
