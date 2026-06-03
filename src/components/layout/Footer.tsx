@@ -1,5 +1,12 @@
 "use client";
 
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/layout/NewsletterForm";
 import { Facebook } from "@/components/icons/Facebook";
@@ -42,14 +49,30 @@ function NavCol({ title, links }: { title: string; links: { label: string; href:
 }
 
 export function Footer() {
+  const ref = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+  // Parallax reveal (à la whatmattersagency.com): as the footer scrolls in, its
+  // content drifts up from -25% to its resting position while a dark overlay
+  // lifts from 0.5 → 0 — both scrubbed to scroll progress over the window from
+  // "footer's top enters the viewport bottom" to "footer's top reaches the top".
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "start start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], reduced ? ["0%", "0%"] : ["-25%", "0%"]);
+  const overlay = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [0.5, 0]);
+
   return (
-    <footer className="relative overflow-hidden bg-black pt-12 pb-8 lg:pt-20">
+    <footer
+      ref={ref}
+      className="relative overflow-hidden bg-black pt-12 pb-8 lg:pt-20"
+    >
       {/* Dots pattern — bottom edge decoration (same as CreativeHero) */}
       <div
         className="dots-pattern pointer-events-none absolute inset-x-0 bottom-0 h-40 opacity-70"
         aria-hidden
       />
-      <div className="container-page relative">
+      <motion.div style={{ y }} className="container-page relative">
 
         {/* Top: link columns + contact cards */}
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
@@ -153,7 +176,15 @@ export function Footer() {
           © 2005-2026 Mitch Designs. All rights reserved.
         </p>
 
-      </div>
+      </motion.div>
+
+      {/* Dark overlay — dims the footer on entry, lifts to fully clear as it
+          settles into view (matches the source site's parallax). */}
+      <motion.div
+        style={{ opacity: overlay }}
+        className="pointer-events-none absolute inset-0 bg-black"
+        aria-hidden
+      />
     </footer>
   );
 }
