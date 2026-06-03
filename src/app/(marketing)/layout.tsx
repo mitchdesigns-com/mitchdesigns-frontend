@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { RevealFooter } from "@/components/layout/RevealFooter";
 import { HeaderConfigProvider } from "@/context/HeaderConfigContext";
 
 export default function MarketingLayout({
@@ -9,11 +10,10 @@ export default function MarketingLayout({
 }) {
   return (
     <HeaderConfigProvider>
-      <Header />
-      <main id="main">
-        {children}
-      </main>
-      <Footer />
+      <RevealFooter footer={<Footer />}>
+        <Header />
+        <main id="main">{children}</main>
+      </RevealFooter>
     </HeaderConfigProvider>
   );
 }

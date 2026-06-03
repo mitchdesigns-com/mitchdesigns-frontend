@@ -6,6 +6,7 @@ import { Section } from "@/components/layout/Section";
 import { cn } from "@/lib/cn";
 import type { FAQ } from "@/lib/cms/types";
 import { fixtureFAQs } from "@/lib/cms/fixtures";
+import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
 import { FAQCard } from "./FAQCard";
 
 type FAQSectionProps = {
@@ -50,12 +51,12 @@ export function FAQSection({
     <Section theme="dark" className="pt-12 pb-24 md:py-32">
       <div className="flex flex-col items-center gap-8 md:gap-12">
         {/* Header */}
-        <div className="flex flex-col items-center gap-4 text-center">
+        <Reveal className="flex flex-col items-center gap-4 text-center">
           <h2 className="text-hero-2 font-bold text-white">{title}</h2>
           {description && (
             <p className="max-w-md text-base text-fg-muted">{description}</p>
           )}
-        </div>
+        </Reveal>
 
         {/* Category tabs — single scrolling row on mobile, centered wrap on desktop */}
         {hasCategories && (
@@ -82,19 +83,23 @@ export function FAQSection({
         )}
 
         {/* FAQ cards */}
-        <div className="flex w-full max-w-2xl flex-col gap-3">
+        <RevealStagger
+          className="flex w-full max-w-2xl flex-col gap-3"
+          stagger={0.08}
+        >
           {displayedFaqs.map((faq) => {
             const isOpen = openId === faq.id;
             return (
-              <FAQCard
-                key={faq.id}
-                faq={faq}
-                isOpen={isOpen}
-                onToggle={() => setOpenId(isOpen ? null : faq.id)}
-              />
+              <RevealItem key={faq.id}>
+                <FAQCard
+                  faq={faq}
+                  isOpen={isOpen}
+                  onToggle={() => setOpenId(isOpen ? null : faq.id)}
+                />
+              </RevealItem>
             );
           })}
-        </div>
+        </RevealStagger>
 
         {/* CTA */}
         <Link

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { cn } from "@/lib/cn";
 import { Section } from "@/components/layout/Section";
+import { Reveal } from "@/components/motion";
 import type { PrototypesProps } from "@/lib/cms/types";
 
 export function PrototypesSection({
@@ -11,7 +12,7 @@ export function PrototypesSection({
   return (
     <Section bleed className={cn("py-16 md:py-20", backgroundColor)}>
       <div className="container-page">
-        <div className="relative aspect-video overflow-hidden rounded-card">
+        <Reveal className="relative aspect-video overflow-hidden rounded-card">
           <Image
             src={image}
             alt={imageAlt ?? ""}
@@ -19,7 +20,7 @@ export function PrototypesSection({
             className="object-cover"
             sizes="100vw"
           />
-        </div>
+        </Reveal>
       </div>
     </Section>
   );

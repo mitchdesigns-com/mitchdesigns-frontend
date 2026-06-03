@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Talk } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
+import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 
 function formatDate(iso: string) {
@@ -22,7 +23,7 @@ function TagPill({ label }: { label: string }) {
 function FeaturedTalk({ talk }: { talk: Talk }) {
   return (
     <Link href={`/talks/${talk.slug}`} className="flex w-full items-start gap-8">
-      <div className="relative aspect-[533/390] w-[38%] shrink-0 overflow-hidden rounded-card-md">
+      <Reveal className="relative aspect-[533/390] w-[38%] shrink-0 overflow-hidden rounded-card-md">
         {talk.cover?.url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -33,9 +34,9 @@ function FeaturedTalk({ talk }: { talk: Talk }) {
         ) : (
           <div className="absolute inset-0 bg-[#e5e5e5]" />
         )}
-      </div>
+      </Reveal>
 
-      <div className="flex flex-1 flex-col justify-between self-stretch py-10">
+      <Reveal delay={0.15} className="flex flex-1 flex-col justify-between self-stretch py-10">
         <div className="flex items-center gap-5">
           <div className="flex flex-wrap gap-2">
             {talk.category
@@ -58,7 +59,7 @@ function FeaturedTalk({ talk }: { talk: Talk }) {
             {talk.excerpt}
           </p>
         </div>
-      </div>
+      </Reveal>
     </Link>
   );
 }
@@ -117,28 +118,35 @@ export function TalksSection({ talks }: { talks: Talk[] }) {
   return (
     <Section className="py-20">
       <div className="flex flex-col gap-10 md:gap-[60px]">
-        <h2 className="text-[36px] font-bold leading-[1.1] text-black md:text-[46px]">
-          Talks
-        </h2>
+        <Reveal>
+          <h2 className="text-[36px] font-bold leading-[1.1] text-black md:text-[46px]">
+            Talks
+          </h2>
+        </Reveal>
 
         {/* Mobile — horizontal scroll; left aligns with content, right bleeds to the edge */}
-        <div className="-mr-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
+        <RevealStagger
+          className="-mr-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden"
+          stagger={0.1}
+        >
           {mobileTalks.map((t) => (
-            <div key={t.slug} className="w-[80vw] shrink-0 snap-start">
+            <RevealItem key={t.slug} className="w-[80vw] shrink-0 snap-start">
               <SmallTalkCard talk={t} />
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </RevealStagger>
 
         {/* Desktop — featured + grid */}
         <div className="hidden flex-col gap-8 md:flex">
           <FeaturedTalk talk={featured} />
           {grid.length > 0 && (
-            <div className="flex gap-4">
+            <RevealStagger className="flex gap-4" stagger={0.1}>
               {grid.map((t) => (
-                <SmallTalkCard key={t.slug} talk={t} />
+                <RevealItem key={t.slug} className="flex flex-1">
+                  <SmallTalkCard talk={t} />
+                </RevealItem>
               ))}
-            </div>
+            </RevealStagger>
           )}
         </div>
 

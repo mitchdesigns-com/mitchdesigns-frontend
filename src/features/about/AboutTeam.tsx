@@ -1,4 +1,5 @@
 import { Section } from "@/components/layout/Section";
+import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
 
 const TEAM_MEMBERS = [
   { name: "Team Member", role: "Role" },
@@ -10,7 +11,7 @@ export function AboutTeam() {
     <Section theme="dark" className="py-30">
       <div className="flex items-center gap-10">
         {/* Left: text + team cards */}
-        <div className="flex w-[672px] shrink-0 flex-col justify-between gap-10">
+        <Reveal className="flex w-[672px] shrink-0 flex-col justify-between gap-10">
           {/* Heading block */}
           <div className="flex flex-col" style={{ gap: 0 }}>
             <span className="inline-flex w-fit items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black rotate-3 mb-[-13px] z-10 relative">
@@ -23,21 +24,23 @@ export function AboutTeam() {
           </div>
 
           {/* Team member cards */}
-          <div className="flex gap-6">
+          <RevealStagger className="flex gap-6" stagger={0.1}>
             {TEAM_MEMBERS.map((member, i) => (
-              <div
+              <RevealItem
                 key={i}
                 className="flex h-[242px] w-[324px] flex-col justify-end rounded-card-sm bg-space-grey p-5"
               >
                 <p className="text-base font-medium text-fg">{member.name}</p>
                 <p className="text-sm text-fg-muted">{member.role}</p>
-              </div>
+              </RevealItem>
             ))}
-          </div>
-        </div>
+          </RevealStagger>
+        </Reveal>
 
         {/* Right: large team photo placeholder */}
-        <div className="h-[800px] flex-1 rounded-card-sm bg-space-grey" />
+        <Reveal className="h-[800px] flex-1 rounded-card-sm bg-space-grey">
+          {null}
+        </Reveal>
       </div>
     </Section>
   );

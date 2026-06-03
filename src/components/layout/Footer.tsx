@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { NewsletterForm } from "@/components/layout/NewsletterForm";
 import { Facebook } from "@/components/icons/Facebook";

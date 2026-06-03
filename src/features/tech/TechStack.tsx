@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
+import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
 import type { TechItem } from "@/lib/cms/types";
 
 type TechStackProps = {
@@ -70,7 +71,7 @@ export function TechStack({
     <Section className="py-20">
       <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
         {/* Left: heading + description */}
-        <div className="flex flex-col gap-4 lg:max-w-[415px] lg:shrink-0">
+        <Reveal className="flex flex-col gap-4 lg:max-w-[415px] lg:shrink-0">
           <h2 className="text-center text-[1.5rem] font-bold leading-[1.3] text-space-grey lg:text-left lg:text-hero-4 lg:leading-[110%]">
             <HighlightedTitle title={title} highlight={highlight} />
           </h2>
@@ -79,15 +80,18 @@ export function TechStack({
               {description}
             </p>
           )}
-        </div>
+        </Reveal>
 
         {/* Right: responsive grid of tech cards */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6">
+        <RevealStagger
+          className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6"
+          stagger={0.07}
+        >
           {items.map((t) => {
             // const logo = strapiMedia(t.logo?.url);
             const logo = t.logo?.url;
             return (
-              <div
+              <RevealItem
                 key={t.id}
                 className="flex h-[88px] w-full items-center gap-3 rounded-card-sm border border-tech-card-border bg-white p-4 shadow-tech-card sm:gap-5 lg:h-[100px] lg:p-5"
               >
@@ -110,10 +114,10 @@ export function TechStack({
                     {formatCategory(t.category)}
                   </span>
                 </div>
-              </div>
+              </RevealItem>
             );
           })}
-        </div>
+        </RevealStagger>
       </div>
     </Section>
   );

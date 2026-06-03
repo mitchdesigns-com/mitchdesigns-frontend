@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
 import type { FeaturesSimplifiedProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 
@@ -22,7 +23,7 @@ export function FeaturesSimplified({
       <div className="flex flex-col gap-16 md:flex-row md:gap-20">
         <div className="flex flex-col gap-8 md:w-80 md:shrink-0">
           <SectionHeader title={title} description={description} />
-          <div className="relative min-h-64 overflow-hidden rounded-card md:flex-1">
+          <Reveal className="relative min-h-64 overflow-hidden rounded-card md:flex-1">
             <Image
               src={image}
               alt={imageAlt ?? ""}
@@ -30,12 +31,13 @@ export function FeaturesSimplified({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 320px"
             />
-          </div>
+          </Reveal>
         </div>
         <div className="flex-1">
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <RevealStagger as="ul" className="grid grid-cols-1 gap-4 sm:grid-cols-2" stagger={0.08} delay={0.15}>
             {featureCards.map((card) => (
-              <li
+              <RevealItem
+                as="li"
                 key={card.title}
                 className="flex flex-col gap-2 rounded-card-sm border border-border p-5"
               >
@@ -50,9 +52,9 @@ export function FeaturesSimplified({
                   )}
                 </div>
                 <RichText content={card.description} className="text-sm text-fg-muted" />
-              </li>
+              </RevealItem>
             ))}
-          </ul>
+          </RevealStagger>
         </div>
       </div>
     </Section>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { RevealStagger, RevealItem } from "@/components/motion";
 import type { ProcessSectionProps } from "@/lib/cms/types";
 
 export function ProcessSection({
@@ -12,9 +13,10 @@ export function ProcessSection({
     <Section className="py-20 md:py-28">
       <div className="space-y-16">
         <SectionHeader title={title} description={description} />
-        <ol className="space-y-16">
+        <RevealStagger as="ol" className="space-y-16" stagger={0.1}>
           {processCards.map((step, i) => (
-            <li
+            <RevealItem
+              as="li"
               key={step.stepNumber}
               className={`flex flex-col gap-10 md:flex-row md:items-start md:gap-16 ${
                 i % 2 !== 0 ? "md:flex-row-reverse" : ""
@@ -46,9 +48,9 @@ export function ProcessSection({
                   ))}
                 </ul>
               </div>
-            </li>
+            </RevealItem>
           ))}
-        </ol>
+        </RevealStagger>
       </div>
     </Section>
   );

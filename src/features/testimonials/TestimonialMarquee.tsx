@@ -7,6 +7,7 @@ import { strapiMedia } from "@/lib/cms/media";
 import type { Testimonial } from "@/lib/cms/types";
 import { Heart } from "@/components/icons/Heart";
 import { GoogleBadge } from "@/components/icons/GoogleBadge";
+import { Reveal } from "@/components/motion";
 
 type TestimonialMarqueeProps = {
   testimonials: Array<Testimonial & { id: number }>;
@@ -77,7 +78,7 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
   return (
     <Section theme="dark" bleed className="overflow-hidden py-20">
       {/* Header */}
-      <div className="container-page mb-10 flex flex-col items-center gap-3.5 text-center">
+      <Reveal className="container-page mb-10 flex flex-col items-center gap-3.5 text-center">
         <h2 className="relative inline-flex items-center text-hero-3 font-bold text-white">
           Loved By Clients
           <span className="absolute -right-8 -top-1 rotate-15">
@@ -87,7 +88,7 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
         <p className="max-w-lg text-base text-white text-balance">
           Hear it from the brands and people who trusted us — genuine feedback that tells our story better than we can.
         </p>
-      </div>
+      </Reveal>
 
       {/* Marquee rows — both use all testimonials so neither row ever runs short */}
       <div className="relative flex flex-col gap-10">

@@ -2,13 +2,14 @@ import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
+import { Reveal } from "@/components/motion";
 
 export function AboutApproach() {
   return (
     <Section theme="dark" className="py-30">
       <div className="flex items-center justify-between gap-15">
         {/* Left: text content */}
-        <div className="flex max-w-[666px] shrink-0 flex-col gap-15">
+        <Reveal className="flex max-w-[666px] shrink-0 flex-col gap-15" delay={0.15}>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <span className="text-base font-bold text-yellow">
@@ -34,10 +35,12 @@ export function AboutApproach() {
               <ArrowRight size={20} />
             </Link>
           </Button>
-        </div>
+        </Reveal>
 
         {/* Right: decorative graphic placeholder */}
-        <div className="h-[600px] w-[666px] shrink-0 rounded-card-md bg-space-grey" />
+        <Reveal className="h-[600px] w-[666px] shrink-0 rounded-card-md bg-space-grey">
+          {null}
+        </Reveal>
       </div>
     </Section>
   );

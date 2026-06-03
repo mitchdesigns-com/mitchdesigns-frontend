@@ -5,6 +5,7 @@ import { flushSync } from "react-dom";
 import { useMotionValue, animate, motion } from "framer-motion";
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
+import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { fixtureClientLogos } from "@/lib/cms/fixtures";
 
 export interface LogoEntry {
@@ -100,14 +101,18 @@ function LogoCard({
   }, [cardId, pool, rotY]);
 
   return (
-    <div className="min-w-0" style={{ perspective: "900px" }}>
+    <motion.div
+      variants={itemFadeUp}
+      className="min-w-0"
+      style={{ perspective: "900px" }}
+    >
       <motion.div
         className="flex h-[110px] w-full items-center justify-center rounded-[4px] border border-[#414141] px-6 sm:h-[150px] lg:h-[200px]"
         style={{ rotateY: rotY }}
       >
         <Image src={logo.src} alt={logo.alt} width={200} height={80} className="max-h-[50%] max-w-[65%] object-contain" />
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -140,18 +145,23 @@ export function ClientLogos() {
   return (
     <Section theme="dark">
       <div className="flex flex-col gap-[60px] py-20">
-        <h2 className="text-hero-2 font-bold tracking-[0.01em] text-white">
-          Our <span className="text-yellow">Agency</span> Experience
-        </h2>
+        <Reveal>
+          <h2 className="text-hero-2 font-bold tracking-[0.01em] text-white">
+            Our <span className="text-yellow">Agency</span> Experience
+          </h2>
+        </Reveal>
 
         {logos === null ? (
           <LogoGridSkeleton />
         ) : (
-          <div className="grid grid-cols-3 gap-4 lg:grid-cols-5">
+          <RevealStagger
+            className="grid grid-cols-3 gap-4 lg:grid-cols-5"
+            stagger={0.05}
+          >
             {initials.map((initial, i) => (
               <LogoCard key={i} cardId={i} pool={pool} initial={initial} />
             ))}
-          </div>
+          </RevealStagger>
         )}
       </div>
     </Section>

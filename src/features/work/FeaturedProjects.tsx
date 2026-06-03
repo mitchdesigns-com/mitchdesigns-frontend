@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
+import { Reveal } from "@/components/motion";
 import { DragCursor } from "@/components/icons/DragCursor";
 import type { CaseStudy } from "@/lib/cms/types";
 
@@ -281,13 +282,15 @@ export function FeaturedProjects({
     <Section theme={theme} bleed>
       <div className="py-20">
         {/* Heading */}
-        <h2
-          className={`mb-10 text-center text-hero-2 font-bold lg:mb-15 ${
-            theme === "dark" ? "text-white" : "text-black"
-          }`}
-        >
-          Featured Projects
-        </h2>
+        <Reveal className="mb-10 lg:mb-15">
+          <h2
+            className={`text-center text-hero-2 font-bold ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Featured Projects
+          </h2>
+        </Reveal>
 
         {/* Stage wrapper — outer is overflow-visible so cursor isn't clipped */}
         <div

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
+import { Reveal } from "@/components/motion";
 import type { WeGotYouProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 
@@ -56,7 +57,7 @@ export function WeGotYou({
           imagePosition === "left" ? "md:flex-row-reverse" : ""
         }`}
       >
-        <div className="flex flex-1 flex-col gap-6">
+        <Reveal className="flex flex-1 flex-col gap-6" delay={0.15}>
           {label && (
             <p className="text-sm font-medium uppercase tracking-[0.18em] text-fg-muted">
               {label}
@@ -71,8 +72,8 @@ export function WeGotYou({
               </Button>
             </div>
           )}
-        </div>
-        <div className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-96">
+        </Reveal>
+        <Reveal className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-96">
           <Image
             src={image}
             alt={imageAlt ?? ""}
@@ -80,7 +81,7 @@ export function WeGotYou({
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
-        </div>
+        </Reveal>
       </div>
     </Section>
   );

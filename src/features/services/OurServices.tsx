@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
+import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { Close } from "@/components/icons/Close";
 import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
@@ -89,7 +90,8 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
   }
 
   return (
-    <div
+    <motion.div
+      variants={itemFadeUp}
       className="relative border-t border-white/10 last:border-b "
       style={{ overflow: "visible" }}
       onMouseEnter={handleMouseEnter}
@@ -249,7 +251,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
@@ -264,7 +266,7 @@ export function OurServices({ services }: OurServicesProps) {
   return (
     <Section theme="dark" bleed>
       <div className="container-page py-20">
-        <div className="mb-15 flex flex-col items-start">
+        <Reveal className="mb-15 flex flex-col items-start">
           <div
             className="-mb-4 inline-flex items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black"
             style={{ rotate: "4deg" }}
@@ -272,9 +274,9 @@ export function OurServices({ services }: OurServicesProps) {
             Our Services
           </div>
           <h2 className="text-hero-2 font-bold text-white">I want to..</h2>
-        </div>
+        </Reveal>
 
-        <div style={{ overflow: "visible" }}>
+        <RevealStagger className="overflow-visible" stagger={0.08}>
           {items.map((s, i) => (
             <ServiceRow
               key={s.num}
@@ -283,7 +285,7 @@ export function OurServices({ services }: OurServicesProps) {
               onToggle={() => setOpenIndex(openIndex === i ? null : i)}
             />
           ))}
-        </div>
+        </RevealStagger>
       </div>
     </Section>
   );

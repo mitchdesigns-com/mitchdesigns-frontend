@@ -3,15 +3,17 @@ import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { MoreAboutProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
+import { RevealStagger, RevealItem } from "@/components/motion";
 
 export function MoreAbout({ title, description, cards }: MoreAboutProps) {
   return (
     <Section className="py-20 md:py-28">
       <div className="space-y-16">
         <SectionHeader title={title} description={description} />
-        <ol className="space-y-16">
+        <RevealStagger as="ol" className="space-y-16" stagger={0.1}>
           {cards.map((card, i) => (
-            <li
+            <RevealItem
+              as="li"
               key={card.title}
               className={`flex flex-col gap-10 md:flex-row md:items-center md:gap-16 ${
                 i % 2 !== 0 ? "md:flex-row-reverse" : ""
@@ -30,9 +32,9 @@ export function MoreAbout({ title, description, cards }: MoreAboutProps) {
                 <h3 className="text-hero-5 font-bold text-fg">{card.title}</h3>
                 <RichText content={card.description} className="text-lg text-fg-muted" />
               </div>
-            </li>
+            </RevealItem>
           ))}
-        </ol>
+        </RevealStagger>
       </div>
     </Section>
   );
