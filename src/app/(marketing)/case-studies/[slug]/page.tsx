@@ -9,6 +9,7 @@ import {
   SingleImageInRow,
   ColorPalette,
   CenteredQuote,
+  RelatedProjects,
 } from "@/features/work";
 import { RichText } from "@/components/ui/RichText";
 import { getCaseStudies, getCaseStudy } from "@/lib/cms";
@@ -67,8 +68,15 @@ export default async function SingleCaseStudyPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const study = await resolveStudy(slug);
+  const [study, allStudies] = await Promise.all([
+    resolveStudy(slug),
+    getCaseStudies().catch(() => fixtureCaseStudies.map((s, i) => ({ ...s, id: i + 1 }))),
+  ]);
   if (!study) notFound();
+
+  const relatedStudies = allStudies
+    .filter((s) => s.slug !== slug)
+    .slice(0, 2);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -147,6 +155,8 @@ export default async function SingleCaseStudyPage({
             return null;
         }
       })}
+
+      <RelatedProjects studies={relatedStudies} />
     </>
   );
 }

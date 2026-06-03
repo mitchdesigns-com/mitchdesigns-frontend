@@ -6,3 +6,4 @@ export { TwoImagesInRow } from "./TwoImagesInRow";
 export { SingleImageInRow } from "./SingleImageInRow";
 export { ColorPalette } from "./ColorPalette";
 export { CenteredQuote } from "./CenteredQuote";
+export { RelatedProjects } from "./RelatedProjects";
