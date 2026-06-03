@@ -1,16 +1,30 @@
+"use client";
+
 import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { strapiMedia } from "@/lib/cms/media";
 import type { CaseStudy } from "@/lib/cms/types";
+import { staggerChildren, itemFadeUp, scaleIn } from "@/components/motion/variants";
 
 type Props = {
   study: Pick<CaseStudy, "title" | "services" | "tagline" | "excerpt" | "websiteUrl" | "cover">;
 };
 
 export function CaseStudyHero({ study }: Props) {
+  const reduced = useReducedMotion();
+
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+    <motion.div
+      className="flex flex-col gap-8"
+      variants={staggerChildren(0.12, 0.1)}
+      initial={reduced ? "visible" : "hidden"}
+      animate="visible"
+    >
+      <motion.div
+        variants={itemFadeUp}
+        className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+      >
         <div className="flex flex-col gap-3">
           <h1 className="text-hero-3 font-black text-fg md:text-hero-2 lg:text-hero-1">{study.title}</h1>
 
@@ -44,11 +58,11 @@ export function CaseStudyHero({ study }: Props) {
             <ArrowRight size={20} />
           </a>
         )}
-      </div>
+      </motion.div>
 
-      <hr className="border-t border-white" />
+      <motion.hr variants={itemFadeUp} className="border-t border-white" />
 
-      <div className="flex flex-col gap-3">
+      <motion.div variants={itemFadeUp} className="flex flex-col gap-3">
         {study.tagline && (
           <p className="text-xl font-medium text-fg text-balance">
             {study.tagline}
@@ -59,20 +73,26 @@ export function CaseStudyHero({ study }: Props) {
             {study.excerpt}
           </p>
         )}
-      </div>
+      </motion.div>
 
       {strapiMedia(study.cover?.url) && (
-        <div className="relative w-full aspect-video overflow-hidden rounded-card">
-          <Image
-            src={strapiMedia(study.cover.url)!}
-            alt={study.cover.alternativeText ?? study.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 1392px"
-            priority
-          />
-        </div>
+        <motion.div variants={itemFadeUp} className="relative w-full aspect-video overflow-hidden rounded-card">
+          <motion.div
+            className="absolute inset-0"
+            variants={scaleIn}
+            transition={{ duration: 1.2 }}
+          >
+            <Image
+              src={strapiMedia(study.cover.url)!}
+              alt={study.cover.alternativeText ?? study.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 1392px"
+              priority
+            />
+          </motion.div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
