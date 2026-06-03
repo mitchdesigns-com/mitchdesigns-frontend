@@ -1,7 +1,5 @@
-import type { CaseStudyChallenge } from "@/lib/cms/types";
-
 type Props = {
-  items: CaseStudyChallenge[];
+  items: Array<{ title: string; body: string }>;
 };
 
 export function Challenges({ items }: Props) {

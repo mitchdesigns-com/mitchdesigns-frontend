@@ -20,30 +20,52 @@ import type {
 /* ------------------------------------------------------------------
  * Case Studies
  * ------------------------------------------------------------------ */
-export const getCaseStudies = (opts?: { featured?: boolean; limit?: number }) =>
-  getCollection<CaseStudy>("/case-studies", {
+type CaseStudyRaw = Omit<CaseStudy, "services"> & {
+  services?: Array<{ value: string }>;
+};
+
+function normalizeCaseStudy<T extends CaseStudyRaw>(raw: T): T & { services: string[] } {
+  return { ...raw, services: (raw.services ?? []).map((s) => s.value) };
+}
+
+export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number }): Promise<Array<CaseStudy & { id: number }>> => {
+  const results = await getCollection<CaseStudyRaw>("/case-studies", {
     revalidate: 60,
     query: {
-      "populate[cover]": "*",
-      "populate[thumbnail]": "*",
+      "populate[cover]": "true",
+      "populate[thumbnail]": "true",
+      "populate[logo]": "true",
+      "populate[testimonial][populate]": "*",
+      "populate[services]": "true",
       sort: "publishedAt:desc",
       ...(opts?.featured ? { "filters[featured][$eq]": "true" } : {}),
       ...(opts?.limit ? { "pagination[limit]": opts.limit } : {}),
     },
   });
+  return results.map(normalizeCaseStudy);
+};
 
 export const getCaseStudy = async (
   slug: string,
 ): Promise<(CaseStudy & { id: number }) | null> => {
-  const results = await getCollection<CaseStudy>("/case-studies", {
+  const results = await getCollection<CaseStudyRaw>("/case-studies", {
     revalidate: 60,
     query: {
       "filters[slug][$eq]": slug,
-      populate: "*",
+      "populate[cover]": "true",
+      "populate[thumbnail]": "true",
+      "populate[logo]": "true",
+      "populate[testimonial][populate]": "*",
+      "populate[services]": "true",
+      "populate[content][populate]": "*",
+      "populate[seo][populate]": "*",
       "pagination[limit]": 1,
     },
   });
-  return results[0] ?? null;
+
+  const raw = results[0];
+  if (!raw) return null;
+  return normalizeCaseStudy(raw) as CaseStudy & { id: number };
 };
 
 /* ------------------------------------------------------------------

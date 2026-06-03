@@ -1,35 +1,37 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
+import { strapiMedia } from "@/lib/cms/media";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 3;
 
-const CATEGORIES = ["All", "Corporate", "eCommerce", "Booking Website", "Mobile App"];
-
-// ── sub-components ─────────────────────────────────────────────────────────
-
 function ServiceBullet({ label }: { label: string }) {
   return (
     <li className="flex items-center gap-1">
       <span className="size-1 shrink-0 rounded-full bg-space-grey" aria-hidden />
-      <span className="text-[12px] leading-[1.3] text-space-grey">{label}</span>
+      <span className="text-xs text-space-grey">{label}</span>
     </li>
   );
 }
 
+// ── sub-components ─────────────────────────────────────────────────────────
+
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
+  const coverSrc = strapiMedia(cs.cover?.url);
+  const avatarSrc = strapiMedia(cs.testimonial?.avatar?.url);
+
   return (
     <Link
       href={`/case-studies/${cs.slug}`}
-      className="flex w-full overflow-hidden rounded-[2px]"
+      className="flex w-full flex-col overflow-hidden rounded-2xs lg:flex-row"
     >
-      {/* Left — info panel */}
-      <div className="flex w-[30%] shrink-0 flex-col justify-between bg-white p-6">
+      {/* Left — info panel: logo + title grouped at the top */}
+      <div className="flex w-full shrink-0 flex-col gap-5 bg-white p-6 lg:w-[30%]">
         {/* Logo */}
         <div className="h-[70px] w-full">
           {cs.logo?.url ? (
@@ -40,16 +42,16 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
               className="h-full max-w-[120px] object-contain object-left"
             />
           ) : (
-            <span className="text-[14px] font-medium text-space-grey">{cs.client}</span>
+            <span className="text-sm font-medium text-space-grey">{cs.client}</span>
           )}
         </div>
 
         {/* Title + divider + services */}
         <div className="flex flex-col gap-5">
-          <h3 className="whitespace-pre-line text-[48px] font-bold leading-[1.1] text-black">
+          <h3 className="whitespace-pre-line text-hero-5 text-black text-balance lg:text-card-title">
             {cs.title}
           </h3>
-          <div className="h-px w-full bg-black/20" />
+          <div className="h-px w-full bg-space-grey/20" />
           <ul className="flex flex-col gap-1">
             {cs.services.map((s) => (
               <ServiceBullet key={s} label={s} />
@@ -58,28 +60,30 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         </div>
       </div>
 
-      {/* Center — cover image */}
-      <div className="relative flex-1 overflow-hidden">
-        {cs.cover?.url ? (
+      {/* Center — cover image (needs an explicit ratio when the card is stacked) */}
+      <div className="relative aspect-video w-full overflow-hidden lg:aspect-auto lg:w-auto lg:flex-1">
+        {coverSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={cs.cover.url}
+            src={coverSrc}
             alt={cs.cover.alternativeText ?? cs.title}
             className="absolute inset-0 size-full object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-[#e5e5e5]" />
+          <div className="absolute inset-0 bg-img-placeholder" />
         )}
       </div>
 
       {/* Right — testimonial panel */}
-      <div className="flex w-[30%] shrink-0 flex-col justify-between bg-space-grey p-10">
+      <div className="flex w-full shrink-0 flex-col justify-between gap-6 bg-space-grey p-10 lg:w-[30%] lg:gap-0">
         {/* Opening quote mark */}
-        <span className="text-[92px] font-black leading-none text-yellow">&ldquo;</span>
+        <span className="text-hero-1 leading-none text-yellow" aria-hidden>
+          &ldquo;
+        </span>
 
         {/* Quote */}
         {cs.testimonial ? (
-          <p className="text-[32px] font-bold leading-[1.1] text-white">
+          <p className="text-hero-5 text-white text-balance">
             {cs.testimonial.quote}
           </p>
         ) : null}
@@ -87,24 +91,25 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         {/* Author */}
         {cs.testimonial ? (
           <div className="flex flex-col gap-10">
-            <div className="h-px w-full bg-[#878787]" />
+            <div className="h-px w-full bg-grey-500" />
             <div className="flex items-center gap-5">
-              {cs.testimonial.avatar?.url ? (
+              {avatarSrc ? (
                 <div className="relative size-16 shrink-0 overflow-hidden rounded-full">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={cs.testimonial.avatar.url}
+                    src={avatarSrc}
                     alt={cs.testimonial.author}
                     className="absolute inset-0 size-full object-cover"
                   />
                 </div>
               ) : (
-                <div className="size-16 shrink-0 rounded-full bg-[#444]" />
+                <div className="size-16 shrink-0 rounded-full bg-grey-600" />
               )}
               <div className="flex flex-col gap-1">
-                <span className="text-[24px] font-medium leading-tight text-white">
+                <span className="text-xl font-medium leading-tight text-white">
                   {cs.testimonial.author}
                 </span>
-                <span className="text-[16px] leading-tight text-yellow">
+                <span className="text-base leading-tight text-yellow">
                   {cs.testimonial.role}
                 </span>
               </div>
@@ -132,6 +137,13 @@ export function CaseStudyGrid({
   const [activeCategory, setActiveCategory] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Categories are derived from the data — every distinct category present,
+  // in first-seen order, with "All" pinned first.
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(caseStudies.map((cs) => cs.category).filter((c): c is string => !!c)))],
+    [caseStudies],
+  );
 
   const filtered = activeCategory === "All"
     ? caseStudies
@@ -167,29 +179,32 @@ export function CaseStudyGrid({
 
   return (
     <Section theme="dark" className="py-20">
-      <div className="flex flex-col gap-[60px]">
+      <div className="flex flex-col gap-10 lg:gap-[60px]">
         {/* Header */}
-        <div className="flex items-end justify-between gap-10">
-          <h1 className="text-[92px] font-black leading-[1.1] text-white">{title}</h1>
-          <p className="max-w-[37%] text-[24px] leading-[125%] text-white">{description}</p>
+        <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+          <h1 className="text-hero-3 text-white md:text-hero-2 lg:text-hero-1">{title}</h1>
+          <p className="max-w-full text-lg text-white text-balance lg:max-w-[37%] lg:text-xl">{description}</p>
         </div>
 
-        {/* Category filter */}
-        <div className="flex flex-wrap gap-4">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={
-                cat === activeCategory
-                  ? "rounded-pill bg-yellow px-6 py-3 text-[16px] font-medium text-black"
-                  : "rounded-pill border border-[#d6d6d6] px-6 py-3 text-[16px] font-medium text-[#d6d6d6]"
-              }
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {/* Category filter — derived from the data */}
+        {categories.length > 1 && (
+          <div className="flex flex-wrap gap-4">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={
+                  cat === activeCategory
+                    ? "rounded-pill bg-yellow px-6 py-3 text-base font-medium text-black"
+                    : "rounded-pill border border-grey-200 px-6 py-3 text-base font-medium text-grey-200"
+                }
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Rows */}
         <div className="flex flex-col gap-[60px]">

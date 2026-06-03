@@ -1,8 +1,6 @@
-import type { CaseStudyChallenge } from "@/lib/cms/types";
-
 type Props = {
   heading: string;
-  items: CaseStudyChallenge[];
+  items: Array<{ title: string; body: string }>;
 };
 
 export function TextInRow({ heading, items }: Props) {
@@ -10,7 +8,7 @@ export function TextInRow({ heading, items }: Props) {
 
   return (
     <div className="flex flex-col items-end">
-      <div className="w-1/2 flex flex-col gap-10">
+      <div className="w-full flex flex-col gap-10 lg:w-1/2">
         <h2 className="text-hero-3 font-bold text-fg">{heading}</h2>
 
         {items.map((item) => (

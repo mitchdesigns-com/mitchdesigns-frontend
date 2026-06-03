@@ -9,12 +9,12 @@ type Props = {
 
 export function TwoImagesInRow({ left, right }: Props) {
   return (
-    <div className="flex gap-10">
+    <div className="flex flex-col gap-6 md:flex-row md:gap-10">
       {[left, right].map((img) => {
         const src = strapiMedia(img.url);
         if (!src) return null;
         return (
-          <div key={img.url} className="relative flex-1 aspect-case-photo overflow-hidden">
+          <div key={img.url} className="relative w-full flex-1 aspect-case-photo overflow-hidden">
             <Media
               src={src}
               alt={img.alternativeText ?? ""}

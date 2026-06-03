@@ -10,6 +10,7 @@ import {
   ColorPalette,
   CenteredQuote,
 } from "@/features/work";
+import { RichText } from "@/components/ui/RichText";
 import { getCaseStudies, getCaseStudy } from "@/lib/cms";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
@@ -98,41 +99,54 @@ export default async function SingleCaseStudyPage({
         <CaseStudyHero study={study} />
       </Section>
 
-      {!!study.challenges?.length && (
-        <Section data-theme="dark" className="py-24">
-          <TextInRow heading="Challenge" items={study.challenges} />
-        </Section>
-      )}
-
-      {study.imagePairs?.map((pair, i) => (
-        <Section key={i} data-theme="dark" className="py-0">
-          <TwoImagesInRow left={pair[0]} right={pair[1]} />
-        </Section>
-      ))}
-
-      {study.singleImages?.map((img, i) => (
-        <Section key={i} data-theme="dark" className="py-0">
-          <SingleImageInRow image={img} />
-        </Section>
-      ))}
-
-      {!!study.impact?.length && (
-        <Section data-theme="dark" className="py-24">
-          <TextInRow heading="Impact" items={study.impact} />
-        </Section>
-      )}
-
-      {!!study.colorPalette?.length && (
-        <Section data-theme="dark" className="py-24">
-          <ColorPalette palettes={study.colorPalette} />
-        </Section>
-      )}
-
-      {study.testimonial && (
-        <Section data-theme="dark" className="py-24">
-          <CenteredQuote testimonial={study.testimonial} />
-        </Section>
-      )}
+      {study.content?.map((block, i) => {
+        switch (block.__component) {
+          case "blocks.rich-text":
+            return (
+              <Section key={i} data-theme="dark" className="py-24">
+                <RichText content={block.body} />
+              </Section>
+            );
+          case "blocks.case-point":
+            return (
+              <Section key={i} data-theme="dark" className="py-24">
+                <TextInRow heading={block.title} items={[block]} />
+              </Section>
+            );
+          case "blocks.image-pair":
+            return (
+              <Section key={i} data-theme="dark" className="py-0">
+                <TwoImagesInRow left={block.left} right={block.right} />
+              </Section>
+            );
+          case "blocks.media-block":
+            return (
+              <Section key={i} data-theme="dark" className="py-0">
+                <SingleImageInRow image={block.file} />
+              </Section>
+            );
+          case "blocks.centered-quote":
+            return (
+              <Section key={i} data-theme="dark" className="py-24">
+                <CenteredQuote quote={block.quote} />
+              </Section>
+            );
+          case "blocks.case-testimonial":
+            return (
+              <Section key={i} data-theme="dark" className="py-24">
+                <CenteredQuote quote={block.quote} author={block.author} role={block.role} avatar={block.avatar} />
+              </Section>
+            );
+          case "blocks.color-palette":
+            return (
+              <Section key={i} data-theme="dark" className="py-24">
+                <ColorPalette palettes={block.swatches} />
+              </Section>
+            );
+          default:
+            return null;
+        }
+      })}
     </>
   );
 }

@@ -1,7 +1,5 @@
-import type { CaseStudyPalette } from "@/lib/cms/types";
-
 type Props = {
-  palettes: CaseStudyPalette[];
+  palettes: Array<{ name: string; hex: string }>;
 };
 
 export function ColorPalette({ palettes }: Props) {

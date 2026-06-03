@@ -222,42 +222,15 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
       role: "Marketing specialist",
       avatar: { url: "/images/client-logos/gobus.png" },
     },
-    challenges: [
-      {
-        title: "Strategic Goal",
-        body: "The aim was to enhance brand visibility, streamline user engagement, and extend market reach.",
-      },
-      {
-        title: "Tech. Stack",
-        body: "Challenged with a vast dataset and the need for multifunctional capabilities, our web design and development solution incorporated cutting-edge technologies including Next.js, PHP, and Tailwind CSS.",
-      },
-      {
-        title: "Performance & Scalability",
-        body: "This approach ensured a robust and intuitive user experience with a backend supported by WordPress for streamlined content management and scalability.",
-      },
-    ],
-    imagePairs: [
-      [
-        { url: "/images/case-studies/el-gouna.webp", alternativeText: "El Gouna website" },
-        { url: "/images/case-studies/el-gouna.webp", alternativeText: "El Gouna website" },
-      ],
-    ],
-    impact: [
-      {
-        title: "Core Outcome",
-        body: "The new website significantly enhanced El Gouna's digital presence.",
-      },
-      {
-        title: "Seamless User Experience",
-        body: "It serves as a central hub for both visitors and residents, with a design that showcases El Gouna's attractions through a modern, visually captivating interface, promoting ease of exploration and interaction.",
-      },
-      {
-        title: "Unique User Interface",
-        body: "The project is successfully setting a new standard for online tourism platforms. The website now effectively supports El Gouna's mission to be recognized as the ultimate destination on the Red Sea.",
-      },
-    ],
-    colorPalette: [
-      { name: "Brick Ember", hex: "#b93524" },
+    content: [
+      { __component: "blocks.case-point" as const, title: "Strategic Goal", body: "The aim was to enhance brand visibility, streamline user engagement, and extend market reach." },
+      { __component: "blocks.case-point" as const, title: "Tech. Stack", body: "Challenged with a vast dataset and the need for multifunctional capabilities, our web design and development solution incorporated cutting-edge technologies including Next.js, PHP, and Tailwind CSS." },
+      { __component: "blocks.case-point" as const, title: "Performance & Scalability", body: "This approach ensured a robust and intuitive user experience with a backend supported by WordPress for streamlined content management and scalability." },
+      { __component: "blocks.image-pair" as const, left: { url: "/images/case-studies/el-gouna.webp", alternativeText: "El Gouna website" }, right: { url: "/images/case-studies/el-gouna.webp", alternativeText: "El Gouna website" } },
+      { __component: "blocks.case-point" as const, title: "Core Outcome", body: "The new website significantly enhanced El Gouna's digital presence." },
+      { __component: "blocks.case-point" as const, title: "Seamless User Experience", body: "It serves as a central hub for both visitors and residents, with a design that showcases El Gouna's attractions through a modern, visually captivating interface, promoting ease of exploration and interaction." },
+      { __component: "blocks.case-point" as const, title: "Unique User Interface", body: "The project is successfully setting a new standard for online tourism platforms. The website now effectively supports El Gouna's mission to be recognized as the ultimate destination on the Red Sea." },
+      { __component: "blocks.color-palette" as const, swatches: [{ name: "Brick Ember", hex: "#b93524" }] },
     ],
     featured: true,
     publishedAt: "2024-08-12",

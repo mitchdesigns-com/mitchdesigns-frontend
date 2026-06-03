@@ -77,6 +77,10 @@
   --text-hero-5--line-height: 1.1;
   --text-hero-5--font-weight: 700;
 
+  --text-card-title: 3rem; /* 48px — case study grid card title */
+  --text-card-title--line-height: 1.1;
+  --text-card-title--font-weight: 700;
+
   /* Body scale */
   --text-xl: 1.5rem; /* 24px */
   --text-xl--line-height: 1.25;
@@ -181,6 +185,13 @@
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "ss02";
+    /* Safety net: never let a wide child cause horizontal scroll / overlay.
+       `clip` (vs `hidden`) keeps position: sticky working. */
+    overflow-x: clip;
+  }
+  html,
+  body {
+    max-width: 100%;
   }
   ::selection {
     background: var(--color-accent);

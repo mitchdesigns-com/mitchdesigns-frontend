@@ -32,15 +32,14 @@ export type CaseStudyTestimonial = {
   avatar?: StrapiImage;
 };
 
-export type CaseStudyChallenge = {
-  title: string;
-  body: string;
-};
-
-export type CaseStudyPalette = {
-  name: string;
-  hex: string;
-};
+export type CaseStudyBlock =
+  | { __component: "blocks.rich-text"; body: unknown }
+  | { __component: "blocks.image-pair"; left: StrapiImage; right: StrapiImage }
+  | { __component: "blocks.media-block"; file: StrapiImage; caption?: string | null }
+  | { __component: "blocks.centered-quote"; quote: string }
+  | { __component: "blocks.color-palette"; swatches: Array<{ name: string; hex: string }> }
+  | { __component: "blocks.case-point"; title: string; body: string }
+  | { __component: "blocks.case-testimonial"; quote: string; author: string; role?: string; avatar?: StrapiImage };
 
 export type CaseStudy = {
   slug: string;
@@ -52,21 +51,16 @@ export type CaseStudy = {
   year: number;
   cover: StrapiImage;
   thumbnail?: StrapiImage;
-  body?: unknown; // Strapi blocks / markdown
+  content?: CaseStudyBlock[];
   featured?: boolean;
   publishedAt: string;
   /** Filter category — e.g. "Corporate", "eCommerce", "Mobile App", "Booking Website" */
   category?: string;
   /** Client logo displayed in the info panel */
   logo?: StrapiImage;
-  /** Paired testimonial shown in the right panel of the grid card */
+  /** Grid card testimonial — populated separately from the detail-page content zone */
   testimonial?: CaseStudyTestimonial;
   websiteUrl?: string;
-  challenges?: CaseStudyChallenge[];
-  impact?: CaseStudyChallenge[];
-  imagePairs?: Array<[StrapiImage, StrapiImage]>;
-  singleImages?: StrapiImage[];
-  colorPalette?: CaseStudyPalette[];
 };
 
 export type BlogSection =

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getCaseStudies } from "@/lib/cms";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
+import type { CaseStudy } from "@/lib/cms/types";
 import { CaseStudyGrid } from "@/features/work";
 
 export const metadata: Metadata = {
@@ -16,12 +18,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/case-studies" },
 };
 
-export default function CaseStudiesIndexPage() {
+async function resolveCaseStudies(): Promise<Array<CaseStudy & { id: number }>> {
+  try {
+    const cms = await getCaseStudies();
+    if (cms.length) return cms;
+  } catch {
+    /* fall through to fixtures */
+  }
+  return fixtureCaseStudies.map((s, i) => ({ ...s, id: i + 1 }));
+}
+
+export default async function CaseStudiesIndexPage() {
+  const caseStudies = await resolveCaseStudies();
+
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "MitchDesigns Case Studies",
-    itemListElement: fixtureCaseStudies.map((study, i) => ({
+    itemListElement: caseStudies.map((study, i) => ({
       "@type": "ListItem",
       position: i + 1,
       url: `https://mitchdesigns.com/case-studies/${study.slug}`,
@@ -32,7 +46,7 @@ export default function CaseStudiesIndexPage() {
   return (
     <>
       <JsonLd data={itemListSchema} />
-      <CaseStudyGrid caseStudies={fixtureCaseStudies} />
+      <CaseStudyGrid caseStudies={caseStudies} />
     </>
   );
 }
