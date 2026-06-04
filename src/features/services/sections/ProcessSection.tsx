@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { RevealStagger, RevealItem } from "@/components/motion";
+import { RichText } from "@/components/ui/RichText";
 import type { ProcessSectionProps } from "@/lib/cms/types";
 
 export function ProcessSection({
@@ -32,21 +33,20 @@ export function ProcessSection({
                 />
               </div>
               <div className="flex flex-1 flex-col gap-4">
+                {step.stepIcon && (
+                  <Image
+                    src={step.stepIcon}
+                    alt={step.stepIconAlt ?? ""}
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 object-contain"
+                  />
+                )}
                 <span className="text-sm font-medium uppercase tracking-[0.18em] text-fg-muted">
                   Step {step.stepNumber < 10 ? `0${step.stepNumber}` : step.stepNumber}
                 </span>
                 <h3 className="text-hero-5 font-bold">{step.title}</h3>
-                <ul className="space-y-3 pt-2">
-                  {step.description.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-base text-fg-muted">
-                      <span
-                        aria-hidden
-                        className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-                      />
-                      <span className="text-balance">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <RichText content={step.description} className="pt-2 text-base text-fg-muted" />
               </div>
             </RevealItem>
           ))}
