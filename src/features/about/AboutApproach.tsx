@@ -1,10 +1,16 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal } from "@/components/motion";
+import type { AboutContent } from "@/lib/cms/types";
 
-export function AboutApproach() {
+export function AboutApproach({
+  approach,
+}: {
+  approach: AboutContent["approach"];
+}) {
   return (
     <Section theme="dark" className="py-30">
       <div className="flex items-center justify-between gap-15">
@@ -13,19 +19,14 @@ export function AboutApproach() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <span className="text-base font-bold text-yellow">
-                How We Work
+                {approach.eyebrow}
               </span>
               <h2 className="text-hero-4 font-bold leading-[110%] text-fg">
-                Every project follows a structured framework designed to align
-                business objectives.
+                {approach.title}
               </h2>
             </div>
             <p className="text-xl leading-[130%] text-fg text-balance">
-              At Mitch Designs, design is seen as the meeting point of a
-              business&rsquo;s goals and the customer&rsquo;s needs. That&rsquo;s
-              why we put your customer at the center of our design process. We
-              act as your customer advocates to design and develop digital
-              products that help you scale your business.
+              {approach.body}
             </p>
           </div>
 
@@ -37,9 +38,16 @@ export function AboutApproach() {
           </Button>
         </Reveal>
 
-        {/* Right: decorative graphic placeholder */}
-        <Reveal className="h-[600px] w-[666px] shrink-0 rounded-card-md bg-space-grey">
-          {null}
+        {/* Right: decorative graphic */}
+        <Reveal className="relative h-[600px] w-[666px] shrink-0 overflow-hidden rounded-card-md bg-space-grey">
+          {approach.image && (
+            <Image
+              src={approach.image.url}
+              alt={approach.image.alt ?? ""}
+              fill
+              className="object-cover"
+            />
+          )}
         </Reveal>
       </div>
     </Section>

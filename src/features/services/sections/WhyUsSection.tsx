@@ -1,9 +1,12 @@
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { CardSlider } from "@/components/ui/CardSlider";
+import { CheckmarkSquareIcon } from "@/components/icons/CheckmarkSquareIcon";
 import { RevealStagger, RevealItem } from "@/components/motion";
 import type { WhyUsSectionProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
+import { Logo } from "@/components/icons/Logo";
 
 export function WhyUsSection({
   title,
@@ -30,14 +33,18 @@ export function WhyUsSection({
   return (
     <Section theme="dark" className="py-20 md:py-28">
       <div className="space-y-12">
-        <SectionHeader eyebrow="Why Us" title={title} description={description} />
+        <SectionHeader
+          icon={<Logo />}
+          title={title}
+          description={description}
+          align="center"
+        />
         {variant === "slider" ? (
-          /* Phase 4: replace with Framer Motion drag carousel */
-          <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
+          <CardSlider scrollStep={288 + 16}>
             {cards.map((card) => (
               <div
                 key={card.title}
-                className="w-72 shrink-0 snap-start flex flex-col gap-4 rounded-card-sm border border-border p-6"
+                className="flex h-full w-72 flex-col gap-4 rounded-card bg-space-grey p-6"
               >
                 <div className="relative aspect-video overflow-hidden rounded-card-sm">
                   <Image
@@ -52,7 +59,7 @@ export function WhyUsSection({
                 <RichText content={card.description} className="text-base text-fg-muted" />
               </div>
             ))}
-          </div>
+          </CardSlider>
         ) : (
           <RevealStagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.08}>
             {cardEls}

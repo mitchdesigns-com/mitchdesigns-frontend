@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -9,8 +10,28 @@ import { fadeUp, stagger } from "@/lib/motion";
 import type { ServiceHeroProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 
+function renderTitle(title: string, titleHighlights: string[] = []) {
+  if (!titleHighlights.length) {
+    return title;
+  }
+  const words = title.split(/\s+/);
+  return words.map((word, i) => {
+    const bare = word.replace(/[.,!?;:]+$/, "");
+    const trail = word.slice(bare.length);
+    const highlighted = titleHighlights.includes(bare);
+    return (
+      <Fragment key={i}>
+        {highlighted ? <span className="text-accent">{bare}</span> : bare}
+        {trail}
+        {i < words.length - 1 ? " " : ""}
+      </Fragment>
+    );
+  });
+}
+
 export function ServiceHero({
   title,
+  titleHighlights,
   subTitle,
   description,
   image,
@@ -19,7 +40,7 @@ export function ServiceHero({
   reverseLayout = false,
 }: ServiceHeroProps) {
   return (
-    <Section className="pt-32 pb-16 md:pb-24">
+    <Section className="pt-32 pb-16 md:pb-24" theme="dark">
       <motion.div
         variants={stagger(0.1)}
         initial="hidden"
@@ -30,7 +51,7 @@ export function ServiceHero({
           {subTitle && (
             <motion.p
               variants={fadeUp}
-              className="text-sm font-medium uppercase tracking-[0.18em] text-fg-muted"
+              className="whitespace-nowrap text-sm font-medium uppercase tracking-[0.18em] text-fg-muted"
             >
               {subTitle}
             </motion.p>
@@ -39,7 +60,7 @@ export function ServiceHero({
             variants={fadeUp}
             className="text-hero-3 font-bold md:text-hero-2"
           >
-            {title}
+            {renderTitle(title, titleHighlights)}
           </motion.h1>
           <motion.div variants={fadeUp}>
             <RichText content={description} className="max-w-xl text-lg text-fg-muted" />

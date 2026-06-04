@@ -109,6 +109,13 @@ export type Career = {
   location: string;
   remote: boolean;
   excerpt: string;
+  /** Optional hero illustration shown on the detail page. */
+  image?: StrapiImage;
+  /** Pull-quote rendered as a highlighted box above the content sections. */
+  quote?: string;
+  /** Ordered content sections (Responsibilities, Qualifications, Benefits, …). */
+  sections?: Array<{ heading: string; body: string }>;
+  /** Legacy rich-text body — rendered only when `sections` is empty. */
   body?: unknown;
   publishedAt: string;
 };
@@ -147,6 +154,53 @@ export type TeamMember = {
   photo: StrapiImage;
   bio?: RichText;
   socials?: { linkedin?: string; twitter?: string; github?: string };
+};
+
+/** Plain image reference used by presentational About sections. */
+export type AboutImage = {
+  url: string;
+  alt?: string;
+  /** Intrinsic dimensions from Strapi — used to derive card aspect ratio. */
+  width?: number;
+  height?: number;
+};
+
+/**
+ * Single type — copy + media for the /about page (excluding the team grid,
+ * which is driven by the `team-member` collection via `getTeam`).
+ */
+export type AboutContent = {
+  hero: {
+    badge: string;
+    /** Newlines render as line breaks. */
+    title: string;
+    description: string;
+    panel: { title: string; body: string };
+    images: AboutImage[];
+  };
+  metrics: Array<{ value: string; label: string }>;
+  approach: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    image?: AboutImage | null;
+  };
+  innovate: {
+    /** Scrolling headline (e.g. "Innovate Or Die"). */
+    text: string;
+    photos: AboutImage[];
+  };
+  team: {
+    badge: string;
+    heading: string;
+    groupPhoto?: AboutImage | null;
+  };
+  story: {
+    eyebrow: string;
+    /** Rich text (Strapi blocks) so editors can bold/italic words. */
+    title: RichText;
+    cards: Array<{ image?: AboutImage | null; body: string }>;
+  };
 };
 
 export type TechItem = {
@@ -234,9 +288,11 @@ export type WhyUsSectionProps = {
 export type ProcessCard = {
   stepNumber: number;
   title: string;
+  stepIcon?: string;
+  stepIconAlt?: string;
   image: string;
   imageAlt?: string;
-  description: string[];
+  description: RichText;
 };
 
 export type ProcessSectionProps = {

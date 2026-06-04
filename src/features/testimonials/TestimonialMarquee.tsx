@@ -92,12 +92,12 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
 
       {/* Marquee rows — both use all testimonials so neither row ever runs short */}
       <div className="relative flex flex-col gap-10">
-        <Marquee speed={40} gap={40}>
+        <Marquee gap={40}>
           {testimonials.map((t) => (
             <ReviewCard key={`a-${t.id}`} t={t} />
           ))}
         </Marquee>
-        <Marquee speed={40} gap={40} direction="right">
+        <Marquee gap={40} direction="right">
           {testimonials.map((t) => (
             <ReviewCard key={`b-${t.id}`} t={t} />
           ))}

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Section } from "@/components/layout/Section";
+import { JobDetailHero } from "@/features/careers/JobDetailHero";
+import { JobDetailBody } from "@/features/careers/JobDetailBody";
+import { CareerExperience } from "@/features/careers/CareerExperience";
+import { strapiMedia } from "@/lib/cms/media";
 import { getCareers, getCareer } from "@/lib/cms";
+
+const APPLY_EMAIL = "careers@mitchdesigns.com";
 
 type Params = { slug: string };
 
@@ -22,9 +27,17 @@ export async function generateMetadata({
   const { slug } = await params;
   try {
     const role = await getCareer(slug);
-    if (role) return { title: role.title, description: role.excerpt };
+    if (role)
+      return {
+        title: role.title,
+        description: role.excerpt,
+        alternates: { canonical: `/careers/${slug}` },
+      };
   } catch { /* fall through */ }
-  return { title: slug.replace(/-/g, " ") };
+  return {
+    title: slug.replace(/-/g, " "),
+    alternates: { canonical: `/careers/${slug}` },
+  };
 }
 
 export default async function SingleCareerPage({
@@ -36,10 +49,19 @@ export default async function SingleCareerPage({
   const role = await getCareer(slug).catch(() => null);
   if (!role) notFound();
 
+  const applyHref = `mailto:${APPLY_EMAIL}?subject=${encodeURIComponent(
+    `Application — ${role.title}`,
+  )}`;
+
+  const heroImage = role.image?.url
+    ? { url: strapiMedia(role.image.url) ?? role.image.url, alt: role.image.alternativeText ?? role.title }
+    : null;
+
   return (
-    <Section className="pt-32 pb-24">
-      <h1 className="text-hero-3 font-bold">{role.title}</h1>
-      {/* TODO: role description + apply CTA */}
-    </Section>
+    <main>
+      <JobDetailHero title={role.title} excerpt={role.excerpt} image={heroImage} />
+      <JobDetailBody role={role} applyHref={applyHref} />
+      <CareerExperience />
+    </main>
   );
 }

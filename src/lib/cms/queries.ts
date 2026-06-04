@@ -3,6 +3,8 @@ import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
 import type {
+  AboutContent,
+  AboutImage,
   CaseStudy,
   Career,
   ClientLogo,
@@ -120,24 +122,34 @@ export const getTalk = async (
 /* ------------------------------------------------------------------
  * Careers
  * ------------------------------------------------------------------ */
-export const getCareers = () =>
-  getCollection<Career>("/careers", {
-    revalidate: 60,
-    query: { sort: "publishedAt:desc" },
-  });
+export const getCareers = async (): Promise<Array<Career & { id: number }>> => {
+  try {
+    return await getCollection<Career>("/careers", {
+      revalidate: 60,
+      query: { sort: "publishedAt:desc" },
+    });
+  } catch {
+    const { fixtureCareers } = await import("./fixtures");
+    return fixtureCareers;
+  }
+};
 
 export const getCareer = async (
   slug: string,
 ): Promise<(Career & { id: number }) | null> => {
-  const results = await getCollection<Career>("/careers", {
-    revalidate: 60,
-    query: {
-      "filters[slug][$eq]": slug,
-      populate: "*",
-      "pagination[limit]": 1,
-    },
-  });
-  return results[0] ?? null;
+  try {
+    const results = await getCollection<Career>("/careers", {
+      revalidate: 60,
+      query: {
+        "filters[slug][$eq]": slug,
+        populate: "*",
+        "pagination[limit]": 1,
+      },
+    });
+    if (results[0]) return results[0];
+  } catch { /* fall through to fixtures */ }
+  const { fixtureCareers } = await import("./fixtures");
+  return fixtureCareers.find((c) => c.slug === slug) ?? null;
 };
 
 /* ------------------------------------------------------------------
@@ -187,11 +199,94 @@ export const getTestimonials = () =>
 /* ------------------------------------------------------------------
  * Team
  * ------------------------------------------------------------------ */
-export const getTeam = () =>
-  getCollection<TeamMember>("/team-members", {
+export const getTeam = async (): Promise<Array<TeamMember & { id: number }>> => {
+  try {
+    const data = await getCollection<TeamMember>("/team-members", {
+      revalidate: 300,
+      query: { populate: "photo" },
+    });
+    if (data.length) return data;
+  } catch { /* fall through to fixtures */ }
+  const { fixtureTeam } = await import("./fixtures");
+  return fixtureTeam;
+};
+
+/* ------------------------------------------------------------------
+ * About page (single type)
+ * ------------------------------------------------------------------ */
+function aboutImage(m: any): AboutImage | null {
+  if (!m || !m.url) return null;
+  return {
+    url: strapiMedia(m.url) ?? m.url,
+    alt: m.alternativeText ?? undefined,
+    width: typeof m.width === "number" ? m.width : undefined,
+    height: typeof m.height === "number" ? m.height : undefined,
+  };
+}
+
+function mapAboutPage(raw: any): AboutContent {
+  return {
+    hero: {
+      badge: raw.hero?.badge ?? "",
+      title: raw.hero?.title ?? "",
+      description: raw.hero?.description ?? "",
+      panel: {
+        title: raw.hero?.panel?.title ?? "",
+        body: raw.hero?.panel?.body ?? "",
+      },
+      images: (raw.hero?.images ?? [])
+        .map(aboutImage)
+        .filter((i: AboutImage | null): i is AboutImage => i !== null),
+    },
+    metrics: (raw.metrics ?? []).map((m: any) => ({
+      value: m.value,
+      label: m.label,
+    })),
+    approach: {
+      eyebrow: raw.approach?.eyebrow ?? "",
+      title: raw.approach?.title ?? "",
+      body: raw.approach?.body ?? "",
+      image: aboutImage(raw.approach?.image),
+    },
+    innovate: {
+      text: raw.innovate?.text ?? "",
+      photos: (raw.innovate?.photos ?? [])
+        .map(aboutImage)
+        .filter((i: AboutImage | null): i is AboutImage => i !== null),
+    },
+    team: {
+      badge: raw.team?.badge ?? "",
+      heading: raw.team?.heading ?? "",
+      groupPhoto: aboutImage(raw.team?.groupPhoto),
+    },
+    story: {
+      eyebrow: raw.story?.eyebrow ?? "",
+      title: raw.story?.title ?? "",
+      cards: (raw.story?.cards ?? []).map((c: any) => ({
+        body: c.body,
+        image: aboutImage(c.image),
+      })),
+    },
+  };
+}
+
+export const getAboutPage = async (): Promise<AboutContent> => {
+  const raw = await getSingle<Record<string, any>>("/about-page", {
     revalidate: 300,
-    query: { populate: "photo" },
+    query: {
+      "populate[hero][populate]": "*",
+      "populate[metrics][populate]": "*",
+      "populate[approach][populate]": "*",
+      "populate[innovate][populate]": "*",
+      "populate[team][populate]": "*",
+      "populate[story][populate][cards][populate]": "*",
+    },
   });
+  if (raw?.hero) return mapAboutPage(raw);
+
+  const { fixtureAboutPage } = await import("./fixtures");
+  return fixtureAboutPage;
+};
 
 /* ------------------------------------------------------------------
  * Client logos
@@ -341,9 +436,11 @@ function mapServicePage(raw: any): ServicePageData {
           processCards: (raw.process.processCards ?? []).map((c: any) => ({
             stepNumber: c.stepNumber,
             title: c.title,
+            stepIcon: c.stepIcon ? mediaUrl(c.stepIcon) : undefined,
+            stepIconAlt: c.stepIcon ? mediaAlt(c.stepIcon) : undefined,
             image: mediaUrl(c.image),
             imageAlt: mediaAlt(c.image),
-            description: c.description ?? [],
+            description: c.description ?? undefined,
           })),
         }
       : undefined,

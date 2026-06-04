@@ -4,12 +4,15 @@
  * Remove or trim once Strapi has real content.
  */
 import type {
+  AboutContent,
   BlogSection,
+  Career,
   CaseStudy,
   ClientLogo,
   FAQ,
   Service,
   Talk,
+  TeamMember,
   TechItem,
   TechStackSection,
   Testimonial,
@@ -911,3 +914,128 @@ export const fixtureTalks: Talk[] = [
     },
   },
 ];
+
+export const fixtureCareers: Array<WithId<Career>> = [
+  {
+    id: 1,
+    slug: "product-designer",
+    title: "Product Designer",
+    team: "Design",
+    type: "Full-time",
+    location: "On-site",
+    remote: true,
+    excerpt:
+      "Become a part of our dynamic team focused on cutting-edge product design. We value clear communication, maintain a collaborative environment, and give you the autonomy to take charge of your projects.",
+    quote: "Innovation Distinguishes Between A Leader And A Follower.",
+    sections: [
+      {
+        heading: "Job Responsibilities",
+        body: "Conduct user interviews to understand their needs and preferences.\nAnalyze competitor products to identify strengths and weaknesses.\nUtilize analytics tools to track user behavior and engagement.",
+      },
+      {
+        heading: "Qualifications",
+        body: "Conduct user interviews to understand their needs and preferences.\nAnalyze competitor products to identify strengths and weaknesses.\nUtilize analytics tools to track user behavior and engagement.",
+      },
+      {
+        heading: "Benefits",
+        body: "Conduct user interviews to understand their needs and preferences.\nAnalyze competitor products to identify strengths and weaknesses.\nUtilize analytics tools to track user behavior and engagement.",
+      },
+      {
+        heading: "Why join MitchDesigns?",
+        body: "Conduct user interviews to understand their needs and preferences.\nAnalyze competitor products to identify strengths and weaknesses.\nUtilize analytics tools to track user behavior and engagement.",
+      },
+      {
+        heading: "Our design principles",
+        body: "Focus on user-centered design to enhance usability.\nMaintain a clean and modern aesthetic to appeal to contemporary tastes.\nEnsure accessibility for all users, regardless of their abilities.",
+      },
+      {
+        heading: "How do we ensure project success?",
+        body: "Define clear goals and objectives at the outset.\nFoster open communication among team members and stakeholders.\nIterate based on feedback to refine the design and functionality.",
+      },
+    ],
+    publishedAt: "2026-05-01T00:00:00.000Z",
+  },
+  {
+    id: 2,
+    slug: "ui-ux-designer",
+    title: "UI/UX Designer",
+    team: "Design",
+    type: "Part-time",
+    location: "Remote",
+    remote: true,
+    excerpt: "Seeking a skilled UI/UX designer to enhance user experiences.",
+    publishedAt: "2026-05-01T00:00:00.000Z",
+  },
+  {
+    id: 3,
+    slug: "visual-designer",
+    title: "Visual Designer",
+    team: "Design",
+    type: "Contract",
+    location: "Hybrid",
+    remote: false,
+    excerpt: "Hiring a visual designer to create compelling graphics.",
+    publishedAt: "2026-05-01T00:00:00.000Z",
+  },
+];
+
+// Empty `photo.url` → the card renders its space-grey fallback (no broken
+// image). Real entries from Strapi supply a populated photo.
+export const fixtureTeam: Array<WithId<TeamMember>> = [
+  { id: 1, name: "Team Member", role: "Role", photo: { url: "" } },
+  { id: 2, name: "Team Member", role: "Role", photo: { url: "" } },
+];
+
+export const fixtureAboutPage: AboutContent = {
+  hero: {
+    badge: "Since 2005",
+    title: "About\nMitchDesigns",
+    description:
+      "We design and build high-performance digital platforms that turn user engagement into measurable business results.",
+    panel: {
+      title: "Clarity Before Creativity",
+      body: "Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.",
+    },
+    images: [
+      { url: "/images/about/about-1.webp", alt: "About MitchDesigns" },
+      { url: "/images/about/about-2.webp", alt: "About MitchDesigns" },
+    ],
+  },
+  metrics: [
+    { value: "20+", label: "Years of experience," },
+    { value: "400+", label: "Projects Delivered" },
+    { value: "30+", label: "Dedicated Experts" },
+  ],
+  approach: {
+    eyebrow: "How We Work",
+    title:
+      "Every project follows a structured framework designed to align business objectives.",
+    body: "At Mitch Designs, design is seen as the meeting point of a business’s goals and the customer’s needs. That’s why we put your customer at the center of our design process. We act as your customer advocates to design and develop digital products that help you scale your business.",
+    image: null,
+  },
+  innovate: {
+    text: "Innovate Or Die",
+    photos: [],
+  },
+  team: {
+    badge: "Our Team",
+    heading:
+      "We believe that positive change comes from diverse minds working together to make a difference.",
+    groupPhoto: null,
+  },
+  story: {
+    eyebrow: "Our Story",
+    title:
+      "Since 2005, we’ve partnered with over 200 clients across 15 industries to innovate and transform the digital landscape in Egypt and the MENA region.",
+    cards: [
+      {
+        image: null,
+        body: "We believe that positive change comes from diverse minds working together to make a difference.",
+      },
+      {
+        image: null,
+        body: "We act as your customer advocates to develop products that help you scale efficiently.",
+      },
+    ],
+  },
+};
