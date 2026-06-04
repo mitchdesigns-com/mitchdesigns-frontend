@@ -295,6 +295,19 @@ export const getAboutPage = async (): Promise<AboutContent> => {
 /* ------------------------------------------------------------------
  * Home Page (single type)
  * ------------------------------------------------------------------ */
+/** Hero rotating words are stored comma/newline-separated in Strapi. */
+function parseWords(raw: unknown): string[] | undefined {
+  if (Array.isArray(raw)) return raw.map(String);
+  if (typeof raw === "string") {
+    const words = raw
+      .split(/[,\n]/)
+      .map((w) => w.trim())
+      .filter(Boolean);
+    return words.length ? words : undefined;
+  }
+  return undefined;
+}
+
 export const getHomePage = async (): Promise<HomePageData> => {
   try {
     const raw = await getSingle<Record<string, any>>("/home-page", {
@@ -311,9 +324,7 @@ export const getHomePage = async (): Promise<HomePageData> => {
           ? {
               eyebrow: raw.hero.eyebrow ?? undefined,
               headline: raw.hero.headline,
-              rotatingWords: Array.isArray(raw.hero.rotatingWords)
-                ? raw.hero.rotatingWords
-                : undefined,
+              rotatingWords: parseWords(raw.hero.rotatingWords),
             }
           : undefined,
         about: raw.about
@@ -382,7 +393,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
         "populate[moreAbout][populate]": "*",
         "populate[journey][populate][steps][populate]": "*",
         "populate[delivery][populate]": "*",
-        "populate[pricing][populate]": "*",
+        "populate[pricing][populate][plans][populate]": "*",
         "populate[sinceFrom][populate]": "*",
         "populate[readyToOwn]": "*",
       },
@@ -449,7 +460,10 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
                 highlighted: p.highlighted ?? undefined,
                 ctaLabel: p.ctaLabel ?? undefined,
                 ctaHref: p.ctaHref ?? undefined,
-                features: Array.isArray(p.features) ? p.features : [],
+                features: (p.features ?? []).map((f: any) => ({
+                  label: f.label,
+                  disabled: f.disabled ?? undefined,
+                })),
               })),
             }
           : undefined,
