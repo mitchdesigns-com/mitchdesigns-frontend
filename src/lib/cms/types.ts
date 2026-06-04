@@ -467,3 +467,111 @@ export type CtaBannerData = {
   cta?: { label: string; href: string };
   bgImage?: string;
 };
+
+/* ------------------------------------------------------------------
+ * Careers Page (single type)
+ * ------------------------------------------------------------------ */
+export type CareersPageData = {
+  hero?: {
+    eyebrow?: string;
+    title: string;
+    description?: string;
+  };
+  drives: Array<{ label: string }>;
+};
+
+/* ------------------------------------------------------------------
+ * Orderbase Page (single type) — /orderbase microsite
+ * ------------------------------------------------------------------ */
+export type OrderbaseIconName =
+  | "user"
+  | "shopping-bag"
+  | "scooter"
+  | "building"
+  | "bar-chart"
+  | "map-pin"
+  | "database"
+  | "trending-up"
+  | "route"
+  | "app-window";
+
+export type OrderbaseIconCard = {
+  icon: OrderbaseIconName;
+  title?: string;
+  description: string;
+};
+
+export type OrderbasePricingPlan = {
+  name: string;
+  tagline?: string;
+  price?: string;
+  setupFee?: string;
+  recommended?: boolean;
+  highlighted?: boolean;
+  ctaLabel?: string;
+  ctaHref?: string;
+  features: Array<{ label: string; disabled?: boolean }>;
+};
+
+export type OrderbasePageData = {
+  hero?: {
+    title: string;
+    titleHighlight?: string;
+    description?: string;
+    primaryCtaLabel?: string;
+    primaryCtaHref?: string;
+    secondaryCtaLabel?: string;
+    secondaryCtaHref?: string;
+  };
+  brands: Array<{ name: string; logo?: string }>;
+  meet?: {
+    title?: string;
+    subtitle?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    features: OrderbaseIconCard[];
+  };
+  challenge?: {
+    label?: string;
+    title?: string;
+    items: Array<{ title: string; description?: string; image?: string }>;
+  };
+  moreAbout?: {
+    title?: string;
+    description?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    features: OrderbaseIconCard[];
+  };
+  journey?: {
+    title?: string;
+    subtitle?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    steps: Array<{ number: string; title: string; description?: string; image?: string }>;
+  };
+  delivery?: {
+    title?: string;
+    subtitle?: string;
+    leftCards: OrderbaseIconCard[];
+    rightCards: OrderbaseIconCard[];
+  };
+  pricing?: {
+    title?: string;
+    subtitle?: string;
+    plans: OrderbasePricingPlan[];
+  };
+  sinceFrom?: {
+    pill?: string;
+    title?: string;
+    description?: string;
+    statsTitle?: string;
+    stats: Array<{ value: string; label?: string }>;
+  };
+  readyToOwn?: {
+    title?: string;
+    subtitle?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+  };
+};

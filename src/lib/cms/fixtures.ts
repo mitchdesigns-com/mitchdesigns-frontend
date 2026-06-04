@@ -7,11 +7,13 @@ import type {
   AboutContent,
   BlogSection,
   Career,
+  CareersPageData,
   CaseStudy,
   ClientLogo,
   CtaBannerData,
   FAQ,
   HomePageData,
+  OrderbasePageData,
   Service,
   Talk,
   TeamMember,
@@ -1104,4 +1106,173 @@ export const fixtureCtaBanner: CtaBannerData = {
     "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
   cta: { label: "Get Detailed Proposal", href: "/quote" },
   bgImage: "/images/cta-bg.webp",
+};
+
+export const fixtureCareersPage: CareersPageData = {
+  hero: {
+    eyebrow: "Join Our Team",
+    title: "Be Part Of Our Team",
+    description:
+      "Join our team of passionate individuals dedicated to innovative web design. We embrace open communication, flat hierarchies, and empower you with full ownership of your work.",
+  },
+  drives: [
+    { label: "Open Communication" },
+    { label: "Flat Hierarchies" },
+    { label: "Full Ownership" },
+    { label: "Innovative Culture" },
+  ],
+};
+
+export const fixtureOrderbasePage: OrderbasePageData = {
+  hero: {
+    title: "The Operating System for",
+    titleHighlight: "Food e-Commerce",
+    description:
+      "Built for restaurants, bakeries & multi-branch F&B brands in Egypt. Sell direct, fulfill smarter, own your customers.",
+    primaryCtaLabel: "Contact Sales",
+    primaryCtaHref: "#",
+    secondaryCtaLabel: "See How It Works",
+    secondaryCtaHref: "#",
+  },
+  brands: [
+    { name: "Almaza", logo: "/images/client-logos/Almaza.png" },
+    { name: "Joula", logo: "/images/client-logos/Joula.png" },
+    { name: "Abu Auf", logo: "/images/client-logos/abu-auf.png" },
+    { name: "Lychee", logo: "/images/client-logos/lychee.png" },
+    { name: "Gobill", logo: "/images/client-logos/gobill.png" },
+  ],
+  meet: {
+    title: "Meet Orderbase",
+    subtitle: "Your digital operating system for food eCommerce",
+    ctaLabel: "Contact Sales",
+    ctaHref: "#",
+    features: [
+      { icon: "user", title: "Customer Data", description: "Keep your guest data. Build loyalty profiles, track behavior, and trigger targeted promotions." },
+      { icon: "shopping-bag", title: "Online Storefront", description: "Launch a branded ordering experience. No marketplace fees, no middlemen — your store, your rules." },
+      { icon: "scooter", title: "Delivery Management", description: "Manage in-house or third-party drivers from one screen. Real-time tracking included." },
+      { icon: "building", title: "Multi-branch Support", description: "Run every branch from a single dashboard. Menus, orders, and staff all in one place." },
+      { icon: "bar-chart", title: "Sales Analytics", description: "Know what's selling, when, and to whom. Make decisions backed by real order data." },
+      { icon: "map-pin", title: "Zone-based Pricing", description: "Set delivery fees and availability by delivery zone. Serve more areas without losing margin." },
+    ],
+  },
+  challenge: {
+    label: "The Challenge",
+    title: "Running Your Own Ordering\nSystem Isn't Simple.",
+    items: [
+      { title: "Scattered Operations", description: "Order management is fragmented across different sales channels." },
+      { title: "Inventory Sync Issues", description: "Inventory items are hard to manage due to variations from one branch to another." },
+      { title: "High Expectations", description: "Customers anticipate quick checkout processes and efficient order tracking." },
+      { title: "Not Built for F&B", description: "Basic eCommerce solutions do not solve the unique needs of food operations." },
+    ],
+  },
+  moreAbout: {
+    title: "Your Kitchen And Your Courier Finally In The Same System",
+    description:
+      "Take control of your margins, operations, and customer relationships by building your own direct digital channel.",
+    ctaLabel: "Contact Sales",
+    ctaHref: "#",
+    features: [
+      { icon: "shopping-bag", description: "Deliver a custom-branded journey that retains customers." },
+      { icon: "database", description: "Capture insights and contact info to drive marketing campaigns." },
+      { icon: "map-pin", description: "Manage inventory and fulfillment across your physical footprint." },
+      { icon: "trending-up", description: "Build a resilient digital infrastructure that grows with you." },
+    ],
+  },
+  journey: {
+    title: "Your System's Journey",
+    subtitle:
+      "From the customer's screen right to their door, fully automated and synced.",
+    ctaLabel: "Contact Sales",
+    ctaHref: "#",
+    steps: [
+      { number: "01", title: "Order Capture", description: "Customer places an order via your custom-branded platform, offering a premium, native-feeling checkout experience." },
+      { number: "02", title: "Routing & Inventory", description: "OrderBase instantly routes the order to the nearest operational branch, automatically updating centralized stock to prevent overselling." },
+      { number: "03", title: "Fulfillment & Tracking", description: "The kitchen receives a streamlined ticket while the integrated courier app handles dispatching and live status updates." },
+    ],
+  },
+  delivery: {
+    title: "Delivery Operations, Fully Connected",
+    subtitle:
+      "Give your couriers the tools to deliver faster, smarter, and with full operational control.",
+    leftCards: [
+      { icon: "scooter", title: "Friendly to couriers", description: "A simple, straightforward interface that any courier can pick up and use instantly." },
+      { icon: "route", title: "Full control on couriers", description: "Manage dispatching, routing, and fleet performance centrally and efficiently." },
+    ],
+    rightCards: [
+      { icon: "app-window", title: "One integrated platform", description: "Sync orders from kitchen to customer without using any other third-party apps." },
+      { icon: "map-pin", title: "Full monitoring on delivery process", description: "Track live locations, status updates, and delivery times so much easier with our system." },
+    ],
+  },
+  pricing: {
+    title: "Start with OrderBase in 3 ways",
+    subtitle: "Transparent pricing for growing food brands.",
+    plans: [
+      {
+        name: "Standard",
+        tagline: "Launch Fast",
+        price: "15,000",
+        setupFee: "+ 90,000 EGP One-time Setup",
+        ctaLabel: "Contact Sales",
+        ctaHref: "#",
+        features: [
+          { label: "Up to 2 Branches" },
+          { label: "Standard Interface Design" },
+          { label: "Basic Order Management" },
+          { label: "Guest Checkout Only", disabled: true },
+          { label: "No ERP Integrations", disabled: true },
+        ],
+      },
+      {
+        name: "Pro",
+        tagline: "Custom & Scalable",
+        price: "22,000",
+        setupFee: "+ 180,000 EGP One-time Setup",
+        recommended: true,
+        highlighted: true,
+        ctaLabel: "Contact Sales",
+        ctaHref: "#",
+        features: [
+          { label: "Up to 10 Branches" },
+          { label: "Custom Interface Design" },
+          { label: "Multi-Branch & Stop Sale Logic" },
+          { label: "User Accounts & Vouchers" },
+          { label: "Standard ERP Integrations" },
+        ],
+      },
+      {
+        name: "Elite",
+        tagline: "Full Digital Infrastructure",
+        price: "40,000",
+        setupFee: "+ 280,000 EGP One-time Setup",
+        ctaLabel: "Contact Sales",
+        ctaHref: "#",
+        features: [
+          { label: "Up to 30 Branches" },
+          { label: "Delivery Driver App & API" },
+          { label: "Loyalty & Wallet System" },
+          { label: "Build Your Own Product" },
+          { label: "Custom Integrations & Reporting" },
+        ],
+      },
+    ],
+  },
+  sinceFrom: {
+    pill: "Since 2005",
+    title: "Built By\nMitchDesigns",
+    description:
+      "Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.",
+    statsTitle: "Our Experience",
+    stats: [
+      { value: "+400", label: "Projects Delivered" },
+      { value: "+20", label: "Years of Experience" },
+      { value: "+30", label: "Dedicated Experts" },
+    ],
+  },
+  readyToOwn: {
+    title: "Ready To Own Your System?",
+    subtitle:
+      "Stop renting your customers from aggregators. Launch fast, scale across branches, and take back your margins.",
+    ctaLabel: "Contact Sales",
+    ctaHref: "#",
+  },
 };

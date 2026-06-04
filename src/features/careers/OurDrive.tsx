@@ -1,13 +1,15 @@
 import { Section } from "@/components/layout/Section";
 
-const drives = [
+const DEFAULT_DRIVES = [
   { label: "Open Communication" },
   { label: "Flat Hierarchies" },
   { label: "Full Ownership" },
   { label: "Innovative Culture" },
 ];
 
-export function OurDrive() {
+type Props = { drives?: Array<{ label: string }> };
+
+export function OurDrive({ drives = DEFAULT_DRIVES }: Props = {}) {
   return (
     <Section theme="dark" className="py-25">
       <div className="flex gap-5">

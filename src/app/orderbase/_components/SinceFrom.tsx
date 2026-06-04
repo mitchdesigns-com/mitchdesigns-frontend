@@ -1,4 +1,26 @@
-export function SinceFrom() {
+type Stat = { value: string; label?: string };
+
+type Props = {
+  pill?: string;
+  title?: string;
+  description?: string;
+  statsTitle?: string;
+  stats?: Stat[];
+};
+
+const DEFAULT_STATS: Stat[] = [
+  { value: "+400", label: "Projects Delivered" },
+  { value: "+20", label: "Years of Experience" },
+  { value: "+30", label: "Dedicated Experts" },
+];
+
+export function SinceFrom({
+  pill = "Since 2005",
+  title = "Built By\nMitchDesigns",
+  description = "Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.",
+  statsTitle = "Our Experience",
+  stats = DEFAULT_STATS,
+}: Props = {}) {
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col gap-[3.75rem]">
@@ -12,16 +34,16 @@ export function SinceFrom() {
               className="relative z-10 -mb-[14px] inline-flex items-center justify-center rounded-pill bg-yellow border border-white px-2 py-1 text-base font-bold text-black"
               style={{ transform: "rotate(4deg)", transformOrigin: "left center" }}
             >
-              Since 2005
+              {pill}
             </div>
             <h2 className="text-hero-2 font-bold text-space-grey leading-[1.1] whitespace-pre-line">
-              {"Built By\nMitchDesigns"}
+              {title}
             </h2>
           </div>
 
           {/* Right — description */}
           <p className="text-xl text-fg text-balance max-w-[517px]">
-            Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.
+            {description}
           </p>
         </div>
 
@@ -30,14 +52,15 @@ export function SinceFrom() {
 
           {/* Stats card */}
           <div className="w-[456px] shrink-0 h-[550px] rounded-[16px] bg-panel p-10 flex flex-col justify-between">
-            <p className="text-base font-medium text-fg">Our Experience</p>
+            <p className="text-base font-medium text-fg">{statsTitle}</p>
 
             <div className="flex flex-col gap-4">
-              <StatRow value="+400" label="Projects Delivered" />
-              <div className="w-full h-px bg-border" />
-              <StatRow value="+20" label="Years of Experience" />
-              <div className="w-full h-px bg-border" />
-              <StatRow value="+30" label="Dedicated Experts" />
+              {stats.map((stat, i) => (
+                <div key={i} className="contents">
+                  <StatRow value={stat.value} label={stat.label ?? ""} />
+                  {i < stats.length - 1 && <div className="w-full h-px bg-border" />}
+                </div>
+              ))}
             </div>
           </div>
 

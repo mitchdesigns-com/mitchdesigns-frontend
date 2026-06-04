@@ -1,7 +1,10 @@
 import Image from "next/image";
+import { OrderbaseIcon } from "@/features/orderbase/OrderbaseIcon";
+import type { OrderbaseIconName } from "@/lib/cms/types";
 
 export interface MoreAboutFeature {
-  icon: React.ReactNode;
+  icon: OrderbaseIconName;
+  title?: string;
   description: string;
 }
 
@@ -75,7 +78,7 @@ function FeatureItem({ icon, description }: MoreAboutFeature) {
     <div className="flex items-center gap-3 rounded-[12px] border border-border p-4">
       {/* 40×40 red icon container */}
       <div className="shrink-0 w-10 h-10 rounded-[8px] bg-orderbase-red flex items-center justify-center text-white">
-        {icon}
+        <OrderbaseIcon name={icon} size={24} />
       </div>
       <p className="text-base text-fg text-balance">{description}</p>
     </div>

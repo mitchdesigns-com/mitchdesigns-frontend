@@ -7,9 +7,9 @@ interface PricingFeature {
 
 interface PricingPlan {
   name: string;
-  tagline: string;
-  price: string;
-  setupFee: string;
+  tagline?: string;
+  price?: string;
+  setupFee?: string;
   features: PricingFeature[];
   recommended?: boolean;
   highlighted?: boolean; // Pro card — red border + tinted bg
@@ -17,7 +17,7 @@ interface PricingPlan {
   ctaHref?: string;
 }
 
-const plans: PricingPlan[] = [
+const DEFAULT_PLANS: PricingPlan[] = [
   {
     name: "Standard",
     tagline: "Launch Fast",
@@ -67,7 +67,17 @@ const plans: PricingPlan[] = [
   },
 ];
 
-export function Pricing() {
+type PricingProps = {
+  title?: string;
+  subtitle?: string;
+  plans?: PricingPlan[];
+};
+
+export function Pricing({
+  title = "Start with OrderBase in 3 ways",
+  subtitle = "Transparent pricing for growing food brands.",
+  plans = DEFAULT_PLANS,
+}: PricingProps = {}) {
   return (
     <section className="bg-black py-20">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col items-center gap-10">
@@ -75,11 +85,9 @@ export function Pricing() {
         {/* Header */}
         <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="text-hero-3 font-bold text-white text-balance leading-[1.1]">
-            Start with OrderBase in 3 ways
+            {title}
           </h2>
-          <p className="text-xl text-white text-balance">
-            Transparent pricing for growing food brands.
-          </p>
+          <p className="text-xl text-white text-balance">{subtitle}</p>
         </div>
 
         {/* Cards */}
