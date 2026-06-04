@@ -106,12 +106,12 @@ export function ServicePicker() {
         {stage === "name" ? (
           <form onSubmit={handleNameSubmit} className="mx-auto">
             <div className="text-center">
-              <h1 className="text-hero-5 font-bold md:text-hero-4">
-                {`Let’s start`}
+              <h1 className="text-hero-5 font-bold md:text-hero-4 text-pretty">
+                Glad you’re here. Let’s get to know you.
               </h1>
-              <p className="mt-4 text-lg text-fg md:text-xl">
-                Just answer a few quick questions, and our team will send your
-                personalized estimate within 48 hours.
+              <p className="mt-4 text-lg text-fg md:text-xl text-balance">
+                A few quick questions, and our team will send your personalized
+                estimate within 48 hours.
               </p>
             </div>
 
@@ -128,6 +128,9 @@ export function ServicePicker() {
                 autoComplete="given-name"
                 required
               />
+              <p className="mt-2 text-base text-fg-muted text-balance">
+                We’ll use this to personalize the questions ahead.
+              </p>
             </div>
 
             <div className="mt-10 flex justify-end">
@@ -147,34 +150,33 @@ export function ServicePicker() {
         ) : (
           <form onSubmit={handleServiceSubmit}>
             <div className="mx-auto text-center">
-              <h1 className="text-hero-5 font-bold md:text-hero-5">
-                What brings you here to Mitch Designs
+              <h1 className="text-hero-5 font-bold md:text-hero-5 text-pretty">
+                So, what are we building together?
               </h1>
               <p className="mt-4 text-lg text-fg md:text-lg text-balance">
-                Get an accurate project estimate tailored to <br className="max-md:hidden"/> your goals — no meetings, no waiting.
+                Pick what fits, we’ll shape the rest of the questions around your
+                project.
               </p>
             </div>
 
             <div className="mt-11">
-              <p className="text-lg text-fg">I Want to build a...</p>
               <p
                 className={cn(
-                  "mt-1 text-base text-orderbase-red",
+                  "mb-1 text-base text-orderbase-red",
                   !showServiceError ? "invisible" : "",
                 )}
               >
                 Please choose a service to proceed
               </p>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2">
                 {quoteServiceOptions.map((option) => (
                   <label
                     key={option.service}
                     className={cn(
-                      "grid min-h-[150px] place-items-center rounded-card-sm border border-grey-500 bg-bg px-6 text-center text-lg font-medium transition-colors md:min-h-[150px] md:text-xl cursor-pointer",
-
+                      "flex min-h-[150px] flex-col items-center justify-center gap-2 rounded-card-sm border border-grey-500 bg-bg px-6 text-center transition-colors cursor-pointer",
                       selectedService === option.service &&
-                      "border-fg bg-fg text-bg",
+                        "border-fg bg-fg text-bg",
                     )}
                   >
                     <input
@@ -193,7 +195,19 @@ export function ServicePicker() {
                       }}
                       className="sr-only"
                     />
-                    {option.label}
+                    <span className="text-lg font-medium md:text-xl">
+                      {option.label}
+                    </span>
+                    <span
+                      className={cn(
+                        "text-sm font-normal text-balance",
+                        selectedService === option.service
+                          ? "text-bg/80"
+                          : "text-fg-muted",
+                      )}
+                    >
+                      {option.tagline}
+                    </span>
                   </label>
                 ))}
               </div>
