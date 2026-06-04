@@ -10,6 +10,39 @@ import { BellIcon } from "@/components/icons/BellIcon";
 import { DashboardIcon } from "@/components/icons/DashboardIcon";
 import { ScooterIcon } from "@/components/icons/ScooterIcon";
 import { LayoutGridIcon } from "@/components/icons/LayoutGridIcon";
+import type { HomeOrderbaseOverview, OrderbaseFeature } from "@/lib/cms/types";
+
+const ICONS = {
+  bell: BellIcon,
+  dashboard: DashboardIcon,
+  scooter: ScooterIcon,
+  "layout-grid": LayoutGridIcon,
+} as const;
+
+function FeatureIcon({ name, size = 20 }: { name: OrderbaseFeature["icon"]; size?: number }) {
+  const Icon = ICONS[name] ?? BellIcon;
+  return <Icon size={size} />;
+}
+
+/** Wrap the highlight phrase within text in the Orderbase red accent. */
+function withHighlight(text: string, highlight?: string) {
+  if (!highlight || !text.includes(highlight)) return text;
+  const [before, ...rest] = text.split(highlight);
+  return (
+    <>
+      {before}
+      <span className="text-orderbase-red">{highlight}</span>
+      {rest.join(highlight)}
+    </>
+  );
+}
+
+const DEFAULT_CARDS: OrderbaseFeature[] = [
+  { icon: "bell", title: "No More Stock Confusion", description: "Real-time inventory alerts so you never run out mid-service." },
+  { icon: "dashboard", title: "All Orders in One Place", description: "Aggregate orders from every channel into one clean dashboard." },
+  { icon: "scooter", title: "Delivery Under Control", description: "Track every rider, every order, every minute from dispatch to door." },
+  { icon: "layout-grid", title: "Clear Operational Visibility", description: "Shift reports and live KPIs to keep your team aligned." },
+];
 
 // ── Per-item scroll-driven reveal ─────────────────────────────────────────────
 // enter: progress value [0,1] at which item reaches the right edge of viewport
@@ -94,7 +127,15 @@ function OrderbaseLogo() {
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
-export function OrderbaseOverview() {
+export function OrderbaseOverview({
+  heading = "A Platform to Manage Your Food Business Operation",
+  description = "OrderBase brings everything into one connected system giving you full control, real-time visibility, and smoother operations from kitchen to customer.",
+  descriptionHighlight = "OrderBase",
+  countValue = "+5",
+  countLabel = "Active Well-known food businesses in Egypt already run on Orderbase",
+  cta = { label: "Know More", href: "/orderbase" },
+  cards = DEFAULT_CARDS,
+}: Partial<HomeOrderbaseOverview> = {}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -185,7 +226,7 @@ export function OrderbaseOverview() {
                 className="font-bold leading-tight text-white"
                 style={{ fontSize: "clamp(1.5rem, 2.5dvh, 2.25rem)" }}
               >
-                A Platform to Manage Your Food Business Operation
+                {heading}
               </h2>
               <p
                 className="text-white/60 text-balance"
@@ -194,15 +235,12 @@ export function OrderbaseOverview() {
                   maxWidth: "36rem",
                 }}
               >
-                <span className="text-orderbase-red">OrderBase</span> brings
-                everything into one connected system giving you full control,
-                real-time visibility, and smoother operations from kitchen to
-                customer.
+                {withHighlight(description ?? "", descriptionHighlight)}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-4">
               <CountUp
-                value="+5"
+                value={countValue ?? "+5"}
                 className="font-bold text-orderbase-red"
                 style={{ fontSize: "clamp(3rem, 7dvh, 4.5rem)" }}
               />
@@ -213,8 +251,7 @@ export function OrderbaseOverview() {
                   maxWidth: "10rem",
                 }}
               >
-                <span className="font-bold text-white">Active</span> Well-known
-                food businesses in Egypt already run on Orderbase
+                {countLabel}
               </p>
             </div>
           </div>
@@ -263,9 +300,9 @@ export function OrderbaseOverview() {
                 className="contents"
               >
                 <FeatureCard
-                  icon={<BellIcon size={20} />}
-                  title="No More Stock Confusion"
-                  description="Real-time inventory alerts so you never run out mid-service."
+                  icon={<FeatureIcon name={cards[0]?.icon ?? "bell"} />}
+                  title={cards[0]?.title ?? ""}
+                  description={cards[0]?.description ?? ""}
                   progress={scrollYProgress}
                   enter={enters[1]}
                 />
@@ -278,9 +315,9 @@ export function OrderbaseOverview() {
                 className="contents"
               >
                 <FeatureCard
-                  icon={<DashboardIcon size={20} />}
-                  title="All Orders in One Place"
-                  description="Aggregate orders from every channel into one clean dashboard."
+                  icon={<FeatureIcon name={cards[1]?.icon ?? "dashboard"} />}
+                  title={cards[1]?.title ?? ""}
+                  description={cards[1]?.description ?? ""}
                   progress={scrollYProgress}
                   enter={enters[2]}
                 />
@@ -309,9 +346,9 @@ export function OrderbaseOverview() {
                 className="contents"
               >
                 <FeatureCard
-                  icon={<ScooterIcon size={20} />}
-                  title="Delivery Under Control"
-                  description="Track every rider, every order, every minute from dispatch to door."
+                  icon={<FeatureIcon name={cards[2]?.icon ?? "scooter"} />}
+                  title={cards[2]?.title ?? ""}
+                  description={cards[2]?.description ?? ""}
                   progress={scrollYProgress}
                   enter={enters[4]}
                 />
@@ -324,9 +361,9 @@ export function OrderbaseOverview() {
                 className="contents"
               >
                 <FeatureCard
-                  icon={<LayoutGridIcon size={20} />}
-                  title="Clear Operational Visibility"
-                  description="Shift reports and live KPIs to keep your team aligned."
+                  icon={<FeatureIcon name={cards[3]?.icon ?? "layout-grid"} />}
+                  title={cards[3]?.title ?? ""}
+                  description={cards[3]?.description ?? ""}
                   progress={scrollYProgress}
                   enter={enters[5]}
                 />
@@ -354,31 +391,22 @@ export function OrderbaseOverview() {
                 className="object-cover"
               />
             </div>
-            {[
-              {
-                Icon: BellIcon,
-                title: "No More Stock Confusion",
-                desc: "Real-time inventory alerts so you never run out mid-service.",
-              },
-              {
-                Icon: DashboardIcon,
-                title: "All Orders in One Place",
-                desc: "Aggregate orders from every channel into one clean dashboard.",
-              },
-            ].map(({ Icon, title, desc }) => (
+            {cards.slice(0, 2).map((card) => (
               <div
-                key={title}
+                key={card.title}
                 className="flex shrink-0 flex-col gap-6 rounded-xl bg-black/80 p-8"
                 style={{ width: "332px", height: "244px" }}
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orderbase-red text-white">
-                  <Icon size={20} />
+                  <FeatureIcon name={card.icon} />
                 </div>
                 <div className="flex flex-col gap-2">
                   <h3 className="text-2xl font-bold leading-snug text-orderbase-red">
-                    {title}
+                    {card.title}
                   </h3>
-                  <p className="text-base text-white/80 text-balance">{desc}</p>
+                  <p className="text-base text-white/80 text-balance">
+                    {card.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -393,31 +421,22 @@ export function OrderbaseOverview() {
                 className="object-cover"
               />
             </div>
-            {[
-              {
-                Icon: ScooterIcon,
-                title: "Delivery Under Control",
-                desc: "Track every rider, every order, every minute from dispatch to door.",
-              },
-              {
-                Icon: LayoutGridIcon,
-                title: "Clear Operational Visibility",
-                desc: "Shift reports and live KPIs to keep your team aligned.",
-              },
-            ].map(({ Icon, title, desc }) => (
+            {cards.slice(2, 4).map((card) => (
               <div
-                key={title}
+                key={card.title}
                 className="flex shrink-0 flex-col gap-6 rounded-xl bg-black/80 p-8"
                 style={{ width: "332px", height: "244px" }}
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orderbase-red text-white">
-                  <Icon size={20} />
+                  <FeatureIcon name={card.icon} />
                 </div>
                 <div className="flex flex-col gap-2">
                   <h3 className="text-2xl font-bold leading-snug text-orderbase-red">
-                    {title}
+                    {card.title}
                   </h3>
-                  <p className="text-base text-white/80 text-balance">{desc}</p>
+                  <p className="text-base text-white/80 text-balance">
+                    {card.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -426,10 +445,10 @@ export function OrderbaseOverview() {
           {/* CTA */}
           <div className="mt-10 flex justify-center px-4 lg:px-0">
             <Link
-              href="/orderbase"
+              href={cta?.href ?? "/orderbase"}
               className="whitespace-nowrap rounded-full bg-yellow px-8 py-3 text-center text-base font-semibold text-black transition-opacity hover:opacity-90 max-md:w-full"
             >
-              Know More →
+              {cta?.label ?? "Know More"} →
             </Link>
           </div>
         </div>

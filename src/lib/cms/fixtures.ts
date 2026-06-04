@@ -9,7 +9,9 @@ import type {
   Career,
   CaseStudy,
   ClientLogo,
+  CtaBannerData,
   FAQ,
+  HomePageData,
   Service,
   Talk,
   TeamMember,
@@ -1038,4 +1040,68 @@ export const fixtureAboutPage: AboutContent = {
       },
     ],
   },
+};
+
+export const fixtureHomePage: HomePageData = {
+  hero: {
+    eyebrow:
+      "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
+    headline: "Start Building Digital Experiences that",
+    rotatingWords: ["Convert", "Engage", "Interact", "Succeed", "Grow"],
+  },
+  about: {
+    intro:
+      "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns in",
+    body: "to results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don't chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it's always about the user, the customer, and their experience. That's why Mitch Designs has become the partner businesses trust when growth can't wait.",
+    signature: "Mitch",
+    stats: [
+      { value: "20+", unit: "Years", label: "Years of experience," },
+      { value: "400+", unit: "Projects", label: "Delivered with Impact" },
+      { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
+    ],
+    cta: { label: "About Us", href: "/about" },
+  },
+  orderbaseOverview: {
+    heading: "A Platform to Manage Your Food Business Operation",
+    description:
+      "OrderBase brings everything into one connected system giving you full control, real-time visibility, and smoother operations from kitchen to customer.",
+    descriptionHighlight: "OrderBase",
+    countValue: "+5",
+    countLabel:
+      "Active Well-known food businesses in Egypt already run on Orderbase",
+    cta: { label: "Know More", href: "/orderbase" },
+    cards: [
+      {
+        icon: "bell",
+        title: "No More Stock Confusion",
+        description:
+          "Real-time inventory alerts so you never run out mid-service.",
+      },
+      {
+        icon: "dashboard",
+        title: "All Orders in One Place",
+        description:
+          "Aggregate orders from every channel into one clean dashboard.",
+      },
+      {
+        icon: "scooter",
+        title: "Delivery Under Control",
+        description:
+          "Track every rider, every order, every minute from dispatch to door.",
+      },
+      {
+        icon: "layout-grid",
+        title: "Clear Operational Visibility",
+        description: "Shift reports and live KPIs to keep your team aligned.",
+      },
+    ],
+  },
+};
+
+export const fixtureCtaBanner: CtaBannerData = {
+  title: "Ready For Your Next Project?",
+  description:
+    "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
+  cta: { label: "Get Detailed Proposal", href: "/quote" },
+  bgImage: "/images/cta-bg.webp",
 };

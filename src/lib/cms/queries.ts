@@ -8,7 +8,9 @@ import type {
   CaseStudy,
   Career,
   ClientLogo,
+  CtaBannerData,
   FAQ,
+  HomePageData,
   SeoData,
   Service,
   ServicePageData,
@@ -286,6 +288,103 @@ export const getAboutPage = async (): Promise<AboutContent> => {
 
   const { fixtureAboutPage } = await import("./fixtures");
   return fixtureAboutPage;
+};
+
+/* ------------------------------------------------------------------
+ * Home Page (single type)
+ * ------------------------------------------------------------------ */
+export const getHomePage = async (): Promise<HomePageData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/home-page", {
+      revalidate: 300,
+      query: {
+        "populate[hero]": "*",
+        "populate[about][populate]": "*",
+        "populate[orderbaseOverview][populate]": "*",
+      },
+    });
+    if (raw?.hero || raw?.about || raw?.orderbaseOverview) {
+      return {
+        hero: raw.hero
+          ? {
+              eyebrow: raw.hero.eyebrow ?? undefined,
+              headline: raw.hero.headline,
+              rotatingWords: Array.isArray(raw.hero.rotatingWords)
+                ? raw.hero.rotatingWords
+                : undefined,
+            }
+          : undefined,
+        about: raw.about
+          ? {
+              intro: raw.about.intro ?? undefined,
+              body: raw.about.body ?? undefined,
+              signature: raw.about.signature ?? undefined,
+              stats: (raw.about.stats ?? []).map((s: any) => ({
+                value: s.value,
+                unit: s.unit ?? undefined,
+                label: s.label ?? undefined,
+              })),
+              cta: raw.about.ctaLabel
+                ? { label: raw.about.ctaLabel, href: raw.about.ctaHref ?? "#" }
+                : undefined,
+            }
+          : undefined,
+        orderbaseOverview: raw.orderbaseOverview
+          ? {
+              heading: raw.orderbaseOverview.heading,
+              description: raw.orderbaseOverview.description ?? undefined,
+              descriptionHighlight:
+                raw.orderbaseOverview.descriptionHighlight ?? undefined,
+              countValue: raw.orderbaseOverview.countValue ?? undefined,
+              countLabel: raw.orderbaseOverview.countLabel ?? undefined,
+              cta: raw.orderbaseOverview.ctaLabel
+                ? {
+                    label: raw.orderbaseOverview.ctaLabel,
+                    href: raw.orderbaseOverview.ctaHref ?? "/orderbase",
+                  }
+                : undefined,
+              cards: (raw.orderbaseOverview.cards ?? []).map((c: any) => ({
+                icon: c.icon,
+                title: c.title,
+                description: c.description ?? undefined,
+              })),
+            }
+          : undefined,
+      };
+    }
+  } catch {
+    /* fall through to fixture */
+  }
+  const { fixtureHomePage } = await import("./fixtures");
+  return fixtureHomePage;
+};
+
+/* ------------------------------------------------------------------
+ * CTA Banner (single type)
+ * ------------------------------------------------------------------ */
+export const getCtaBanner = async (): Promise<CtaBannerData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/cta-banner", {
+      revalidate: 300,
+      query: { populate: "bgImage" },
+    });
+    if (raw?.title) {
+      return {
+        title: raw.title,
+        description: raw.description ?? undefined,
+        cta: raw.ctaLabel
+          ? { label: raw.ctaLabel, href: raw.ctaHref ?? "/quote" }
+          : undefined,
+        bgImage: raw.bgImage
+          ? strapiMedia(raw.bgImage.url) ?? raw.bgImage.url
+          : undefined,
+      };
+    }
+  } catch {
+    /* fall through to fixture */
+  }
+  const { fixtureCtaBanner } = await import("./fixtures");
+  return fixtureCtaBanner;
 };
 
 /* ------------------------------------------------------------------

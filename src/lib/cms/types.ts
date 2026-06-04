@@ -409,3 +409,61 @@ export type ServicePageData = {
   designsAdapt?: DesignsAdaptProps;
   moreAbout?: MoreAboutProps;
 };
+
+/* ------------------------------------------------------------------
+ * Home Page (single type)
+ * ------------------------------------------------------------------ */
+export type HomeHero = {
+  eyebrow?: string;
+  headline: string;
+  rotatingWords?: string[];
+};
+
+export type HomeStat = {
+  value: string;
+  unit?: string;
+  label?: string;
+};
+
+export type HomeAboutSection = {
+  /** White lead-in paragraph (rendered immediately). */
+  intro?: string;
+  /** Continuation that animates from grey → white on scroll. */
+  body?: string;
+  signature?: string;
+  stats: HomeStat[];
+  cta?: { label: string; href: string };
+};
+
+export type OrderbaseFeature = {
+  icon: "bell" | "dashboard" | "scooter" | "layout-grid";
+  title: string;
+  description?: string;
+};
+
+export type HomeOrderbaseOverview = {
+  heading: string;
+  description?: string;
+  /** Word(s) within the description rendered in the Orderbase red accent. */
+  descriptionHighlight?: string;
+  countValue?: string;
+  countLabel?: string;
+  cta?: { label: string; href: string };
+  cards: OrderbaseFeature[];
+};
+
+export type HomePageData = {
+  hero?: HomeHero;
+  about?: HomeAboutSection;
+  orderbaseOverview?: HomeOrderbaseOverview;
+};
+
+/* ------------------------------------------------------------------
+ * CTA Banner (single type)
+ * ------------------------------------------------------------------ */
+export type CtaBannerData = {
+  title: string;
+  description?: string;
+  cta?: { label: string; href: string };
+  bgImage?: string;
+};

@@ -11,17 +11,21 @@ import {
   MotionValue,
 } from "framer-motion";
 import { Section } from "@/components/layout/Section";
+import type { HomeAboutSection } from "@/lib/cms/types";
 
-const STATS = [
+const DEFAULT_STATS = [
   { value: "20+", unit: "Years", label: "Years of experience," },
   { value: "400+", unit: "Projects", label: "Delivered with Impact" },
   { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
-] as const;
+];
 
-const GRAY_PARAGRAPHS =
+const DEFAULT_INTRO =
+  "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns in";
+
+const DEFAULT_BODY =
   "to results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don’t chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it’s always about the user, the customer, and their experience. That’s why Mitch Designs has become the partner businesses trust when growth can’t wait.";
 
-const SIGNATURE = "Mitch";
+const DEFAULT_SIGNATURE = "Mitch";
 
 // How much of the 0-1 scroll range a single character takes to transition
 const CHAR_WINDOW = 0.08;
@@ -44,7 +48,13 @@ function AnimatedChar({
   return <motion.span style={{ color }}>{char}</motion.span>;
 }
 
-export function AboutSection() {
+export function AboutSection({
+  stats = DEFAULT_STATS,
+  intro = DEFAULT_INTRO,
+  body = DEFAULT_BODY,
+  signature = DEFAULT_SIGNATURE,
+  cta = { label: "About Us", href: "/about" },
+}: Partial<HomeAboutSection> = {}) {
   const ref = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -58,8 +68,8 @@ export function AboutSection() {
     if (v > animProgress.get()) animProgress.set(v);
   });
 
-  const grayChars = GRAY_PARAGRAPHS.split("");
-  const sigChars = SIGNATURE.split("");
+  const grayChars = (body ?? "").split("");
+  const sigChars = (signature ?? "").split("");
   const total = grayChars.length + sigChars.length;
 
   // Signature chars start after all gray text chars, with a small gap
@@ -71,7 +81,7 @@ export function AboutSection() {
         {/* Left — stats + CTA */}
         <div className="flex w-full shrink-0 flex-col items-center justify-between gap-11 lg:w-auto lg:items-start lg:self-stretch">
           <ul className="flex flex-col gap-11">
-            {STATS.map(({ value, unit, label }) => (
+            {stats.map(({ value, unit, label }) => (
               <li key={value} className="flex flex-col items-center lg:items-start">
                 <div className="flex items-baseline gap-2.5">
                   <span className="font-bold text-[3.5rem] leading-none text-white sm:text-[4rem]">
@@ -87,10 +97,10 @@ export function AboutSection() {
           </ul>
 
           <Link
-            href="/about"
+            href={cta?.href ?? "/about"}
             className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#373737] px-9 py-4 text-sm font-medium text-white transition-colors hover:bg-[#444] lg:inline-flex lg:w-auto"
           >
-            About Us
+            {cta?.label ?? "About Us"}
             <svg
               width="20"
               height="20"
@@ -115,11 +125,7 @@ export function AboutSection() {
           className="flex max-w-[895px] flex-col items-center gap-10 text-center lg:items-start lg:text-left"
         >
           <p className="text-[1.5rem] leading-normal tracking-[0.01em] sm:text-[1.75rem] lg:text-[2rem]">
-            <span className="text-white">
-              Since 2005, I&apos;ve built Mitch Designs in Egypt with one
-              belief, businesses deserve more than templates. As a website
-              design company in Egypt, we craft custom design that turns in
-            </span>
+            <span className="text-white">{intro}</span>{" "}
             {grayChars.map((char, i) => (
               <AnimatedChar
                 key={i}
