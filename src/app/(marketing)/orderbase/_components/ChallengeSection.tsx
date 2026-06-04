@@ -18,7 +18,7 @@ export function ChallengeSection({
   features = [],
 }: ChallengeSectionProps) {
   return (
-    <section className="bg-black py-24">
+    <section data-theme="dark" className="bg-black py-24">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col gap-[2.5rem]">
 
         {/* Header — pill overlaps title via negative margin */}

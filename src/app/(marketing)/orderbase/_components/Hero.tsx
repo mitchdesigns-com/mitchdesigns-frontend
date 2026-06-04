@@ -45,6 +45,7 @@ export function Hero({
     // Outer wrapper is taller than the viewport so there's scroll room for the tilt animation
     <section
       ref={sectionRef}
+      data-theme="dark"
       className="relative bg-black"
     >
       {/* Sticky inner — stays pinned while user scrolls through the tilt animation */}

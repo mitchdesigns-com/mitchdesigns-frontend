@@ -20,7 +20,7 @@ export default async function OrderbasePage() {
   const data = await getOrderbasePage();
 
   return (
-    <main className="min-h-dvh">
+    <div className="min-h-dvh">
       <Hero {...data.hero} title={data.hero?.title ?? ""} />
       <TrustedBrands brands={data.brands} />
       <MeetSection {...data.meet} />
@@ -35,6 +35,6 @@ export default async function OrderbasePage() {
       <Pricing {...data.pricing} />
       <SinceFrom {...data.sinceFrom} />
       <ReadyToOwn {...data.readyToOwn} />
-    </main>
+    </div>
   );
 }
