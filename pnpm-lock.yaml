@@ -11,6 +11,9 @@ importers:
       '@opennextjs/cloudflare':
         specifier: ^1.19.9
         version: 1.19.11(next@15.5.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(wrangler@4.95.0)
+      '@userback/widget':
+        specifier: ^0.3.12
+        version: 0.3.12
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1494,6 +1497,9 @@ packages:
     resolution: {integrity: sha512-nAB74NfSNKknqQ1RrYj6uz8FcXEomu/MATJZxh/x+BArzN2U3JbOYC0APYzUIGhVY3m5hRxA8VPNdPBoG8txlA==}
     cpu: [x64]
     os: [win32]
+
+  '@userback/widget@0.3.12':
+    resolution: {integrity: sha512-68YihQblx1+4kFpd7e4nDBSV6ljSY0+hzIHHgbxgbJPJIhNgN4lyvOjcDbCrEb9qh6yXx5W6HBLKTMJD4hLXGg==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -4927,6 +4933,8 @@ snapshots:
 
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
+
+  '@userback/widget@0.3.12': {}
 
   abort-controller@3.0.0:
     dependencies:
