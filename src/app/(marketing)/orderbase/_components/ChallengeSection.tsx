@@ -26,7 +26,7 @@ export function ChallengeSection({
           {/* Rotated label pill */}
           <div
             className="relative z-10 -mb-[11px] inline-flex items-center justify-center rounded-pill bg-orderbase-red border border-black px-2 py-1 text-base font-bold text-white"
-            style={{ transform: "rotate(4deg)", transformOrigin: "left center" }}
+            style={{ transform: "rotate(-4deg)", transformOrigin: "left center" }}
           >
             {label}
           </div>
@@ -53,7 +53,7 @@ export function ChallengeSection({
 
 function ChallengeCard({ image, title, description }: ChallengeFeature) {
   return (
-    <div className="flex flex-col gap-3 rounded-[20px] bg-card px-3 py-5">
+    <div className="flex flex-col gap-3 px-3 py-5">
       {/* Illustration / image area */}
       <div className="w-full aspect-[309/242] rounded-[12px] overflow-hidden bg-white/5">
         {image ? (
