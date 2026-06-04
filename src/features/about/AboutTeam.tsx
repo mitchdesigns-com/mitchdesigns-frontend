@@ -1,12 +1,46 @@
+import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
+import { strapiMedia } from "@/lib/cms/media";
+import type { AboutContent, TeamMember } from "@/lib/cms/types";
 
-const TEAM_MEMBERS = [
-  { name: "Team Member", role: "Role" },
-  { name: "Team Member", role: "Role" },
-] as const;
+function MemberCard({ member }: { member: TeamMember }) {
+  const photo = member.photo?.url
+    ? strapiMedia(member.photo.url) ?? member.photo.url
+    : null;
 
-export function AboutTeam() {
+  return (
+    <div className="relative flex h-[242px] w-[324px] flex-col justify-end overflow-hidden rounded-card-sm bg-space-grey p-5">
+      {photo && (
+        <>
+          <Image
+            src={photo}
+            alt={member.name}
+            fill
+            className="object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        </>
+      )}
+      <div className="relative">
+        <p className="text-base font-medium text-fg">{member.name}</p>
+        <p className="text-sm text-fg-muted">{member.role}</p>
+      </div>
+    </div>
+  );
+}
+
+export function AboutTeam({
+  team,
+  members,
+}: {
+  team: AboutContent["team"];
+  members: TeamMember[];
+}) {
+  const groupPhoto = team.groupPhoto?.url
+    ? strapiMedia(team.groupPhoto.url) ?? team.groupPhoto.url
+    : null;
+
   return (
     <Section theme="dark" className="py-30">
       <div className="flex items-center gap-10">
@@ -14,32 +48,34 @@ export function AboutTeam() {
         <Reveal className="flex w-[672px] shrink-0 flex-col justify-between gap-10">
           {/* Heading block */}
           <div className="flex flex-col" style={{ gap: 0 }}>
-            <span className="inline-flex w-fit items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black rotate-3 mb-[-13px] z-10 relative">
-              Our Team
+            <span className="inline-flex w-fit items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black -rotate-3 -mb-2.25 z-10 relative">
+              {team.badge}
             </span>
             <h2 className="text-hero-4 font-bold leading-[130%] text-fg">
-              We believe that positive change comes from diverse minds working
-              together to make a difference.
+              {team.heading}
             </h2>
           </div>
 
           {/* Team member cards */}
           <RevealStagger className="flex gap-6" stagger={0.1}>
-            {TEAM_MEMBERS.map((member, i) => (
-              <RevealItem
-                key={i}
-                className="flex h-[242px] w-[324px] flex-col justify-end rounded-card-sm bg-space-grey p-5"
-              >
-                <p className="text-base font-medium text-fg">{member.name}</p>
-                <p className="text-sm text-fg-muted">{member.role}</p>
+            {members.map((member, i) => (
+              <RevealItem key={i}>
+                <MemberCard member={member} />
               </RevealItem>
             ))}
           </RevealStagger>
         </Reveal>
 
-        {/* Right: large team photo placeholder */}
-        <Reveal className="h-[800px] flex-1 rounded-card-sm bg-space-grey">
-          {null}
+        {/* Right: large team photo */}
+        <Reveal className="relative h-[800px] flex-1 overflow-hidden rounded-card-sm bg-space-grey">
+          {groupPhoto && (
+            <Image
+              src={groupPhoto}
+              alt={team.groupPhoto?.alt ?? "The MitchDesigns team"}
+              fill
+              className="object-cover"
+            />
+          )}
         </Reveal>
       </div>
     </Section>

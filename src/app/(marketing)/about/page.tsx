@@ -6,6 +6,7 @@ import { InnovateMarquee } from "@/features/about/InnovateMarquee";
 import { AboutTeam } from "@/features/about/AboutTeam";
 import { AboutStory } from "@/features/about/AboutStory";
 import { CTABanner } from "@/features/cta";
+import { getAboutPage, getTeam } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "About MitchDesigns — Egyptian Design Studio",
@@ -20,15 +21,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [about, team] = await Promise.all([getAboutPage(), getTeam()]);
+
   return (
     <>
-      <AboutHero />
-      <AboutMetrics />
-      <AboutApproach />
-      <InnovateMarquee />
-      <AboutTeam />
-      <AboutStory />
+      <AboutHero hero={about.hero} />
+      <AboutMetrics metrics={about.metrics} />
+      <AboutApproach approach={about.approach} />
+      <InnovateMarquee innovate={about.innovate} />
+      <AboutTeam team={about.team} members={team} />
+      <AboutStory story={about.story} />
       <CTABanner />
     </>
   );

@@ -11,12 +11,14 @@
   --color-black: #07020d;
   --color-space-grey: #1d1d1b;
   --color-card-pro: #29211f; /* Pro pricing card — dark red-tinted */
+  --color-grey-700: #363636; /* dark body text — process step descriptions */
   --color-grey-600: #515151; /* meta / muted text (dates, read time) */
   --color-grey-500: #878787; /* "Medium Grey" — secondary text */
   --color-grey-200: #d6d6d6; /* "Light Grey" — borders / dividers */
   --color-img-placeholder: #e5e5e5; /* image fallback background */
   --color-bej: #f9f7f1; /* alt surface (beige) */
   --color-yellow: #ffdb00; /* primary accent */
+  --color-yellow-soft: #fff8cc; /* process step icon badge fill */
   --color-orderbase-red: #e72b29; /* case-study scoped */
   --color-panel: #f1f1f1; /* light grey panel surface */
   --color-panel-mid: #ebebeb; /* feature cards — MeetSection / Orderbase */
@@ -81,6 +83,11 @@
   --text-card-title: 3rem; /* 48px — case study grid card title */
   --text-card-title--line-height: 1.1;
   --text-card-title--font-weight: 700;
+
+  --text-story: 2.75rem; /* 44px — About "Our Story" heading */
+  --text-story--line-height: 1.2;
+  --text-story--font-weight: 400;
+  --text-story--letter-spacing: 0.01em;
 
   /* Body scale */
   --text-xl: 1.5rem; /* 24px */
