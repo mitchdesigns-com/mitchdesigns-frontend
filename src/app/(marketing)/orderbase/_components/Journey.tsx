@@ -1,3 +1,8 @@
+"use client";
+
+import { useRef } from "react";
+import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
+
 export interface JourneyStep {
   number: string;
   title: string;
@@ -20,6 +25,20 @@ export function Journey({
   ctaHref = "#",
   steps = defaultSteps,
 }: JourneyProps) {
+  const reduced = useReducedMotion();
+  const timelineRef = useRef<HTMLDivElement>(null);
+
+  // Center divider fills top→bottom as the steps scroll through the viewport.
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start center", "end center"],
+  });
+  const fill = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col items-center gap-10">
@@ -43,7 +62,20 @@ export function Journey({
         </div>
 
         {/* Steps */}
-        <div className="w-full max-w-[1232px] flex flex-col">
+        <div ref={timelineRef} className="relative w-full max-w-[1232px] flex flex-col">
+          {/* Continuous center divider — fills red on scroll */}
+          <span aria-hidden className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2">
+            <span className="absolute inset-0 bg-border" />
+            {reduced ? (
+              <span className="absolute inset-0 bg-orderbase-red" />
+            ) : (
+              <motion.span
+                style={{ scaleY: fill }}
+                className="absolute inset-0 origin-top bg-orderbase-red"
+              />
+            )}
+          </span>
+
           {steps.map((step, i) => {
             const textLeft = i % 2 === 0;
             return (
@@ -57,11 +89,12 @@ export function Journey({
                   )}
                 </div>
 
-                {/* Divider */}
-                <div className="relative shrink-0 w-px self-stretch bg-border">
+                {/* Divider spacer — the animated line is drawn once for the
+                    whole column via the overlay above */}
+                <div className="relative shrink-0 w-px self-stretch">
                   {/* Dot marker on even rows */}
                   {!textLeft && (
-                    <div className="absolute left-1/2 top-[111px] -translate-x-1/2 w-4 h-4 rounded-full border-2 border-orderbase-red bg-white" />
+                    <div className="absolute left-1/2 top-[111px] -translate-x-1/2 w-4 h-4 rounded-full border-2 border-orderbase-red bg-white z-10" />
                   )}
                 </div>
 
