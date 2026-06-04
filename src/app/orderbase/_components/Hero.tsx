@@ -7,7 +7,7 @@ import OrderBaseLogo from "./OrderBaseLogo";
 export interface HeroProps {
   title: string;
   titleHighlight?: string;
-  description: string;
+  description?: string;
   primaryCtaLabel?: string;
   primaryCtaHref?: string;
   secondaryCtaLabel?: string;

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CareersHero } from "@/features/careers/CareersHero";
 import { OurDrive } from "@/features/careers/OurDrive";
 import { OpenPositions } from "@/features/careers/OpenPositions";
-import { getCareers } from "@/lib/cms";
+import { getCareers, getCareersPage } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 };
 
 export default async function CareersIndexPage() {
-  const jobs = await getCareers();
+  const [jobs, page] = await Promise.all([getCareers(), getCareersPage()]);
 
   return (
     <main>
-      <CareersHero />
-      <OurDrive />
+      <CareersHero {...page.hero} />
+      <OurDrive drives={page.drives} />
       <OpenPositions jobs={jobs} />
     </main>
   );

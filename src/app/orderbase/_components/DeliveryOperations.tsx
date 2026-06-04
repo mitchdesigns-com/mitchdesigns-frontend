@@ -1,41 +1,29 @@
-import { ScooterIcon } from "@/components/icons/ScooterIcon";
-import { RouteIcon } from "@/components/icons/RouteIcon";
-import { AppWindowIcon } from "@/components/icons/AppWindowIcon";
-import { MapPinIcon } from "@/components/icons/MapPinIcon";
+import { OrderbaseIcon } from "@/features/orderbase/OrderbaseIcon";
+import type { OrderbaseIconCard } from "@/lib/cms/types";
 
-interface DeliveryCard {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-const leftCards: DeliveryCard[] = [
-  {
-    icon: <ScooterIcon size={24} />,
-    title: "Friendly to couriers",
-    description: "A simple, straightforward interface that any courier can pick up and use instantly.",
-  },
-  {
-    icon: <RouteIcon size={24} />,
-    title: "Full control on couriers",
-    description: "Manage dispatching, routing, and fleet performance centrally and efficiently.",
-  },
+const DEFAULT_LEFT: OrderbaseIconCard[] = [
+  { icon: "scooter", title: "Friendly to couriers", description: "A simple, straightforward interface that any courier can pick up and use instantly." },
+  { icon: "route", title: "Full control on couriers", description: "Manage dispatching, routing, and fleet performance centrally and efficiently." },
 ];
 
-const rightCards: DeliveryCard[] = [
-  {
-    icon: <AppWindowIcon size={24} />,
-    title: "One integrated platform",
-    description: "Sync orders from kitchen to customer without using any other third-party apps.",
-  },
-  {
-    icon: <MapPinIcon size={24} />,
-    title: "Full monitoring on delivery process",
-    description: "Track live locations, status updates, and delivery times so much easier with our system.",
-  },
+const DEFAULT_RIGHT: OrderbaseIconCard[] = [
+  { icon: "app-window", title: "One integrated platform", description: "Sync orders from kitchen to customer without using any other third-party apps." },
+  { icon: "map-pin", title: "Full monitoring on delivery process", description: "Track live locations, status updates, and delivery times so much easier with our system." },
 ];
 
-export function DeliveryOperations() {
+type Props = {
+  title?: string;
+  subtitle?: string;
+  leftCards?: OrderbaseIconCard[];
+  rightCards?: OrderbaseIconCard[];
+};
+
+export function DeliveryOperations({
+  title = "Delivery Operations, Fully Connected",
+  subtitle = "Give your couriers the tools to deliver faster, smarter, and with full operational control.",
+  leftCards = DEFAULT_LEFT,
+  rightCards = DEFAULT_RIGHT,
+}: Props = {}) {
   return (
     <section className="bg-black py-20">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col items-center gap-10">
@@ -43,11 +31,9 @@ export function DeliveryOperations() {
         {/* Header */}
         <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="text-hero-3 font-bold text-white text-balance leading-[1.1]">
-            Delivery Operations, Fully Connected
+            {title}
           </h2>
-          <p className="text-xl text-white text-balance">
-            Give your couriers the tools to deliver faster, smarter, and with full operational control.
-          </p>
+          <p className="text-xl text-white text-balance">{subtitle}</p>
         </div>
 
         {/* 3-col layout */}
@@ -77,11 +63,11 @@ export function DeliveryOperations() {
   );
 }
 
-function DeliveryCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function DeliveryCard({ icon, title, description }: OrderbaseIconCard) {
   return (
     <div className="flex flex-col gap-10 rounded-[16px] bg-space-grey px-4 py-6 min-h-[210px]">
       <div className="w-12 h-12 rounded-[8px] bg-orderbase-red flex items-center justify-center text-white">
-        {icon}
+        <OrderbaseIcon name={icon} size={24} />
       </div>
       <div className="flex flex-col gap-1">
         <p className="text-xl font-medium text-white">{title}</p>

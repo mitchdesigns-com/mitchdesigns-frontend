@@ -3,7 +3,7 @@ import Image from "next/image";
 export interface ChallengeFeature {
   image?: string;
   title: string;
-  description: string;
+  description?: string;
 }
 
 export interface ChallengeSectionProps {

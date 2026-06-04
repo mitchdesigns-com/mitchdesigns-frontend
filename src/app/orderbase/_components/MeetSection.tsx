@@ -1,6 +1,9 @@
+import { OrderbaseIcon } from "@/features/orderbase/OrderbaseIcon";
+import type { OrderbaseIconName } from "@/lib/cms/types";
+
 export interface MeetFeature {
-  icon: React.ReactNode;
-  title: string;
+  icon: OrderbaseIconName;
+  title?: string;
   description: string;
 }
 
@@ -71,7 +74,7 @@ function FeatureCard({ icon, title, description }: MeetFeature) {
     <div className="rounded-card-sm bg-panel-mid px-4 py-6 flex gap-3 items-start">
       {/* Icon container — 32×32, red bg, rounded-[8px] */}
       <div className="shrink-0 w-8 h-8 rounded-[8px] bg-orderbase-red flex items-center justify-center text-white">
-        {icon}
+        <OrderbaseIcon name={icon} size={20} />
       </div>
 
       {/* Text */}

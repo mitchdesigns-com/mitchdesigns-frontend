@@ -429,7 +429,17 @@ function Cursor({
 }
 
 // ─── CreativeHero ──────────────────────────────────────────────────────────────
-export function CreativeHero() {
+type CreativeHeroProps = {
+  eyebrow?: string;
+  headline?: string;
+  rotatingWords?: string[];
+};
+
+export function CreativeHero({
+  eyebrow = "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
+  headline = "Start Building Digital Experiences that",
+  rotatingWords,
+}: CreativeHeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const [cardHovered, setCardHovered] = useState(false);
   const [lightbox, setLightbox] = useState<{ src: string; label: string } | null>(null);
@@ -526,8 +536,11 @@ export function CreativeHero() {
 
         <div>
           <Hero
-            eyebrow="MitchDesigns — Website & Mobile App Design Company Based in Egypt"
-            headline="Start Building Digital Experiences that"
+            eyebrow={eyebrow}
+            headline={headline}
+            rotatingWords={
+              rotatingWords && rotatingWords.length ? rotatingWords : undefined
+            }
           />
         </div>
       </section>

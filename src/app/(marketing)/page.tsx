@@ -19,7 +19,9 @@ export const metadata: Metadata = {
 };
 import {
   getCaseStudies,
+  getCtaBanner,
   getFAQs,
+  getHomePage,
   getServices,
   getTalks,
   getTestimonials,
@@ -42,13 +44,16 @@ async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
 }
 
 export default async function HomePage() {
-  const [services, caseStudies, testimonials, faqs, talks] = await Promise.all([
-    safe(getServices(), fixtureServices),
-    safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
-    safe(getTestimonials(), fixtureTestimonials),
-    safe(getFAQs(), fixtureFAQs),
-    safe(getTalks(), fixtureTalks),
-  ]);
+  const [services, caseStudies, testimonials, faqs, talks, home, ctaBanner] =
+    await Promise.all([
+      safe(getServices(), fixtureServices),
+      safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
+      safe(getTestimonials(), fixtureTestimonials),
+      safe(getFAQs(), fixtureFAQs),
+      safe(getTalks(), fixtureTalks),
+      getHomePage(),
+      getCtaBanner(),
+    ]);
 
   // Single @graph merges AggregateRating + FAQPage + HowTo into one <script> tag
   const homeGraph = {
@@ -130,9 +135,9 @@ export default async function HomePage() {
     <>
       <JsonLd data={homeGraph} />
       <HeaderConfig sticky={false} />
-      <CreativeHero />
+      <CreativeHero {...home.hero} />
 
-      <AboutSection />
+      <AboutSection {...home.about} />
 
       <ClientLogos />
 
@@ -142,7 +147,7 @@ export default async function HomePage() {
 
       <OurServices services={services} />
 
-      <OrderbaseOverview />
+      <OrderbaseOverview {...home.orderbaseOverview} />
 
       <TestimonialMarqueeFetcher />
 
@@ -156,7 +161,7 @@ export default async function HomePage() {
         description="We've answered the most common ones to help you understand how we work and what to expect."
         defaultCategory="Corporate Websites"
       />
-      <CTABanner />
+      <CTABanner {...ctaBanner} />
     </>
   );
 }

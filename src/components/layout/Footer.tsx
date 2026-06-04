@@ -137,6 +137,8 @@ export function Footer() {
             <a href="https://instagram.com/mitchdesigns" target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Instagram</a>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
             <Link href="/privacy" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Privacy Policy</Link>
+            <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
+            <Link href="/terms" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Terms of Service</Link>
           </div>
         </div>
 

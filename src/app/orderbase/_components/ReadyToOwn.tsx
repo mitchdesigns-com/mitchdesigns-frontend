@@ -1,4 +1,16 @@
-export function ReadyToOwn() {
+type Props = {
+  title?: string;
+  subtitle?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
+export function ReadyToOwn({
+  title = "Ready To Own Your System?",
+  subtitle = "Stop renting your customers from aggregators. Launch fast, scale across branches, and take back your margins.",
+  ctaLabel = "Contact Sales",
+  ctaHref = "#",
+}: Props = {}) {
   return (
     <section className="relative overflow-hidden bg-black py-20">
 
@@ -23,17 +35,17 @@ export function ReadyToOwn() {
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="flex flex-col gap-2">
             <h2 className="text-hero-2 font-bold text-white text-balance leading-[1.1]">
-              Ready To Own Your System?
+              {title}
             </h2>
             <p className="text-xl text-white text-balance max-w-[754px]">
-              Stop renting your customers from aggregators. Launch fast, scale across branches, and take back your margins.
+              {subtitle}
             </p>
           </div>
           <a
-            href="#"
+            href={ctaHref}
             className="inline-flex items-center justify-center rounded-pill bg-orderbase-red px-9 py-4 text-xl font-medium text-white"
           >
-            Contact Sales
+            {ctaLabel}
           </a>
         </div>
 

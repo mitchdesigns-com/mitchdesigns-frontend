@@ -7,8 +7,12 @@ import type {
   AboutImage,
   CaseStudy,
   Career,
+  CareersPageData,
   ClientLogo,
+  CtaBannerData,
   FAQ,
+  HomePageData,
+  OrderbasePageData,
   SeoData,
   Service,
   ServicePageData,
@@ -286,6 +290,262 @@ export const getAboutPage = async (): Promise<AboutContent> => {
 
   const { fixtureAboutPage } = await import("./fixtures");
   return fixtureAboutPage;
+};
+
+/* ------------------------------------------------------------------
+ * Home Page (single type)
+ * ------------------------------------------------------------------ */
+/** Hero rotating words are stored comma/newline-separated in Strapi. */
+function parseWords(raw: unknown): string[] | undefined {
+  if (Array.isArray(raw)) return raw.map(String);
+  if (typeof raw === "string") {
+    const words = raw
+      .split(/[,\n]/)
+      .map((w) => w.trim())
+      .filter(Boolean);
+    return words.length ? words : undefined;
+  }
+  return undefined;
+}
+
+export const getHomePage = async (): Promise<HomePageData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/home-page", {
+      revalidate: 300,
+      query: {
+        "populate[hero]": "*",
+        "populate[about][populate]": "*",
+        "populate[orderbaseOverview][populate]": "*",
+      },
+    });
+    if (raw?.hero || raw?.about || raw?.orderbaseOverview) {
+      return {
+        hero: raw.hero
+          ? {
+              eyebrow: raw.hero.eyebrow ?? undefined,
+              headline: raw.hero.headline,
+              rotatingWords: parseWords(raw.hero.rotatingWords),
+            }
+          : undefined,
+        about: raw.about
+          ? {
+              intro: raw.about.intro ?? undefined,
+              body: raw.about.body ?? undefined,
+              signature: raw.about.signature ?? undefined,
+              stats: (raw.about.stats ?? []).map((s: any) => ({
+                value: s.value,
+                unit: s.unit ?? undefined,
+                label: s.label ?? undefined,
+              })),
+              cta: raw.about.ctaLabel
+                ? { label: raw.about.ctaLabel, href: raw.about.ctaHref ?? "#" }
+                : undefined,
+            }
+          : undefined,
+        orderbaseOverview: raw.orderbaseOverview
+          ? {
+              heading: raw.orderbaseOverview.heading,
+              description: raw.orderbaseOverview.description ?? undefined,
+              descriptionHighlight:
+                raw.orderbaseOverview.descriptionHighlight ?? undefined,
+              countValue: raw.orderbaseOverview.countValue ?? undefined,
+              countLabel: raw.orderbaseOverview.countLabel ?? undefined,
+              cta: raw.orderbaseOverview.ctaLabel
+                ? {
+                    label: raw.orderbaseOverview.ctaLabel,
+                    href: raw.orderbaseOverview.ctaHref ?? "/orderbase",
+                  }
+                : undefined,
+              cards: (raw.orderbaseOverview.cards ?? []).map((c: any) => ({
+                icon: c.icon,
+                title: c.title,
+                description: c.description ?? undefined,
+              })),
+            }
+          : undefined,
+      };
+    }
+  } catch {
+    /* fall through to fixture */
+  }
+  const { fixtureHomePage } = await import("./fixtures");
+  return fixtureHomePage;
+};
+
+/* ------------------------------------------------------------------
+ * Orderbase Page (single type)
+ * ------------------------------------------------------------------ */
+export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
+  const mUrl = (m: any) => (m ? strapiMedia(m.url) ?? m.url : undefined);
+  const iconCard = (c: any) => ({
+    icon: c.icon,
+    title: c.title ?? undefined,
+    description: c.description,
+  });
+  try {
+    const raw = await getSingle<Record<string, any>>("/orderbase-page", {
+      revalidate: 300,
+      query: {
+        "populate[hero]": "*",
+        "populate[brands][populate]": "*",
+        "populate[meet][populate]": "*",
+        "populate[challenge][populate][items][populate]": "*",
+        "populate[moreAbout][populate]": "*",
+        "populate[journey][populate][steps][populate]": "*",
+        "populate[delivery][populate]": "*",
+        "populate[pricing][populate][plans][populate]": "*",
+        "populate[sinceFrom][populate]": "*",
+        "populate[readyToOwn]": "*",
+      },
+    });
+    if (raw?.hero) {
+      return {
+        hero: raw.hero ?? undefined,
+        brands: (raw.brands ?? []).map((b: any) => ({
+          name: b.name,
+          logo: mUrl(b.logo),
+        })),
+        meet: raw.meet
+          ? { ...raw.meet, features: (raw.meet.features ?? []).map(iconCard) }
+          : undefined,
+        challenge: raw.challenge
+          ? {
+              label: raw.challenge.label ?? undefined,
+              title: raw.challenge.title ?? undefined,
+              items: (raw.challenge.items ?? []).map((i: any) => ({
+                title: i.title,
+                description: i.description ?? undefined,
+                image: mUrl(i.image),
+              })),
+            }
+          : undefined,
+        moreAbout: raw.moreAbout
+          ? {
+              ...raw.moreAbout,
+              features: (raw.moreAbout.features ?? []).map(iconCard),
+            }
+          : undefined,
+        journey: raw.journey
+          ? {
+              title: raw.journey.title ?? undefined,
+              subtitle: raw.journey.subtitle ?? undefined,
+              ctaLabel: raw.journey.ctaLabel ?? undefined,
+              ctaHref: raw.journey.ctaHref ?? undefined,
+              steps: (raw.journey.steps ?? []).map((s: any) => ({
+                number: s.number,
+                title: s.title,
+                description: s.description ?? undefined,
+                image: mUrl(s.image),
+              })),
+            }
+          : undefined,
+        delivery: raw.delivery
+          ? {
+              title: raw.delivery.title ?? undefined,
+              subtitle: raw.delivery.subtitle ?? undefined,
+              leftCards: (raw.delivery.leftCards ?? []).map(iconCard),
+              rightCards: (raw.delivery.rightCards ?? []).map(iconCard),
+            }
+          : undefined,
+        pricing: raw.pricing
+          ? {
+              title: raw.pricing.title ?? undefined,
+              subtitle: raw.pricing.subtitle ?? undefined,
+              plans: (raw.pricing.plans ?? []).map((p: any) => ({
+                name: p.name,
+                tagline: p.tagline ?? undefined,
+                price: p.price ?? undefined,
+                setupFee: p.setupFee ?? undefined,
+                recommended: p.recommended ?? undefined,
+                highlighted: p.highlighted ?? undefined,
+                ctaLabel: p.ctaLabel ?? undefined,
+                ctaHref: p.ctaHref ?? undefined,
+                features: (p.features ?? []).map((f: any) => ({
+                  label: f.label,
+                  disabled: f.disabled ?? undefined,
+                })),
+              })),
+            }
+          : undefined,
+        sinceFrom: raw.sinceFrom
+          ? {
+              pill: raw.sinceFrom.pill ?? undefined,
+              title: raw.sinceFrom.title ?? undefined,
+              description: raw.sinceFrom.description ?? undefined,
+              statsTitle: raw.sinceFrom.statsTitle ?? undefined,
+              stats: (raw.sinceFrom.stats ?? []).map((s: any) => ({
+                value: s.value,
+                label: s.label ?? undefined,
+              })),
+            }
+          : undefined,
+        readyToOwn: raw.readyToOwn ?? undefined,
+      };
+    }
+  } catch {
+    /* fall through to fixture */
+  }
+  const { fixtureOrderbasePage } = await import("./fixtures");
+  return fixtureOrderbasePage;
+};
+
+/* ------------------------------------------------------------------
+ * Careers Page (single type)
+ * ------------------------------------------------------------------ */
+export const getCareersPage = async (): Promise<CareersPageData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/careers-page", {
+      revalidate: 300,
+      query: {
+        "populate[hero]": "*",
+        "populate[drives]": "*",
+      },
+    });
+    if (raw?.hero || (raw?.drives && raw.drives.length)) {
+      return {
+        hero: raw.hero
+          ? {
+              eyebrow: raw.hero.eyebrow ?? undefined,
+              title: raw.hero.title,
+              description: raw.hero.description ?? undefined,
+            }
+          : undefined,
+        drives: (raw.drives ?? []).map((d: any) => ({ label: d.label })),
+      };
+    }
+  } catch {
+    /* fall through to fixture */
+  }
+  const { fixtureCareersPage } = await import("./fixtures");
+  return fixtureCareersPage;
+};
+
+/* ------------------------------------------------------------------
+ * CTA Banner (single type)
+ * ------------------------------------------------------------------ */
+export const getCtaBanner = async (): Promise<CtaBannerData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/cta-banner", {
+      revalidate: 300,
+      query: { populate: "bgImage" },
+    });
+    if (raw?.title) {
+      return {
+        title: raw.title,
+        description: raw.description ?? undefined,
+        cta: raw.ctaLabel
+          ? { label: raw.ctaLabel, href: raw.ctaHref ?? "/quote" }
+          : undefined,
+        bgImage: raw.bgImage
+          ? strapiMedia(raw.bgImage.url) ?? raw.bgImage.url
+          : undefined,
+      };
+    }
+  } catch {
+    /* fall through to fixture */
+  }
+  const { fixtureCtaBanner } = await import("./fixtures");
+  return fixtureCtaBanner;
 };
 
 /* ------------------------------------------------------------------

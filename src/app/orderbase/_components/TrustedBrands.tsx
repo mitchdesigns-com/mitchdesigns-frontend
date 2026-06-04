@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 export interface Brand {
   name: string;
-  logo: React.ReactNode;
+  logo?: string;
 }
 
 export interface TrustedBrandsProps {
@@ -21,26 +22,31 @@ export function TrustedBrands({
 
         {/* 5-up logo row — each slot ~290px, gap-4 */}
         <div className="flex items-center justify-between gap-4">
-          {brands.length > 0 ? (
-            brands.map((brand) => (
-              <div
-                key={brand.name}
-                className="flex flex-1 items-center justify-center h-[78px]"
-              >
-                {brand.logo}
-              </div>
-            ))
-          ) : (
-            // Placeholders until real logos are passed
-            Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex flex-1 items-center justify-center h-[78px] rounded-card-sm bg-panel"
-              >
-                <span className="text-sm text-fg-muted">Brand {i + 1}</span>
-              </div>
-            ))
-          )}
+          {brands.length > 0
+            ? brands.map((brand) => (
+                <div
+                  key={brand.name}
+                  className="flex flex-1 items-center justify-center h-[78px]"
+                >
+                  {brand.logo ? (
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="max-h-12 w-auto object-contain mix-blend-exclusion"
+                    />
+                  ) : (
+                    <span className="text-sm text-fg-muted">{brand.name}</span>
+                  )}
+                </div>
+              ))
+            : Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-1 items-center justify-center h-[78px] rounded-card-sm bg-panel"
+                >
+                  <span className="text-sm text-fg-muted">Brand {i + 1}</span>
+                </div>
+              ))}
         </div>
       </div>
     </section>
