@@ -10,6 +10,7 @@ import { Pricing } from "./_components/Pricing";
 import { SinceFrom } from "./_components/SinceFrom";
 import { ReadyToOwn } from "./_components/ReadyToOwn";
 import { getOrderbasePage } from "@/lib/cms";
+import { HeaderConfig } from "@/context/HeaderConfigContext";
 
 export const metadata: Metadata = {
   title: "Orderbase — Case Study",
@@ -21,6 +22,7 @@ export default async function OrderbasePage() {
 
   return (
     <div className="min-h-dvh">
+      <HeaderConfig sticky={false} />
       <Hero {...data.hero} title={data.hero?.title ?? ""} />
       <TrustedBrands brands={data.brands} />
       <MeetSection {...data.meet} />
