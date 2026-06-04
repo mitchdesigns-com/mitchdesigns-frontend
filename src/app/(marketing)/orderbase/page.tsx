@@ -22,7 +22,7 @@ export default async function OrderbasePage() {
 
   return (
     <div className="min-h-dvh">
-      <HeaderConfig sticky={false} />
+      <HeaderConfig sticky={false} showCta={false} />
       <Hero {...data.hero} title={data.hero?.title ?? ""} />
       <TrustedBrands brands={data.brands} />
       <MeetSection {...data.meet} />
