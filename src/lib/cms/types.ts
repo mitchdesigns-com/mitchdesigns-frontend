@@ -312,6 +312,7 @@ export type SupportCard = {
 export type SupportSectionProps = {
   title: string;
   titleHighlights?: string[];
+  description?: RichText;
   cards: SupportCard[];
 };
 

@@ -25,6 +25,8 @@ type Props = {
   slug: Service["slug"];
   data: ServicePageData;
   faqs: Array<FAQ & { id: number }>;
+  /** FAQs for this service's category — feed the accordion section. */
+  accordionFaqs?: FAQ[];
   caseStudies?: CaseStudy[];
 };
 
@@ -32,6 +34,7 @@ export function ServicePageRenderer({
   slug,
   data,
   faqs,
+  accordionFaqs = [],
   caseStudies = [],
 }: Props) {
   const {
@@ -48,6 +51,16 @@ export function ServicePageRenderer({
     designsAdapt,
     moreAbout,
   } = data;
+
+  // Accordion items come from the FAQ collection (filtered by service category);
+  // fall back to the section's own seeded items when no FAQs match.
+  const accordionItems = accordionFaqs.length
+    ? accordionFaqs.map((f, i) => ({
+        id: String(i),
+        title: f.question,
+        content: f.answer,
+      }))
+    : accordion?.accordion ?? [];
 
   switch (slug) {
     case "corporate":
@@ -90,7 +103,9 @@ export function ServicePageRenderer({
           <PrototypesSection {...prototypes} />
           {designsAdapt && <DesignsAdapt {...designsAdapt} />}
           {moreAbout && <MoreAbout {...moreAbout} />}
-          {accordion && <AccordionSection {...accordion} />}
+          {accordion && (
+            <AccordionSection {...accordion} accordion={accordionItems} />
+          )}
           {process && <ProcessSection {...process} />}
           {caseStudies.length > 0 && (
             <FeaturedProjects caseStudies={caseStudies} />
@@ -127,10 +142,15 @@ export function ServicePageRenderer({
         <>
           <ServiceHero {...hero} />
           <PrototypesSection {...prototypes} />
-          {numbers && <NumbersSection {...numbers} />}
-          {brief && <BriefSection {...brief} />}
           {weGotYou && <WeGotYou {...weGotYou} theme="beige" />}
           {whyUs && <WhyUsSection {...whyUs} />}
+          {process && <ProcessSection {...process} />}
+          <TechStackFetcher
+            title="Craft seamless digital platforms with our modern tech stack"
+            description="More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client."
+            highlight="modern tech stack"
+          />
+          {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
           <FAQSection faqs={faqs} />
         </>

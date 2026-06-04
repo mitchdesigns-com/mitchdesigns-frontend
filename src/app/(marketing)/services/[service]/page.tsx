@@ -12,7 +12,11 @@ import {
   fixtureFAQs,
 } from "@/lib/cms/fixtures";
 import { buildPageMetadata } from "@/lib/seo";
-import { SERVICES as NAV_SERVICES, type ServiceSlug } from "@/config/nav";
+import {
+  SERVICES as NAV_SERVICES,
+  SERVICE_FAQ_CATEGORY,
+  type ServiceSlug,
+} from "@/config/nav";
 
 const SERVICE_SLUGS = NAV_SERVICES.map((s) => s.slug);
 
@@ -93,9 +97,10 @@ export default async function ServicePage({
   const { service } = await params;
   if (!SERVICE_SLUGS.includes(service)) notFound();
 
-  const [data, faqs, caseStudies] = await Promise.all([
+  const [data, faqs, accordionFaqs, caseStudies] = await Promise.all([
     getServicePageData(service),
     safe(getFAQs(), fixtureFAQs),
+    safe(getFAQs(SERVICE_FAQ_CATEGORY[service]), []),
     safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
   ]);
 
@@ -135,6 +140,7 @@ export default async function ServicePage({
         slug={service}
         data={data}
         faqs={faqs}
+        accordionFaqs={accordionFaqs}
         caseStudies={caseStudies}
       />
     </>

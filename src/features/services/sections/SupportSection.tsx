@@ -5,11 +5,11 @@ import type { SupportSectionProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 import { RevealStagger, RevealItem } from "@/components/motion";
 
-export function SupportSection({ title, cards }: SupportSectionProps) {
+export function SupportSection({ title, description, cards }: SupportSectionProps) {
   return (
     <Section theme="beige" className="py-20 md:py-28">
       <div className="space-y-12">
-        <SectionHeader title={title} />
+        <SectionHeader title={title} description={description} align="center" />
         <RevealStagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.08}>
           {cards.map((card) => (
             <RevealItem

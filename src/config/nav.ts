@@ -76,6 +76,21 @@ export const SERVICES: {
   },
 ];
 
+/**
+ * Maps each service to the FAQ `category` whose entries feed that service's
+ * accordion / FAQ filtering. Edit the right-hand values to match the category
+ * names used in Strapi (Settings → FAQ entries).
+ */
+export const SERVICE_FAQ_CATEGORY: Record<ServiceSlug, string> = {
+  corporate: "Corporate Website",
+  ecommerce: "eCommerce website",
+  "mobile-app": "Product Design",
+  custom: "Custom Software",
+  "media-buying": "Media Buying",
+  "google-ads": "Google Ads",
+  seo: "SEO / AGO",
+};
+
 export function serviceHref(slug: ServiceSlug) {
   return `/services/${slug}` as const;
 }
