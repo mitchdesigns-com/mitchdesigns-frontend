@@ -448,6 +448,7 @@ function mapServicePage(raw: any): ServicePageData {
       ? {
           title: raw.support.title,
           titleHighlights: raw.support.titleHighlights ?? undefined,
+          description: raw.support.description ?? undefined,
           cards: (raw.support.cards ?? []).map((c: any) => ({
             title: c.title,
             image: mediaUrl(c.image),
