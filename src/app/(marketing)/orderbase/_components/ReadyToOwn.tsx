@@ -12,7 +12,7 @@ export function ReadyToOwn({
   ctaHref = "#",
 }: Props = {}) {
   return (
-    <section className="relative overflow-hidden bg-black py-20">
+    <section data-theme="dark" className="relative overflow-hidden bg-black py-20">
 
       {/* Red glow — 438×438 ellipse at x:537 y:524, blur 100px, 50% opacity */}
       <div

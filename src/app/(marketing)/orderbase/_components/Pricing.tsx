@@ -79,7 +79,7 @@ export function Pricing({
   plans = DEFAULT_PLANS,
 }: PricingProps = {}) {
   return (
-    <section className="bg-black py-20">
+    <section data-theme="dark" className="bg-black py-20">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col items-center gap-10">
 
         {/* Header */}

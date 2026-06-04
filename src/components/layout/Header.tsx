@@ -58,7 +58,7 @@ function ServiceCard({
 }
 
 export function Header() {
-  const { sticky } = useContext(HeaderConfigContext);
+  const { sticky, showCta } = useContext(HeaderConfigContext);
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
   const [atTop, setAtTop] = useState(true);
@@ -152,15 +152,17 @@ export function Header() {
           </Link>
 
           <div className="flex items-center gap-6">
-            <Link
-              href="/quote"
-              className={cn(
-                "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
-                menuOpen && "opacity-0 pointer-events-none",
-              )}
-            >
-              Get Detailed Proposal
-            </Link>
+            {showCta && (
+              <Link
+                href="/quote"
+                className={cn(
+                  "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
+                  menuOpen && "opacity-0 pointer-events-none",
+                )}
+              >
+                Get Detailed Proposal
+              </Link>
+            )}
 
             <button
               type="button"

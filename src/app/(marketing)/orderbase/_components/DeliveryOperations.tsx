@@ -25,7 +25,7 @@ export function DeliveryOperations({
   rightCards = DEFAULT_RIGHT,
 }: Props = {}) {
   return (
-    <section className="bg-black py-20">
+    <section data-theme="dark" className="bg-black py-20">
       <div className="mx-auto max-w-[var(--container-max)] px-[3.75rem] flex flex-col items-center gap-10">
 
         {/* Header */}
