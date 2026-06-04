@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
@@ -10,7 +10,9 @@ import {
   getNextOutcome,
   getPreviousStep,
   getStepCount,
+  isFieldVisible,
   PICKER_STAGES,
+  type QuoteField,
   type QuoteFieldKey,
   type QuoteFlow,
   type QuoteFormState,
@@ -20,6 +22,7 @@ import {
 } from "@/lib/quote/schema";
 
 import { submitLead } from "@/lib/quote/submitLead";
+import { CalendlyEmbed } from "./CalendlyEmbed";
 import { ChoiceGroup } from "./ChoiceGroup";
 import { FieldRenderer } from "./FieldRenderer";
 import { FileUpload } from "./FileUpload";
@@ -53,13 +56,15 @@ export function StepRenderer({ service, flow, step }: Props) {
     setUploadedFile(null);
   }, [service, step.step]);
 
-  const hydratedTitle = useMemo(() => {
-    const firstName =
-      typeof state.firstName === "string" && state.firstName.trim()
-        ? state.firstName.trim()
-        : "there";
-    return step.title.replace("{firstName}", firstName);
-  }, [state.firstName, step.title]);
+  const hydratedTitle = useMemo(
+    () => personalize(step.title, state.firstName),
+    [state.firstName, step.title],
+  );
+
+  const visibleFields = useMemo(
+    () => (step.kind === "form" ? step.fields.filter((f) => isFieldVisible(f, state)) : []),
+    [step, state],
+  );
 
   function updateValue(key: QuoteFieldKey, value: QuoteFormValue) {
     setState((current) => {
@@ -71,12 +76,53 @@ export function StepRenderer({ service, flow, step }: Props) {
   }
 
   function goBack() {
-    const previousStep = getPreviousStep(service, step.step);
-    if (previousStep) {
-      router.push(`/quote/${service}/${previousStep}`);
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
       return;
     }
-    router.push("/quote");
+    const previousStep = getPreviousStep(service, step.step);
+    router.push(previousStep ? `/quote/${service}/${previousStep}` : "/quote");
+  }
+
+  const finalizeAndSubmit = useCallback(() => {
+    // Fire-and-forget — don't block navigation on Strapi being slow/down
+    submitLead({
+      firstName:        toString(state.firstName),
+      lastName:         toString(state.lastName),
+      email:            toString(state.email),
+      mobileNumber:     toString(state.mobileNumber),
+      service,
+      companyName:      toString(state.companyName),
+      companyCountry:   toString(state.companyCountry),
+      companyStage:     state.companyStage,
+      industry:         toString(state.industry),
+      websiteLanguages: toString(state.websiteLanguages),
+      websitePurpose:   state.websitePurpose,
+      websiteSections:  state.websiteSections,
+      specialFeatures:  state.specialFeatures,
+      hasSitemap:       toString(state.hasSitemap),
+      additionalNotes:  toString(state.additionalNotes),
+      budget:           toString(state.budget),
+      timeline:         toString(state.timeline),
+      nextAction:       toString(state.nextAction),
+      rawFormData:      state,
+      sitemapFileId:    readFileId("sitemapFile"),
+      companyProfileId: readFileId("companyProfile"),
+    }).catch((err) => console.error("Lead submission error:", err));
+
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(FILE_IDS_KEY);
+    }
+  }, [service, state]);
+
+  function navigate(outcome: ReturnType<typeof getNextOutcome>) {
+    if (outcome.type === "route") {
+      if (outcome.href.startsWith("/quote/thank-you")) finalizeAndSubmit();
+      router.push(outcome.href);
+      return;
+    }
+    router.push(`/quote/${service}/${outcome.step}`);
   }
 
   async function submitStep(event: React.FormEvent<HTMLFormElement>) {
@@ -86,47 +132,13 @@ export function StepRenderer({ service, flow, step }: Props) {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    const stepValue = state[step.id];
-    const selectedValue = typeof stepValue === "string" ? stepValue : undefined;
-    const outcome = getNextOutcome(service, step.step, selectedValue);
-
-    if (outcome.type === "route" && outcome.href.startsWith("/quote/thank-you")) {
-      // Fire-and-forget — don't block navigation on Strapi being slow/down
-      submitLead({
-        firstName:        toString(state.firstName),
-        lastName:         toString(state.lastName),
-        email:            toString(state.email),
-        mobileNumber:     toString(state.mobileNumber),
-        service,
-        companyName:      toString(state.companyName),
-        companyCountry:   toString(state.companyCountry),
-        companyStage:     state.companyStage,
-        industry:         toString(state.industry),
-        websiteLanguages: toString(state.websiteLanguages),
-        websitePurpose:   state.websitePurpose,
-        websiteSections:  state.websiteSections,
-        specialFeatures:  state.specialFeatures,
-        hasSitemap:       toString(state.hasSitemap),
-        additionalNotes:  toString(state.additionalNotes),
-        budget:           toString(state.budget),
-        timeline:         toString(state.timeline),
-        nextAction:       toString(state.nextAction),
-        rawFormData:      state,
-        sitemapFileId:    readFileId("sitemapFile"),
-        companyProfileId: readFileId("companyProfile"),
-      }).catch((err) => console.error("Lead submission error:", err));
-
-      window.localStorage.removeItem(STORAGE_KEY);
-      window.localStorage.removeItem(FILE_IDS_KEY);
-    }
-
-    if (outcome.type === "route") {
-      router.push(outcome.href);
-      return;
-    }
-
-    router.push(`/quote/${service}/${outcome.step}`);
+    navigate(getNextOutcome(service, step.step, state));
   }
+
+  const handleScheduled = useCallback(() => {
+    finalizeAndSubmit();
+    router.push("/quote/thank-you");
+  }, [finalizeAndSubmit, router]);
 
   return (
     <>
@@ -145,7 +157,7 @@ export function StepRenderer({ service, flow, step }: Props) {
             type="button"
             aria-label="Back"
             onClick={goBack}
-            className="absolute left-6 top-11 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-fg transition-colors hover:bg-bg-alt md:left-10"
+            className="absolute left-6 top-11 flex h-9 w-9 items-center justify-center rounded-full text-fg transition-colors hover:bg-bg-alt md:left-10"
           >
             <ArrowLeftHand />
           </button>
@@ -162,7 +174,7 @@ export function StepRenderer({ service, flow, step }: Props) {
             </h1>
             {step.description ? (
               <p className="mt-4 text-lg text-fg md:text-xl text-balance">
-                {step.description}
+                {personalize(step.description, state.firstName)}
               </p>
             ) : null}
           </div>
@@ -171,10 +183,10 @@ export function StepRenderer({ service, flow, step }: Props) {
           <div className="mt-10">
             {step.kind === "form" && (
               <div className="space-y-8">
-                {step.fields.map((field) => (
+                {visibleFields.map((field) => (
                   <FieldRenderer
                     key={field.id}
-                    field={field}
+                    field={withPersonalizedLabel(field, state.firstName)}
                     value={state[field.id]}
                     error={errors[field.id]}
                     onChange={(value) => updateValue(field.id, value)}
@@ -221,6 +233,21 @@ export function StepRenderer({ service, flow, step }: Props) {
               />
             )}
 
+            {step.kind === "schedule" && (
+              <div>
+                <CalendlyEmbed onScheduled={handleScheduled} />
+                <div className="mt-6 text-center">
+                  <button
+                    type="button"
+                    onClick={handleScheduled}
+                    className="text-base font-medium text-fg-muted underline-offset-4 transition-colors hover:text-black hover:underline"
+                  >
+                    I&apos;ll book later — finish up
+                  </button>
+                </div>
+              </div>
+            )}
+
             {step.kind === "summary" && (
               <p className="mx-auto max-w-[660px] text-center text-lg text-fg">
                 {step.description}
@@ -228,22 +255,24 @@ export function StepRenderer({ service, flow, step }: Props) {
             )}
           </div>
 
-          {/* Submit */}
-          <div className="mt-10 flex justify-end">
-            <Button
-              type="submit"
-              size="lg"
-              className={cn(
-                "h-[68px] min-w-[200px] text-base",
-                step.kind !== "summary" && "uppercase",
-                step.kind === "summary" && "w-full",
-              )}
-            >
-              {step.kind === "summary"
-                ? step.submitLabel
-                : (step.nextLabel ?? "Next")}
-            </Button>
-          </div>
+          {/* Submit (hidden for the schedule step, which advances on booking) */}
+          {step.kind !== "schedule" && (
+            <div className="mt-10 flex justify-end">
+              <Button
+                type="submit"
+                size="lg"
+                className={cn(
+                  "h-[68px] min-w-[200px] text-base",
+                  step.kind !== "summary" && "uppercase",
+                  step.kind === "summary" && "w-full",
+                )}
+              >
+                {step.kind === "summary"
+                  ? step.submitLabel
+                  : (step.nextLabel ?? "Next")}
+              </Button>
+            </div>
+          )}
         </form>
       </section>
     </>
@@ -251,6 +280,19 @@ export function StepRenderer({ service, flow, step }: Props) {
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
+
+function personalize(text: string, firstName?: string): string {
+  const name =
+    typeof firstName === "string" && firstName.trim()
+      ? firstName.trim()
+      : "there";
+  return text.replace("{firstName}", name);
+}
+
+function withPersonalizedLabel(field: QuoteField, firstName?: string): QuoteField {
+  if (!field.label.includes("{firstName}")) return field;
+  return { ...field, label: personalize(field.label, firstName) };
+}
 
 function validateStep(
   step: QuoteStep,
@@ -261,6 +303,8 @@ function validateStep(
 
   if (step.kind === "form") {
     for (const field of step.fields) {
+      if (!isFieldVisible(field, state)) continue;
+
       const value = state[field.id];
       const rule = field.validation;
 

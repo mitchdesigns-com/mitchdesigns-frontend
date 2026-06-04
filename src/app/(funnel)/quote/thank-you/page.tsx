@@ -23,11 +23,11 @@ export default function ThankYouPage() {
           {/* Heading + body */}
           <div className="mt-2 flex flex-col gap-3 text-center">
             <h1 className="text-[32px] font-bold leading-[1.1] text-black">
-              Thank You!
+              You’re all set. Thanks!
             </h1>
             <p className="text-xl font-medium leading-[1.3] text-black text-balance">
-              Your project details have been received. Our team is reviewing your
-              requirements to prepare a tailored, high-converting strategy.
+              Your estimate is on its way. Our team is shaping it around what you
+              shared, and we’ll be in touch within 48 hours.
             </p>
           </div>
         </div>

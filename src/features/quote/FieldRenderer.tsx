@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { TelInput } from "@/components/ui/TelInput";
 import { CountrySelect } from "@/components/ui/CountrySelect";
+import { MarketsSelect } from "@/components/ui/MarketsSelect";
 import type { QuoteField, QuoteFormValue } from "@/lib/quote/schema";
 import { ChoiceGroup } from "./ChoiceGroup";
 
@@ -114,6 +115,31 @@ export function FieldRenderer({ field, value, error, onChange }: Props) {
           id={`field-${field.id}`}
           value={typeof value === "string" ? value : (field.defaultValue ?? "")}
           options={field.options as { label: string; value: string }[]}
+          onChange={(v) => onChange(v)}
+          invalid={Boolean(error)}
+          className="mt-2"
+        />
+        {error ? (
+          <p className="mt-2 text-sm text-orderbase-red">{error}</p>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (field.type === "markets") {
+    const selectedMarkets = Array.isArray(value) ? value : [];
+    return (
+      <div>
+        <label htmlFor={`field-${field.id}`} className="block text-base font-medium">
+          {field.label}{" "}
+          {field.required ? <span className="text-accent">*</span> : null}
+        </label>
+        {field.helperText ? (
+          <p className="mt-1 text-base text-fg-muted">{field.helperText}</p>
+        ) : null}
+        <MarketsSelect
+          id={`field-${field.id}`}
+          value={selectedMarkets}
           onChange={(v) => onChange(v)}
           invalid={Boolean(error)}
           className="mt-2"

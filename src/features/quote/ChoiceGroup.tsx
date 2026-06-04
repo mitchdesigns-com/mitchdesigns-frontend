@@ -69,6 +69,16 @@ export function ChoiceGroup({
               />
 
               <span>{option.label}</span>
+              {isCompletion && option.description ? (
+                <span
+                  className={cn(
+                    "text-sm font-normal text-balance",
+                    checked ? "text-white/80" : "text-fg-muted",
+                  )}
+                >
+                  {option.description}
+                </span>
+              ) : null}
             </label>
           );
         })}
