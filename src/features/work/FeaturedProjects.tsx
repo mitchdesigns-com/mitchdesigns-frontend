@@ -208,10 +208,10 @@ export function FeaturedProjects({
   const [isHovering, setIsHovering] = useState(false);
   const n = caseStudies.length;
 
-  // Viewport-derived coverflow geometry (lazy init avoids a desktop→mobile flash)
-  const [vw, setVw] = useState(() =>
-    typeof window !== "undefined" ? window.innerWidth : 1512,
-  );
+  // Viewport-derived coverflow geometry. Init to the same value the server uses
+  // so the first client render matches the SSR HTML (no hydration mismatch); the
+  // effect below syncs to the real width right after mount.
+  const [vw, setVw] = useState(1512);
   useEffect(() => {
     const update = () => setVw(window.innerWidth);
     update();

@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.9",
+    "@userback/widget": "^0.3.12",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.0",
     "gl-matrix": "^3.4.4",
