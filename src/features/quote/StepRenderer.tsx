@@ -51,9 +51,21 @@ export function StepRenderer({ service, flow, step }: Props) {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   useEffect(() => {
-    setState(readStoredLead());
+    const stored = readStoredLead();
+    if (
+      (step.kind === "radio" || step.kind === "completion-choice") &&
+      step.defaultValue &&
+      isEmptyValue(stored[step.id])
+    ) {
+      const seeded = { ...stored, [step.id]: step.defaultValue };
+      writeStoredLead(seeded);
+      setState(seeded);
+    } else {
+      setState(stored);
+    }
     setErrors({});
     setUploadedFile(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [service, step.step]);
 
   const hydratedTitle = useMemo(
@@ -73,6 +85,14 @@ export function StepRenderer({ service, flow, step }: Props) {
       return next;
     });
     setErrors((current) => ({ ...current, [key]: undefined }));
+  }
+
+  function updateOther(fieldId: QuoteFieldKey, value: string) {
+    setState((current) => {
+      const next = { ...current, [`${fieldId}Other`]: value };
+      writeStoredLead(next);
+      return next;
+    });
   }
 
   function goBack() {
@@ -108,6 +128,7 @@ export function StepRenderer({ service, flow, step }: Props) {
       rawFormData:      state,
       sitemapFileId:    readFileId("sitemapFile"),
       companyProfileId: readFileId("companyProfile"),
+      briefFileId:      readFileId("briefFile"),
     }).catch((err) => console.error("Lead submission error:", err));
 
     if (typeof window !== "undefined") {
@@ -190,6 +211,8 @@ export function StepRenderer({ service, flow, step }: Props) {
                     value={state[field.id]}
                     error={errors[field.id]}
                     onChange={(value) => updateValue(field.id, value)}
+                    otherValue={otherText(state, field.id)}
+                    onOtherChange={(value) => updateOther(field.id, value)}
                   />
                 ))}
               </div>
@@ -280,6 +303,11 @@ export function StepRenderer({ service, flow, step }: Props) {
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
+
+function otherText(state: StoredLead, fieldId: QuoteFieldKey): string {
+  const value = state[`${fieldId}Other`];
+  return typeof value === "string" ? value : "";
+}
 
 function personalize(text: string, firstName?: string): string {
   const name =
