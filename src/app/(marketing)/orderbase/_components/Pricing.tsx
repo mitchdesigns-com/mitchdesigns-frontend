@@ -115,7 +115,7 @@ function PricingCard({ plan }: { plan: PricingPlan }) {
       {/* "Most Recommended" pill */}
       {plan.recommended && (
         <div
-          className="absolute -top-3 left-[250px] inline-flex items-center justify-center rounded-pill bg-orderbase-red border border-black px-2 py-1 text-base font-medium text-white"
+          className="absolute -top-3 left-[250px] inline-flex items-center justify-center rounded-pill bg-orderbase-red border border-black px-2 py-1 text-base font-medium text-white whitespace-nowrap"
           style={{ transform: "rotate(3deg)", transformOrigin: "left center" }}
         >
           Most Recommended
