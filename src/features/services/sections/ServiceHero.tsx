@@ -82,7 +82,7 @@ export function ServiceHero({
               src={image}
               alt={imageAlt ?? ""}
               fill
-              className="object-cover"
+              className="object-contain object-center"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority
             />

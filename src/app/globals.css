@@ -141,6 +141,7 @@
 
   /* ---------------- Aspect Ratios ---------------- */
   --aspect-case-photo: 3 / 2; /* case study gallery images (676×450) */
+  --aspect-card-media: 37 / 25; /* why-us card image (296×200) */
 
   /* ---------------- Layout ---------------- */
   --container-max: 1392px; /* 1512 canvas - 60px×2 padding */

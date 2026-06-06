@@ -143,7 +143,7 @@ export function Footer() {
         </div>
 
         {/* Wordmark */}
-        <div className="relative mt-12 lg:mt-20">
+        <div className="relative mt-12 lg:mt-20 pointer-events-none">
           <div className="footer-grid absolute inset-0" aria-hidden />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>

@@ -15,8 +15,8 @@ export function WhyUsSection({
   variant = "grid",
 }: WhyUsSectionProps) {
   const cardEls = cards.map((card) => (
-    <RevealItem key={card.title} className="flex flex-col gap-4 rounded-card-sm border border-border p-6">
-      <div className="relative aspect-video overflow-hidden rounded-card-sm">
+    <RevealItem key={card.title} className="flex h-full flex-col gap-6 rounded-card bg-space-grey p-5">
+      <div className="relative aspect-card-media overflow-hidden rounded-card-sm">
         <Image
           src={card.image}
           alt={card.imageAlt ?? ""}
@@ -25,8 +25,10 @@ export function WhyUsSection({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
       </div>
-      <h3 className="text-lg font-semibold text-fg">{card.title}</h3>
-      <RichText content={card.description} className="text-base text-fg-muted" />
+      <div className="flex flex-col gap-2">
+        <h3 className="text-xl font-normal text-white">{card.title}</h3>
+        <RichText content={card.description} className="text-base font-medium text-grey-500" />
+      </div>
     </RevealItem>
   ));
 
