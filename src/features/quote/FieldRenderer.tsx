@@ -14,13 +14,43 @@ type Props = {
   value: QuoteFormValue | undefined;
   error?: string;
   onChange: (value: QuoteFormValue) => void;
+  /** Free-text companion for a selected "Other" option. */
+  otherValue?: string;
+  onOtherChange?: (value: string) => void;
 };
 
-export function FieldRenderer({ field, value, error, onChange }: Props) {
+/** Inline "please specify" input shown when an "Other" option is chosen. */
+function OtherInput({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <Input
+      type="text"
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      placeholder="Please specify"
+      aria-label="Please specify"
+      className="mt-3 h-11 px-4"
+    />
+  );
+}
+
+export function FieldRenderer({
+  field,
+  value,
+  error,
+  onChange,
+  otherValue = "",
+  onOtherChange,
+}: Props) {
   const label = (
     <span className="text-base font-medium">
       {field.label}{" "}
-      {field.required ? <span className="text-accent">*</span> : null}
+      {field.required ? <span className="text-orderbase-red">*</span> : null}
     </span>
   );
 
@@ -69,6 +99,9 @@ export function FieldRenderer({ field, value, error, onChange }: Props) {
             onChange={onChange}
           />
         </div>
+        {value === "other" && onOtherChange ? (
+          <OtherInput value={otherValue} onChange={onOtherChange} />
+        ) : null}
       </div>
     );
   }
@@ -97,6 +130,9 @@ export function FieldRenderer({ field, value, error, onChange }: Props) {
             />
           ))}
         </div>
+        {selectedValues.includes("other") && onOtherChange ? (
+          <OtherInput value={otherValue} onChange={onOtherChange} />
+        ) : null}
         {error ? (
           <p className="mt-2 text-sm text-orderbase-red">{error}</p>
         ) : null}
@@ -109,7 +145,7 @@ export function FieldRenderer({ field, value, error, onChange }: Props) {
       <div>
         <label htmlFor={`field-${field.id}`} className="block text-base font-medium">
           {field.label}{" "}
-          {field.required ? <span className="text-accent">*</span> : null}
+          {field.required ? <span className="text-orderbase-red">*</span> : null}
         </label>
         <CountrySelect
           id={`field-${field.id}`}
@@ -132,7 +168,7 @@ export function FieldRenderer({ field, value, error, onChange }: Props) {
       <div>
         <label htmlFor={`field-${field.id}`} className="block text-base font-medium">
           {field.label}{" "}
-          {field.required ? <span className="text-accent">*</span> : null}
+          {field.required ? <span className="text-orderbase-red">*</span> : null}
         </label>
         {field.helperText ? (
           <p className="mt-1 text-base text-fg-muted">{field.helperText}</p>
@@ -156,7 +192,7 @@ export function FieldRenderer({ field, value, error, onChange }: Props) {
       <div>
         <label htmlFor={`field-${field.id}`} className="block text-base font-medium">
           {field.label}{" "}
-          {field.required ? <span className="text-accent">*</span> : null}
+          {field.required ? <span className="text-orderbase-red">*</span> : null}
         </label>
         <TelInput
           id={`field-${field.id}`}

@@ -44,6 +44,7 @@ export type QuoteFieldKey =
   | "schedule"
   // corporate
   | "currentWebsite"
+  | "currentWebsiteUrl"
   | "hasSitemap"
   | "sitemapFile"
   | "websiteLanguages"
@@ -413,6 +414,15 @@ export const quoteFlows = {
               { label: "Yes, I have one already", value: "yes" },
               { label: "No", value: "no" },
             ],
+          },
+          {
+            id: "currentWebsiteUrl",
+            label: "What's the link?",
+            type: "url",
+            required: true,
+            helperText: "(We'll take a look before the call.)",
+            placeholder: "https://www.yourcompany.com/",
+            showWhen: { field: "currentWebsite", equals: "yes" },
           },
           {
             id: "hasSitemap",
@@ -1397,7 +1407,10 @@ export type QuoteFormValue =
   | null
   | Record<string, string>;
 
-export type QuoteFormState = Partial<Record<QuoteFieldKey, QuoteFormValue>>;
+export type QuoteFormState = Partial<Record<QuoteFieldKey, QuoteFormValue>> & {
+  /** Free-text companions for "Other" options, stored as `${fieldId}Other`. */
+  readonly [key: string]: QuoteFormValue | undefined;
+};
 
 export function isQuoteService(value: string): value is QuoteService {
   return QUOTE_SERVICES.includes(value as QuoteService);

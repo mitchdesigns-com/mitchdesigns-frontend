@@ -117,7 +117,7 @@ export function ServicePicker() {
 
             <div className="mt-11">
               <label htmlFor="quote-first-name" className="text-base font-medium">
-                First Name <span className="text-accent">*</span>
+                First Name <span className="text-orderbase-red">*</span>
               </label>
               <Input
                 id="quote-first-name"

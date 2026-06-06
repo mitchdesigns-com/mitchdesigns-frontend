@@ -75,6 +75,14 @@ export function StepRenderer({ service, flow, step }: Props) {
     setErrors((current) => ({ ...current, [key]: undefined }));
   }
 
+  function updateOther(fieldId: QuoteFieldKey, value: string) {
+    setState((current) => {
+      const next = { ...current, [`${fieldId}Other`]: value };
+      writeStoredLead(next);
+      return next;
+    });
+  }
+
   function goBack() {
     if (typeof window !== "undefined" && window.history.length > 1) {
       router.back();
@@ -108,6 +116,7 @@ export function StepRenderer({ service, flow, step }: Props) {
       rawFormData:      state,
       sitemapFileId:    readFileId("sitemapFile"),
       companyProfileId: readFileId("companyProfile"),
+      briefFileId:      readFileId("briefFile"),
     }).catch((err) => console.error("Lead submission error:", err));
 
     if (typeof window !== "undefined") {
@@ -190,6 +199,8 @@ export function StepRenderer({ service, flow, step }: Props) {
                     value={state[field.id]}
                     error={errors[field.id]}
                     onChange={(value) => updateValue(field.id, value)}
+                    otherValue={otherText(state, field.id)}
+                    onOtherChange={(value) => updateOther(field.id, value)}
                   />
                 ))}
               </div>
@@ -280,6 +291,11 @@ export function StepRenderer({ service, flow, step }: Props) {
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
+
+function otherText(state: StoredLead, fieldId: QuoteFieldKey): string {
+  const value = state[`${fieldId}Other`];
+  return typeof value === "string" ? value : "";
+}
 
 function personalize(text: string, firstName?: string): string {
   const name =

@@ -21,14 +21,16 @@ export type LeadPayload = {
   source?: string;
   sitemapFileId?: number | null;
   companyProfileId?: number | null;
+  briefFileId?: number | null;
 };
 
 export async function submitLead(payload: LeadPayload): Promise<void> {
-  const { sitemapFileId, companyProfileId, ...rest } = payload;
+  const { sitemapFileId, companyProfileId, briefFileId, ...rest } = payload;
 
   const body: Record<string, unknown> = { ...rest, source: "quote-form" };
   if (sitemapFileId)    body.sitemapFile    = sitemapFileId;
   if (companyProfileId) body.companyProfile = companyProfileId;
+  if (briefFileId)      body.briefFile      = briefFileId;
 
   const res = await fetch("/api/leads", {
     method: "POST",
