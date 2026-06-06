@@ -130,7 +130,12 @@ export function ServicePageRenderer({
           <PrototypesSection {...prototypes} />
           {numbers && <NumbersSection {...numbers} />}
           {brief && <BriefSection {...brief} />}
-          {weGotYou && <WeGotYou {...weGotYou} />}
+          {weGotYou && (
+            <WeGotYou
+              {...weGotYou}
+              theme={slug === "google-ads" ? "dark" : weGotYou.theme}
+            />
+          )}
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           <FAQSection faqs={faqs} />

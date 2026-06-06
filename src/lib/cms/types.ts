@@ -265,7 +265,7 @@ export type WeGotYouProps = {
   image: string;
   imageAlt?: string;
   cta?: { label: string; href: string };
-  theme?: "light" | "beige";
+  theme?: "light" | "dark" | "beige";
   imagePosition?: "left" | "right";
 };
 

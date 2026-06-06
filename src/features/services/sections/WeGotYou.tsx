@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
+import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal } from "@/components/motion";
 import type { WeGotYouProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
@@ -13,11 +14,11 @@ function renderTitle(
   Tag: "h2" | "h3",
 ) {
   if (!titleHighlights.length) {
-    return <Tag className="text-hero-3 font-bold md:text-hero-2">{title}</Tag>;
+    return <Tag className="text-hero-5">{title}</Tag>;
   }
   const words = title.split(/\s+/);
   return (
-    <Tag className="text-hero-3 font-bold md:text-hero-2">
+    <Tag className="text-hero-5">
       {words.map((word, i) => {
         const bare = word.replace(/[.,!?;:]+$/, "");
         const trail = word.slice(bare.length);
@@ -53,22 +54,28 @@ export function WeGotYou({
   return (
     <Section theme={theme} className="py-20 md:py-28">
       <div
-        className={`flex flex-col gap-12 md:flex-row md:items-center md:gap-20 ${
+        className={`flex flex-col gap-10 md:flex-row md:items-center ${
           imagePosition === "left" ? "md:flex-row-reverse" : ""
         }`}
       >
-        <Reveal className="flex flex-1 flex-col gap-6" delay={0.15}>
+        <Reveal className="flex flex-1 flex-col gap-10" delay={0.15}>
           {label && (
             <p className="text-sm font-medium uppercase tracking-[0.18em] text-fg-muted">
               {label}
             </p>
           )}
           {renderTitle(title, titleHighlights, titleTag)}
-          <RichText content={description} className="max-w-xl text-lg text-fg-muted" />
+          <RichText
+            content={description}
+            className="max-w-2xl text-lg leading-[125%] text-fg-muted md:text-2xl"
+          />
           {cta && (
             <div>
-              <Button asChild variant="secondary">
-                <Link href={cta.href}>{cta.label}</Link>
+              <Button size="lg" asChild>
+                <Link href={cta.href} className="flex items-center gap-2">
+                  {cta.label}
+                  <ArrowRight size={20} />
+                </Link>
               </Button>
             </div>
           )}
