@@ -51,9 +51,21 @@ export function StepRenderer({ service, flow, step }: Props) {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   useEffect(() => {
-    setState(readStoredLead());
+    const stored = readStoredLead();
+    if (
+      (step.kind === "radio" || step.kind === "completion-choice") &&
+      step.defaultValue &&
+      isEmptyValue(stored[step.id])
+    ) {
+      const seeded = { ...stored, [step.id]: step.defaultValue };
+      writeStoredLead(seeded);
+      setState(seeded);
+    } else {
+      setState(stored);
+    }
     setErrors({});
     setUploadedFile(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [service, step.step]);
 
   const hydratedTitle = useMemo(

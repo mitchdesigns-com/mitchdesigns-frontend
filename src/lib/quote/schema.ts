@@ -161,6 +161,7 @@ export type QuoteChoiceStep = QuoteStepBase & {
   readonly kind: "service-select" | "radio" | "completion-choice";
   readonly label?: string;
   readonly helperText?: string;
+  readonly defaultValue?: string;
   readonly options: readonly QuoteStepOption[];
 };
 
@@ -358,6 +359,7 @@ const whatsNextStep = (step: number, scheduleStepNum: number): QuoteChoiceStep =
   description:
     "Your details are with our team. While they prep your strategy, pick how you'd like to move forward.",
   validation: { required: true },
+  defaultValue: "schedule-call",
   options: [
     {
       label: "Schedule an Online Meeting",
