@@ -426,9 +426,11 @@ export type HomeStat = {
 };
 
 export type HomeAboutSection = {
-  /** White lead-in paragraph (rendered immediately). */
-  intro?: string;
-  /** Continuation that animates from grey → white on scroll. */
+  /**
+   * Full body copy that animates from grey → white on scroll. Authored as a
+   * Strapi `blocks` field, flattened to a `\n\n`-joined string in the query
+   * (inline marks are dropped — the char-by-char animation can't render them).
+   */
   body?: string;
   signature?: string;
   stats: HomeStat[];

@@ -308,6 +308,26 @@ function parseWords(raw: unknown): string[] | undefined {
   return undefined;
 }
 
+/**
+ * Flatten a Strapi `blocks` value into a plain string. Each top-level block
+ * becomes a paragraph joined by "\n\n" — the AboutSection body is rendered
+ * with a per-character scroll animation, so inline marks (bold/links) are
+ * intentionally dropped. Passes strings through unchanged (legacy/fixture data).
+ */
+function blocksToText(raw: unknown): string | undefined {
+  if (typeof raw === "string") return raw || undefined;
+  if (!Array.isArray(raw)) return undefined;
+  const text = raw
+    .map((block: any) =>
+      Array.isArray(block?.children)
+        ? block.children.map((c: any) => c?.text ?? "").join("")
+        : "",
+    )
+    .join("\n\n")
+    .trim();
+  return text || undefined;
+}
+
 export const getHomePage = async (): Promise<HomePageData> => {
   try {
     const raw = await getSingle<Record<string, any>>("/home-page", {
@@ -329,8 +349,7 @@ export const getHomePage = async (): Promise<HomePageData> => {
           : undefined,
         about: raw.about
           ? {
-              intro: raw.about.intro ?? undefined,
-              body: raw.about.body ?? undefined,
+              body: blocksToText(raw.about.body),
               signature: raw.about.signature ?? undefined,
               stats: (raw.about.stats ?? []).map((s: any) => ({
                 value: s.value,

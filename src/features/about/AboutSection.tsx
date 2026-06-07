@@ -19,11 +19,8 @@ const DEFAULT_STATS = [
   { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
 ];
 
-const DEFAULT_INTRO =
-  "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns in";
-
 const DEFAULT_BODY =
-  "to results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don’t chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it’s always about the user, the customer, and their experience. That’s why Mitch Designs has become the partner businesses trust when growth can’t wait.";
+  "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns into results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don’t chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it’s always about the user, the customer, and their experience. That’s why Mitch Designs has become the partner businesses trust when growth can’t wait.";
 
 const DEFAULT_SIGNATURE = "Mitch";
 
@@ -50,7 +47,6 @@ function AnimatedChar({
 
 export function AboutSection({
   stats = DEFAULT_STATS,
-  intro = DEFAULT_INTRO,
   body = DEFAULT_BODY,
   signature = DEFAULT_SIGNATURE,
   cta = { label: "About Us", href: "/about" },
@@ -125,7 +121,6 @@ export function AboutSection({
           className="flex max-w-[895px] flex-col items-center gap-10 text-center lg:items-start lg:text-left"
         >
           <p className="text-[1.5rem] leading-normal tracking-[0.01em] sm:text-[1.75rem] lg:text-[2rem]">
-            <span className="text-white">{intro}</span>{" "}
             {grayChars.map((char, i) => (
               <AnimatedChar
                 key={i}
