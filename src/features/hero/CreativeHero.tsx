@@ -207,11 +207,13 @@ function FloatingCard({
   card,
   rawX,
   rawY,
+  videosReady,
   onClickVideo,
 }: {
   card: CardDef;
   rawX: ReturnType<typeof useMotionValue<number>>;
   rawY: ReturnType<typeof useMotionValue<number>>;
+  videosReady: boolean;
   onClickVideo: (src: string, label: string) => void;
 }) {
   const [hovered, setHovered] = useState(false);
@@ -259,13 +261,16 @@ function FloatingCard({
           justifyContent: 'flex-end',
         }}
       >
-        {/* Project video preview */}
+        {/* Project video preview — mounted only once the browser is idle so
+            the heavy autoplay videos don't compete with the LCP hero text. */}
+        {videosReady && (
         <video
           src={card.video}
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
           aria-hidden
           style={{
             position: 'absolute',
@@ -277,6 +282,7 @@ function FloatingCard({
             transition: 'opacity 0.3s ease',
           }}
         />
+        )}
 
         {/* Decorative grid lines */}
         <svg
@@ -444,6 +450,20 @@ export function CreativeHero({
   const [cardHovered, setCardHovered] = useState(false);
   const [lightbox, setLightbox] = useState<{ src: string; label: string } | null>(null);
 
+  // Hold off mounting the (heavy) preview videos until the browser is idle, so
+  // ~11 MB of autoplay video doesn't compete with the LCP hero text for bandwidth.
+  const [videosReady, setVideosReady] = useState(false);
+  useEffect(() => {
+    const supportsRic = typeof window.requestIdleCallback === "function";
+    const handle = supportsRic
+      ? window.requestIdleCallback(() => setVideosReady(true), { timeout: 2500 })
+      : window.setTimeout(() => setVideosReady(true), 1200);
+    return () => {
+      if (supportsRic) window.cancelIdleCallback(handle as number);
+      else window.clearTimeout(handle as number);
+    };
+  }, []);
+
   // Section-relative cursor position (for the visual cursor ring)
   const curX = useMotionValue(-200);
   const curY = useMotionValue(-200);
@@ -528,6 +548,7 @@ export function CreativeHero({
                 card={card}
                 rawX={springX}
                 rawY={springY}
+                videosReady={videosReady}
                 onClickVideo={(src, label) => setLightbox({ src, label })}
               />
             </div>
