@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Talk } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
@@ -25,11 +26,12 @@ function FeaturedTalk({ talk }: { talk: Talk }) {
     <Link href={`/talks/${talk.slug}`} className="flex w-full items-start gap-8">
       <Reveal className="relative aspect-[533/390] w-[38%] shrink-0 overflow-hidden rounded-card-md">
         {talk.cover?.url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={talk.cover.url}
             alt={talk.cover.alternativeText ?? talk.title}
-            className="absolute inset-0 size-full object-cover"
+            fill
+            sizes="(min-width: 768px) 40vw, 80vw"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 bg-[#e5e5e5]" />
@@ -69,11 +71,12 @@ function SmallTalkCard({ talk }: { talk: Talk }) {
     <Link href={`/talks/${talk.slug}`} className="flex flex-1 flex-col gap-4">
       <div className="relative aspect-4/3 w-full overflow-hidden rounded-card-md">
         {talk.cover?.url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={talk.cover.url}
             alt={talk.cover.alternativeText ?? talk.title}
-            className="absolute inset-0 size-full object-cover"
+            fill
+            sizes="(min-width: 768px) 25vw, 80vw"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 bg-[#e5e5e5]" />

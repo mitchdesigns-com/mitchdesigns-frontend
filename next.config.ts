@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     // Invalid src prop (http://localhost:1337/images/case-studies/el-gouna.webp) on `next/image`, hostname "localhost" is not configured under images in your `next.config.js`
     // pub-aa7546047e2b40c9810cb247ee90e22d.r2.dev
     formats: ["image/avif", "image/webp"],
+    // Cache optimized images for 31 days (report flagged /_next/image as "None").
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       // Add CMS image domains here, e.g.:
       // { protocol: "https", hostname: "cdn.sanity.io" },

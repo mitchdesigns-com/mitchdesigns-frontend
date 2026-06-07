@@ -454,6 +454,9 @@ export function CreativeHero({
   // ~11 MB of autoplay video doesn't compete with the LCP hero text for bandwidth.
   const [videosReady, setVideosReady] = useState(false);
   useEffect(() => {
+    // Skip the heavy autoplay preview videos on small screens entirely — saves
+    // ~11 MB on mobile; the cards keep their dark background + grid lines.
+    if (window.matchMedia("(max-width: 1023px)").matches) return;
     const supportsRic = typeof window.requestIdleCallback === "function";
     const handle = supportsRic
       ? window.requestIdleCallback(() => setVideosReady(true), { timeout: 2500 })

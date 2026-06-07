@@ -83,6 +83,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={poppins.variable}>
+      <head>
+        {/* Preload the LCP body/heading font so it isn't discovered late via CSS */}
+        <link
+          rel="preload"
+          href="/fonts/Satoshi-Variable.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-dvh antialiased">
         <JsonLd data={siteGraph} />
         {children}
