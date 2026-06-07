@@ -61,6 +61,8 @@ export type CaseStudy = {
   /** Grid card testimonial — populated separately from the detail-page content zone */
   testimonial?: CaseStudyTestimonial;
   websiteUrl?: string;
+  /** Hex colour for the box that frames the cover image (e.g. "#0b0f1a"). */
+  bgColor?: string;
 };
 
 export type BlogSection =

@@ -242,6 +242,7 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
       { __component: "blocks.color-palette" as const, swatches: [{ name: "Brick Ember", hex: "#b93524" }] },
     ],
     featured: true,
+    bgColor: "#0b3a53",
     publishedAt: "2024-08-12",
   },
   {
@@ -267,6 +268,7 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
       avatar: { url: "/images/client-logos/lychee.png" },
     },
     featured: true,
+    bgColor: "#e5484d",
     publishedAt: "2024-06-01",
   },
   {
@@ -292,6 +294,7 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
       avatar: { url: "/images/client-logos/mv.png" },
     },
     featured: true,
+    bgColor: "#1f7a5a",
     publishedAt: "2020-10-01",
   },
   {
@@ -321,6 +324,7 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
       avatar: { url: "/images/client-logos/gdev.png" },
     },
     featured: true,
+    bgColor: "#5b3fb0",
     publishedAt: "2024-08-12",
   },
 ];

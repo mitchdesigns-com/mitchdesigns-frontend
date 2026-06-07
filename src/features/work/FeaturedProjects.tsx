@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/motion";
 import { DragCursor } from "@/components/icons/DragCursor";
+import { ArrowRight } from "@/components/icons/ArrowRight";
 import type { CaseStudy } from "@/lib/cms/types";
 
 const DRAG_THRESHOLD = 50;
@@ -89,9 +90,22 @@ interface CardProps {
   theme: "dark" | "light";
   onNext: () => void;
   onPrev: () => void;
+  onCenterEnter: () => void;
+  onCenterLeave: () => void;
+  suppressClickRef: React.MutableRefObject<boolean>;
 }
 
-function Card({ project, slot, geom, theme, onNext, onPrev }: CardProps) {
+function Card({
+  project,
+  slot,
+  geom,
+  theme,
+  onNext,
+  onPrev,
+  onCenterEnter,
+  onCenterLeave,
+  suppressClickRef,
+}: CardProps) {
   const s = geom;
   const isCenter = slot === "center";
   const isLeft = slot === "left";
@@ -132,14 +146,38 @@ function Card({ project, slot, geom, theme, onNext, onPrev }: CardProps) {
         />
       )}
 
-      {/* Image */}
-      <div className="relative w-full overflow-hidden rounded-sm" style={{ aspectRatio: "911 / 800" }}>
+      {/* Image — framed in a box whose colour comes from Strapi (project.bgColor) */}
+      <div
+        className="relative w-full overflow-hidden rounded-sm"
+        style={{
+          aspectRatio: "911 / 800",
+          backgroundColor:
+            project.bgColor ??
+            (theme === "dark" ? "var(--color-card)" : "var(--color-img-placeholder)"),
+        }}
+      >
         <Image
           src={project.cover.url}
           alt={project.title}
           fill
-          className="object-cover"
+          sizes={isCenter ? "(min-width: 1024px) 928px, 82vw" : "560px"}
+          className="object-contain p-6 md:p-8"
         />
+
+        {/* Center card links to the project; hovering it swaps the stage
+            cursor to the "Explore Project" pill. */}
+        {isCenter && (
+          <Link
+            href={`/case-studies/${project.slug}`}
+            aria-label={`Explore ${project.title}`}
+            onMouseEnter={onCenterEnter}
+            onMouseLeave={onCenterLeave}
+            onClick={(e) => {
+              if (suppressClickRef.current) e.preventDefault();
+            }}
+            className="absolute inset-0 z-20"
+          />
+        )}
       </div>
 
       {/* Meta */}
@@ -206,6 +244,7 @@ export function FeaturedProjects({
 }: FeaturedProjectsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [overCenter, setOverCenter] = useState(false);
   const n = caseStudies.length;
 
   // Viewport-derived coverflow geometry. Init to the same value the server uses
@@ -231,6 +270,8 @@ export function FeaturedProjects({
   const dragStartX = useRef<number | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const wheelCooldown = useRef(false);
+  // Set true on a real drag so the trailing click on the center link is ignored.
+  const suppressClickRef = useRef(false);
 
   const goNext = useCallback(() => setActiveIndex((i) => (i + 1) % n), [n]);
   const goPrev = useCallback(() => setActiveIndex((i) => (i - 1 + n) % n), [n]);
@@ -267,12 +308,15 @@ export function FeaturedProjects({
 
   function handlePointerDown(e: React.PointerEvent) {
     dragStartX.current = e.clientX;
+    suppressClickRef.current = false;
   }
 
   function handlePointerUp(e: React.PointerEvent) {
     if (dragStartX.current === null) return;
     const delta = e.clientX - dragStartX.current;
     if (Math.abs(delta) > DRAG_THRESHOLD) {
+      // Real drag — advance and swallow the click that follows pointerup.
+      suppressClickRef.current = true;
       if (delta < 0) { goNext(); } else { goPrev(); }
     }
     dragStartX.current = null;
@@ -300,6 +344,7 @@ export function FeaturedProjects({
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => {
             setIsHovering(false);
+            setOverCenter(false);
             dragStartX.current = null;
           }}
           onMouseMove={handleMouseMove}
@@ -319,6 +364,9 @@ export function FeaturedProjects({
                   theme={theme}
                   onNext={goNext}
                   onPrev={goPrev}
+                  onCenterEnter={() => setOverCenter(true)}
+                  onCenterLeave={() => setOverCenter(false)}
+                  suppressClickRef={suppressClickRef}
                 />
               );
             })}
@@ -339,7 +387,14 @@ export function FeaturedProjects({
             }}
             transition={{ duration: 0.2 }}
           >
-            <DragCursor size={100} />
+            {overCenter ? (
+              <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-yellow px-7 py-4 text-lg font-semibold text-black shadow-lg">
+                Explore Project
+                <ArrowRight size={20} className="-rotate-45" />
+              </span>
+            ) : (
+              <DragCursor size={100} />
+            )}
           </motion.div>
         </div>
 
