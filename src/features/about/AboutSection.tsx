@@ -132,7 +132,7 @@ export function AboutSection({
 
           <span
             className="font-signature"
-            style={{ fontSize: "clamp(5rem, 10vw, 10rem)", lineHeight: 1 }}
+            style={{ fontSize: "clamp(5rem, 10vw, 10rem)", lineHeight: "52px" }}
             aria-hidden
           >
             {sigChars.map((char, i) => (
