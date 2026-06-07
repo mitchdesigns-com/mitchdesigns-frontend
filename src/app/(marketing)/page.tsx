@@ -141,8 +141,6 @@ export default async function HomePage() {
 
       <ClientLogos />
 
-      <ClientsTrustFetcher />
-
       <FeaturedProjects caseStudies={caseStudies} theme="dark" />
 
       <OurServices services={services} />
@@ -161,6 +159,8 @@ export default async function HomePage() {
         description="We've answered the most common ones to help you understand how we work and what to expect."
         defaultCategory="Corporate Websites"
       />
+
+      <ClientsTrustFetcher />
       <CTABanner {...ctaBanner} />
     </>
   );
