@@ -90,7 +90,7 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
 
         {/* Author */}
         {cs.testimonial ? (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-10 mt-10">
             <div className="h-px w-full bg-grey-500" />
             <div className="flex items-center gap-5">
               {avatarSrc ? (

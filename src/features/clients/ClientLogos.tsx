@@ -147,7 +147,7 @@ export function ClientLogos() {
       <div className="flex flex-col gap-[60px] py-20">
         <Reveal>
           <h2 className="text-hero-2 font-bold tracking-[0.01em] text-white">
-            Our <span className="text-yellow">Agency</span> Experience
+            Our Agency Experience
           </h2>
         </Reveal>
 
