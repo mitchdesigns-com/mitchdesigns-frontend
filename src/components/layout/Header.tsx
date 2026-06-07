@@ -13,6 +13,8 @@ import { NAV_LINKS, SERVICES, serviceHref } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
+// How far to scroll before the sticky floating menu button appears.
+const FAB_SHOW_AFTER = 300;
 
 function SlideLabel({ label }: { label: string }) {
   return (
@@ -62,22 +64,20 @@ export function Header() {
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
   const [atTop, setAtTop] = useState(true);
+  const [scrolledPast, setScrolledPast] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showServices, setShowServices] = useState(false);
 
   useEffect(() => {
-    if (!sticky) {
-      setVisible(true);
-      setAtTop(true);
-      return;
-    }
-
     let lastY = window.scrollY;
 
     const onScroll = () => {
       const y = window.scrollY;
       setAtTop(y < 8);
-      if (y < 8) {
+      setScrolledPast(y > FAB_SHOW_AFTER);
+      if (!sticky) {
+        setVisible(true);
+      } else if (y < 8) {
         setVisible(true);
       } else if (y > lastY) {
         setVisible(false);
@@ -113,6 +113,11 @@ export function Header() {
   const logoSrc = isDark
     ? "/images/logo-white.webp"
     : "/images/logo-black.webp";
+
+  // Sticky floating menu button: shown once scrolled (and the inline header
+  // menu isn't already on screen), and kept on as the close (X) while the menu
+  // is open so there's always a visible way to dismiss it.
+  const fabShown = scrolledPast && (menuOpen || (sticky ? !visible : true));
 
   return (
     <>
@@ -169,7 +174,10 @@ export function Header() {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               onClick={() => (menuOpen ? closeAll() : openMenu())}
-              className="relative flex flex-col items-start justify-center transition-opacity hover:opacity-70"
+              className={cn(
+                "relative flex flex-col items-start justify-center transition-opacity hover:opacity-70",
+                fabShown && "pointer-events-none opacity-0",
+              )}
               style={{ width: 75, height: 40 }}
             >
               <motion.span
@@ -196,6 +204,54 @@ export function Header() {
           </div>
         </div>
       </motion.header>
+
+      {/* Sticky floating menu toggle — aligned to the container's right edge.
+          Becomes a close (X) while the menu is open, and sits above the menu
+          overlay (z-60) so it can always dismiss it. */}
+      <div className="pointer-events-none fixed inset-x-0 top-5 z-60 md:top-8">
+        <div className="container-page flex justify-end">
+          <AnimatePresence>
+            {fabShown && (
+              <motion.button
+                key="menu-fab"
+                type="button"
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                onClick={() => (menuOpen ? closeAll() : openMenu())}
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.6 }}
+                transition={{ duration: 0.25, ease: EASE }}
+                className={cn(
+                  "pointer-events-auto flex size-16 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-25",
+                  menuOpen ? "bg-black" : "bg-yellow",
+                )}
+              >
+                <span className="relative block h-6 w-11">
+                  <motion.span
+                    animate={menuOpen ? { y: 6, rotate: 45 } : { y: 0, rotate: 0 }}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className={cn(
+                      "absolute left-0 block h-1 w-full rounded-pill",
+                      menuOpen ? "bg-white" : "bg-black",
+                    )}
+                    style={{ top: 4 }}
+                  />
+                  <motion.span
+                    animate={menuOpen ? { y: -6, rotate: -45 } : { y: 0, rotate: 0 }}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className={cn(
+                      "absolute left-0 block h-1 w-full rounded-pill",
+                      menuOpen ? "bg-white" : "bg-black",
+                    )}
+                    style={{ top: 16 }}
+                  />
+                </span>
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
 
       {/* Full-screen yellow menu */}
       <AnimatePresence>
