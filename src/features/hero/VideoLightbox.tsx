@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Close } from "@/components/icons/Close";
 
@@ -12,6 +13,15 @@ export function VideoLightbox({
   alt: string;
   onClose: () => void;
 }) {
+  // Lock body scroll while the lightbox is open; restore on close/unmount.
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   return (
     <motion.div
       role="dialog"
