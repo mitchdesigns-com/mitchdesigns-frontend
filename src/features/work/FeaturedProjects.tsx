@@ -73,9 +73,8 @@ function CategoryPill({
 }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full px-2 py-1.5 text-sm ${
-        theme === "dark" ? "bg-card-border text-white" : "bg-border text-black"
-      }`}
+      className={`inline-flex shrink-0 items-center rounded-full px-2 py-1.5 text-sm ${theme === "dark" ? "bg-card-border text-white" : "bg-border text-black"
+        }`}
     >
       {label}
     </span>
@@ -157,7 +156,7 @@ function Card({
         }}
       >
         <Image
-          src={project.cover.url}
+          src={(project.featuredThumbnail ?? project.cover).url}
           alt={project.title}
           fill
           sizes={isCenter ? "(min-width: 1024px) 928px, 82vw" : "560px"}
@@ -186,15 +185,18 @@ function Card({
           <Link
             href={`/case-studies/${project.slug}`}
             onClick={(e) => e.stopPropagation()}
-            className={`font-bold leading-snug hover:underline ${
-              isCenter ? "text-2xl" : "text-lg font-medium"
-            } ${titleColor}`}
+            className={`font-bold leading-snug hover:underline ${isCenter ? "text-2xl" : "text-lg font-medium"
+              } ${titleColor}`}
           >
-            {project.title}
+            {project.title}{`’s Website`}
           </Link>
-          <CategoryPill label={project.services[0]} theme={theme} />
+          {project.services.length > 0 && (
+            <CategoryPill label={project.services[0]} theme={theme} />
+          )}
         </div>
-        <span className="text-base text-fg-muted">Since {project.year}</span>
+        {project.year && (
+          <span className="text-base text-fg-muted">Since {project.year}</span>
+        )}
       </div>
     </motion.div>
   );
@@ -219,13 +221,12 @@ function Dots({
           key={i}
           aria-label={`Go to project ${i + 1}`}
           onClick={() => onSelect(i)}
-          className={`h-2 rounded-full transition-all duration-300 ${
-            i === active
+          className={`h-2 rounded-full transition-all duration-300 ${i === active
               ? "w-6 bg-yellow"
               : theme === "dark"
                 ? "w-2 bg-white/30 hover:bg-white/60"
                 : "w-2 bg-black/20 hover:bg-black/40"
-          }`}
+            }`}
         />
       ))}
     </div>
@@ -328,9 +329,8 @@ export function FeaturedProjects({
         {/* Heading */}
         <Reveal className="mb-10 lg:mb-15">
           <h2
-            className={`text-center text-hero-2 font-bold ${
-              theme === "dark" ? "text-white" : "text-black"
-            }`}
+            className={`text-center text-hero-2 font-bold ${theme === "dark" ? "text-white" : "text-black"
+              }`}
           >
             Featured Projects
           </h2>

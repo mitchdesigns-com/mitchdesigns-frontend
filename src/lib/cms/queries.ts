@@ -42,6 +42,7 @@ export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number
     query: {
       "populate[cover]": "true",
       "populate[thumbnail]": "true",
+      "populate[featuredThumbnail]": "true",
       "populate[logo]": "true",
       "populate[testimonial][populate]": "*",
       "populate[services]": "true",
@@ -62,6 +63,7 @@ export const getCaseStudy = async (
       "filters[slug][$eq]": slug,
       "populate[cover]": "true",
       "populate[thumbnail]": "true",
+      "populate[featuredThumbnail]": "true",
       "populate[logo]": "true",
       "populate[testimonial][populate]": "*",
       "populate[services]": "true",

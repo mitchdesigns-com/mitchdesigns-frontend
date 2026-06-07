@@ -51,6 +51,8 @@ export type CaseStudy = {
   year: number;
   cover: StrapiImage;
   thumbnail?: StrapiImage;
+  /** Image used by the Featured Projects coverflow; falls back to `cover`. */
+  featuredThumbnail?: StrapiImage;
   content?: CaseStudyBlock[];
   featured?: boolean;
   publishedAt: string;
