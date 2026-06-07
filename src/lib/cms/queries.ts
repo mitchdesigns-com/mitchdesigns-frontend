@@ -815,38 +815,40 @@ function mapServicePage(raw: any): ServicePageData {
 export async function getServicePageData(
   slug: Service["slug"],
 ): Promise<ServicePageData> {
-  const results = await getCollection<Record<string, unknown>>(
-    "/service-pages",
-    {
-      revalidate: 300,
-      query: {
-        "filters[slug][$eq]": slug,
-        // Flat sections — one level of populate gets all their fields + media
-        "populate[hero][populate]": "*",
-        "populate[prototypes][populate]": "*",
-        "populate[weGotYou][populate]": "*",
-        "populate[brief][populate]": "*",
-        "populate[featuresSimplified][populate]": "*",
-        "populate[accordion][populate]": "*",
-        "populate[numbers][populate]": "*",
-        // Sections with repeatable sub-components that have their own images
-        "populate[whyUs][populate][cards][populate]": "*",
-        "populate[process][populate][processCards][populate]": "*",
-        "populate[support][populate][cards][populate]": "*",
-        "populate[designsAdapt][populate][cards][populate]": "*",
-        "populate[moreAbout][populate][cards][populate]": "*",
-        "populate[seo][populate]": "*",
+  try {
+    const results = await getCollection<Record<string, unknown>>(
+      "/service-pages",
+      {
+        revalidate: 300,
+        query: {
+          "filters[slug][$eq]": slug,
+          // Flat sections — one level of populate gets all their fields + media
+          "populate[hero][populate]": "*",
+          "populate[prototypes][populate]": "*",
+          "populate[weGotYou][populate]": "*",
+          "populate[brief][populate]": "*",
+          "populate[featuresSimplified][populate]": "*",
+          "populate[accordion][populate]": "*",
+          "populate[numbers][populate]": "*",
+          // Sections with repeatable sub-components that have their own images
+          "populate[whyUs][populate][cards][populate]": "*",
+          "populate[process][populate][processCards][populate]": "*",
+          "populate[support][populate][cards][populate]": "*",
+          "populate[designsAdapt][populate][cards][populate]": "*",
+          "populate[moreAbout][populate][cards][populate]": "*",
+          "populate[seo][populate]": "*",
+        },
       },
-    },
-  );
+    );
 
-  const raw = results[0];
-  if (!raw) {
-    const { fixtureServicePages } = await import("./fixtures/servicePages");
-    return fixtureServicePages[slug];
+    const raw = results[0];
+    if (raw) return mapServicePage(raw);
+  } catch {
+    /* CMS unreachable (e.g. 502 during build) — fall through to fixture */
   }
 
-  return mapServicePage(raw);
+  const { fixtureServicePages } = await import("./fixtures/servicePages");
+  return fixtureServicePages[slug];
 }
 
 /* ------------------------------------------------------------------
