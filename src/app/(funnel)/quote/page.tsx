@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ServicePicker } from "@/features/quote";
+import { AwayTitle } from "@/lib/quote/useAwayTitle";
 
 export const metadata: Metadata = {
   title: "Request a Quote",
@@ -9,5 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function QuoteEntryPage() {
-  return <ServicePicker />;
+  return (
+    <>
+      <AwayTitle />
+      <ServicePicker />
+    </>
+  );
 }

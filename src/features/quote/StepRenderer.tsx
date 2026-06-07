@@ -22,6 +22,7 @@ import {
 } from "@/lib/quote/schema";
 
 import { submitLead } from "@/lib/quote/submitLead";
+import { useAwayTitle } from "@/lib/quote/useAwayTitle";
 import { CalendlyEmbed } from "./CalendlyEmbed";
 import { ChoiceGroup } from "./ChoiceGroup";
 import { FieldRenderer } from "./FieldRenderer";
@@ -49,6 +50,8 @@ export function StepRenderer({ service, flow, step }: Props) {
   const [state, setState] = useState<StoredLead>({});
   const [errors, setErrors] = useState<ErrorMap>({});
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  useAwayTitle(state.firstName);
 
   useEffect(() => {
     const stored = readStoredLead();
