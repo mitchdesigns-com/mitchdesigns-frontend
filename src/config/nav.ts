@@ -6,6 +6,7 @@ export const NAV_LINKS = [
   { label: "Talks", href: "/talks" },
   { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
+  { label: "Get Detailed Proposal", href: "/quote" },
 ] as const;
 
 export const COMPANY_LINKS = [
