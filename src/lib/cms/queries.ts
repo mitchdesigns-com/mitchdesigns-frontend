@@ -174,7 +174,7 @@ export const getFAQs = (category?: string) =>
 export const getServices = () =>
   getCollection<Service>("/our-services", {
     revalidate: 300,
-    query: { populate: "icon" },
+    query: { populate: "icon", sort: "order:asc" },
   });
 
 export const getService = async (

@@ -130,6 +130,8 @@ export type FAQ = {
 };
 
 export type Service = {
+  /** Display order in the homepage services list — set in Strapi (ascending). */
+  order?: number;
   slug: ServiceSlug;
   title: string;
   tagline: string;
