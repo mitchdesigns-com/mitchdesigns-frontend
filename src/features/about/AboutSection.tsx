@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
-  useScroll,
   useTransform,
   useMotionValue,
-  useMotionValueEvent,
+  useInView,
+  animate,
   MotionValue,
 } from "framer-motion";
 import { Section } from "@/components/layout/Section";
@@ -52,17 +52,16 @@ export function AboutSection({
   cta = { label: "About Us", href: "/about" },
 }: Partial<HomeAboutSection> = {}) {
   const ref = useRef<HTMLDivElement>(null);
+  // Play the reveal once the block scrolls into view — runs on its own from
+  // then on, decoupled from scroll position.
+  const inView = useInView(ref, { once: true, amount: 0.4 });
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 0.85", "end 0.25"],
-  });
-
-  // One-way progress — only ever increases so lit characters stay white
   const animProgress = useMotionValue(0);
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (v > animProgress.get()) animProgress.set(v);
-  });
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(animProgress, 1, { duration: 2, ease: "linear" });
+    return () => controls.stop();
+  }, [inView, animProgress]);
 
   const grayChars = (body ?? "").split("");
   const sigChars = (signature ?? "").split("");
