@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { RichText as RichTextContent } from "@/lib/cms/types";
+import { normalizeRichTextHref } from "@/lib/richTextHref";
 
 type TextNode = {
   type: "text";
@@ -37,7 +38,7 @@ type BlockNode =
 function renderInline(node: InlineNode, key: number) {
   if (node.type === "link") {
     return (
-      <Link key={key} href={node.url} className="underline underline-offset-2 hover:opacity-70">
+      <Link key={key} href={normalizeRichTextHref(node.url)} className="underline underline-offset-2 hover:opacity-70">
         {node.children.map((c, i) => renderInline(c, i))}
       </Link>
     );

@@ -4,6 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { TocSidebar } from "./TocSidebar";
 import { BlockImage } from "./BlockImage";
+import { normalizeRichTextHref } from "@/lib/richTextHref";
 
 // ── Strapi Blocks types ────────────────────────────────────────────────────
 
@@ -66,29 +67,6 @@ function headingId(text: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-}
-
-function normalizeRichTextHref(href: string) {
-  if (href.startsWith("/")) return href;
-
-  try {
-    const url = new URL(href);
-    if (url.hostname === "mitchdesigns.com" || url.hostname === "www.mitchdesigns.com") {
-      const path = url.pathname.replace(/\/+$/, "");
-      const segments = path.split("/").filter(Boolean);
-      if (path.startsWith("/talks/")) {
-        return `${path}${url.search}${url.hash}`;
-      }
-      if (segments.length && segments[0].startsWith("talks")) {
-        return `/talks/${segments[segments.length - 1]}${url.search}${url.hash}`;
-      }
-      return `${path}${url.search}${url.hash}`;
-    }
-  } catch {
-    // ignore invalid URLs and return original href
-  }
-
-  return href;
 }
 
 function blockText(children: InlineNode[]): string {
