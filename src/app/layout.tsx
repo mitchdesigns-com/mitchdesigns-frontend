@@ -96,7 +96,7 @@ export default function RootLayout({
         <Script
           src="https://feedback-widget.mitchdesigns.workers.dev/widget.js"
           data-ingest-key="pk_b9de74ec44ea8cd03eeedbe6438440e7"
-          data-endpoint="https://caereguiqcqhfvmskxlu.supabase.co/functions/v1/ingest-feedback"
+          data-endpoint="https://bugger-worker.mitchdesigns.workers.dev/functions/v1/ingest-feedback"
           strategy="lazyOnload"
           data-position="bottom-left"
           data-buttonText="Our Feedback"
