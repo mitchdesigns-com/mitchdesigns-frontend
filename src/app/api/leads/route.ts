@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { createTrelloCard } from "@/lib/quote/createTrelloCard";
 
@@ -24,9 +24,13 @@ export async function POST(request: Request) {
       return NextResponse.json(data, { status: res.status });
     }
 
-    // Fire-and-forget Trello card — never block or fail the lead response on it.
-    createTrelloCard(body?.data ?? {}).catch((err) =>
-      console.error("Trello card error:", err),
+    // Create the Trello card after the response is sent. `after()` maps to
+    // Cloudflare's waitUntil, so the Worker stays alive until it finishes
+    // (a bare fire-and-forget gets cancelled when the response returns).
+    after(
+      createTrelloCard(body?.data ?? {}).catch((err) =>
+        console.error("Trello card error:", err),
+      ),
     );
 
     return NextResponse.json(data, { status: 201 });

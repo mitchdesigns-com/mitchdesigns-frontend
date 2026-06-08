@@ -6,6 +6,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const { createTrelloCard } = vi.hoisted(() => ({ createTrelloCard: vi.fn(async () => {}) }));
 vi.mock("@/lib/quote/createTrelloCard", () => ({ createTrelloCard }));
 
+// `after()` needs a real request scope (it doesn't exist in the test runner),
+// so replace it with a pass-through that still settles the scheduled promise.
+vi.mock("next/server", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("next/server")>();
+  return { ...actual, after: (work: Promise<unknown> | (() => unknown)) => (typeof work === "function" ? work() : work) };
+});
+
 import { POST } from "./route";
 
 const leadData = { firstName: "Sarah", email: "sarah@acme.com", service: "corporate-website", source: "quote-form" };
