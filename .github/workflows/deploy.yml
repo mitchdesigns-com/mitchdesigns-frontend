@@ -6,6 +6,9 @@
 #   CLOUDFLARE_ACCOUNT_ID  — from dash.cloudflare.com or `wrangler whoami`
 #   CLOUDFLARE_API_TOKEN   — API token with Edit Cloudflare Workers permission
 #   STRAPI_API_TOKEN       — read-only token from Strapi admin
+#   TRELLO_API_KEY         — Trello Power-Up API key
+#   TRELLO_TOKEN           — Trello API token (never-expiring)
+#   TRELLO_LIST_ID         — id of the "🌐 Website Quote Leads" list on New MD Leads
 
 name: Deploy — Production
 
@@ -43,3 +46,6 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          TRELLO_LIST_ID: ${{ secrets.TRELLO_LIST_ID }}
