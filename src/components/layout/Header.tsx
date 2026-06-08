@@ -14,7 +14,7 @@ import { NAV_LINKS, SERVICES, serviceHref } from "@/config/nav";
 const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
 // How far to scroll before the sticky floating menu button appears.
-const FAB_SHOW_AFTER = 300;
+const FAB_SHOW_AFTER = 1300;
 
 function SlideLabel({ label }: { label: string }) {
   return (

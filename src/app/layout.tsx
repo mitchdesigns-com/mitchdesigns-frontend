@@ -10,7 +10,7 @@ const poppins = Poppins({
   display: "swap",
 });
 import { JsonLd } from "@/components/seo/JsonLd";
-import { UserbackWidget } from "@/components/Userback";
+// import { UserbackWidget } from "@/components/Userback";
 
 const SITE_URL = "https://mitchdesigns.com";
 const SITE_NAME = "MitchDesigns";
@@ -105,7 +105,7 @@ export default function RootLayout({
       <body className="min-h-dvh antialiased">
         <JsonLd data={siteGraph} />
         {children}
-        <UserbackWidget />
+        {/* <UserbackWidget /> */}
       </body>
     </html>
   );
