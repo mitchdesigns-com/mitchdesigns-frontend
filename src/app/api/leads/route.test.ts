@@ -3,15 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 // Mock the Trello module so we never import "server-only" or hit the network,
 // and can assert the route triggers it. vi.hoisted lets the (hoisted) factory
 // reference the mock fn safely.
-const { createTrelloCard } = vi.hoisted(() => ({ createTrelloCard: vi.fn(async () => {}) }));
+const { createTrelloCard } = vi.hoisted(() => ({
+  createTrelloCard: vi.fn(async () => ({ ok: true, cardId: "card_1" })),
+}));
 vi.mock("@/lib/quote/createTrelloCard", () => ({ createTrelloCard }));
-
-// `after()` needs a real request scope (it doesn't exist in the test runner),
-// so replace it with a pass-through that still settles the scheduled promise.
-vi.mock("next/server", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("next/server")>();
-  return { ...actual, after: (work: Promise<unknown> | (() => unknown)) => (typeof work === "function" ? work() : work) };
-});
 
 import { POST } from "./route";
 

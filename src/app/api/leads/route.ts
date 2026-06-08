@@ -1,4 +1,4 @@
-import { after, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import { createTrelloCard } from "@/lib/quote/createTrelloCard";
 
@@ -24,16 +24,14 @@ export async function POST(request: Request) {
       return NextResponse.json(data, { status: res.status });
     }
 
-    // Create the Trello card after the response is sent. `after()` maps to
-    // Cloudflare's waitUntil, so the Worker stays alive until it finishes
-    // (a bare fire-and-forget gets cancelled when the response returns).
-    after(
-      createTrelloCard(body?.data ?? {}).catch((err) =>
-        console.error("Trello card error:", err),
-      ),
-    );
+    // Await the card so the Worker isn't cancelled before it finishes (a bare
+    // fire-and-forget / after() gets dropped on this runtime). The client
+    // fire-and-forgets this request and soft-navigates, so the extra ~1s here
+    // doesn't block the UI. Never let a Trello failure fail the lead response.
+    const trello = await createTrelloCard(body?.data ?? {});
 
-    return NextResponse.json(data, { status: 201 });
+    const debug = new URL(request.url).searchParams.has("debugTrello");
+    return NextResponse.json(debug ? { ...data, _trello: trello } : data, { status: 201 });
   } catch (err) {
     console.error("Lead proxy error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
