@@ -8,7 +8,8 @@
 #   STRAPI_API_TOKEN       — read-only token from Strapi admin
 #   TRELLO_API_KEY         — Trello Power-Up API key
 #   TRELLO_TOKEN           — Trello API token (never-expiring)
-#   TRELLO_LIST_ID         — id of the "🌐 Website Quote Leads" list on New MD Leads
+#   TRELLO_LIST_ID         — id of the "🌐 New Leads" list on New MD Leads
+#   TRELLO_TEMPLATE_CARD_ID — id of "Card Template (Don't Delete)" new cards copy from
 
 name: Deploy — Production
 
@@ -49,3 +50,4 @@ jobs:
           TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
           TRELLO_LIST_ID: ${{ secrets.TRELLO_LIST_ID }}
+          TRELLO_TEMPLATE_CARD_ID: ${{ secrets.TRELLO_TEMPLATE_CARD_ID }}

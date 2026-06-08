@@ -7,11 +7,15 @@ import type { LeadPayload } from "./submitLead";
 // straight to a hardcoded list id captured from the board once.
 const API_KEY = process.env.TRELLO_API_KEY;
 const TOKEN = process.env.TRELLO_TOKEN;
-const LIST_ID = process.env.TRELLO_LIST_ID; // id of "Lead Received & Discovery Meeting Scheduled"
+const LIST_ID = process.env.TRELLO_LIST_ID; // id of the "🌐 New Leads" list on New MD Leads
+const TEMPLATE_CARD_ID = process.env.TRELLO_TEMPLATE_CARD_ID; // "Card Template (Don't Delete)"
+
+const TRELLO = "https://api.trello.com/1";
+const SITEMAP_ITEM = "Sales | Sitemap Created";
 
 export async function createTrelloCard(lead: LeadPayload): Promise<void> {
-  if (!API_KEY || !TOKEN || !LIST_ID) {
-    console.warn("Trello not configured (TRELLO_API_KEY / TRELLO_TOKEN / TRELLO_LIST_ID), skipping card creation");
+  if (!API_KEY || !TOKEN || !LIST_ID || !TEMPLATE_CARD_ID) {
+    console.warn("Trello not configured (TRELLO_API_KEY / TRELLO_TOKEN / TRELLO_LIST_ID / TRELLO_TEMPLATE_CARD_ID), skipping card creation");
     return;
   }
 
@@ -20,10 +24,14 @@ export async function createTrelloCard(lead: LeadPayload): Promise<void> {
     .filter(Boolean)
     .join(" - ");
 
-  const url = new URL("https://api.trello.com/1/cards");
+  // Copy the template card (brings its "Todos" checklist along), then override
+  // name/desc with this lead's data.
+  const url = new URL(`${TRELLO}/cards`);
   url.searchParams.set("key", API_KEY);
   url.searchParams.set("token", TOKEN);
   url.searchParams.set("idList", LIST_ID);
+  url.searchParams.set("idCardSource", TEMPLATE_CARD_ID);
+  url.searchParams.set("keepFromSource", "checklists");
   url.searchParams.set("pos", "bottom");
   url.searchParams.set("name", name);
   url.searchParams.set("desc", formatCardDescription(lead));
@@ -32,9 +40,34 @@ export async function createTrelloCard(lead: LeadPayload): Promise<void> {
     const res = await fetch(url, { method: "POST" });
     if (!res.ok) {
       console.error(`Trello card creation failed (${res.status}): ${await res.text().catch(() => res.statusText)}`);
+      return;
+    }
+    const card = (await res.json()) as { id: string };
+
+    // If the lead already has a sitemap, tick that checklist item on the copy.
+    if (String(lead.hasSitemap ?? "").toLowerCase() === "yes") {
+      await checkSitemapItem(card.id);
     }
   } catch (err) {
     console.error("Trello card creation error:", err);
+  }
+}
+
+async function checkSitemapItem(cardId: string): Promise<void> {
+  try {
+    const checklists = (await (
+      await fetch(`${TRELLO}/cards/${cardId}/checklists?key=${API_KEY}&token=${TOKEN}`)
+    ).json()) as Array<{ checkItems: Array<{ id: string; name: string }> }>;
+
+    const item = checklists.flatMap((l) => l.checkItems ?? []).find((i) => i.name === SITEMAP_ITEM);
+    if (!item) return;
+
+    await fetch(
+      `${TRELLO}/cards/${cardId}/checkItem/${item.id}?state=complete&key=${API_KEY}&token=${TOKEN}`,
+      { method: "PUT" },
+    );
+  } catch (err) {
+    console.error("Trello sitemap check error:", err);
   }
 }
 
