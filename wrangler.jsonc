@@ -46,6 +46,8 @@
     "enabled": false
   },
   "vars": {
-    "NEXT_PUBLIC_STRAPI_URL": "https://cms.mitchdesigns.com"
+    "NEXT_PUBLIC_STRAPI_URL": "https://cms.mitchdesigns.com",
+    "TRELLO_LIST_ID": "6a26e054ed929963d61939eb",
+    "TRELLO_TEMPLATE_CARD_ID": "6a26f4c6bc9fbe8ecd38af9a"
   }
 }
