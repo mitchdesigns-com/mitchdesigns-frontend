@@ -53,12 +53,6 @@ export function Journey({
               {subtitle}
             </p>
           </div>
-          <a
-            href={ctaHref}
-            className="inline-flex items-center justify-center rounded-pill bg-orderbase-red px-9 py-4 text-xl font-medium text-white"
-          >
-            {ctaLabel}
-          </a>
         </div>
 
         {/* Steps */}
@@ -110,6 +104,12 @@ export function Journey({
             );
           })}
         </div>
+        <a
+          href={ctaHref}
+          className="inline-flex items-center justify-center rounded-pill bg-orderbase-red px-9 py-4 text-xl font-medium text-white"
+        >
+          {ctaLabel}
+        </a>
       </div>
     </section>
   );
