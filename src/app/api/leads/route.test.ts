@@ -57,11 +57,15 @@ describe("POST /api/leads", () => {
 
   it("returns 500 when the request body is not valid JSON", async () => {
     vi.stubGlobal("fetch", vi.fn());
+    // The route logs the parse error on this path — silence it to keep CI clean.
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const badReq = new Request("http://localhost/api/leads", { method: "POST", body: "not-json" });
 
     const res = await POST(badReq);
 
     expect(res.status).toBe(500);
     expect(fetch).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });
