@@ -31,7 +31,7 @@ function withHighlight(text: string, highlight?: string) {
   return (
     <>
       {before}
-      <span className="text-orderbase-red">{highlight}</span>
+      <span className="text-[#ff2f2d]">{highlight}</span>
       {rest.join(highlight)}
     </>
   );

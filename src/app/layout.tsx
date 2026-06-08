@@ -99,6 +99,7 @@ export default function RootLayout({
           data-endpoint="https://caereguiqcqhfvmskxlu.supabase.co/functions/v1/ingest-feedback"
           strategy="lazyOnload"
           data-position="bottom-left"
+          data-buttonText="Our Feedback"
         />
       </head>
       <body className="min-h-dvh antialiased">
