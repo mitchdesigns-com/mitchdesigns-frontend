@@ -6,10 +6,13 @@
 #   CLOUDFLARE_ACCOUNT_ID  — from dash.cloudflare.com or `wrangler whoami`
 #   CLOUDFLARE_API_TOKEN   — API token with Edit Cloudflare Workers permission
 #   STRAPI_API_TOKEN       — read-only token from Strapi admin
-#   TRELLO_API_KEY         — Trello Power-Up API key
-#   TRELLO_TOKEN           — Trello API token (never-expiring)
-#   TRELLO_LIST_ID         — id of the "🌐 New Leads" list on New MD Leads
-#   TRELLO_TEMPLATE_CARD_ID — id of "Card Template (Don't Delete)" new cards copy from
+#   TRELLO_API_KEY         — Trello Power-Up API key  (pushed to the Worker as a secret below)
+#   TRELLO_TOKEN           — Trello API token         (pushed to the Worker as a secret below)
+#
+# Note: GitHub Action secrets only exist at BUILD time. The running Worker reads
+# process.env from Cloudflare vars/secrets, so the two Trello secrets are synced
+# to the Worker with `wrangler secret put`. The non-secret ids (TRELLO_LIST_ID,
+# TRELLO_TEMPLATE_CARD_ID) live in wrangler.jsonc `vars`.
 
 name: Deploy — Production
 
@@ -50,7 +53,14 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+
+      # Runtime secrets must live on the Worker, not just in the build env.
+      - name: Sync Trello secrets to Worker
+        run: |
+          printf '%s' "$TRELLO_API_KEY" | pnpm exec wrangler secret put TRELLO_API_KEY
+          printf '%s' "$TRELLO_TOKEN"   | pnpm exec wrangler secret put TRELLO_TOKEN
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
-          TRELLO_LIST_ID: ${{ secrets.TRELLO_LIST_ID }}
-          TRELLO_TEMPLATE_CARD_ID: ${{ secrets.TRELLO_TEMPLATE_CARD_ID }}
