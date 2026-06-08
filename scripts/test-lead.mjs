@@ -21,7 +21,11 @@ const lead = {
   companyName: "Smoke Test Co",
   companyCountry: "Egypt",
   industry: "E-commerce",
-  websitePurpose: "Lead generation",
+  // These are `json` fields in Strapi (multi-selects) — must be arrays/objects,
+  // not bare strings, or Strapi 500s on insert.
+  websitePurpose: ["Lead generation"],
+  websiteSections: ["Home", "Services", "Contact"],
+  specialFeatures: [],
   hasSitemap: "yes", // exercises the pre-checked checklist item
   budget: "$8,000–$12,000",
   timeline: "6–8 weeks",
