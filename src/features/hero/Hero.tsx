@@ -69,7 +69,7 @@ export function Hero({
           <span
             aria-live="polite"
             aria-atomic="true"
-            className="relative inline-flex align-baseline overflow-hidden h-[1.1em] min-w-[5ch]"
+            className="relative inline-flex align-bottom overflow-hidden h-[1.3em] min-w-[5ch]"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
@@ -78,7 +78,7 @@ export function Hero({
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "-100%", opacity: 0 }}
                 transition={{ duration: 0.55, ease: easeOutSoft }}
-                className="inline-block whitespace-nowrap text-yellow"
+                className="inline-flex items-center h-[1.3em] whitespace-nowrap leading-none text-yellow"
               >
                 {word}
               </motion.span>
