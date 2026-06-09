@@ -389,9 +389,9 @@ export function TalkContent({
 }: TalkContentProps) {
   return (
     <Section className="py-10">
-      <div className="flex gap-10">
+      <div className="flex flex-col gap-10 lg:flex-row">
         {/* Left sticky sidebar */}
-        <aside className="w-blog-sidebar shrink-0">
+        <aside className="w-full shrink-0 lg:w-blog-sidebar">
           <div className="sticky top-24 flex flex-col gap-7.5 py-10">
             <TocSidebar items={toc} />
             <ShareButtons url={pageUrl} title={talk.title} />
