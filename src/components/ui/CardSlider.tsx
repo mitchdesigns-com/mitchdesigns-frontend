@@ -49,7 +49,7 @@ export function CardSlider({
       <motion.div
         ref={trackRef}
         onScroll={updateArrows}
-        className="bleed-carousel flex gap-4 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="bleed-carousel flex gap-2 overflow-x-auto scroll-smooth sm:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         variants={staggerChildren(0.1)}
         initial={reduced ? "visible" : "hidden"}
         animate={inView || reduced ? "visible" : "hidden"}
