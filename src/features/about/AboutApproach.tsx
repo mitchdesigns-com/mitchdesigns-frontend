@@ -13,9 +13,9 @@ export function AboutApproach({
 }) {
   return (
     <Section theme="dark" className="py-30">
-      <div className="flex items-center justify-between gap-15">
+      <div className="flex flex-col items-center gap-15 lg:flex-row lg:justify-between">
         {/* Left: text content */}
-        <Reveal className="flex max-w-[666px] shrink-0 flex-col gap-15" delay={0.15}>
+        <Reveal className="flex w-full max-w-[666px] flex-col gap-15" delay={0.15}>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <span className="text-base font-bold text-yellow">
@@ -39,7 +39,7 @@ export function AboutApproach({
         </Reveal>
 
         {/* Right: decorative graphic */}
-        <Reveal className="relative h-[600px] w-[666px] shrink-0 overflow-hidden rounded-card-md bg-space-grey">
+        <Reveal className="relative aspect-[666/600] w-full max-w-[666px] overflow-hidden rounded-card-md bg-space-grey">
           {approach.image && (
             <Image
               src={approach.image.url}
