@@ -110,7 +110,7 @@ function LogoCard({
         className="flex h-[110px] w-full items-center justify-center rounded-[4px] border border-[#414141] px-6 sm:h-[150px] lg:h-[200px]"
         style={{ rotateY: rotY }}
       >
-        <Image src={logo.src} alt={logo.alt} width={200} height={80} className="max-h-[50%] max-w-[65%] object-contain" />
+        <Image src={logo.src} alt={logo.alt} width={200} height={80} className="max-h-[62%] max-w-[80%] object-contain" />
       </motion.div>
     </motion.div>
   );
