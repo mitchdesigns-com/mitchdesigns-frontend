@@ -78,9 +78,9 @@ export function TalkHero({ talk }: { talk: Talk }) {
     <Section theme="dark" className="pt-40 pb-10">
       <div className="flex flex-col gap-10">
         {/* Two-column header row — aligned to bottom */}
-        <div className="flex items-end gap-10">
+        <div className="flex flex-col gap-10 md:flex-row md:items-end">
           {/* Left: go-back + title */}
-          <div className="flex w-1/2 shrink-0 flex-col justify-between gap-5">
+          <div className="flex w-full shrink-0 flex-col justify-between gap-5 md:w-1/2">
             <Link
               href="/talks"
               onClick={goBack}
@@ -91,7 +91,7 @@ export function TalkHero({ talk }: { talk: Talk }) {
             </Link>
             <h1
               ref={titleRef}
-              className="text-hero-2 font-bold text-white"
+              className="text-hero-3 font-bold text-balance text-white md:text-hero-2"
             >
               {talk.title}
             </h1>
