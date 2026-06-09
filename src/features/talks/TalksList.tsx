@@ -76,9 +76,9 @@ function FeaturedCard({
           : undefined
       }
     >
-      <Link href={`/talks/${talk.slug}`} className="flex w-full items-start gap-10">
-        {/* Image — 55% width, custom aspect */}
-        <div className="relative aspect-676/500 w-[55%] shrink-0 overflow-hidden rounded-xs">
+      <Link href={`/talks/${talk.slug}`} className="flex w-full flex-col items-start gap-10 md:flex-row">
+        {/* Image — full width on mobile, 55% on desktop */}
+        <div className="relative aspect-676/500 w-full shrink-0 overflow-hidden rounded-xs md:w-[55%]">
           {talk.cover?.url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -166,7 +166,7 @@ export function TalksList({ talks }: TalksListProps) {
               {rows.map(([a, b], rowIdx) => {
                 const isLastRow = isLastPage && rowIdx === rows.length - 1;
                 return (
-                  <div key={rowIdx} className="flex gap-10">
+                  <div key={rowIdx} className="flex flex-col gap-10 md:flex-row">
                     <TalkCard
                       talk={a}
                       delay={0.1 + rowIdx * 0.12}
