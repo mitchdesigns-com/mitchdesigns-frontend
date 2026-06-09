@@ -82,7 +82,7 @@ export function AboutSection({
                   <span className="font-bold text-[3.5rem] leading-none text-white sm:text-[4rem]">
                     {value}
                   </span>
-                  <span className="font-light text-xl text-white">{unit}</span>
+                  <span className="font-light text-3xl text-white">{unit}</span>
                 </div>
                 <span className="text-[13px] tracking-[0.01em] text-fg-muted">
                   {label}
