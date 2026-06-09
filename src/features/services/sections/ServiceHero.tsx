@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -39,6 +39,8 @@ export function ServiceHero({
   cta,
   reverseLayout = false,
 }: ServiceHeroProps) {
+  // Swap to a local fallback image if the CMS image fails to load.
+  const [imgSrc, setImgSrc] = useState(image);
   return (
     <Section className="pt-32 pb-16 md:pb-24" theme="dark">
       <motion.div
@@ -79,12 +81,13 @@ export function ServiceHero({
         >
           {image && (
             <Image
-              src={image}
+              src={imgSrc ?? image}
               alt={imageAlt ?? ""}
               fill
               className="object-contain object-center"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority
+              onError={() => setImgSrc("/images/404.webp")}
             />
           )}
         </motion.div>
