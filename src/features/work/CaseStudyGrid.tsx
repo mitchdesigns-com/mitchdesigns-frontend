@@ -74,22 +74,20 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         )}
       </div>
 
-      {/* Right — testimonial panel */}
-      <div className="flex w-full shrink-0 flex-col justify-between gap-6 bg-space-grey p-10 lg:w-[30%] lg:gap-0">
-        {/* Opening quote mark */}
-        <span className="text-hero-1 leading-none text-yellow" aria-hidden>
-          &ldquo;
-        </span>
+      {/* Right — testimonial panel (hidden entirely when there's no testimonial) */}
+      {cs.testimonial ? (
+        <div className="flex w-full shrink-0 flex-col justify-between gap-6 bg-space-grey p-10 lg:w-[30%] lg:gap-0">
+          {/* Opening quote mark */}
+          <span className="text-hero-1 leading-none text-yellow" aria-hidden>
+            &ldquo;
+          </span>
 
-        {/* Quote */}
-        {cs.testimonial ? (
+          {/* Quote */}
           <p className="text-hero-5 text-white text-balance">
             {cs.testimonial.quote}
           </p>
-        ) : null}
 
-        {/* Author */}
-        {cs.testimonial ? (
+          {/* Author */}
           <div className="flex flex-col gap-10 mt-10">
             <div className="h-px w-full bg-grey-500" />
             <div className="flex items-center gap-5">
@@ -115,8 +113,8 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
               </div>
             </div>
           </div>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </Link>
   );
 }
