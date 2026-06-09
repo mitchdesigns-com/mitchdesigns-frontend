@@ -1,0 +1,62 @@
+{
+  // Staging/preview Worker — a SEPARATE Worker from production (`mitchdesigns-website`).
+  // Branch pushes deploy here (last-push-wins) so reviewers can see changes at
+  //   https://mitchdesigns-website-staging.mitchdesigns.workers.dev
+  // It does NOT touch production. Version preview URLs can't be used because the
+  // Worker has a Durable Object, so we deploy a named Worker instead.
+  //
+  // The DO namespace is its own (per-Worker), so the cache queue is isolated from
+  // prod. The R2 incremental-cache bucket is shared with prod, but OpenNext keys
+  // cached responses by build id, so the two builds don't read each other's entries.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mitchdesigns-website-staging",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-05-11",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "mitchdesigns-website-staging"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "mitchdesigns-website-cache"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "DOQueueHandler"
+      ]
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": false
+  },
+  "vars": {
+    "NEXT_PUBLIC_STRAPI_URL": "https://cms.mitchdesigns.com",
+    "TRELLO_LIST_ID": "6a26e054ed929963d61939eb",
+    "TRELLO_TEMPLATE_CARD_ID": "6a26f4c6bc9fbe8ecd38af9a"
+  }
+}
