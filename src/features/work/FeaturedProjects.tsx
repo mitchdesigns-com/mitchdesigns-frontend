@@ -17,7 +17,7 @@ const CENTER_W = 928; // 58rem
 const SIDE_W = 560; // 35rem
 const GAP = 24; // 1.5rem
 const CARD_AR = 911 / 800; // image width / height
-const META_H = 96; // title + year row below the image
+const META_H = 120; // title + year row below the image (room so "Since {year}" isn't clipped)
 
 type Slot = "left" | "center" | "right" | "hiddenLeft" | "hiddenRight";
 
