@@ -14,12 +14,12 @@ export function CareersHero({
         {eyebrow && (
           <span className="text-lg font-medium text-yellow">{eyebrow}</span>
         )}
-        <div className="flex items-end justify-between gap-10">
-          <h1 className="text-hero-1 font-black text-fg leading-[1.1] max-w-[44%]">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
+          <h1 className="text-hero-3 font-black text-fg leading-[1.1] max-w-full md:text-hero-1 md:max-w-[44%]">
             {title}
           </h1>
           {description && (
-            <p className="text-xl text-fg max-w-[39%] text-balance">
+            <p className="text-xl text-fg max-w-full text-balance md:max-w-[39%]">
               {description}
             </p>
           )}
