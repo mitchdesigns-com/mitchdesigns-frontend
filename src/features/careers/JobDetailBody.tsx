@@ -100,7 +100,7 @@ export function JobDetailBody({
                   key={section.heading}
                   className="flex flex-col gap-5"
                 >
-                  <h2 className="text-hero-3 font-bold text-fg">
+                  <h2 className="text-hero-3 font-bold text-fg" style={{ textAlign: "left" }}>
                     {section.heading}
                   </h2>
                   <p className="whitespace-pre-line text-xl text-fg text-balance">
