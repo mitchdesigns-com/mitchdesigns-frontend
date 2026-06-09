@@ -12,7 +12,7 @@ type Props = { drives?: Array<{ label: string }> };
 export function OurDrive({ drives = DEFAULT_DRIVES }: Props = {}) {
   return (
     <Section theme="dark" className="py-25">
-      <div className="flex gap-5">
+      <div className="flex flex-col gap-5 sm:flex-row">
         {drives.map(({ label }) => (
           <div
             key={label}
