@@ -1,0 +1,91 @@
+# Branch preview — builds any non-main branch and uploads a Cloudflare Worker
+# *version* (preview URL) WITHOUT promoting it to production.
+#
+# `wrangler versions upload` creates a new version and a preview URL of the form
+#   https://<alias>-mitchdesigns-website.<subdomain>.workers.dev
+# but does NOT shift production traffic — the live deployment keeps serving the
+# version that `deploy.yml` (push → main) last deployed. The preview version
+# inherits the production Worker's secrets and bindings.
+#
+# Requires the same GitHub Secrets the production deploy already uses:
+#   CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, STRAPI_API_TOKEN
+# and "Preview URLs" must be enabled on the Worker
+# (Cloudflare dash → Workers → mitchdesigns-website → Settings → Domains & Routes → Preview URLs).
+
+name: Preview — branch version
+
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: preview-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write # to post the preview URL as a commit comment
+
+jobs:
+  preview:
+    name: Build & upload preview version
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Derive preview alias from branch name
+        id: alias
+        run: |
+          slug=$(printf '%s' "$GITHUB_REF_NAME" \
+            | tr '[:upper:]' '[:lower:]' \
+            | tr -c 'a-z0-9' '-' \
+            | sed -E 's/-+/-/g; s/^-//; s/-$//' \
+            | cut -c1-40)
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Build (OpenNext)
+        run: pnpm exec opennextjs-cloudflare build
+        env:
+          NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+
+      - name: Upload preview version
+        id: upload
+        run: |
+          set -o pipefail
+          pnpm exec wrangler versions upload \
+            --preview-alias "${{ steps.alias.outputs.slug }}" 2>&1 | tee upload.log
+          url=$(grep -iE 'preview url' upload.log \
+            | grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' | head -n1)
+          if [ -z "$url" ]; then
+            url=$(grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' upload.log | head -n1)
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Publish preview URL
+        if: steps.upload.outputs.url != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "### 🔎 Branch preview"
+            echo ""
+            echo "Branch \`$GITHUB_REF_NAME\` → ${{ steps.upload.outputs.url }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
+            -f body="🔎 Preview for \`$GITHUB_REF_NAME\`: ${{ steps.upload.outputs.url }}" >/dev/null || true
