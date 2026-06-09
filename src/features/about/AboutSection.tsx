@@ -74,10 +74,10 @@ export function AboutSection({
     <Section theme="dark" bleed>
       <div className="container-page flex flex-col-reverse items-center gap-14 bg-black py-14 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
         {/* Left — stats + CTA */}
-        <div className="flex w-full shrink-0 flex-col items-center justify-between gap-11 lg:w-auto lg:items-start lg:self-stretch">
+        <div className="flex w-full shrink-0 flex-col items-center justify-between gap-11 lg:w-auto lg:self-stretch">
           <ul className="flex flex-col gap-11">
             {stats.map(({ value, unit, label }) => (
-              <li key={value} className="flex flex-col items-center lg:items-start">
+              <li key={value} className="flex flex-col items-center">
                 <div className="flex items-baseline gap-2.5">
                   <span className="font-bold text-[3.5rem] leading-none text-white sm:text-[4rem]">
                     {value}
