@@ -1,18 +1,17 @@
-# Branch preview — builds any non-main branch and uploads a Cloudflare Worker
-# *version* (preview URL) WITHOUT promoting it to production.
+# Branch preview — deploys any non-main branch to a single shared *staging* Worker
+# (`mitchdesigns-website-staging`), separate from production. Last push wins.
 #
-# `wrangler versions upload` creates a new version and a preview URL of the form
-#   https://<alias>-mitchdesigns-website.<subdomain>.workers.dev
-# but does NOT shift production traffic — the live deployment keeps serving the
-# version that `deploy.yml` (push → main) last deployed. The preview version
-# inherits the production Worker's secrets and bindings.
+#   Preview URL: https://mitchdesigns-website-staging.mitchdesigns.workers.dev
 #
-# Requires the same GitHub Secrets the production deploy already uses:
-#   CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, STRAPI_API_TOKEN
-# and "Preview URLs" must be enabled on the Worker
-# (Cloudflare dash → Workers → mitchdesigns-website → Settings → Domains & Routes → Preview URLs).
+# Why a named Worker and not `wrangler versions upload`: version preview URLs are
+# NOT generated for Workers that use Durable Objects, and this Worker has one
+# (OpenNext's NEXT_CACHE_DO_QUEUE). So we deploy a separate, named Worker instead.
+# This never touches the production Worker.
+#
+# Requires the same GitHub Secrets the production deploy uses:
+#   CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, STRAPI_API_TOKEN, TRELLO_API_KEY, TRELLO_TOKEN
 
-name: Preview — branch version
+name: Preview — staging deploy
 
 on:
   push:
@@ -20,16 +19,17 @@ on:
       - main
   workflow_dispatch:
 
+# Single shared staging Worker → serialize deploys so two branches don't race.
 concurrency:
-  group: preview-${{ github.ref }}
-  cancel-in-progress: true
+  group: preview-staging
+  cancel-in-progress: false
 
 permissions:
   contents: write # to post the preview URL as a commit comment
 
 jobs:
-  preview:
-    name: Build & upload preview version
+  staging:
+    name: Build & deploy to staging Worker
     runs-on: ubuntu-latest
 
     steps:
@@ -45,55 +45,48 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Derive preview alias from branch name
-        id: alias
-        run: |
-          slug=$(printf '%s' "$GITHUB_REF_NAME" \
-            | tr '[:upper:]' '[:lower:]' \
-            | tr -c 'a-z0-9' '-' \
-            | sed -E 's/-+/-/g; s/^-//; s/-$//' \
-            | cut -c1-40)
-          echo "slug=$slug" >> "$GITHUB_OUTPUT"
-
       - name: Build (OpenNext)
         run: pnpm exec opennextjs-cloudflare build
         env:
           NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
 
-      # Upload the version. pipefail makes a real wrangler failure fail the step;
-      # tee keeps the output for URL extraction in the next step.
-      - name: Upload preview version
-        run: |
-          set -o pipefail
-          pnpm exec wrangler versions upload \
-            --preview-alias "${{ steps.alias.outputs.slug }}" 2>&1 | tee upload.log
+      - name: Deploy staging Worker
+        run: pnpm exec wrangler deploy --config wrangler.staging.jsonc
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-      # Parse the preview URL wrangler printed; fall back to the deterministic
-      # alias URL. `|| true` so a no-match grep can't fail the step under bash -e.
-      - name: Resolve preview URL
-        id: url
+      # The staging Worker reads these from process.env at runtime (CMS auth +
+      # the lead form's Trello integration). Set them only when the secret exists.
+      - name: Sync runtime secrets to staging Worker
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
         run: |
-          url=$(grep -iE 'preview url' upload.log 2>/dev/null \
-            | grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' | head -n1 || true)
-          if [ -z "$url" ]; then
-            url="https://${{ steps.alias.outputs.slug }}-mitchdesigns-website.mitchdesigns.workers.dev"
-          fi
-          echo "url=$url" >> "$GITHUB_OUTPUT"
-          echo "Preview URL: $url"
+          put() {
+            local name="$1" val="$2"
+            [ -z "$val" ] && { echo "skip $name (empty)"; return 0; }
+            printf '%s' "$val" | pnpm exec wrangler secret put "$name" --config wrangler.staging.jsonc
+          }
+          put STRAPI_API_TOKEN "$STRAPI_API_TOKEN"
+          put TRELLO_API_KEY   "$TRELLO_API_KEY"
+          put TRELLO_TOKEN     "$TRELLO_TOKEN"
 
       - name: Publish preview URL
-        if: steps.url.outputs.url != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          url="https://mitchdesigns-website-staging.mitchdesigns.workers.dev"
           {
-            echo "### 🔎 Branch preview"
+            echo "### 🔎 Staging preview"
             echo ""
-            echo "Branch \`$GITHUB_REF_NAME\` → ${{ steps.url.outputs.url }}"
+            echo "Branch \`$GITHUB_REF_NAME\` deployed to the shared staging Worker:"
+            echo ""
+            echo "$url"
           } >> "$GITHUB_STEP_SUMMARY"
           gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
-            -f body="🔎 Preview for \`$GITHUB_REF_NAME\`: ${{ steps.url.outputs.url }}" >/dev/null || true
+            -f body="🔎 Staging preview for \`$GITHUB_REF_NAME\`: $url (shared staging Worker — reflects the most recent branch deploy)" >/dev/null || true
