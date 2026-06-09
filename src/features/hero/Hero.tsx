@@ -63,7 +63,7 @@ export function Hero({
         <motion.h1
           variants={{ hidden: { opacity: 1, y: 24 }, visible: { opacity: 1, y: 0 } }}
           transition={{ ease: easeOutSoft }}
-          className="mt-[10px] font-black tracking-[0.01em] text-white text-[2.75rem] leading-[1.05] md:text-[4.5rem] md:leading-[1.08] lg:text-hero-1 relative z-30"
+          className="mt-[10px] font-black tracking-[0.01em] text-white text-balance text-[2.75rem] leading-[1.05] md:text-[4.5rem] md:leading-[1.08] lg:text-hero-1 relative z-30"
         >
           {headline}{" "}
           <span
