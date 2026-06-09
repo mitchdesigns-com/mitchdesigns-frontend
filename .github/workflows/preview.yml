@@ -61,31 +61,39 @@ jobs:
           NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
 
+      # Upload the version. pipefail makes a real wrangler failure fail the step;
+      # tee keeps the output for URL extraction in the next step.
       - name: Upload preview version
-        id: upload
         run: |
           set -o pipefail
           pnpm exec wrangler versions upload \
             --preview-alias "${{ steps.alias.outputs.slug }}" 2>&1 | tee upload.log
-          url=$(grep -iE 'preview url' upload.log \
-            | grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' | head -n1)
-          if [ -z "$url" ]; then
-            url=$(grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' upload.log | head -n1)
-          fi
-          echo "url=$url" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
+      # Parse the preview URL wrangler printed; fall back to the deterministic
+      # alias URL. `|| true` so a no-match grep can't fail the step under bash -e.
+      - name: Resolve preview URL
+        id: url
+        run: |
+          url=$(grep -iE 'preview url' upload.log 2>/dev/null \
+            | grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' | head -n1 || true)
+          if [ -z "$url" ]; then
+            url="https://${{ steps.alias.outputs.slug }}-mitchdesigns-website.mitchdesigns.workers.dev"
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Preview URL: $url"
+
       - name: Publish preview URL
-        if: steps.upload.outputs.url != ''
+        if: steps.url.outputs.url != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           {
             echo "### 🔎 Branch preview"
             echo ""
-            echo "Branch \`$GITHUB_REF_NAME\` → ${{ steps.upload.outputs.url }}"
+            echo "Branch \`$GITHUB_REF_NAME\` → ${{ steps.url.outputs.url }}"
           } >> "$GITHUB_STEP_SUMMARY"
           gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
-            -f body="🔎 Preview for \`$GITHUB_REF_NAME\`: ${{ steps.upload.outputs.url }}" >/dev/null || true
+            -f body="🔎 Preview for \`$GITHUB_REF_NAME\`: ${{ steps.url.outputs.url }}" >/dev/null || true
