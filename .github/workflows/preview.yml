@@ -1,0 +1,92 @@
+# Branch preview — deploys any non-main branch to a single shared *staging* Worker
+# (`mitchdesigns-website-staging`), separate from production. Last push wins.
+#
+#   Preview URL: https://mitchdesigns-website-staging.mitchdesigns.workers.dev
+#
+# Why a named Worker and not `wrangler versions upload`: version preview URLs are
+# NOT generated for Workers that use Durable Objects, and this Worker has one
+# (OpenNext's NEXT_CACHE_DO_QUEUE). So we deploy a separate, named Worker instead.
+# This never touches the production Worker.
+#
+# Requires the same GitHub Secrets the production deploy uses:
+#   CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, STRAPI_API_TOKEN, TRELLO_API_KEY, TRELLO_TOKEN
+
+name: Preview — staging deploy
+
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+# Single shared staging Worker → serialize deploys so two branches don't race.
+concurrency:
+  group: preview-staging
+  cancel-in-progress: false
+
+permissions:
+  contents: write # to post the preview URL as a commit comment
+
+jobs:
+  staging:
+    name: Build & deploy to staging Worker
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (OpenNext)
+        run: pnpm exec opennextjs-cloudflare build
+        env:
+          NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+
+      - name: Deploy staging Worker
+        run: pnpm exec wrangler deploy --config wrangler.staging.jsonc
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      # The staging Worker reads these from process.env at runtime (CMS auth +
+      # the lead form's Trello integration). Set them only when the secret exists.
+      - name: Sync runtime secrets to staging Worker
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+        run: |
+          put() {
+            local name="$1" val="$2"
+            [ -z "$val" ] && { echo "skip $name (empty)"; return 0; }
+            printf '%s' "$val" | pnpm exec wrangler secret put "$name" --config wrangler.staging.jsonc
+          }
+          put STRAPI_API_TOKEN "$STRAPI_API_TOKEN"
+          put TRELLO_API_KEY   "$TRELLO_API_KEY"
+          put TRELLO_TOKEN     "$TRELLO_TOKEN"
+
+      - name: Publish preview URL
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          url="https://mitchdesigns-website-staging.mitchdesigns.workers.dev"
+          {
+            echo "### 🔎 Staging preview"
+            echo ""
+            echo "Branch \`$GITHUB_REF_NAME\` deployed to the shared staging Worker:"
+            echo ""
+            echo "$url"
+          } >> "$GITHUB_STEP_SUMMARY"
+          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
+            -f body="🔎 Staging preview for \`$GITHUB_REF_NAME\`: $url (shared staging Worker — reflects the most recent branch deploy)" >/dev/null || true
