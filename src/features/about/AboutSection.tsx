@@ -93,7 +93,7 @@ export function AboutSection({
 
           <Link
             href={cta?.href ?? "/about"}
-            className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#373737] px-9 py-4 text-sm font-medium text-white transition-colors hover:bg-[#444] lg:inline-flex lg:w-auto"
+            className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#373737] px-9 py-4 text-sm font-medium text-white transition-colors hover:bg-[#444]"
           >
             {cta?.label ?? "About Us"}
             <svg
