@@ -269,7 +269,7 @@ export function OurServices({ services }: OurServicesProps) {
         <Reveal className="mb-15 flex flex-col items-start">
           <div
             className="-mb-4 inline-flex items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black"
-            style={{ rotate: "4deg" }}
+            style={{ rotate: "-4deg" }}
           >
             Our Services
           </div>
