@@ -10,7 +10,7 @@ export function CareersHero({
 }: Partial<Props> = {}) {
   return (
     <Section theme="dark" className="pt-25 pb-25">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
         {eyebrow && (
           <span className="text-lg font-medium text-yellow">{eyebrow}</span>
         )}
