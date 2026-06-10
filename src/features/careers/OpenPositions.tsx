@@ -16,8 +16,8 @@ function JobTag({ icon, label }: { icon: React.ReactNode; label: string }) {
 
 function JobRow({ job }: { job: Career }) {
   return (
-    <div className="flex items-center justify-between border-t border-border py-10">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col items-start gap-6 border-t border-border py-6 md:flex-row md:items-center md:justify-between md:gap-10 md:py-10">
+      <div className="flex w-full flex-col gap-4 md:w-auto">
         <h3 className="text-hero-4 font-bold text-fg">{job.title}</h3>
         <p className="text-lg text-fg text-balance">{job.excerpt}</p>
         <div className="flex items-center gap-6">
