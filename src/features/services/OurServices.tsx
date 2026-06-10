@@ -265,7 +265,7 @@ export function OurServices({ services }: OurServicesProps) {
 
   return (
     <Section theme="dark" bleed>
-      <div className="container-page py-20">
+      <div className="container-page pt-20 pb-0 md:pb-20">
         <Reveal className="mb-15 flex flex-col items-start">
           <div
             className="mb-2 inline-flex items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black"
