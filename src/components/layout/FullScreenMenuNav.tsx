@@ -65,7 +65,10 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                   >
                     <span
                       aria-hidden
-                      className="absolute inset-0 origin-center scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100"
+                      className={cn(
+                        "absolute inset-y-0 origin-center scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100",
+                        showServices ? "inset-x-0" : "bleed-x",
+                      )}
                     />
                     <div className="relative flex items-center py-2">
                       <span className="text-display font-light uppercase leading-none tracking-[-0.01em] text-black">
@@ -82,7 +85,10 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                   >
                     <span
                       aria-hidden
-                      className="absolute inset-0 origin-center scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100"
+                      className={cn(
+                        "absolute inset-y-0 origin-center scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100",
+                        showServices ? "inset-x-0" : "bleed-x",
+                      )}
                     />
                     <div className="relative flex items-center gap-4 py-2">
                       <span className="text-display font-light uppercase leading-none tracking-[-0.01em] text-black">
