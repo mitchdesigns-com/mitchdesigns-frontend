@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView } from "framer-motion";
+import { cn } from "@/lib/cn";
 
 /**
  * Animates the numeric portion of a stat value (e.g. "400+", "20+", "100%")
@@ -42,7 +43,13 @@ export function CountUp({
   }, [hasNumber, inView, target, prefix, suffix]);
 
   return (
-    <span ref={ref} className={className} aria-label={value}>
+    <span
+      ref={ref}
+      // Reserve a stable width so the counting digits don't reflow the row as
+      // the number grows (min-w-50 = 12.5rem = 200px on the spacing scale).
+      className={cn("inline-block min-w-50", className)}
+      aria-label={value}
+    >
       {display}
     </span>
   );
