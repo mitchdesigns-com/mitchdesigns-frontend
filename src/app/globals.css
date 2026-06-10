@@ -262,6 +262,15 @@
     background-size: 50px 50px;
   }
 
+  /* Stretch an absolutely-positioned child to the full viewport width even
+     when its positioned ancestor is the centered .container-page (the row's
+     center coincides with the viewport center, so 50% - 50vw lands on each
+     screen edge). Used for the full-screen menu's edge-to-edge hover sweep. */
+  .bleed-x {
+    left: calc(50% - 50vw);
+    right: calc(50% - 50vw);
+  }
+
   /* Full-bleed horizontal carousel: the scroll track spans the whole viewport
      so cards crop at the screen edges (not the container), while the first card
      stays aligned with the container content. The end bleeds to the edge. */
