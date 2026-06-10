@@ -6,7 +6,6 @@ import { ClientLogos } from "@/features/clients";
 import { ClientsTrustFetcher } from "@/features/ClientsTrust";
 import { FeaturedProjects } from "@/features/work";
 import { OurServices } from "@/features/services";
-import { OrderbaseOverview } from "@/features/orderbase";
 import { TestimonialMarqueeFetcher } from "@/features/testimonials";
 import { TechStackFetcher } from "@/features/tech";
 import { TalksSection } from "@/features/talks";
@@ -144,8 +143,6 @@ export default async function HomePage() {
       <FeaturedProjects caseStudies={caseStudies} theme="dark" />
 
       <OurServices services={services} />
-
-      <OrderbaseOverview {...home.orderbaseOverview} />
 
       <TestimonialMarqueeFetcher />
 
