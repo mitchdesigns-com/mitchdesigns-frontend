@@ -47,11 +47,11 @@ function getDims(vw: number): Dims {
 function buildSlotMap(d: Dims): Record<Slot, SlotGeom> {
   const off = d.offset;
   return {
-    left: { x: -off, rotate: -5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
+    left: { x: -off, rotate: 5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
     center: { x: 0, rotate: 0, scale: 1, opacity: 1, zIndex: 10, width: d.center },
-    right: { x: off, rotate: 5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
-    hiddenLeft: { x: -off * 2.4, rotate: -8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
-    hiddenRight: { x: off * 2.4, rotate: 8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
+    right: { x: off, rotate: -5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
+    hiddenLeft: { x: -off * 2.4, rotate: 8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
+    hiddenRight: { x: off * 2.4, rotate: -8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
   };
 }
 
