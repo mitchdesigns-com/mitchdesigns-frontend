@@ -29,8 +29,10 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
           </h1>
         </div>
 
-        {/* Right: description + CTA */}
-        <Reveal className="flex max-w-[517px] flex-col gap-7">
+        {/* Right: description + CTA — above the fold, so reveal on mount
+            rather than waiting for the scroll trigger (which never fires
+            for content already in view on first paint). */}
+        <Reveal immediate className="flex max-w-[517px] flex-col gap-7">
           <p className="text-xl leading-[125%] text-black text-balance">
             {hero.description}
           </p>
