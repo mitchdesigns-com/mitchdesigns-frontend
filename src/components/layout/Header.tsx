@@ -47,11 +47,13 @@ function ServiceCard({
     <Link
       href={href}
       onClick={onClick}
-      className="group flex flex-1 flex-col items-center justify-center gap-3 rounded-card-sm border border-border bg-white px-8 py-5 text-center transition-colors hover:border-black hover:bg-panel"
+      className="group flex flex-1 flex-col items-center justify-center gap-1 rounded-card-sm border border-border bg-white px-2 py-4 text-center transition-colors hover:border-black hover:bg-panel md:gap-3 md:px-8 md:py-5"
     >
-      <span className="text-xl font-bold text-space-grey">{title}</span>
+      <span className="text-base font-bold leading-normal text-space-grey md:text-xl">
+        {title}
+      </span>
       {subtitle && (
-        <span className="text-base font-light uppercase tracking-wide text-fg-muted">
+        <span className="text-sm font-normal leading-normal text-space-grey md:text-base md:font-light md:uppercase md:tracking-wide md:text-fg-muted">
           {subtitle}
         </span>
       )}
