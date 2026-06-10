@@ -7,59 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { useSectionTheme } from "@/hooks/useSectionTheme";
 import { HeaderConfigContext } from "@/context/HeaderConfigContext";
-import { ChevronDown } from "@/components/icons/ChevronDown";
 import { Logo } from "../icons/Logo";
-import { NAV_LINKS, SERVICES, serviceHref } from "@/config/nav";
+import { FullScreenMenuNav } from "./FullScreenMenuNav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
 // How far to scroll before the sticky floating menu button appears.
 const FAB_SHOW_AFTER = 1300;
-
-function SlideLabel({ label }: { label: string }) {
-  return (
-    <span
-      className="relative inline-block overflow-hidden leading-none"
-      style={{ height: "1em" }}
-    >
-      <span className="flex flex-col transition-transform duration-350 ease-out-soft group-hover:-translate-y-1/2">
-        <span className="block">{label}</span>
-        <span className="block" aria-hidden>
-          {label}
-        </span>
-      </span>
-    </span>
-  );
-}
-
-function ServiceCard({
-  title,
-  subtitle,
-  href,
-  onClick,
-}: {
-  title: string;
-  subtitle: string | null;
-  href: string;
-  onClick: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="group flex flex-1 flex-col items-center justify-center gap-1 rounded-card-sm border border-border bg-white px-2 py-4 text-center transition-colors hover:border-black hover:bg-panel md:gap-3 md:px-8 md:py-5"
-    >
-      <span className="text-base font-bold leading-normal text-space-grey md:text-xl">
-        {title}
-      </span>
-      {subtitle && (
-        <span className="text-sm font-normal leading-normal text-space-grey md:text-base md:font-light md:uppercase md:tracking-wide md:text-fg-muted">
-          {subtitle}
-        </span>
-      )}
-    </Link>
-  );
-}
 
 export function Header() {
   const { sticky, showCta } = useContext(HeaderConfigContext);
@@ -68,7 +22,6 @@ export function Header() {
   const [atTop, setAtTop] = useState(true);
   const [scrolledPast, setScrolledPast] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showServices, setShowServices] = useState(false);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -103,11 +56,9 @@ export function Header() {
 
   function closeAll() {
     setMenuOpen(false);
-    setShowServices(false);
   }
 
   function openMenu() {
-    setShowServices(false);
     setMenuOpen(true);
   }
 
@@ -277,110 +228,7 @@ export function Header() {
               <Logo />
             </div>
 
-            <nav className="flex flex-1 flex-col justify-center pb-16">
-              {NAV_LINKS.map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.4,
-                    delay: 0.05 + i * 0.04,
-                    ease: EASE,
-                  }}
-                >
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      onClick={closeAll}
-                      className="group relative flex w-full overflow-hidden"
-                    >
-                      <span
-                        aria-hidden
-                        className="absolute inset-0 origin-center scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100"
-                      />
-                      <div className="container-page relative flex items-center py-2">
-                        <span className="text-display font-light uppercase leading-none tracking-[-0.01em] text-black">
-                          <SlideLabel label={item.label} />
-                        </span>
-                      </div>
-                    </Link>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => setShowServices((v) => !v)}
-                        className="group relative flex w-full overflow-hidden"
-                      >
-                        <span
-                          aria-hidden
-                          className={cn(
-                            "absolute inset-0 origin-center bg-white transition-transform duration-300 ease-out",
-                            showServices ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
-                          )}
-                        />
-                        <div className="container-page relative flex items-center gap-3 py-2">
-                          <span className="text-display font-light uppercase leading-none tracking-[-0.01em] text-black">
-                            <SlideLabel label={item.label} />
-                          </span>
-                          <motion.span
-                            animate={{ rotate: showServices ? 180 : 0 }}
-                            transition={{ duration: 0.3, ease: EASE }}
-                            className="mt-1 shrink-0 opacity-50"
-                          >
-                            <ChevronDown size={28} />
-                          </motion.span>
-                        </div>
-                      </button>
-
-                      <AnimatePresence>
-                        {showServices && (
-                          <motion.div
-                            key="services-inline"
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.35, ease: EASE }}
-                            className="overflow-hidden bg-white"
-                          >
-                            <div className="container-page grid grid-cols-3 gap-4 py-6">
-                              {SERVICES.map((s) => (
-                                <ServiceCard
-                                  key={s.slug}
-                                  title={s.title}
-                                  subtitle={s.subtitle}
-                                  href={serviceHref(s.slug)}
-                                  onClick={closeAll}
-                                />
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  )}
-                </motion.div>
-              ))}
-
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.05 + NAV_LINKS.length * 0.04,
-                  ease: EASE,
-                }}
-                className="mt-6 px-4 sm:hidden lg:px-6"
-              >
-                <Link
-                  href="/quote"
-                  onClick={closeAll}
-                  className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
-                >
-                  Get Detailed Proposal
-                </Link>
-              </motion.div>
-            </nav>
+            <FullScreenMenuNav onNavigate={closeAll} />
           </motion.div>
         )}
       </AnimatePresence>
