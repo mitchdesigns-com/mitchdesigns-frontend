@@ -59,7 +59,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "group relative flex w-full overflow-hidden transition-opacity duration-300 ease-out-soft",
+                      "group relative flex w-full transition-opacity duration-300 ease-out-soft",
                       dimmed && "opacity-40 hover:opacity-100",
                     )}
                   >
@@ -81,7 +81,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                     type="button"
                     aria-expanded={showServices}
                     onClick={() => setShowServices((v) => !v)}
-                    className="group relative flex w-full overflow-hidden text-left"
+                    className="group relative flex w-full text-left"
                   >
                     <span
                       aria-hidden
