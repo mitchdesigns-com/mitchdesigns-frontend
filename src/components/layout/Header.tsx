@@ -127,13 +127,16 @@ export function Header() {
         className={cn(
           "inset-x-0 top-0 z-60 transition-colors duration-300 ease-out-soft",
           sticky ? "fixed" : "absolute",
-          menuOpen
+          // The blurred/opaque background only makes sense for a sticky header
+          // that stays fixed on screen. Non-sticky headers (e.g. /orderbase)
+          // are an absolute overlay that scrolls away with the page, so keep
+          // them transparent — otherwise a tiny scroll paints the blur over
+          // the hero content beneath.
+          menuOpen || atTop || !sticky
             ? "border-b border-transparent bg-transparent"
-            : atTop
-              ? "border-b border-transparent bg-transparent"
-              : isDark
-                ? "border-b border-white/10 bg-black/80 backdrop-blur-md"
-                : "border-b border-black/10 bg-white/80 backdrop-blur-md",
+            : isDark
+              ? "border-b border-white/10 bg-black/80 backdrop-blur-md"
+              : "border-b border-black/10 bg-white/80 backdrop-blur-md",
         )}
         style={{ height: HEADER_HEIGHT }}
       >
