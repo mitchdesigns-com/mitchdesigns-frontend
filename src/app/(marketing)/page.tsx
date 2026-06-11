@@ -12,6 +12,7 @@ import { TalksSection } from "@/features/talks";
 import { CTABanner } from "@/features/cta";
 import { FAQSection } from "@/features/faqs";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { V2FloatButton } from "@/features/v2/V2FloatButton";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -159,6 +160,7 @@ export default async function HomePage() {
 
       <ClientsTrustFetcher />
       <CTABanner {...ctaBanner} />
+      <V2FloatButton />
     </>
   );
 }

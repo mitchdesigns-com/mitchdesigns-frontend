@@ -13,6 +13,8 @@ type HeroProps = {
   rotatingWords?: readonly string[];
   /** Per-word dwell time before swapping, in ms. */
   rotationInterval?: number;
+  /** Render without the dark surface fill (for heroes with their own backdrop). */
+  transparent?: boolean;
 };
 
 const DEFAULT_WORDS = [
@@ -28,6 +30,7 @@ export function Hero({
   headline,
   rotatingWords = DEFAULT_WORDS,
   rotationInterval = 2400,
+  transparent = false,
 }: HeroProps) {
   const [index, setIndex] = useState(0);
 
@@ -43,7 +46,10 @@ export function Hero({
   const word = rotatingWords[index];
 
   return (
-    <Section theme="dark" className="pt-30 pb-5 md:pt-34">
+    <Section
+      theme="dark"
+      className={`pt-30 pb-5 md:pt-34${transparent ? " bg-transparent" : ""}`}
+    >
       <motion.div
         initial="hidden"
         animate="visible"
