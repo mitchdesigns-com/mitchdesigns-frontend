@@ -60,7 +60,7 @@ export function FAQSection({
 
         {/* Category tabs — single scrolling row on mobile, centered wrap on desktop */}
         {hasCategories && (
-          <div className="-mr-4 flex w-full gap-3 overflow-x-auto [scrollbar-width:none] md:mr-0 md:w-auto md:flex-wrap md:justify-center md:overflow-visible [&::-webkit-scrollbar]:hidden">
+          <Reveal className="-mr-4 flex w-full gap-3 overflow-x-auto [scrollbar-width:none] md:mr-0 md:w-auto md:flex-wrap md:justify-center md:overflow-visible [&::-webkit-scrollbar]:hidden">
             {categoryOptions.map((cat) => (
               <button
                 key={cat}
@@ -70,16 +70,16 @@ export function FAQSection({
                   setOpenId(null);
                 }}
                 className={cn(
-                  "shrink-0 whitespace-nowrap rounded-pill border px-5 py-2.5 text-sm font-medium transition-colors",
+                  "shrink-0 whitespace-nowrap rounded-pill bg-space-grey px-5 py-2.5 text-sm font-medium transition-colors",
                   activeCategory === cat
-                    ? "border-white bg-space-grey text-white"
-                    : "border-border bg-space-grey text-fg-muted hover:text-white"
+                    ? "text-white"
+                    : "text-grey-500 hover:text-white"
                 )}
               >
                 {cat}
               </button>
             ))}
-          </div>
+          </Reveal>
         )}
 
         {/* FAQ cards */}

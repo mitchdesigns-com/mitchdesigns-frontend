@@ -53,7 +53,7 @@ function FeaturedTalk({ talk }: { talk: Talk }) {
           )}
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex max-w-[586px] flex-col gap-2.5">
           <h3 className="text-[46px] font-bold leading-[1.1] text-black">
             {talk.title}
           </h3>
