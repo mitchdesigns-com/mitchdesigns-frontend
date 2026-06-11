@@ -19,7 +19,7 @@ function ReviewCard({ t }: { t: Testimonial & { id: number } }) {
 
   return (
     <article className="flex w-card-review shrink-0 flex-col justify-between rounded-card-md border border-card-border bg-card p-5">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 md:gap-5">
         {/* Header: avatar + name/role + Google badge */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2.5">

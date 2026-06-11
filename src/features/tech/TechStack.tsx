@@ -24,7 +24,7 @@ function formatCategory(category: string): string {
 const MARK_STYLE: CSSProperties = {
   background: "none",
   backgroundImage:
-    "linear-gradient(to top, var(--color-yellow) 0.35em, transparent 0.35em)",
+    "linear-gradient(to top, var(--color-yellow) 0.45em, transparent 0.45em)",
   boxDecorationBreak: "clone",
   WebkitBoxDecorationBreak: "clone",
 };
