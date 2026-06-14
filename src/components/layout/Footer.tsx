@@ -48,7 +48,7 @@ function NavCol({ title, links }: { title: string; links: { label: string; href:
   );
 }
 
-export function Footer() {
+export function Footer({ hideTop = false }: { hideTop?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   // Parallax reveal (à la whatmattersagency.com): as the footer scrolls in, its
@@ -75,62 +75,64 @@ export function Footer() {
       <motion.div style={{ y }} className="container-page relative">
 
         {/* Top: link columns + contact cards */}
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+        {!hideTop && (
+          <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
 
-          {/* Left: Company + Services columns */}
-          <div className="flex justify-between gap-6 sm:justify-center sm:gap-12 lg:justify-start lg:gap-16">
-            <NavCol
-              title="Company"
-              links={[
-                ...COMPANY_LINKS,
-                { label: "Get Detailed Proposal", href: "/quote", yellow: true },
-              ]}
-            />
-            <NavCol title="Services" links={SERVICE_LINKS} />
-          </div>
+            {/* Left: Company + Services columns */}
+            <div className="flex justify-between gap-6 sm:justify-center sm:gap-12 lg:justify-start lg:gap-16">
+              <NavCol
+                title="Company"
+                links={[
+                  ...COMPANY_LINKS,
+                  { label: "Get Detailed Proposal", href: "/quote", yellow: true },
+                ]}
+              />
+              <NavCol title="Services" links={SERVICE_LINKS} />
+            </div>
 
-          {/* Right: WhatsApp + Newsletter cards */}
-          <div className="flex flex-col gap-8 lg:w-[35rem] lg:shrink-0">
+            {/* Right: WhatsApp + Newsletter cards */}
+            <div className="flex flex-col gap-8 lg:w-[35rem] lg:shrink-0">
 
-            {/* WhatsApp card */}
-            <a
-              href="https://wa.me/201014430669"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 rounded-card-md bg-space-grey px-6 py-5 transition-opacity hover:opacity-90 lg:gap-5 lg:px-9 lg:py-6"
-            >
-              <WhatsApp size={48} className="shrink-0 lg:hidden" />
-              <WhatsApp size={80} className="hidden shrink-0 lg:block" />
-              <div className="flex flex-col">
-                <span className="text-lg text-white">We&rsquo;re on Whatsapp</span>
-                <span className="text-2xl font-medium text-white">+201014430669</span>
-              </div>
-            </a>
+              {/* WhatsApp card */}
+              <a
+                href="https://wa.me/201014430669"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 rounded-card-md bg-space-grey px-6 py-5 transition-opacity hover:opacity-90 lg:gap-5 lg:px-9 lg:py-6"
+              >
+                <WhatsApp size={48} className="shrink-0 lg:hidden" />
+                <WhatsApp size={80} className="hidden shrink-0 lg:block" />
+                <div className="flex flex-col">
+                  <span className="text-lg text-white">We&rsquo;re on Whatsapp</span>
+                  <span className="text-2xl font-medium text-white">+201014430669</span>
+                </div>
+              </a>
 
-            {/* Newsletter card */}
-            <div className="rounded-xl bg-space-grey px-4 py-6">
-              <p className="text-center text-lg font-bold text-white lg:text-left">Join Our Newsletter</p>
-              <NewsletterForm />
-              <div className="mt-8 flex justify-center gap-6 lg:justify-start">
-                {SOCIAL.map(({ icon: Icon, label, href }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="text-yellow transition-opacity hover:opacity-70"
-                  >
-                    <Icon size={32} />
-                  </a>
-                ))}
+              {/* Newsletter card */}
+              <div className="rounded-xl bg-space-grey px-4 py-6">
+                <p className="text-center text-lg font-bold text-white lg:text-left">Join Our Newsletter</p>
+                <NewsletterForm />
+                <div className="mt-8 flex justify-center gap-6 lg:justify-start">
+                  {SOCIAL.map(({ icon: Icon, label, href }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="text-yellow transition-opacity hover:opacity-70"
+                    >
+                      <Icon size={32} />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Divider + social links row */}
-        <div className="mt-12 border-t border-space-grey pt-3 lg:mt-15">
+        <div className={`border-t border-space-grey pt-3 ${hideTop ? "" : "mt-12 lg:mt-15"}`}>
           <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
             <a href="https://linkedin.com/company/mitchdesigns" target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
@@ -145,29 +147,29 @@ export function Footer() {
         {/* Wordmark */}
         <div className="relative mt-12 lg:mt-20 pointer-events-none">
           <div className="footer-grid absolute inset-0" aria-hidden />
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-end lg:justify-between">
+            <div className="min-w-0">
               {/* "Mitch" with signature overlay */}
               <div className="relative">
                 <span
-                  className="absolute left-4 -top-8 whitespace-nowrap font-signature text-wordmark-sm text-yellow lg:text-signature-lg leading-[47px]"
+                  className="absolute left-4 -top-8 whitespace-nowrap font-signature text-signature text-yellow leading-[47px]"
                   style={{ rotate: "-4deg", transformOrigin: "left center" }}
                   aria-hidden
                 >
                   webdesign agency
                 </span>
-                <p className="font-wordmark text-wordmark-sm font-bold leading-none text-white lg:text-wordmark-lg uppercase">
+                <p className="font-wordmark text-wordmark font-bold leading-none text-white uppercase">
                   Mitch
                 </p>
               </div>
-              <p className="font-wordmark text-wordmark-sm font-bold leading-none text-white lg:text-wordmark-lg uppercase">
+              <p className="font-wordmark text-wordmark font-bold leading-none text-white uppercase">
                 Designs
                 <sup className="ml-1 align-super font-sans text-lg font-medium">
                   TM
                 </sup>
               </p>
             </div>
-            <p className="text-xl font-medium text-white lg:self-end">
+            <p className="text-xl font-medium text-white lg:self-end whitespace-nowrap">
               Design. Technology. Performance.
             </p>
           </div>

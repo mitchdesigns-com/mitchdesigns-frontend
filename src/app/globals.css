@@ -47,6 +47,12 @@
   --text-wordmark-lg--line-height: 1;
   --text-wordmark-sm: 5rem; /* 80px — mobile */
   --text-wordmark-sm--line-height: 1;
+  /* Fluid variants — scale with viewport width so the logotype always fits
+     the container at every size, capping at the desktop sizes above. */
+  --text-wordmark: clamp(2.5rem, 12.5vw, 10.625rem);
+  --text-wordmark--line-height: 1;
+  --text-signature: clamp(2.4rem, 12vw, 10.25rem);
+  --text-signature--line-height: 1;
 
   /* Type scale — Hero (display, tight 1.1) */
   --text-jumbo: 18.75rem; /* 300px — "Innovate Or Die" display */
