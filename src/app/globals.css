@@ -68,6 +68,13 @@
   --text-display--font-weight: 900;
   --text-display--letter-spacing: -0.01em;
 
+  /* Full-screen menu nav links — scale with viewport height so all items stay
+     visible on every desktop screen (caps at the display size on tall screens). */
+  --text-menu: clamp(1.75rem, 5.5vh, 3.5rem);
+  --text-menu--line-height: 1.1;
+  --text-menu--font-weight: 300;
+  --text-menu--letter-spacing: -0.01em;
+
   --text-hero-3: 2.875rem; /* 46px */
   --text-hero-3--line-height: 1.1;
   --text-hero-3--font-weight: 700;

@@ -81,7 +81,7 @@ export function MarketsSelect({ id, value, onChange, invalid, className }: Props
 
       {/* Add-a-market control: a visual chevron over a native select */}
       <div className="relative flex-1">
-        <div className="pointer-events-none flex items-center gap-1 text-base text-fg-muted">
+        <div className="pointer-events-none flex items-center justify-between gap-1 text-base text-fg-muted whitespace-nowrap">
           <span>{selected.length ? "Add another…" : "Select markets…"}</span>
           <ChevronDown size={16} />
         </div>

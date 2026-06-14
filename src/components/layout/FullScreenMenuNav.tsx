@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
@@ -33,10 +33,24 @@ function SlideLabel({ label }: { label: string }) {
  */
 export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
   const [showServices, setShowServices] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Close the services submenu on a click anywhere outside the nav body.
+  useEffect(() => {
+    if (!showServices) return;
+    const handle = (e: PointerEvent) => {
+      if (!panelRef.current?.contains(e.target as Node)) setShowServices(false);
+    };
+    document.addEventListener("pointerdown", handle);
+    return () => document.removeEventListener("pointerdown", handle);
+  }, [showServices]);
 
   return (
     <nav className="flex flex-1 flex-col justify-center pb-16">
-      <div className="container-page flex flex-col md:flex-row md:items-center md:gap-8">
+      <div
+        ref={panelRef}
+        className="container-page relative flex flex-col md:flex-row md:items-center md:gap-8"
+      >
         {/* Left — primary nav */}
         <ul
           className={cn(
@@ -57,7 +71,10 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                 {item.href ? (
                   <Link
                     href={item.href}
-                    onClick={onNavigate}
+                    onClick={() => {
+                      setShowServices(false);
+                      onNavigate();
+                    }}
                     className={cn(
                       "group relative flex w-full transition-opacity duration-300 ease-out-soft",
                       dimmed && "opacity-40 hover:opacity-100",
@@ -70,8 +87,8 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                         showServices ? "inset-x-0" : "bleed-x",
                       )}
                     />
-                    <div className="relative flex items-center py-2">
-                      <span className="text-display font-light uppercase leading-none tracking-[-0.01em] text-black">
+                    <div className="relative flex items-center py-1.5">
+                      <span className="text-menu font-light uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>
                     </div>
@@ -87,11 +104,12 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                       aria-hidden
                       className={cn(
                         "absolute inset-y-0 origin-center scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100",
-                        showServices ? "inset-x-0" : "bleed-x",
+                        showServices ? "inset-x-0 bg-transparent!" : "bleed-x",
+                        dimmed ? "bg-transparent!" : "",
                       )}
                     />
-                    <div className="relative flex items-center gap-4 py-2">
-                      <span className="text-display font-light uppercase leading-none tracking-[-0.01em] text-black">
+                    <div className="relative flex items-center gap-4 py-1.5">
+                      <span className="text-menu font-light uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>
                       <motion.span
@@ -118,7 +136,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 40 }}
               transition={{ duration: 0.4, ease: EASE }}
-              className="flex w-full flex-col justify-center gap-1 pt-8 md:w-1/2 md:pl-16 md:pt-0"
+              className="flex w-full flex-col justify-center gap-1 pt-8 md:absolute md:inset-y-0 md:right-0 md:w-1/2 md:pl-16 md:pt-0"
             >
               {SERVICES.map((s, i) => (
                 <motion.li
@@ -140,7 +158,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                       aria-hidden
                       className="absolute right-full mr-5 hidden h-0.5 w-11 origin-right scale-x-0 bg-black transition-transform duration-300 ease-out-soft group-hover:scale-x-100 md:block"
                     />
-                    <span className="text-hero-5 font-light leading-tight text-black md:text-card-title">
+                    <span className="text-menu font-light leading-tight text-black">
                       {s.title}
                     </span>
                   </Link>

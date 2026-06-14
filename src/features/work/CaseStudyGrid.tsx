@@ -176,7 +176,7 @@ export function CaseStudyGrid({
   }, [hasMore, loadMore]);
 
   return (
-    <Section theme="dark" className="py-20">
+    <Section theme="dark" className="py-25">
       <div className="flex flex-col gap-10 lg:gap-[60px]">
         {/* Header */}
         <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">

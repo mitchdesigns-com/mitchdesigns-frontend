@@ -77,12 +77,12 @@ export function AboutSection({
         <div className="flex w-full shrink-0 flex-col items-center justify-between gap-11 lg:w-auto lg:self-stretch">
           <ul className="flex flex-col gap-11">
             {stats.map(({ value, unit, label }) => (
-              <li key={value} className="flex flex-col items-center">
-                <div className="flex items-baseline gap-2.5">
+              <li key={value} className="flex flex-col items-start">
+                <div className="flex items-center gap-2.5">
                   <span className="font-bold text-[3.5rem] leading-none text-white sm:text-[4rem]">
                     {value}
                   </span>
-                  <span className="font-light text-3xl text-white">{unit}</span>
+                  <span className="font-light text-lg text-white">{unit}</span>
                 </div>
                 <span className="text-[13px] tracking-[0.01em] text-fg-muted">
                   {label}
