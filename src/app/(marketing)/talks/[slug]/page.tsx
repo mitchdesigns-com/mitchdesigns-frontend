@@ -32,7 +32,7 @@ const PUBLISHER = {
   url: "https://mitchdesigns.com",
   logo: {
     "@type": "ImageObject",
-    url: "https://mitchdesigns.com/logo.png",
+    url: "https://mitchdesigns.com/images/logo-black.webp",
   },
 };
 

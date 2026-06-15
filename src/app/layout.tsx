@@ -54,7 +54,7 @@ const siteGraph = {
       "@type": "Organization",
       name: SITE_NAME,
       url: SITE_URL,
-      logo: `${SITE_URL}/logo.png`,
+      logo: `${SITE_URL}/images/logo-black.webp`,
       description:
         "Website and mobile app design agency based in Egypt, building premium digital products for brands across the MENA region.",
       address: { "@type": "PostalAddress", addressCountry: "EG" },
