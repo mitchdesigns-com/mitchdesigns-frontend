@@ -31,6 +31,27 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion"],
     viewTransition: true,
   },
+  // RFC 8288 Link headers — advertise real, agent-useful resources from the
+  // homepage. All three use IANA-registered relation types and point to
+  // resources that actually exist. Relative URIs resolve against the request
+  // host, so this works on staging and prod without env coupling.
+  async headers() {
+    return [
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value: [
+              '</sitemap.xml>; rel="sitemap"',
+              '</privacy>; rel="privacy-policy"',
+              '</terms>; rel="terms-of-service"',
+            ].join(", "),
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default function config(phase: string): NextConfig {
