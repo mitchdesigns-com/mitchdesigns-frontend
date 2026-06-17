@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-static";
+
 // Single source of truth for indexability: the SAME NEXT_PUBLIC_INDEXABLE flag
 // that drives the <meta robots> tag in app/layout.tsx. Flip it to "true" for the
 // production build to open the crawl directive and the meta tag together — no

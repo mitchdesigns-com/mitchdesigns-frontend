@@ -1,16 +1,18 @@
 import type { MetadataRoute } from "next";
 import { getCaseStudies, getServices, getTalks } from "@/lib/cms/queries";
+import { fixtureCaseStudies, fixtureServices, fixtureTalks } from "@/lib/cms/fixtures";
 
 const BASE = "https://mitchdesigns.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  // Live CMS, with the query layer's fixture fallback if Strapi is unreachable.
+  // Live CMS; falls back to fixtures if Strapi is unreachable so the sitemap
+  // never 500s during a crawl window or Strapi deploy.
   const [services, caseStudies, talks] = await Promise.all([
-    getServices(),
-    getCaseStudies(),
-    getTalks(),
+    getServices().catch(() => fixtureServices),
+    getCaseStudies().catch(() => fixtureCaseStudies),
+    getTalks().catch(() => fixtureTalks),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
