@@ -1,3 +1,6 @@
+/** External lead/quote funnel — moved to its own project (md-leads). */
+export const LEADS_URL = "https://leads.mitchdesigns.com/";
+
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Our Services", href: null, hasChevron: true },
@@ -6,7 +9,7 @@ export const NAV_LINKS = [
   { label: "Talks", href: "/talks" },
   { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
-  { label: "Get Detailed Proposal", href: "/quote" },
+  { label: "Get Detailed Proposal", href: LEADS_URL },
 ] as const;
 
 export const COMPANY_LINKS = [

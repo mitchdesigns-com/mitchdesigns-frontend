@@ -3,6 +3,7 @@
  * first run before Strapi is provisioned). Shapes match `lib/cms/types`.
  * Remove or trim once Strapi has real content.
  */
+import { LEADS_URL } from "@/config/nav";
 import type {
   AboutContent,
   BlogSection,
@@ -1112,7 +1113,7 @@ export const fixtureCtaBanner: CtaBannerData = {
   title: "Ready For Your Next Project?",
   description:
     "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
-  cta: { label: "Get Detailed Proposal", href: "/quote" },
+  cta: { label: "Get Detailed Proposal", href: LEADS_URL },
   bgImage: "/images/cta-bg.webp",
 };
 

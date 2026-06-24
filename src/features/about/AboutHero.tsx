@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
 import type { AboutContent } from "@/lib/cms/types";
+import { LEADS_URL } from "@/config/nav";
 
 export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
   const titleLines = hero.title.split("\n");
@@ -37,7 +38,7 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
             {hero.description}
           </p>
           <Button size="lg" asChild>
-            <Link href="/quote" className="flex items-center gap-2">
+            <Link href={LEADS_URL} className="flex items-center gap-2">
               Get Detailed Proposal
               <ArrowRight size={20} />
             </Link>

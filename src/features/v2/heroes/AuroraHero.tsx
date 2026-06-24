@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { Hero } from "@/features/hero";
 import { Button } from "@/components/ui/Button";
+import { LEADS_URL } from "@/config/nav";
 
 type AuroraHeroProps = {
   eyebrow?: string;
@@ -166,7 +167,7 @@ export function AuroraHero({ eyebrow, headline, rotatingWords }: AuroraHeroProps
         />
         <div className="container-page flex flex-wrap items-center gap-4 pb-16 pt-8">
           <Button asChild size="lg">
-            <Link href="/quote">Start a project</Link>
+            <Link href={LEADS_URL}>Start a project</Link>
           </Button>
           <Button
             asChild

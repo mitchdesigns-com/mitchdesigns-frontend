@@ -15,6 +15,7 @@ import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { Close } from "@/components/icons/Close";
 import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
+import { LEADS_URL } from "@/config/nav";
 
 interface ServiceItem {
   num: string;
@@ -234,7 +235,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
                 <div className="flex flex-wrap items-center justify-end gap-4 self-end">
                   <Link
-                    href="/quote"
+                    href={LEADS_URL}
                     className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
                   >
                     Get Detailed Proposal

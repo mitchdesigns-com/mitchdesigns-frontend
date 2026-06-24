@@ -9,6 +9,7 @@ import { useSectionTheme } from "@/hooks/useSectionTheme";
 import { HeaderConfigContext } from "@/context/HeaderConfigContext";
 import { Logo } from "../icons/Logo";
 import { FullScreenMenuNav } from "./FullScreenMenuNav";
+import { LEADS_URL } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
@@ -115,7 +116,7 @@ export function Header() {
           <div className="flex items-center gap-6">
             {showCta && (
               <Link
-                href="/quote"
+                href={LEADS_URL}
                 className={cn(
                   "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
                   menuOpen && "opacity-0 pointer-events-none",

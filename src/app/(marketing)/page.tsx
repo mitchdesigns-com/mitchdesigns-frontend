@@ -99,14 +99,14 @@ export default async function HomePage() {
             position: 1,
             name: "Request a Proposal",
             text: "Fill out our quote form with your project goals, budget range, and timeline. We respond within 24 hours with initial thoughts.",
-            url: "https://mitchdesigns.com/quote",
+            url: "https://leads.mitchdesigns.com/",
           },
           {
             "@type": "HowToStep",
             position: 2,
             name: "Discovery Call",
             text: "We schedule a call to deeply understand your business, users, and success metrics. This shapes the entire project scope.",
-            url: "https://mitchdesigns.com/quote/schedule-call",
+            url: "https://leads.mitchdesigns.com/",
           },
           {
             "@type": "HowToStep",

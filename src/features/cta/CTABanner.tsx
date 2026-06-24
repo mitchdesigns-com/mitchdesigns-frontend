@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { RevealStagger, RevealItem } from "@/components/motion";
+import { LEADS_URL } from "@/config/nav";
 
 type CTABannerProps = {
   title?: React.ReactNode;
@@ -14,7 +15,7 @@ type CTABannerProps = {
 export function CTABanner({
   title = "Ready For Your Next Project?",
   description = "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
-  cta = { label: "Get Detailed Proposal", href: "/quote" },
+  cta = { label: "Get Detailed Proposal", href: LEADS_URL },
   bgImage = "/images/cta-bg.webp",
 }: CTABannerProps) {
   return (

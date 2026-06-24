@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { ArrowRight } from "@/components/icons/ArrowRight";
-import { NAV_LINKS, SERVICES, serviceHref } from "@/config/nav";
+import { NAV_LINKS, SERVICES, serviceHref, LEADS_URL } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -172,7 +172,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
       {/* Mobile-only quote CTA (inline header CTA is hidden on small screens) */}
       <div className="container-page mt-10 sm:hidden">
         <Link
-          href="/quote"
+          href={LEADS_URL}
           onClick={onNavigate}
           className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
         >

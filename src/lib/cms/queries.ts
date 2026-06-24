@@ -2,6 +2,7 @@
 import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
+import { LEADS_URL } from "@/config/nav";
 import type {
   AboutContent,
   AboutImage,
@@ -555,7 +556,7 @@ export const getCtaBanner = async (): Promise<CtaBannerData> => {
         title: raw.title,
         description: raw.description ?? undefined,
         cta: raw.ctaLabel
-          ? { label: raw.ctaLabel, href: raw.ctaHref ?? "/quote" }
+          ? { label: raw.ctaLabel, href: raw.ctaHref ?? LEADS_URL }
           : undefined,
         bgImage: raw.bgImage
           ? strapiMedia(raw.bgImage.url) ?? raw.bgImage.url

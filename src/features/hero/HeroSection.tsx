@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { VideoLightbox } from "./VideoLightbox";
+import { LEADS_URL } from "@/config/nav";
 
 // TODO: replace preview/video with real assets
 const CARDS = [
@@ -127,7 +128,7 @@ export function HeroSection() {
             className="absolute bottom-20 left-0 right-0 flex justify-center"
           >
             <Button asChild size="lg">
-              <Link href="/quote">Get Detailed Proposal →</Link>
+              <Link href={LEADS_URL}>Get Detailed Proposal →</Link>
             </Button>
           </motion.div>
         </div>

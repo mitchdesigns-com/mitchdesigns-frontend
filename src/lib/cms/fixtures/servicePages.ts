@@ -1,4 +1,5 @@
 import type { Service, ServicePageData } from "../types";
+import { LEADS_URL } from "@/config/nav";
 
 export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   corporate: {
@@ -7,7 +8,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       subTitle: "Corporate Website",
       description:
         "We design and build custom corporate websites on Next.js — no templates, no shortcuts. Every page is crafted for lead generation, brand clarity, and blazing performance.",
-      cta: { label: "Get a Proposal", href: "/quote" },
+      cta: { label: "Get a Proposal", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/corporate/prototype.webp",
@@ -204,7 +205,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Custom storefronts with seamless checkout, local payment gateways (Paymob, Fawry), and conversion-optimised UX. Built on Next.js — fast, scalable, and yours.",
       image: "/images/services/ecommerce/hero.webp",
       imageAlt: "eCommerce store product page on mobile and desktop",
-      cta: { label: "Start Your Store", href: "/quote" },
+      cta: { label: "Start Your Store", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/ecommerce/prototype.webp",
@@ -394,7 +395,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Booking systems, SaaS dashboards, internal tools, and client portals — custom-architected for reliability and designed for the people who use them daily.",
       image: "/images/services/custom/hero.webp",
       imageAlt: "Custom platform dashboard on a large monitor",
-      cta: { label: "Discuss Your Project", href: "/quote" },
+      cta: { label: "Discuss Your Project", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/custom/prototype.webp",
@@ -562,7 +563,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "From database schema to pixel-perfect UI — we own the full stack so you get a cohesive product, not stitched-together modules from different vendors.",
       image: "/images/services/custom/we-got-you.webp",
       imageAlt: "Full-stack development team",
-      cta: { label: "Get a Proposal", href: "/quote" },
+      cta: { label: "Get a Proposal", href: LEADS_URL },
       imagePosition: "right",
       theme: "beige",
     },
@@ -576,7 +577,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Data-driven paid campaigns across Meta, TikTok, and Snapchat. Creative testing, audience targeting, and funnel optimisation built around your CPA — not just impressions.",
       image: "/images/services/media-buying/hero.webp",
       imageAlt: "Media buying campaign performance dashboard",
-      cta: { label: "Start Scaling", href: "/quote" },
+      cta: { label: "Start Scaling", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/media-buying/prototype.webp",
@@ -667,7 +668,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Search and Performance Max campaigns built around profitable keywords and tight negative lists. Continuously tested and optimised for every dirham in ad spend.",
       image: "/images/services/google-ads/hero.webp",
       imageAlt: "Google Ads campaign dashboard",
-      cta: { label: "Get a Free Audit", href: "/quote" },
+      cta: { label: "Get a Free Audit", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/google-ads/prototype.webp",
@@ -711,7 +712,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Keyword research, campaign structure, ad copy, bid strategy, negative keywords, and landing page alignment — all handled by certified specialists who live inside your account.",
       image: "/images/services/google-ads/we-got-you.webp",
       imageAlt: "Google Ads account management workflow",
-      cta: { label: "Book a Free Audit", href: "/quote" },
+      cta: { label: "Book a Free Audit", href: LEADS_URL },
       imagePosition: "right",
     },
     whyUs: {
@@ -758,7 +759,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Technical SEO, content strategy, and AI-Generative Optimisation (AGO) to rank on Google and get cited in ChatGPT, Perplexity, and AI Overviews. Arabic SEO included.",
       image: "/images/services/seo/hero.webp",
       imageAlt: "SEO and AI search visibility dashboard",
-      cta: { label: "Get an SEO Audit", href: "/quote" },
+      cta: { label: "Get an SEO Audit", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/seo/prototype.webp",
@@ -849,7 +850,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         "Native-feel iOS and Android apps built with React Native. Designed for conversion, built for performance, and ready for App Store and Play Store submission.",
       image: "/images/services/mobile-app/hero.webp",
       imageAlt: "Mobile app screens on iPhone and Android devices",
-      cta: { label: "Discuss Your App", href: "/quote" },
+      cta: { label: "Discuss Your App", href: LEADS_URL },
     },
     prototypes: {
       image: "/images/services/mobile-app/prototype.webp",

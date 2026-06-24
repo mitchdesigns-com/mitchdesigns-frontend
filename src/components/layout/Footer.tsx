@@ -14,7 +14,7 @@ import { Instagram } from "@/components/icons/Instagram";
 import { LinkedIn } from "@/components/icons/LinkedIn";
 import { YouTube } from "@/components/icons/YouTube";
 import { WhatsApp } from "@/components/icons/WhatsApp";
-import { COMPANY_LINKS, SERVICES, serviceHref } from "@/config/nav";
+import { COMPANY_LINKS, SERVICES, serviceHref, LEADS_URL } from "@/config/nav";
 
 const SERVICE_LINKS = SERVICES.map((s) => ({
   label: s.footerLabel,
@@ -84,7 +84,7 @@ export function Footer({ hideTop = false }: { hideTop?: boolean }) {
                 title="Company"
                 links={[
                   ...COMPANY_LINKS,
-                  { label: "Get Detailed Proposal", href: "/quote", yellow: true },
+                  { label: "Get Detailed Proposal", href: LEADS_URL, yellow: true },
                 ]}
               />
               <NavCol title="Services" links={SERVICE_LINKS} />

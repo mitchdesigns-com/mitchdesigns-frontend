@@ -7,6 +7,7 @@ import { CardSlider } from "@/components/ui/CardSlider";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal } from "@/components/motion";
 import { ClientsTrustCard } from "./ClientsTrustCard";
+import { LEADS_URL } from "@/config/nav";
 
 export type TrustReasonCard = {
   image?: string | null;
@@ -20,7 +21,7 @@ const SCROLL_STEP = 330 + 16; // card width + gap
 
 const DEFAULT_INTRO =
   "Because choosing a digital partner shouldn’t feel risky, it should feel right.";
-const DEFAULT_CTA: Cta = { label: "Get Detailed Proposal", href: "/quote" };
+const DEFAULT_CTA: Cta = { label: "Get Detailed Proposal", href: LEADS_URL };
 
 type Props = {
   reasons: TrustReasonCard[];

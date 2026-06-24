@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal } from "@/components/motion";
 import type { AboutContent } from "@/lib/cms/types";
+import { LEADS_URL } from "@/config/nav";
 
 export function AboutApproach({
   approach,
@@ -31,7 +32,7 @@ export function AboutApproach({
           </div>
 
           <Button size="lg" asChild>
-            <Link href="/quote" className="flex items-center gap-2">
+            <Link href={LEADS_URL} className="flex items-center gap-2">
               Get Detailed Proposal
               <ArrowRight size={20} />
             </Link>
