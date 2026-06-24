@@ -46,8 +46,16 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      # We build then `wrangler deploy` directly instead of `opennextjs-cloudflare
+      # deploy`. The latter first runs `populateCache remote`, which hits the R2
+      # REST API to check/seed the incremental-cache bucket — and the account-owned
+      # `cfat_` token 401s on that API (it only works for wrangler's Workers upload).
+      # Skipping populate is safe: the R2 binding stays, so the cache seeds lazily
+      # at runtime instead of at deploy time.
       - name: Build & deploy
-        run: pnpm run deploy
+        run: |
+          pnpm exec opennextjs-cloudflare build
+          pnpm exec wrangler deploy
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
