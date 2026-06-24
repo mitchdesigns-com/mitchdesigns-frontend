@@ -17,12 +17,6 @@
       "service": "mitchdesigns-website"
     }
   ],
-  "r2_buckets": [
-    {
-      "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "mitchdesigns-website-cache"
-    }
-  ],
   "durable_objects": {
     "bindings": [
       {
