@@ -2,6 +2,7 @@
 import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
+import { blocksToText } from "./blocks";
 import { LEADS_URL } from "@/config/nav";
 import type {
   AboutContent,
@@ -239,10 +240,10 @@ function mapAboutPage(raw: any): AboutContent {
     hero: {
       badge: raw.hero?.badge ?? "",
       title: raw.hero?.title ?? "",
-      description: raw.hero?.description ?? "",
+      description: blocksToText(raw.hero?.description) ?? "",
       panel: {
         title: raw.hero?.panel?.title ?? "",
-        body: raw.hero?.panel?.body ?? "",
+        body: blocksToText(raw.hero?.panel?.body) ?? "",
       },
       images: (raw.hero?.images ?? [])
         .map(aboutImage)
@@ -255,7 +256,7 @@ function mapAboutPage(raw: any): AboutContent {
     approach: {
       eyebrow: raw.approach?.eyebrow ?? "",
       title: raw.approach?.title ?? "",
-      body: raw.approach?.body ?? "",
+      body: blocksToText(raw.approach?.body) ?? "",
       image: aboutImage(raw.approach?.image),
     },
     innovate: {
@@ -273,7 +274,7 @@ function mapAboutPage(raw: any): AboutContent {
       eyebrow: raw.story?.eyebrow ?? "",
       title: raw.story?.title ?? "",
       cards: (raw.story?.cards ?? []).map((c: any) => ({
-        body: c.body,
+        body: blocksToText(c.body) ?? "",
         image: aboutImage(c.image),
       })),
     },
@@ -314,26 +315,6 @@ function parseWords(raw: unknown): string[] | undefined {
   return undefined;
 }
 
-/**
- * Flatten a Strapi `blocks` value into a plain string. Each top-level block
- * becomes a paragraph joined by "\n\n" — the AboutSection body is rendered
- * with a per-character scroll animation, so inline marks (bold/links) are
- * intentionally dropped. Passes strings through unchanged (legacy/fixture data).
- */
-function blocksToText(raw: unknown): string | undefined {
-  if (typeof raw === "string") return raw || undefined;
-  if (!Array.isArray(raw)) return undefined;
-  const text = raw
-    .map((block: any) =>
-      Array.isArray(block?.children)
-        ? block.children.map((c: any) => c?.text ?? "").join("")
-        : "",
-    )
-    .join("\n\n")
-    .trim();
-  return text || undefined;
-}
-
 export const getHomePage = async (): Promise<HomePageData> => {
   try {
     const raw = await getSingle<Record<string, any>>("/home-page", {
@@ -372,7 +353,7 @@ export const getHomePage = async (): Promise<HomePageData> => {
         orderbaseOverview: raw.orderbaseOverview
           ? {
               heading: raw.orderbaseOverview.heading,
-              description: raw.orderbaseOverview.description ?? undefined,
+              description: blocksToText(raw.orderbaseOverview.description),
               descriptionHighlight:
                 raw.orderbaseOverview.descriptionHighlight ?? undefined,
               countValue: raw.orderbaseOverview.countValue ?? undefined,
@@ -386,7 +367,7 @@ export const getHomePage = async (): Promise<HomePageData> => {
               cards: (raw.orderbaseOverview.cards ?? []).map((c: any) => ({
                 icon: c.icon,
                 title: c.title,
-                description: c.description ?? undefined,
+                description: blocksToText(c.description),
               })),
             }
           : undefined,
@@ -429,7 +410,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
   const iconCard = (c: any) => ({
     icon: c.icon,
     title: c.title ?? undefined,
-    description: c.description,
+    description: blocksToText(c.description),
   });
   try {
     const raw = await getSingle<Record<string, any>>("/orderbase-page", {
@@ -449,7 +430,9 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
     });
     if (raw?.hero) {
       return {
-        hero: raw.hero ?? undefined,
+        hero: raw.hero
+          ? { ...raw.hero, description: blocksToText(raw.hero.description) }
+          : undefined,
         brands: (raw.brands ?? []).map((b: any) => ({
           name: b.name,
           logo: mUrl(b.logo),
@@ -463,7 +446,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
               title: raw.challenge.title ?? undefined,
               items: (raw.challenge.items ?? []).map((i: any) => ({
                 title: i.title,
-                description: i.description ?? undefined,
+                description: blocksToText(i.description),
                 image: mUrl(i.image),
               })),
             }
@@ -471,6 +454,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
         moreAbout: raw.moreAbout
           ? {
               ...raw.moreAbout,
+              description: blocksToText(raw.moreAbout.description),
               features: (raw.moreAbout.features ?? []).map(iconCard),
             }
           : undefined,
@@ -483,7 +467,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
               steps: (raw.journey.steps ?? []).map((s: any) => ({
                 number: s.number,
                 title: s.title,
-                description: s.description ?? undefined,
+                description: blocksToText(s.description),
                 image: mUrl(s.image),
               })),
             }
@@ -520,7 +504,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
           ? {
               pill: raw.sinceFrom.pill ?? undefined,
               title: raw.sinceFrom.title ?? undefined,
-              description: raw.sinceFrom.description ?? undefined,
+              description: blocksToText(raw.sinceFrom.description),
               statsTitle: raw.sinceFrom.statsTitle ?? undefined,
               stats: (raw.sinceFrom.stats ?? []).map((s: any) => ({
                 value: s.value,
@@ -557,7 +541,7 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
           ? {
               eyebrow: raw.hero.eyebrow ?? undefined,
               title: raw.hero.title,
-              description: raw.hero.description ?? undefined,
+              description: blocksToText(raw.hero.description),
             }
           : undefined,
         drives: (raw.drives ?? []).map((d: any) => ({ label: d.label })),
@@ -569,7 +553,7 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
                   ? strapiMedia(c.image.url) ?? c.image.url
                   : null,
                 title: c.title,
-                body: c.body,
+                body: blocksToText(c.body) ?? "",
               }))
             : undefined,
       };
@@ -593,7 +577,7 @@ export const getCtaBanner = async (): Promise<CtaBannerData> => {
     if (raw?.title) {
       return {
         title: raw.title,
-        description: raw.description ?? undefined,
+        description: blocksToText(raw.description),
         cta: raw.ctaLabel
           ? { label: raw.ctaLabel, href: raw.ctaHref ?? LEADS_URL }
           : undefined,
@@ -664,7 +648,7 @@ const mapPageHero = (raw: Record<string, any> | null) =>
     ? {
         eyebrow: raw.hero.eyebrow ?? undefined,
         title: raw.hero.title as string,
-        description: raw.hero.description ?? undefined,
+        description: blocksToText(raw.hero.description),
       }
     : undefined;
 
@@ -721,11 +705,13 @@ export async function getClientLogos(): Promise<
 /* ------------------------------------------------------------------
  * Trust reasons ("Reasons Clients Trust MitchDesigns")
  * ------------------------------------------------------------------ */
-export const getTrustReasons = () =>
-  getCollection<TrustReason>("/trust-reasons", {
+export const getTrustReasons = async () => {
+  const items = await getCollection<TrustReason>("/trust-reasons", {
     revalidate: 600,
     query: { populate: "image", sort: "order:asc" },
   });
+  return items.map((r) => ({ ...r, body: blocksToText(r.body) ?? "" }));
+};
 
 /* ------------------------------------------------------------------
  * Tech stack
@@ -737,9 +723,14 @@ export const getTechStack = () =>
   });
 
 /** Single type — heading copy for the homepage tech stack section. */
-export const getTechStackSection = (): Promise<
+export const getTechStackSection = async (): Promise<
   (TechStackSection & { id: number }) | null
-> => getSingle<TechStackSection>("/tech-stack-section", { revalidate: 600 });
+> => {
+  const raw = await getSingle<TechStackSection>("/tech-stack-section", {
+    revalidate: 600,
+  });
+  return raw ? { ...raw, description: blocksToText(raw.description) } : null;
+};
 
 /* ------------------------------------------------------------------
  * Service page data
@@ -898,7 +889,7 @@ function mapServicePage(raw: any): ServicePageData {
           numbers: (raw.numbers.numbers ?? ([] as any[])).map((n: any) => ({
             value: n.value,
             title: n.title,
-            description: n.description ?? undefined,
+            description: blocksToText(n.description),
           })),
         }
       : undefined,

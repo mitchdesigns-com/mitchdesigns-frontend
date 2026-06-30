@@ -13,6 +13,7 @@ import {
 } from "@/features/work";
 import { RichText } from "@/components/ui/RichText";
 import { getCaseStudies, getCaseStudy } from "@/lib/cms";
+import { blocksToText } from "@/lib/cms/blocks";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
 
@@ -118,7 +119,10 @@ export default async function SingleCaseStudyPage({
           case "blocks.case-point":
             return (
               <Section key={i} data-theme="dark" className="py-24">
-                <TextInRow heading={block.title} items={[block]} />
+                <TextInRow
+                  heading={block.title}
+                  items={[{ title: block.title, body: blocksToText(block.body) ?? "" }]}
+                />
               </Section>
             );
           case "blocks.image-pair":
