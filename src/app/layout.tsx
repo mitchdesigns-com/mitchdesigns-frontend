@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -92,14 +91,6 @@ export default function RootLayout({
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
-        />
-        <Script
-          src="https://feedback-widget.mitchdesigns.workers.dev/widget.js"
-          data-ingest-key="pk_b9de74ec44ea8cd03eeedbe6438440e7"
-          data-endpoint="https://bugger-worker.mitchdesigns.workers.dev/functions/v1/ingest-feedback"
-          strategy="lazyOnload"
-          data-position="bottom-left"
-          data-buttonText="Our Feedback"
         />
       </head>
       <body className="min-h-dvh antialiased">
