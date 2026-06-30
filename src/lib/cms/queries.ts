@@ -42,21 +42,29 @@ function normalizeCaseStudy<T extends CaseStudyRaw>(raw: T): T & { services: str
 }
 
 export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number }): Promise<Array<CaseStudy & { id: number }>> => {
-  const results = await getCollection<CaseStudyRaw>("/case-studies", {
-    revalidate: 60,
-    query: {
-      "populate[cover]": "true",
-      "populate[thumbnail]": "true",
-      "populate[featuredThumbnail]": "true",
-      "populate[logo]": "true",
-      "populate[testimonial][populate]": "*",
-      "populate[services]": "true",
-      sort: "publishedAt:desc",
-      ...(opts?.featured ? { "filters[featured][$eq]": "true" } : {}),
-      ...(opts?.limit ? { "pagination[limit]": opts.limit } : {}),
-    },
-  });
-  return results.map(normalizeCaseStudy);
+  try {
+    const results = await getCollection<CaseStudyRaw>("/case-studies", {
+      revalidate: 60,
+      query: {
+        "populate[cover]": "true",
+        "populate[thumbnail]": "true",
+        "populate[featuredThumbnail]": "true",
+        "populate[logo]": "true",
+        "populate[testimonial][populate]": "*",
+        "populate[services]": "true",
+        sort: "publishedAt:desc",
+        ...(opts?.featured ? { "filters[featured][$eq]": "true" } : {}),
+        ...(opts?.limit ? { "pagination[limit]": opts.limit } : {}),
+      },
+    });
+    return results.map(normalizeCaseStudy);
+  } catch {
+    const { fixtureCaseStudies } = await import("./fixtures");
+    let items = fixtureCaseStudies.map((s, i) => ({ ...s, id: i + 1 }));
+    if (opts?.featured) items = items.filter((s) => (s as CaseStudy).featured);
+    if (opts?.limit) items = items.slice(0, opts.limit);
+    return items as Array<CaseStudy & { id: number }>;
+  }
 };
 
 export const getCaseStudy = async (
@@ -76,25 +84,33 @@ export const getCaseStudy = async (
       "populate[seo][populate]": "*",
       "pagination[limit]": 1,
     },
-  });
+  }).catch(() => [] as CaseStudyRaw[]);
 
   const raw = results[0];
-  if (!raw) return null;
-  return normalizeCaseStudy(raw) as CaseStudy & { id: number };
+  if (raw) return normalizeCaseStudy(raw) as CaseStudy & { id: number };
+  const { fixtureCaseStudies } = await import("./fixtures");
+  const fx = fixtureCaseStudies.find((c) => c.slug === slug);
+  return fx ? ({ ...fx, id: 0 } as CaseStudy & { id: number }) : null;
 };
 
 /* ------------------------------------------------------------------
  * Talks
  * ------------------------------------------------------------------ */
-export const getTalks = () =>
-  getCollectionAll<Talk>("/blogs", {
-    revalidate: 120,
-    query: {
-      "populate[cover]": "true",
-      "populate[author][populate][avatar]": "true",
-      sort: "publishedAt:desc",
-    },
-  });
+export const getTalks = async (): Promise<Array<Talk & { id: number }>> => {
+  try {
+    return await getCollectionAll<Talk>("/blogs", {
+      revalidate: 120,
+      query: {
+        "populate[cover]": "true",
+        "populate[author][populate][avatar]": "true",
+        sort: "publishedAt:desc",
+      },
+    });
+  } catch {
+    const { fixtureTalks } = await import("./fixtures");
+    return fixtureTalks.map((t, i) => ({ ...t, id: i + 1 }));
+  }
+};
 
 export const getRelatedTalks = async (
   excludeSlug: string,
@@ -108,7 +124,7 @@ export const getRelatedTalks = async (
       sort: "publishedAt:desc",
       "pagination[limit]": 10,
     },
-  });
+  }).catch(() => [] as Talk[]);
   // Shuffle and pick `count` random items
   return pool.sort(() => Math.random() - 0.5).slice(0, count);
 };
@@ -126,8 +142,12 @@ export const getTalk = async (
       "populate[seo][populate]": "*",
       "pagination[limit]": 1,
     },
-  });
-  return results[0] ?? null;
+  }).catch(() => [] as Array<Talk & { id: number }>);
+  if (results[0]) return results[0];
+  const { fixtureTalks } = await import("./fixtures");
+  return (fixtureTalks.find((t) => t.slug === slug) ?? null) as
+    | (Talk & { id: number })
+    | null;
 };
 
 /* ------------------------------------------------------------------
@@ -166,23 +186,39 @@ export const getCareer = async (
 /* ------------------------------------------------------------------
  * FAQs
  * ------------------------------------------------------------------ */
-export const getFAQs = (category?: string) =>
-  getCollectionAll<FAQ>("/faqs", {
-    revalidate: 300,
-    query: {
-      sort: "order:asc",
-      ...(category ? { "filters[category][$eq]": category } : {}),
-    },
-  });
+export const getFAQs = async (
+  category?: string,
+): Promise<Array<FAQ & { id: number }>> => {
+  try {
+    return await getCollectionAll<FAQ>("/faqs", {
+      revalidate: 300,
+      query: {
+        sort: "order:asc",
+        ...(category ? { "filters[category][$eq]": category } : {}),
+      },
+    });
+  } catch {
+    const { fixtureFAQs } = await import("./fixtures");
+    return category
+      ? fixtureFAQs.filter((f) => f.category === category)
+      : fixtureFAQs;
+  }
+};
 
 /* ------------------------------------------------------------------
  * Services
  * ------------------------------------------------------------------ */
-export const getServices = () =>
-  getCollection<Service>("/our-services", {
-    revalidate: 300,
-    query: { populate: "icon", sort: "order:asc" },
-  });
+export const getServices = async (): Promise<Array<Service & { id: number }>> => {
+  try {
+    return await getCollection<Service>("/our-services", {
+      revalidate: 300,
+      query: { populate: "icon", sort: "order:asc" },
+    });
+  } catch {
+    const { fixtureServices } = await import("./fixtures");
+    return fixtureServices as Array<Service & { id: number }>;
+  }
+};
 
 export const getService = async (
   slug: Service["slug"],
@@ -194,18 +230,30 @@ export const getService = async (
       populate: "icon",
       "pagination[limit]": 1,
     },
-  });
-  return results[0] ?? null;
+  }).catch(() => [] as Array<Service & { id: number }>);
+  if (results[0]) return results[0];
+  const { fixtureServices } = await import("./fixtures");
+  return (fixtureServices.find((s) => s.slug === slug) ?? null) as
+    | (Service & { id: number })
+    | null;
 };
 
 /* ------------------------------------------------------------------
  * Testimonials
  * ------------------------------------------------------------------ */
-export const getTestimonials = () =>
-  getCollection<Testimonial>("/testimonials", {
-    revalidate: 300,
-    query: { "populate[0]": "avatar", "populate[1]": "companyLogo" },
-  });
+export const getTestimonials = async (): Promise<
+  Array<Testimonial & { id: number }>
+> => {
+  try {
+    return await getCollection<Testimonial>("/testimonials", {
+      revalidate: 300,
+      query: { "populate[0]": "avatar", "populate[1]": "companyLogo" },
+    });
+  } catch {
+    const { fixtureTestimonials } = await import("./fixtures");
+    return fixtureTestimonials as Array<Testimonial & { id: number }>;
+  }
+};
 
 /* ------------------------------------------------------------------
  * Team
@@ -282,19 +330,22 @@ function mapAboutPage(raw: any): AboutContent {
 }
 
 export const getAboutPage = async (): Promise<AboutContent> => {
-  const raw = await getSingle<Record<string, any>>("/about-page", {
-    revalidate: 300,
-    query: {
-      "populate[hero][populate]": "*",
-      "populate[metrics][populate]": "*",
-      "populate[approach][populate]": "*",
-      "populate[innovate][populate]": "*",
-      "populate[team][populate]": "*",
-      "populate[story][populate][cards][populate]": "*",
-    },
-  });
-  if (raw?.hero) return mapAboutPage(raw);
-
+  try {
+    const raw = await getSingle<Record<string, any>>("/about-page", {
+      revalidate: 300,
+      query: {
+        "populate[hero][populate]": "*",
+        "populate[metrics][populate]": "*",
+        "populate[approach][populate]": "*",
+        "populate[innovate][populate]": "*",
+        "populate[team][populate]": "*",
+        "populate[story][populate][cards][populate]": "*",
+      },
+    });
+    if (raw?.hero) return mapAboutPage(raw);
+  } catch {
+    /* fall through to fixture */
+  }
   const { fixtureAboutPage } = await import("./fixtures");
   return fixtureAboutPage;
 };
@@ -706,30 +757,55 @@ export async function getClientLogos(): Promise<
  * Trust reasons ("Reasons Clients Trust MitchDesigns")
  * ------------------------------------------------------------------ */
 export const getTrustReasons = async () => {
-  const items = await getCollection<TrustReason>("/trust-reasons", {
-    revalidate: 600,
-    query: { populate: "image", sort: "order:asc" },
-  });
-  return items.map((r) => ({ ...r, body: blocksToText(r.body) ?? "" }));
+  try {
+    const items = await getCollection<TrustReason>("/trust-reasons", {
+      revalidate: 600,
+      query: { populate: "image", sort: "order:asc" },
+    });
+    return items.map((r) => ({ ...r, body: blocksToText(r.body) ?? "" }));
+  } catch {
+    const { fixtureTrustReasons } = await import("./fixtures");
+    return fixtureTrustReasons.map((r) => ({
+      ...r,
+      body: blocksToText(r.body) ?? "",
+    }));
+  }
 };
 
 /* ------------------------------------------------------------------
  * Tech stack
  * ------------------------------------------------------------------ */
-export const getTechStack = () =>
-  getCollection<TechItem>("/tech-items", {
-    revalidate: 600,
-    query: { populate: "logo" },
-  });
+export const getTechStack = async (): Promise<
+  Array<TechItem & { id: number }>
+> => {
+  try {
+    return await getCollection<TechItem>("/tech-items", {
+      revalidate: 600,
+      query: { populate: "logo" },
+    });
+  } catch {
+    const { fixtureTechStack } = await import("./fixtures");
+    return fixtureTechStack;
+  }
+};
 
 /** Single type — heading copy for the homepage tech stack section. */
 export const getTechStackSection = async (): Promise<
   (TechStackSection & { id: number }) | null
 > => {
-  const raw = await getSingle<TechStackSection>("/tech-stack-section", {
-    revalidate: 600,
-  });
-  return raw ? { ...raw, description: blocksToText(raw.description) } : null;
+  try {
+    const raw = await getSingle<TechStackSection>("/tech-stack-section", {
+      revalidate: 600,
+    });
+    return raw ? { ...raw, description: blocksToText(raw.description) } : null;
+  } catch {
+    const { fixtureTechStackSection } = await import("./fixtures");
+    return {
+      ...fixtureTechStackSection,
+      id: 0,
+      description: blocksToText(fixtureTechStackSection.description),
+    };
+  }
 };
 
 /* ------------------------------------------------------------------
@@ -977,4 +1053,4 @@ export type TalksPageData = {
 };
 
 export const getTalksPage = (): Promise<TalksPageData | null> =>
-  getSingle<TalksPageData>("/talks-page", { revalidate: 300 });
+  getSingle<TalksPageData>("/talks-page", { revalidate: 300 }).catch(() => null);
