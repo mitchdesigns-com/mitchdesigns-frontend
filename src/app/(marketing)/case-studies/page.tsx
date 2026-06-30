@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getCaseStudies } from "@/lib/cms";
+import { getCaseStudies, getCaseStudiesPage } from "@/lib/cms";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
 import { CaseStudyGrid } from "@/features/work";
@@ -29,7 +29,10 @@ async function resolveCaseStudies(): Promise<Array<CaseStudy & { id: number }>> 
 }
 
 export default async function CaseStudiesIndexPage() {
-  const caseStudies = await resolveCaseStudies();
+  const [caseStudies, page] = await Promise.all([
+    resolveCaseStudies(),
+    getCaseStudiesPage(),
+  ]);
 
   const itemListSchema = {
     "@context": "https://schema.org",
@@ -46,7 +49,7 @@ export default async function CaseStudiesIndexPage() {
   return (
     <>
       <JsonLd data={itemListSchema} />
-      <CaseStudyGrid caseStudies={caseStudies} />
+      <CaseStudyGrid caseStudies={caseStudies} title={page.hero?.title} />
     </>
   );
 }

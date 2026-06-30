@@ -31,11 +31,17 @@ const EXPERIENCE_CARDS: TrustReasonCard[] = [
   },
 ];
 
-export function CareerExperience() {
+export function CareerExperience({
+  heading = "What You’ll Experience at MitchDesigns",
+  cards,
+}: {
+  heading?: string;
+  cards?: TrustReasonCard[];
+} = {}) {
   return (
     <ClientsTrust
-      reasons={EXPERIENCE_CARDS}
-      heading="What You’ll Experience at MitchDesigns"
+      reasons={cards && cards.length ? cards : EXPERIENCE_CARDS}
+      heading={heading}
       intro={null}
       cta={null}
     />

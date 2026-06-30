@@ -460,11 +460,46 @@ export type HomeOrderbaseOverview = {
   cards: OrderbaseFeature[];
 };
 
+/** Content for a homepage hero floating card. Layout/position is fixed in code per slot. */
+export type HomeHeroCard = {
+  label: string;
+  sub?: string;
+  accentColor?: string;
+  video?: string;
+  fullVideo?: string;
+};
+
 export type HomePageData = {
   hero?: HomeHero;
   about?: HomeAboutSection;
   orderbaseOverview?: HomeOrderbaseOverview;
+  /** Logos picked on the Home Page relation; empty/undefined → component shows all logos. */
+  clientLogos?: Array<{ src: string; alt: string }>;
+  /** Hero project cards; empty/undefined → component shows its built-in defaults. */
+  heroCards?: HomeHeroCard[];
 };
+
+/* ------------------------------------------------------------------
+ * Site Settings (single type) — global footer/contact/social
+ * ------------------------------------------------------------------ */
+export type SocialPlatform = "facebook" | "instagram" | "linkedin" | "youtube";
+
+export type SiteSettings = {
+  whatsappNumber?: string;
+  whatsappLabel?: string;
+  newsletterTitle?: string;
+  signatureText?: string;
+  tagline?: string;
+  copyright?: string;
+  socialLinks: Array<{ platform: SocialPlatform; url: string }>;
+};
+
+/* ------------------------------------------------------------------
+ * Simple page heroes (single types) — eyebrow / title / description
+ * ------------------------------------------------------------------ */
+export type PageHero = { eyebrow?: string; title: string; description?: string };
+export type CaseStudiesPageData = { hero?: PageHero };
+export type FaqsPageData = { hero?: PageHero };
 
 /* ------------------------------------------------------------------
  * CTA Banner (single type)
@@ -486,6 +521,8 @@ export type CareersPageData = {
     description?: string;
   };
   drives: Array<{ label: string }>;
+  experienceHeading?: string;
+  experienceCards?: Array<{ image: string | null; title: string; body: string }>;
 };
 
 /* ------------------------------------------------------------------

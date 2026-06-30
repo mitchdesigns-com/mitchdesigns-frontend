@@ -129,15 +129,23 @@ function LogoGridSkeleton() {
   );
 }
 
-export function ClientLogos() {
-  const [logos, setLogos] = useState<LogoEntry[] | null>(null);
+export function ClientLogos({ logos: logosProp }: { logos?: LogoEntry[] } = {}) {
+  const hasCmsLogos = !!logosProp?.length;
+  const [logos, setLogos] = useState<LogoEntry[] | null>(
+    hasCmsLogos ? logosProp! : null,
+  );
 
   useEffect(() => {
+    // Logos explicitly picked on the Home Page relation — use them, skip fetch.
+    if (hasCmsLogos) {
+      setLogos(logosProp!);
+      return;
+    }
     fetch("/api/client-logos")
       .then((r) => r.json())
       .then((data: LogoEntry[]) => setLogos(data.length >= GRID_SIZE ? data : fallbackLogos))
       .catch(() => setLogos(fallbackLogos));
-  }, []);
+  }, [hasCmsLogos, logosProp]);
 
   const pool = logos ?? fallbackLogos;
   const initials = useMemo(() => buildInitial(pool), [pool]);

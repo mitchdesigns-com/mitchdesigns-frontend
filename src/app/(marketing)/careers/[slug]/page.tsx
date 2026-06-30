@@ -4,7 +4,7 @@ import { JobDetailHero } from "@/features/careers/JobDetailHero";
 import { JobDetailBody } from "@/features/careers/JobDetailBody";
 import { CareerExperience } from "@/features/careers/CareerExperience";
 import { strapiMedia } from "@/lib/cms/media";
-import { getCareers, getCareer } from "@/lib/cms";
+import { getCareers, getCareer, getCareersPage } from "@/lib/cms";
 
 const APPLY_EMAIL = "careers@mitchdesigns.com";
 
@@ -46,7 +46,10 @@ export default async function SingleCareerPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const role = await getCareer(slug).catch(() => null);
+  const [role, careersPage] = await Promise.all([
+    getCareer(slug).catch(() => null),
+    getCareersPage().catch(() => null),
+  ]);
   if (!role) notFound();
 
   const applyHref = `mailto:${APPLY_EMAIL}?subject=${encodeURIComponent(
@@ -61,7 +64,10 @@ export default async function SingleCareerPage({
     <main>
       <JobDetailHero title={role.title} excerpt={role.excerpt} image={heroImage} />
       <JobDetailBody role={role} applyHref={applyHref} />
-      <CareerExperience />
+      <CareerExperience
+        heading={careersPage?.experienceHeading}
+        cards={careersPage?.experienceCards}
+      />
     </main>
   );
 }

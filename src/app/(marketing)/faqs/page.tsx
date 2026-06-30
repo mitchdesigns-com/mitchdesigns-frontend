@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { FAQPageSection } from "@/features/faqs/FAQPageSection";
 import { Section } from "@/components/layout/Section";
-import { getFAQs } from "@/lib/cms/queries";
+import { getFAQs, getFaqsPage } from "@/lib/cms/queries";
 import { fixtureFAQs } from "@/lib/cms/fixtures";
 
 export const metadata: Metadata = {
@@ -19,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function FAQsPage() {
-  const faqs = (await getFAQs()) ?? fixtureFAQs;
+  const [faqs, page] = await Promise.all([
+    getFAQs().then((f) => f ?? fixtureFAQs),
+    getFaqsPage(),
+  ]);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -38,7 +41,7 @@ export default async function FAQsPage() {
     <>
       <JsonLd data={faqSchema} />
       <Section theme="dark" className="py-24 md:py-32">
-        <FAQPageSection faqs={faqs} defaultOpenId={6} />
+        <FAQPageSection faqs={faqs} defaultOpenId={6} title={page.hero?.title} />
       </Section>
     </>
   );

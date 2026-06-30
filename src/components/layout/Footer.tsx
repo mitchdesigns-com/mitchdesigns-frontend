@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type ComponentType } from "react";
 import {
   motion,
   useScroll,
@@ -15,17 +15,30 @@ import { LinkedIn } from "@/components/icons/LinkedIn";
 import { YouTube } from "@/components/icons/YouTube";
 import { WhatsApp } from "@/components/icons/WhatsApp";
 import { COMPANY_LINKS, SERVICES, serviceHref, LEADS_URL } from "@/config/nav";
+import type { SiteSettings, SocialPlatform } from "@/lib/cms/types";
 
 const SERVICE_LINKS = SERVICES.map((s) => ({
   label: s.footerLabel,
   href: serviceHref(s.slug),
 }));
 
-const SOCIAL = [
-  { icon: Facebook, label: "Facebook", href: "https://facebook.com/mitchdesigns" },
-  { icon: Instagram, label: "Instagram", href: "https://instagram.com/mitchdesigns" },
-  { icon: LinkedIn, label: "LinkedIn", href: "https://linkedin.com/company/mitchdesigns" },
-  { icon: YouTube, label: "YouTube", href: "https://youtube.com/@mitchdesigns" },
+const SOCIAL_ICONS: Record<
+  SocialPlatform,
+  ComponentType<{ size?: number; className?: string }>
+> = { facebook: Facebook, instagram: Instagram, linkedin: LinkedIn, youtube: YouTube };
+
+const SOCIAL_LABELS: Record<SocialPlatform, string> = {
+  facebook: "Facebook",
+  instagram: "Instagram",
+  linkedin: "LinkedIn",
+  youtube: "YouTube",
+};
+
+const DEFAULT_SOCIAL: SiteSettings["socialLinks"] = [
+  { platform: "facebook", url: "https://facebook.com/mitchdesigns" },
+  { platform: "instagram", url: "https://instagram.com/mitchdesigns" },
+  { platform: "linkedin", url: "https://linkedin.com/company/mitchdesigns" },
+  { platform: "youtube", url: "https://youtube.com/@mitchdesigns" },
 ];
 
 function NavCol({ title, links }: { title: string; links: { label: string; href: string; yellow?: boolean }[] }) {
@@ -48,9 +61,27 @@ function NavCol({ title, links }: { title: string; links: { label: string; href:
   );
 }
 
-export function Footer({ hideTop = false }: { hideTop?: boolean }) {
+export function Footer({
+  hideTop = false,
+  settings,
+}: {
+  hideTop?: boolean;
+  settings?: SiteSettings;
+}) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+
+  const social = settings?.socialLinks?.length ? settings.socialLinks : DEFAULT_SOCIAL;
+  const urlFor = (p: SocialPlatform, fallback: string) =>
+    social.find((s) => s.platform === p)?.url ?? fallback;
+  const waNumber = settings?.whatsappNumber ?? "+201014430669";
+  const waDigits = waNumber.replace(/[^\d]/g, "");
+  const waLabel = settings?.whatsappLabel ?? "We’re on Whatsapp";
+  const newsletterTitle = settings?.newsletterTitle ?? "Join Our Newsletter";
+  const signatureText = settings?.signatureText ?? "webdesign agency";
+  const tagline = settings?.tagline ?? "Design. Technology. Performance.";
+  const copyright =
+    settings?.copyright ?? "© 2005-2026 Mitch Designs. All rights reserved.";
   // Parallax reveal (à la whatmattersagency.com): as the footer scrolls in, its
   // content drifts up from -25% to its resting position while a dark overlay
   // lifts from 0.5 → 0 — both scrubbed to scroll progress over the window from
@@ -95,7 +126,7 @@ export function Footer({ hideTop = false }: { hideTop?: boolean }) {
 
               {/* WhatsApp card */}
               <a
-                href="https://wa.me/201014430669"
+                href={`https://wa.me/${waDigits}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 rounded-card-md bg-space-grey px-6 py-5 transition-opacity hover:opacity-90 lg:gap-5 lg:px-9 lg:py-6"
@@ -103,28 +134,31 @@ export function Footer({ hideTop = false }: { hideTop?: boolean }) {
                 <WhatsApp size={48} className="shrink-0 lg:hidden" />
                 <WhatsApp size={80} className="hidden shrink-0 lg:block" />
                 <div className="flex flex-col">
-                  <span className="text-lg text-white">We&rsquo;re on Whatsapp</span>
-                  <span className="text-2xl font-medium text-white">+201014430669</span>
+                  <span className="text-lg text-white">{waLabel}</span>
+                  <span className="text-2xl font-medium text-white">{waNumber}</span>
                 </div>
               </a>
 
               {/* Newsletter card */}
               <div className="rounded-xl bg-space-grey px-4 py-6">
-                <p className="text-center text-lg font-bold text-white lg:text-left">Join Our Newsletter</p>
+                <p className="text-center text-lg font-bold text-white lg:text-left">{newsletterTitle}</p>
                 <NewsletterForm />
                 <div className="mt-8 flex justify-center gap-6 lg:justify-start">
-                  {SOCIAL.map(({ icon: Icon, label, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      className="text-yellow transition-opacity hover:opacity-70"
-                    >
-                      <Icon size={32} />
-                    </a>
-                  ))}
+                  {social.map(({ platform, url }) => {
+                    const Icon = SOCIAL_ICONS[platform];
+                    return (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={SOCIAL_LABELS[platform]}
+                        className="text-yellow transition-opacity hover:opacity-70"
+                      >
+                        <Icon size={32} />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -134,9 +168,9 @@ export function Footer({ hideTop = false }: { hideTop?: boolean }) {
         {/* Divider + social links row */}
         <div className={`border-t border-space-grey pt-3 ${hideTop ? "" : "mt-12 lg:mt-15"}`}>
           <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-            <a href="https://linkedin.com/company/mitchdesigns" target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
+            <a href={urlFor("linkedin", "https://linkedin.com/company/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
-            <a href="https://instagram.com/mitchdesigns" target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Instagram</a>
+            <a href={urlFor("instagram", "https://instagram.com/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Instagram</a>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
             <Link href="/privacy" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Privacy Policy</Link>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
@@ -156,7 +190,7 @@ export function Footer({ hideTop = false }: { hideTop?: boolean }) {
                   style={{ rotate: "-4deg", transformOrigin: "left center" }}
                   aria-hidden
                 >
-                  webdesign agency
+                  {signatureText}
                 </span>
                 <p className="font-wordmark text-wordmark font-bold leading-none text-white uppercase">
                   Mitch
@@ -170,14 +204,14 @@ export function Footer({ hideTop = false }: { hideTop?: boolean }) {
               </p>
             </div>
             <p className="text-xl font-medium text-white lg:self-end whitespace-nowrap">
-              Design. Technology. Performance.
+              {tagline}
             </p>
           </div>
         </div>
 
         {/* Copyright */}
         <p className="mt-6 text-center text-xs font-medium text-grey-200 lg:text-right">
-          © 2005-2026 Mitch Designs. All rights reserved.
+          {copyright}
         </p>
 
       </motion.div>

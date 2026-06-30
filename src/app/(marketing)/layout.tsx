@@ -1,5 +1,5 @@
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { FooterFetcher } from "@/components/layout/FooterFetcher";
 import { HeaderConfigProvider } from "@/context/HeaderConfigContext";
 
 export default function MarketingLayout({
@@ -11,7 +11,7 @@ export default function MarketingLayout({
     <HeaderConfigProvider>
       <Header />
       <main id="main">{children}</main>
-      <Footer />
+      <FooterFetcher />
     </HeaderConfigProvider>
   );
 }

@@ -46,161 +46,62 @@ type CardDef = {
   baseZ?: number;
 };
 
+// Editable content per card (CMS-overridable). Order matters: content N maps to
+// layout slot N below.
+type CardContent = {
+  label: string;
+  sub?: string;
+  accentColor?: string;
+  video?: string;
+  fullVideo?: string;
+};
+
+// Fixed layout/position per slot — design-owned, stays in code.
+type CardLayout = Omit<CardDef, 'label' | 'sub' | 'video' | 'fullVideo' | 'border'>;
+
 // baseZ controls stacking relative to the Hero text (which is z-10 via Section).
 // Edge cards: baseZ 10 (above text on hover). Center cards: baseZ 2–4 (behind text).
-const CARDS: CardDef[] = [
+const CARD_LAYOUT: CardLayout[] = [
   // ── Outer / edge ──────────────────────────────────────────────────────────────
-  {
-    id: 1,
-    label: 'Mountain View',
-    sub: 'Website Design',
-    video: PREVIEW_VIDEOS[0],
-    fullVideo: FULL_VIDEOS[0],
-    depth: 0.038,
-    pos: { left: '2%', top: '10%' },
-    rotate: -10,
-    width: 190,
-    aspectRatio: '3/4',
-    bg: '#0b0f1a',
-    border: '#ffdb00',
-  },
-  {
-    id: 2,
-    label: 'Real Estate',
-    sub: 'Mobile App',
-    video: PREVIEW_VIDEOS[1],
-    fullVideo: FULL_VIDEOS[1],
-    depth: 0.065,
-    pos: { right: '3%', top: '8%' },
-    rotate: 9,
-    width: 165,
-    aspectRatio: '3/4',
-    bg: '#120d1c',
-    border: '#a855f7',
-  },
-  {
-    id: 3,
-    label: 'Orderbase',
-    sub: 'SaaS Product',
-    video: PREVIEW_VIDEOS[2],
-    fullVideo: FULL_VIDEOS[2],
-    depth: 0.028,
-    pos: { left: '0%', bottom: '12%' },
-    rotate: 7,
-    width: 230,
-    aspectRatio: '16/9',
-    bg: '#0b1710',
-    border: '#22c55e',
-  },
-  {
-    id: 4,
-    label: 'Travel Booking',
-    sub: 'Product Design',
-    video: PREVIEW_VIDEOS[0],
-    fullVideo: FULL_VIDEOS[0],
-    depth: 0.052,
-    pos: { right: '2%', bottom: '16%' },
-    rotate: -7,
-    width: 200,
-    aspectRatio: '16/9',
-    bg: '#1a0e08',
-    border: '#f97316',
-  },
+  { id: 1, depth: 0.038, pos: { left: '2%', top: '10%' }, rotate: -10, width: 190, aspectRatio: '3/4', bg: '#0b0f1a' },
+  { id: 2, depth: 0.065, pos: { right: '3%', top: '8%' }, rotate: 9, width: 165, aspectRatio: '3/4', bg: '#120d1c' },
+  { id: 3, depth: 0.028, pos: { left: '0%', bottom: '12%' }, rotate: 7, width: 230, aspectRatio: '16/9', bg: '#0b1710' },
+  { id: 4, depth: 0.052, pos: { right: '2%', bottom: '16%' }, rotate: -7, width: 200, aspectRatio: '16/9', bg: '#1a0e08' },
   // ── Top / bottom center ────────────────────────────────────────────────────────
-  {
-    id: 5,
-    label: 'Brand Identity',
-    sub: 'Visual Design',
-    video: PREVIEW_VIDEOS[1],
-    fullVideo: FULL_VIDEOS[1],
-    depth: 0.044,
-    pos: { left: '50%', top: '3%' },
-    centered: true,
-    rotate: -4,
-    width: 170,
-    aspectRatio: '4/3',
-    bg: '#0a1015',
-    border: '#06b6d4',
-    baseZ: 2,
-  },
-  {
-    id: 6,
-    label: 'E-Commerce',
-    sub: 'Web Platform',
-    video: PREVIEW_VIDEOS[2],
-    fullVideo: FULL_VIDEOS[2],
-    depth: 0.035,
-    pos: { left: '50%', bottom: '8%' },
-    centered: true,
-    rotate: 3,
-    width: 240,
-    aspectRatio: '16/9',
-    bg: '#150f05',
-    border: '#facc15',
-    baseZ: 2,
-  },
+  { id: 5, depth: 0.044, pos: { left: '50%', top: '3%' }, centered: true, rotate: -4, width: 170, aspectRatio: '4/3', bg: '#0a1015', baseZ: 2 },
+  { id: 6, depth: 0.035, pos: { left: '50%', bottom: '8%' }, centered: true, rotate: 3, width: 240, aspectRatio: '16/9', bg: '#150f05', baseZ: 2 },
   // ── Inner / near-center ────────────────────────────────────────────────────────
-  {
-    id: 7,
-    label: 'Fintech App',
-    sub: 'Mobile Design',
-    video: PREVIEW_VIDEOS[0],
-    fullVideo: FULL_VIDEOS[0],
-    depth: 0.055,
-    pos: { left: '16%', top: '42%' },
-    rotate: -6,
-    width: 150,
-    aspectRatio: '3/4',
-    bg: '#050f1a',
-    border: '#38bdf8',
-    baseZ: 3,
-  },
-  {
-    id: 8,
-    label: 'Healthcare',
-    sub: 'Web App',
-    video: PREVIEW_VIDEOS[1],
-    fullVideo: FULL_VIDEOS[1],
-    depth: 0.06,
-    pos: { right: '15%', top: '40%' },
-    rotate: 6,
-    width: 150,
-    aspectRatio: '3/4',
-    bg: '#0f0a1a',
-    border: '#f472b6',
-    baseZ: 3,
-  },
-  {
-    id: 9,
-    label: 'Food Delivery',
-    sub: 'Mobile App',
-    video: PREVIEW_VIDEOS[2],
-    fullVideo: FULL_VIDEOS[2],
-    depth: 0.07,
-    pos: { left: '7%', top: '45%' },
-    rotate: 11,
-    width: 130,
-    aspectRatio: '3/4',
-    bg: '#1a0a05',
-    border: '#fb923c',
-    baseZ: 2,
-  },
-  {
-    id: 10,
-    label: 'EdTech Platform',
-    sub: 'Web Design',
-    video: PREVIEW_VIDEOS[0],
-    fullVideo: FULL_VIDEOS[0],
-    depth: 0.042,
-    pos: { right: '6%', top: '48%' },
-    rotate: -10,
-    width: 130,
-    aspectRatio: '3/4',
-    bg: '#081510',
-    border: '#4ade80',
-    baseZ: 2,
-  },
+  { id: 7, depth: 0.055, pos: { left: '16%', top: '42%' }, rotate: -6, width: 150, aspectRatio: '3/4', bg: '#050f1a', baseZ: 3 },
+  { id: 8, depth: 0.06, pos: { right: '15%', top: '40%' }, rotate: 6, width: 150, aspectRatio: '3/4', bg: '#0f0a1a', baseZ: 3 },
+  { id: 9, depth: 0.07, pos: { left: '7%', top: '45%' }, rotate: 11, width: 130, aspectRatio: '3/4', bg: '#1a0a05', baseZ: 2 },
+  { id: 10, depth: 0.042, pos: { right: '6%', top: '48%' }, rotate: -10, width: 130, aspectRatio: '3/4', bg: '#081510', baseZ: 2 },
 ];
+
+const CARD_CONTENT_FALLBACK: CardContent[] = [
+  { label: 'Mountain View', sub: 'Website Design', accentColor: '#ffdb00', video: PREVIEW_VIDEOS[0], fullVideo: FULL_VIDEOS[0] },
+  { label: 'Real Estate', sub: 'Mobile App', accentColor: '#a855f7', video: PREVIEW_VIDEOS[1], fullVideo: FULL_VIDEOS[1] },
+  { label: 'Orderbase', sub: 'SaaS Product', accentColor: '#22c55e', video: PREVIEW_VIDEOS[2], fullVideo: FULL_VIDEOS[2] },
+  { label: 'Travel Booking', sub: 'Product Design', accentColor: '#f97316', video: PREVIEW_VIDEOS[0], fullVideo: FULL_VIDEOS[0] },
+  { label: 'Brand Identity', sub: 'Visual Design', accentColor: '#06b6d4', video: PREVIEW_VIDEOS[1], fullVideo: FULL_VIDEOS[1] },
+  { label: 'E-Commerce', sub: 'Web Platform', accentColor: '#facc15', video: PREVIEW_VIDEOS[2], fullVideo: FULL_VIDEOS[2] },
+  { label: 'Fintech App', sub: 'Mobile Design', accentColor: '#38bdf8', video: PREVIEW_VIDEOS[0], fullVideo: FULL_VIDEOS[0] },
+  { label: 'Healthcare', sub: 'Web App', accentColor: '#f472b6', video: PREVIEW_VIDEOS[1], fullVideo: FULL_VIDEOS[1] },
+  { label: 'Food Delivery', sub: 'Mobile App', accentColor: '#fb923c', video: PREVIEW_VIDEOS[2], fullVideo: FULL_VIDEOS[2] },
+  { label: 'EdTech Platform', sub: 'Web Design', accentColor: '#4ade80', video: PREVIEW_VIDEOS[0], fullVideo: FULL_VIDEOS[0] },
+];
+
+// Zip editable content onto fixed layout slots — render at most one card per slot.
+function buildCards(content: CardContent[]): CardDef[] {
+  const count = Math.min(content.length, CARD_LAYOUT.length);
+  return CARD_LAYOUT.slice(0, count).map((slot, i) => ({
+    ...slot,
+    label: content[i].label,
+    sub: content[i].sub ?? '',
+    video: content[i].video ?? PREVIEW_VIDEOS[i % PREVIEW_VIDEOS.length],
+    fullVideo: content[i].fullVideo ?? FULL_VIDEOS[i % FULL_VIDEOS.length],
+    border: content[i].accentColor ?? '#ffdb00',
+  }));
+}
 
 // ─── FloatingCard ──────────────────────────────────────────────────────────────
 function FloatingCard({
@@ -439,13 +340,16 @@ type CreativeHeroProps = {
   eyebrow?: string;
   headline?: string;
   rotatingWords?: string[];
+  cards?: CardContent[];
 };
 
 export function CreativeHero({
   eyebrow = "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
   headline = "Start Building Digital Experiences that",
   rotatingWords,
+  cards,
 }: CreativeHeroProps = {}) {
+  const heroCards = buildCards(cards && cards.length ? cards : CARD_CONTENT_FALLBACK);
   const sectionRef = useRef<HTMLElement>(null);
   const [cardHovered, setCardHovered] = useState(false);
   const [lightbox, setLightbox] = useState<{ src: string; label: string } | null>(null);
@@ -540,7 +444,7 @@ export function CreativeHero({
           className="pointer-events-none absolute inset-0"
           style={{ pointerEvents: 'none' }}
         >
-          {CARDS.map((card) => (
+          {heroCards.map((card) => (
             <div
               key={card.id}
               style={{ pointerEvents: 'auto' }}

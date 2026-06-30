@@ -135,11 +135,11 @@ export default async function HomePage() {
     <>
       <JsonLd data={homeGraph} />
       <HeaderConfig sticky={false} />
-      <CreativeHero {...home.hero} />
+      <CreativeHero {...home.hero} cards={home.heroCards} />
 
       <AboutSection {...home.about} />
 
-      <ClientLogos />
+      <ClientLogos logos={home.clientLogos} />
 
       <FeaturedProjects caseStudies={caseStudies} theme="dark" />
 

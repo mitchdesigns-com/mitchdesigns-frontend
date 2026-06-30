@@ -9,11 +9,14 @@ import type {
   CaseStudy,
   Career,
   CareersPageData,
+  CaseStudiesPageData,
   ClientLogo,
   CtaBannerData,
   FAQ,
+  FaqsPageData,
   HomePageData,
   OrderbasePageData,
+  SiteSettings,
   SeoData,
   Service,
   ServicePageData,
@@ -339,6 +342,8 @@ export const getHomePage = async (): Promise<HomePageData> => {
         "populate[hero]": "*",
         "populate[about][populate]": "*",
         "populate[orderbaseOverview][populate]": "*",
+        "populate[clientLogos][populate]": "logo",
+        "populate[heroCards][populate]": "*",
       },
     });
     if (raw?.hero || raw?.about || raw?.orderbaseOverview) {
@@ -385,6 +390,28 @@ export const getHomePage = async (): Promise<HomePageData> => {
               })),
             }
           : undefined,
+        clientLogos: Array.isArray(raw.clientLogos)
+          ? raw.clientLogos
+              .filter((c: any) => c?.logo?.url)
+              .map((c: any) => ({
+                src: strapiMedia(c.logo.url) ?? c.logo.url,
+                alt: c.logo.alternativeText ?? c.name,
+              }))
+          : undefined,
+        heroCards:
+          Array.isArray(raw.heroCards) && raw.heroCards.length
+            ? raw.heroCards.map((c: any) => ({
+                label: c.label,
+                sub: c.sub ?? undefined,
+                accentColor: c.accentColor ?? undefined,
+                video: c.video?.url
+                  ? strapiMedia(c.video.url) ?? c.video.url
+                  : undefined,
+                fullVideo: c.fullVideo?.url
+                  ? strapiMedia(c.fullVideo.url) ?? c.fullVideo.url
+                  : undefined,
+              }))
+            : undefined,
       };
     }
   } catch {
@@ -521,6 +548,7 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
       query: {
         "populate[hero]": "*",
         "populate[drives]": "*",
+        "populate[experienceCards][populate]": "image",
       },
     });
     if (raw?.hero || (raw?.drives && raw.drives.length)) {
@@ -533,6 +561,17 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
             }
           : undefined,
         drives: (raw.drives ?? []).map((d: any) => ({ label: d.label })),
+        experienceHeading: raw.experienceHeading ?? undefined,
+        experienceCards:
+          Array.isArray(raw.experienceCards) && raw.experienceCards.length
+            ? raw.experienceCards.map((c: any) => ({
+                image: c.image?.url
+                  ? strapiMedia(c.image.url) ?? c.image.url
+                  : null,
+                title: c.title,
+                body: c.body,
+              }))
+            : undefined,
       };
     }
   } catch {
@@ -568,6 +607,89 @@ export const getCtaBanner = async (): Promise<CtaBannerData> => {
   }
   const { fixtureCtaBanner } = await import("./fixtures");
   return fixtureCtaBanner;
+};
+
+/* ------------------------------------------------------------------
+ * Site Settings (single type) — global footer/contact/social
+ * ------------------------------------------------------------------ */
+/** Defaults match the values previously hardcoded in the Footer. */
+const SITE_SETTINGS_FALLBACK: SiteSettings = {
+  whatsappNumber: "+201014430669",
+  whatsappLabel: "We’re on Whatsapp",
+  newsletterTitle: "Join Our Newsletter",
+  signatureText: "webdesign agency",
+  tagline: "Design. Technology. Performance.",
+  copyright: "© 2005-2026 Mitch Designs. All rights reserved.",
+  socialLinks: [
+    { platform: "facebook", url: "https://facebook.com/mitchdesigns" },
+    { platform: "instagram", url: "https://instagram.com/mitchdesigns" },
+    { platform: "linkedin", url: "https://linkedin.com/company/mitchdesigns" },
+    { platform: "youtube", url: "https://youtube.com/@mitchdesigns" },
+  ],
+};
+
+export const getSiteSettings = async (): Promise<SiteSettings> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/site-setting", {
+      revalidate: 300,
+      query: { "populate[socialLinks]": "*" },
+    });
+    if (raw && (raw.tagline || raw.whatsappNumber || raw.socialLinks?.length)) {
+      return {
+        whatsappNumber: raw.whatsappNumber ?? SITE_SETTINGS_FALLBACK.whatsappNumber,
+        whatsappLabel: raw.whatsappLabel ?? SITE_SETTINGS_FALLBACK.whatsappLabel,
+        newsletterTitle:
+          raw.newsletterTitle ?? SITE_SETTINGS_FALLBACK.newsletterTitle,
+        signatureText: raw.signatureText ?? SITE_SETTINGS_FALLBACK.signatureText,
+        tagline: raw.tagline ?? SITE_SETTINGS_FALLBACK.tagline,
+        copyright: raw.copyright ?? SITE_SETTINGS_FALLBACK.copyright,
+        socialLinks: Array.isArray(raw.socialLinks) && raw.socialLinks.length
+          ? raw.socialLinks
+              .filter((s: any) => s?.platform && s?.url)
+              .map((s: any) => ({ platform: s.platform, url: s.url }))
+          : SITE_SETTINGS_FALLBACK.socialLinks,
+      };
+    }
+  } catch {
+    /* fall through to fallback */
+  }
+  return SITE_SETTINGS_FALLBACK;
+};
+
+/* ------------------------------------------------------------------
+ * Simple page heroes (single types)
+ * ------------------------------------------------------------------ */
+const mapPageHero = (raw: Record<string, any> | null) =>
+  raw?.hero?.title
+    ? {
+        eyebrow: raw.hero.eyebrow ?? undefined,
+        title: raw.hero.title as string,
+        description: raw.hero.description ?? undefined,
+      }
+    : undefined;
+
+export const getCaseStudiesPage = async (): Promise<CaseStudiesPageData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/case-studies-page", {
+      revalidate: 300,
+      query: { "populate[hero]": "*" },
+    });
+    return { hero: mapPageHero(raw) };
+  } catch {
+    return {};
+  }
+};
+
+export const getFaqsPage = async (): Promise<FaqsPageData> => {
+  try {
+    const raw = await getSingle<Record<string, any>>("/faqs-page", {
+      revalidate: 300,
+      query: { "populate[hero]": "*" },
+    });
+    return { hero: mapPageHero(raw) };
+  } catch {
+    return {};
+  }
 };
 
 /* ------------------------------------------------------------------

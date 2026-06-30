@@ -10,6 +10,7 @@ type FAQPageSectionProps = {
     faqs: Array<FAQ & { id: number }>;
     defaultCategory?: string;
     defaultOpenId?: number;
+    title?: string;
 };
 
 
@@ -17,6 +18,7 @@ export function FAQPageSection({
     faqs,
     defaultCategory,
     defaultOpenId,
+    title = "FAQs",
 }: FAQPageSectionProps) {
     const derivedCategories = Array.from(
         new Set(faqs.map((faq) => faq.category).filter(Boolean) as string[]),
@@ -38,7 +40,7 @@ export function FAQPageSection({
         <Section theme="light" className="py-24 md:py-32">
             <div className="grid gap-10 lg:grid-cols-[minmax(280px,420px)_1fr]">
                 <div className="sticky top-24 self-start">
-                    <h1 className="text-hero-2 font-black text-white">FAQs</h1>
+                    <h1 className="text-hero-2 font-black text-white">{title}</h1>
 
                     <div className="mt-10 flex flex-wrap gap-3">
                         {categories.map((category) => {
