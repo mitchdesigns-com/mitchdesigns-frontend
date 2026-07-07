@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
 
 export interface JourneyStep {
@@ -138,7 +139,13 @@ function StepImage({ step }: { step: JourneyStep }) {
   return (
     <div className="w-full aspect-[555/518] rounded-card overflow-hidden bg-panel">
       {step.image ? (
-        <img src={step.image} alt={step.title} className="w-full h-full object-cover" />
+        <Image
+          src={step.image}
+          alt={step.title}
+          width={555}
+          height={518}
+          className="w-full h-full object-cover"
+        />
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <span className="text-sm text-fg-muted">{step.title}</span>

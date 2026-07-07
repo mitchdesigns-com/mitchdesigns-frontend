@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import OrderBaseLogo from "./OrderBaseLogo";
 
@@ -133,7 +134,14 @@ export function Hero({
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
           >
             {image ? (
-              <img src={image} alt={imageAlt} className="w-full rounded-card" />
+              <Image
+                src={image}
+                alt={imageAlt}
+                width={1048}
+                height={1124}
+                priority
+                className="w-full h-auto rounded-card"
+              />
             ) : (
               <div className="w-full aspect-[1048/1124] rounded-card bg-white/5 border border-white/10 flex items-center justify-center">
                 <span className="text-white/30 text-sm">Dashboard screenshot</span>

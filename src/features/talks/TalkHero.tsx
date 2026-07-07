@@ -129,9 +129,11 @@ export function TalkHero({ talk }: { talk: Talk }) {
             {talk.author && (
               <div className="flex items-center gap-3">
                 {talk.author.avatar?.url ? (
-                  <img
+                  <Image
                     src={talk.author.avatar.url}
                     alt={talk.author.avatar.alternativeText ?? talk.author.name}
+                    width={36}
+                    height={36}
                     className="size-9 shrink-0 rounded-full object-cover"
                   />
                 ) : (

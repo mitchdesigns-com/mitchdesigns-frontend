@@ -16,7 +16,7 @@ export function RelatedTalks({
       <div className="flex flex-col gap-[60px]">
         <h2 className="text-[60px] font-bold leading-[1.1] text-black">{heading}</h2>
         <div className="flex gap-10">
-          {talks.map((t, i) => (
+          {talks.map((t) => (
             <TalkCard key={t.slug} talk={t} />
           ))}
         </div>

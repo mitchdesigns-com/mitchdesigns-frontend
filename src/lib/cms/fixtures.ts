@@ -6,7 +6,6 @@
 import { LEADS_URL } from "@/config/nav";
 import type {
   AboutContent,
-  BlogSection,
   Career,
   CareersPageData,
   CaseStudy,

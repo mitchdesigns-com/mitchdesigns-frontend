@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CardSlider } from "@/components/ui/CardSlider";
-import { CheckmarkSquareIcon } from "@/components/icons/CheckmarkSquareIcon";
 import { RevealStagger, RevealItem } from "@/components/motion";
 import type { WhyUsSectionProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
