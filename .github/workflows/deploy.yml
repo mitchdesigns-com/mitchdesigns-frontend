@@ -55,12 +55,14 @@ jobs:
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
 
       # Runtime secrets must live on the Worker, not just in the build env.
-      - name: Sync Trello secrets to Worker
+      - name: Sync runtime secrets to Worker
         run: |
-          printf '%s' "$TRELLO_API_KEY" | pnpm exec wrangler secret put TRELLO_API_KEY
-          printf '%s' "$TRELLO_TOKEN"   | pnpm exec wrangler secret put TRELLO_TOKEN
+          printf '%s' "$STRAPI_API_TOKEN" | pnpm exec wrangler secret put STRAPI_API_TOKEN
+          printf '%s' "$TRELLO_API_KEY"   | pnpm exec wrangler secret put TRELLO_API_KEY
+          printf '%s' "$TRELLO_TOKEN"     | pnpm exec wrangler secret put TRELLO_TOKEN
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
           TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
