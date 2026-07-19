@@ -477,6 +477,10 @@ export type HomePageData = {
   clientLogos?: Array<{ src: string; alt: string }>;
   /** Hero project cards; empty/undefined → component shows its built-in defaults. */
   heroCards?: HomeHeroCard[];
+  /** FAQ section heading; empty/undefined → page uses its default copy. */
+  faqHeading?: string;
+  /** FAQ section intro; empty/undefined → page uses its default copy. */
+  faqDescription?: string;
 };
 
 /* ------------------------------------------------------------------

@@ -153,8 +153,11 @@ export default async function HomePage() {
 
       <FAQSection
         faqs={faqs}
-        title="Got Questions?"
-        description="We've answered the most common ones to help you understand how we work and what to expect."
+        title={home.faqHeading ?? "Got Questions?"}
+        description={
+          home.faqDescription ??
+          "We've answered the most common ones to help you understand how we work and what to expect."
+        }
         defaultCategory="Corporate Websites"
       />
 

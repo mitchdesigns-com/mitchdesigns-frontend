@@ -380,6 +380,8 @@ export const getHomePage = async (): Promise<HomePageData> => {
     });
     if (raw?.hero || raw?.about || raw?.orderbaseOverview) {
       return {
+        faqHeading: raw.faqHeading ?? undefined,
+        faqDescription: raw.faqDescription ?? undefined,
         hero: raw.hero
           ? {
               eyebrow: raw.hero.eyebrow ?? undefined,
