@@ -17,7 +17,7 @@ User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=no
 ${INDEXABLE ? "Allow: /" : "Disallow: /"}
 
-Sitemap: https://www.mitchdesigns.com/sitemap.xml
+Sitemap: https://mitchdesigns.com/sitemap.xml
 `;
 
 export function GET() {

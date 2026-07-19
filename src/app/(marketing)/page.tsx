@@ -33,6 +33,7 @@ import {
   fixtureTalks,
   fixtureTestimonials,
 } from "@/lib/cms/fixtures";
+import { blocksToText } from "@/lib/cms/blocks";
 
 async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
   try {
@@ -55,6 +56,10 @@ export default async function HomePage() {
       getCtaBanner(),
     ]);
 
+  // Only real Google reviews back the AggregateRating — never claim a rating
+  // with zero reviews (invalid schema + manual-action risk).
+  const googleReviews = testimonials.filter((t) => t.googleReview);
+
   // Single @graph merges AggregateRating + FAQPage + HowTo into one <script> tag
   const homeGraph = {
     "@context": "https://schema.org",
@@ -63,28 +68,30 @@ export default async function HomePage() {
         "@type": "Organization",
         name: "MitchDesigns",
         url: "https://mitchdesigns.com",
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: "5",
-          bestRating: "5",
-          worstRating: "1",
-          ratingCount: testimonials.length,
-        },
-        review: testimonials
-          .filter((t) => t.googleReview)
-          .map((t) => ({
-            "@type": "Review",
-            author: { "@type": "Person", name: t.author },
-            reviewBody: t.quote,
-            reviewRating: { "@type": "Rating", ratingValue: "5" },
-          })),
+        ...(googleReviews.length > 0
+          ? {
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "5",
+                bestRating: "5",
+                worstRating: "1",
+                ratingCount: googleReviews.length,
+              },
+              review: googleReviews.map((t) => ({
+                "@type": "Review",
+                author: { "@type": "Person", name: t.author },
+                reviewBody: t.quote,
+                reviewRating: { "@type": "Rating", ratingValue: "5" },
+              })),
+            }
+          : {}),
       },
       {
         "@type": "FAQPage",
         mainEntity: faqs.map((faq) => ({
           "@type": "Question",
           name: faq.question,
-          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+          acceptedAnswer: { "@type": "Answer", text: blocksToText(faq.answer) ?? "" },
         })),
       },
       {

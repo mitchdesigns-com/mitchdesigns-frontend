@@ -493,6 +493,8 @@ export type HomePageData = {
 export type SocialPlatform = "facebook" | "instagram" | "linkedin" | "youtube";
 
 export type SiteSettings = {
+  contactEmail?: string;
+  contactPhone?: string;
   whatsappNumber?: string;
   whatsappLabel?: string;
   newsletterTitle?: string;

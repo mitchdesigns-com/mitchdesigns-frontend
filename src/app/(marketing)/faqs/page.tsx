@@ -4,6 +4,7 @@ import { FAQPageSection } from "@/features/faqs/FAQPageSection";
 import { Section } from "@/components/layout/Section";
 import { getFAQs, getFaqsPage } from "@/lib/cms/queries";
 import { fixtureFAQs } from "@/lib/cms/fixtures";
+import { blocksToText } from "@/lib/cms/blocks";
 
 export const metadata: Metadata = {
   title: "FAQs — MitchDesigns Design & Development",
@@ -32,7 +33,7 @@ export default async function FAQsPage() {
       name: faq.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: faq.answer,
+        text: blocksToText(faq.answer) ?? "",
       },
     })),
   };

@@ -661,6 +661,8 @@ export const getCtaBanner = async (): Promise<CtaBannerData> => {
  * ------------------------------------------------------------------ */
 /** Defaults match the values previously hardcoded in the Footer. */
 const SITE_SETTINGS_FALLBACK: SiteSettings = {
+  contactEmail: undefined,
+  contactPhone: undefined,
   whatsappNumber: "+201014430669",
   whatsappLabel: "We’re on Whatsapp",
   newsletterTitle: "Join Our Newsletter",
@@ -683,6 +685,8 @@ export const getSiteSettings = async (): Promise<SiteSettings> => {
     });
     if (raw && (raw.tagline || raw.whatsappNumber || raw.socialLinks?.length)) {
       return {
+        contactEmail: raw.contactEmail ?? SITE_SETTINGS_FALLBACK.contactEmail,
+        contactPhone: raw.contactPhone ?? SITE_SETTINGS_FALLBACK.contactPhone,
         whatsappNumber: raw.whatsappNumber ?? SITE_SETTINGS_FALLBACK.whatsappNumber,
         whatsappLabel: raw.whatsappLabel ?? SITE_SETTINGS_FALLBACK.whatsappLabel,
         newsletterTitle:

@@ -9,6 +9,8 @@ const poppins = Poppins({
   display: "swap",
 });
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getSiteSettings } from "@/lib/cms/queries";
+import type { SiteSettings } from "@/lib/cms/types";
 // import { UserbackWidget } from "@/components/Userback";
 
 const SITE_URL = "https://mitchdesigns.com";
@@ -35,8 +37,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@mitchdesigns", // TODO: confirm handle
-    creator: "@mitchdesigns",
     title: "MitchDesigns — Website & Mobile App Design Agency in Egypt",
     description: SITE_DESCRIPTION,
   },
@@ -45,42 +45,65 @@ export const metadata: Metadata = {
     : { index: false, follow: false },
 };
 
-// Single @graph merges Organization + WebSite into one <script> tag instead of two
-const siteGraph = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: `${SITE_URL}/images/logo-black.webp`,
-      description:
-        "Website and mobile app design agency based in Egypt, building premium digital products for brands across the MENA region.",
-      address: { "@type": "PostalAddress", addressCountry: "EG" },
-      sameAs: [
-        "https://www.linkedin.com/company/mitchdesigns",
-        "https://twitter.com/mitchdesigns",
-        // TODO: add Instagram, Behance, Dribbble URLs
-      ],
-    },
-    {
-      "@type": "WebSite",
-      name: SITE_NAME,
-      url: SITE_URL,
-      potentialAction: {
-        "@type": "SearchAction",
-        target: `${SITE_URL}/case-studies?q={search_term_string}`,
-        "query-input": "required name=search_term_string",
-      },
-    },
-  ],
-};
+// Single @graph merges Organization + WebSite into one <script> tag instead of
+// two. Contact + social identity are sourced from Strapi Site Settings so they
+// stay in sync with the footer and can be edited without a code deploy.
+function buildSiteGraph(settings: SiteSettings) {
+  const telephone = settings.contactPhone || settings.whatsappNumber;
+  const sameAs = settings.socialLinks.map((s) => s.url);
 
-export default function RootLayout({
+  const contactPoint = {
+    "@type": "ContactPoint",
+    contactType: "sales",
+    ...(settings.contactEmail ? { email: settings.contactEmail } : {}),
+    ...(telephone ? { telephone } : {}),
+    areaServed: ["EG", "MENA"],
+    availableLanguage: ["English", "Arabic"],
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/images/logo-black.webp`,
+        description:
+          "Website and mobile app design agency based in Egypt, building premium digital products for brands across the MENA region.",
+        address: { "@type": "PostalAddress", addressCountry: "EG" },
+        areaServed: [
+          { "@type": "Country", name: "Egypt" },
+          { "@type": "Place", name: "MENA region" },
+        ],
+        knowsLanguage: ["en", "ar"],
+        ...(settings.contactEmail ? { email: settings.contactEmail } : {}),
+        ...(telephone ? { telephone } : {}),
+        contactPoint,
+        ...(sameAs.length ? { sameAs } : {}),
+      },
+      {
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: SITE_URL,
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${SITE_URL}/case-studies?q={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSiteSettings();
+  const siteGraph = buildSiteGraph(settings);
+
   return (
     <html lang="en" className={poppins.variable}>
       <head>
