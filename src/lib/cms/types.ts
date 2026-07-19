@@ -65,6 +65,8 @@ export type CaseStudy = {
   websiteUrl?: string;
   /** Hex colour for the box that frames the cover image (e.g. "#0b0f1a"). */
   bgColor?: string;
+  /** CMS SEO override; falls back to title/tagline when unset. */
+  seo?: SeoData;
 };
 
 export type BlogSection =
@@ -207,6 +209,8 @@ export type AboutContent = {
     title: RichText;
     cards: Array<{ image?: AboutImage | null; body: string }>;
   };
+  /** CMS SEO override; falls back to the hardcoded page metadata when unset. */
+  seo?: SeoData;
 };
 
 export type TechItem = {

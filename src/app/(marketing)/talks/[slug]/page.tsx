@@ -62,27 +62,34 @@ export async function generateMetadata({
 
   if (!talk) return { title: slug.replace(/-/g, " ") };
 
-  const title = `${talk.title} — MitchDesigns`;
-  const description = talk.excerpt;
+  // CMS SEO overrides on top of title/excerpt fallbacks, keeping article OG fields.
+  const seo = talk.seo;
+  const title = seo?.metaTitle ?? `${talk.title} — MitchDesigns`;
+  const description = seo?.metaDescription ?? talk.excerpt;
+  const canonical = seo?.canonicalURL ?? `/talks/${slug}`;
+  const ogImageUrl = seo?.ogImage?.url ?? talk.cover?.url;
 
   return {
     title,
     description,
+    ...(seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
     authors: [{ name: talk.author?.name ?? "Mitch", url: "https://mitchdesigns.com/about" }],
-    alternates: { canonical: `/talks/${slug}` },
+    alternates: { canonical },
     openGraph: {
-      title,
-      description,
-      url: `https://mitchdesigns.com/talks/${slug}`,
+      title: seo?.ogTitle ?? title,
+      description: seo?.ogDescription ?? description,
+      url: `https://mitchdesigns.com${canonical}`,
       type: "article",
       publishedTime: talk.publishedAt ?? talk.date,
       authors: ["https://mitchdesigns.com/about"],
-      ...(talk.cover?.url
+      ...(ogImageUrl
         ? {
             images: [
               {
-                url: talk.cover.url,
-                alt: talk.cover.alternativeText ?? undefined,
+                url: ogImageUrl,
+                alt:
+                  (seo?.ogImage?.alternativeText ?? talk.cover?.alternativeText) ??
+                  undefined,
               },
             ],
           }
