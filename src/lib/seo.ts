@@ -5,6 +5,8 @@ type Fallback = {
   title: string;
   description: string;
   canonical: string;
+  /** OG image used when the CMS SEO has no ogImage (e.g. the entry's cover). */
+  image?: string;
 };
 
 export function buildPageMetadata(fallback: Fallback, cms?: SeoData): Metadata {
@@ -13,6 +15,7 @@ export function buildPageMetadata(fallback: Fallback, cms?: SeoData): Metadata {
   const canonical = cms?.canonicalURL ?? fallback.canonical;
   const ogTitle = cms?.ogTitle ?? title;
   const ogDescription = cms?.ogDescription ?? description;
+  const ogImage = cms?.ogImage?.url ?? fallback.image;
 
   return {
     title,
@@ -23,7 +26,7 @@ export function buildPageMetadata(fallback: Fallback, cms?: SeoData): Metadata {
       title: ogTitle,
       description: ogDescription,
       url: `https://mitchdesigns.com${canonical}`,
-      ...(cms?.ogImage?.url ? { images: [{ url: cms.ogImage.url }] } : {}),
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
   };
 }

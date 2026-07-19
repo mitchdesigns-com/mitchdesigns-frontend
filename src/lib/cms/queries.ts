@@ -87,7 +87,11 @@ export const getCaseStudy = async (
   }).catch(() => [] as CaseStudyRaw[]);
 
   const raw = results[0];
-  if (raw) return normalizeCaseStudy(raw) as CaseStudy & { id: number };
+  if (raw) {
+    const study = normalizeCaseStudy(raw) as CaseStudy & { id: number };
+    study.seo = mapSeo((raw as any).seo);
+    return study;
+  }
   const { fixtureCaseStudies } = await import("./fixtures");
   const fx = fixtureCaseStudies.find((c) => c.slug === slug);
   return fx ? ({ ...fx, id: 0 } as CaseStudy & { id: number }) : null;
@@ -143,7 +147,11 @@ export const getTalk = async (
       "pagination[limit]": 1,
     },
   }).catch(() => [] as Array<Talk & { id: number }>);
-  if (results[0]) return results[0];
+  if (results[0]) {
+    const talk = results[0];
+    talk.seo = mapSeo((talk as any).seo);
+    return talk;
+  }
   const { fixtureTalks } = await import("./fixtures");
   return (fixtureTalks.find((t) => t.slug === slug) ?? null) as
     | (Talk & { id: number })
@@ -285,6 +293,7 @@ function aboutImage(m: any): AboutImage | null {
 
 function mapAboutPage(raw: any): AboutContent {
   return {
+    seo: mapSeo(raw.seo),
     hero: {
       badge: raw.hero?.badge ?? "",
       title: raw.hero?.title ?? "",
@@ -340,6 +349,7 @@ export const getAboutPage = async (): Promise<AboutContent> => {
         "populate[innovate][populate]": "*",
         "populate[team][populate]": "*",
         "populate[story][populate][cards][populate]": "*",
+        "populate[seo][populate]": "*",
       },
     });
     if (raw?.hero) return mapAboutPage(raw);

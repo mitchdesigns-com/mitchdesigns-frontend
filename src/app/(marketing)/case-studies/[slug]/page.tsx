@@ -13,6 +13,7 @@ import {
 } from "@/features/work";
 import { RichText } from "@/components/ui/RichText";
 import { getCaseStudies, getCaseStudy } from "@/lib/cms";
+import { buildPageMetadata } from "@/lib/seo";
 import { blocksToText } from "@/lib/cms/blocks";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
@@ -45,22 +46,17 @@ export async function generateMetadata({
 
   if (!study) return { title: slug.replace(/-/g, " ") };
 
-  const title = `${study.title} — Case Study`;
-  const description =
-    study.tagline ||
-    `How MitchDesigns designed and built ${study.title} for ${study.client}.`;
-
-  return {
-    title,
-    description,
-    alternates: { canonical: `/case-studies/${slug}` },
-    openGraph: {
-      title,
-      description,
-      url: `https://mitchdesigns.com/case-studies/${slug}`,
-      ...(study.cover?.url ? { images: [{ url: study.cover.url }] } : {}),
+  return buildPageMetadata(
+    {
+      title: `${study.title} — Case Study`,
+      description:
+        study.tagline ||
+        `How MitchDesigns designed and built ${study.title} for ${study.client}.`,
+      canonical: `/case-studies/${slug}`,
+      image: study.cover?.url,
     },
-  };
+    study.seo,
+  );
 }
 
 export default async function SingleCaseStudyPage({
