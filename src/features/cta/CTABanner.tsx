@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { RevealStagger, RevealItem } from "@/components/motion";
-import { LEADS_URL } from "@/config/nav";
+import { HeaderCtaInView } from "@/components/layout/HeaderCtaInView";
+import { LEADS_URL, isLeadsHref } from "@/config/nav";
 
 type CTABannerProps = {
   title?: React.ReactNode;
@@ -66,12 +67,14 @@ export function CTABanner({
           </RevealItem>
 
           <RevealItem>
-            <Button asChild size="lg" variant="primary" className="max-md:w-full">
-              <Link href={cta.href} className="flex items-center gap-2">
-                {cta.label}
-                <ArrowRight />
-              </Link>
-            </Button>
+            <HeaderCtaInView className="w-fit max-md:w-full" active={isLeadsHref(cta.href)}>
+              <Button asChild size="lg" variant="primary" className="max-md:w-full">
+                <Link href={cta.href} className="flex items-center gap-2">
+                  {cta.label}
+                  <ArrowRight />
+                </Link>
+              </Button>
+            </HeaderCtaInView>
           </RevealItem>
         </RevealStagger>
       </div>

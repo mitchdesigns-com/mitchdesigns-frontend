@@ -6,6 +6,8 @@ import { Fragment, useState } from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
+import { useHeaderCtaInView } from "@/components/layout/HeaderCtaInView";
+import { isLeadsHref } from "@/config/nav";
 import { fadeUp, stagger } from "@/lib/motion";
 import type { ServiceHeroProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
@@ -41,6 +43,7 @@ export function ServiceHero({
 }: ServiceHeroProps) {
   // Swap to a local fallback image if the CMS image fails to load.
   const [imgSrc, setImgSrc] = useState(image);
+  const ctaRef = useHeaderCtaInView<HTMLDivElement>(isLeadsHref(cta?.href));
   return (
     <Section className="pt-32 pb-16 md:pb-24" theme="dark">
       <motion.div
@@ -68,7 +71,7 @@ export function ServiceHero({
             <RichText content={description} className="max-w-xl text-lg text-fg-muted" />
           </motion.div>
           {cta && (
-            <motion.div variants={fadeUp}>
+            <motion.div variants={fadeUp} ref={ctaRef}>
               <Button asChild size="lg">
                 <Link href={cta.href}>{cta.label}</Link>
               </Button>

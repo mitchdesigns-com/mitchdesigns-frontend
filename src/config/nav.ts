@@ -1,6 +1,14 @@
 /** External lead/quote funnel — moved to its own project (md-leads). */
 export const LEADS_URL = "https://leads.mitchdesigns.com/";
 
+/**
+ * True when a CTA points at the leads app — the same destination as the header
+ * CTA. Only these should suppress the header CTA when scrolled into view.
+ */
+export function isLeadsHref(href?: string | null): boolean {
+  return !!href && href.startsWith("https://leads.mitchdesigns.com");
+}
+
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Our Services", href: null, hasChevron: true },

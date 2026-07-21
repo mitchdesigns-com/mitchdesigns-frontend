@@ -17,7 +17,7 @@ const HEADER_HEIGHT = 108;
 const FAB_SHOW_AFTER = 1300;
 
 export function Header() {
-  const { sticky, showCta } = useContext(HeaderConfigContext);
+  const { sticky, showCta, ctaInView } = useContext(HeaderConfigContext);
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
   const [atTop, setAtTop] = useState(true);
@@ -119,7 +119,7 @@ export function Header() {
                 href={LEADS_URL}
                 className={cn(
                   "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
-                  menuOpen && "opacity-0 pointer-events-none",
+                  (menuOpen || ctaInView) && "opacity-0 pointer-events-none",
                 )}
               >
                 Get Detailed Proposal
