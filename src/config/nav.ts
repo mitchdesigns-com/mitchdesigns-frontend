@@ -9,6 +9,39 @@ export function isLeadsHref(href?: string | null): boolean {
   return !!href && href.startsWith("https://leads.mitchdesigns.com");
 }
 
+/**
+ * A CTA that should route into the lead funnel: either an in-app `/quote` link
+ * (legacy / CMS-authored) or the bare leads app. These get rewritten to the
+ * service-specific funnel URL on service pages.
+ */
+export function isLeadFunnelHref(href?: string | null): boolean {
+  return !!href && (href.startsWith("/quote") || isLeadsHref(href));
+}
+
+/**
+ * Marketing service slug → lead-funnel service slug (md-leads routes). Only the
+ * four productised services have a dedicated funnel; the rest fall back to the
+ * leads home, which redirects gracefully.
+ */
+const LEADS_FUNNEL_SERVICE: Partial<Record<ServiceSlug, string>> = {
+  corporate: "corporate-website",
+  ecommerce: "ecommerce",
+  "mobile-app": "mobile-app",
+  custom: "custom-web",
+};
+
+/**
+ * Deep link into the leads app with a service preselected, e.g.
+ * `https://leads.mitchdesigns.com/quote/mobile-app/1`. Falls back to the leads
+ * home for services without a dedicated funnel.
+ */
+export function leadsUrl(service?: string): string {
+  const funnelService = service
+    ? LEADS_FUNNEL_SERVICE[service as ServiceSlug]
+    : undefined;
+  return funnelService ? `${LEADS_URL}quote/${funnelService}/1` : LEADS_URL;
+}
+
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Our Services", href: null, hasChevron: true },
