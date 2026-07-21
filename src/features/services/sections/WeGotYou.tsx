@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
+import { HeaderCtaInView } from "@/components/layout/HeaderCtaInView";
+import { isLeadsHref } from "@/config/nav";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal } from "@/components/motion";
 import type { WeGotYouProps } from "@/lib/cms/types";
@@ -70,14 +72,14 @@ export function WeGotYou({
             className="max-w-2xl text-lg leading-[125%] text-fg-muted md:text-2xl"
           />
           {cta && (
-            <div>
+            <HeaderCtaInView active={isLeadsHref(cta.href)}>
               <Button size="lg" asChild>
                 <Link href={cta.href} className="flex items-center gap-2">
                   {cta.label}
                   <ArrowRight size={20} />
                 </Link>
               </Button>
-            </div>
+            </HeaderCtaInView>
           )}
         </Reveal>
         <Reveal className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-96">
