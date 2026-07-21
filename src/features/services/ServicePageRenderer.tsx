@@ -4,6 +4,7 @@ import type {
   Service,
   ServicePageData,
 } from "@/lib/cms/types";
+import { isLeadFunnelHref, leadsUrl } from "@/config/nav";
 import { ServiceHero } from "./sections/ServiceHero";
 import { PrototypesSection } from "./sections/PrototypesSection";
 import { WeGotYou } from "./sections/WeGotYou";
@@ -30,6 +31,20 @@ type Props = {
   caseStudies?: CaseStudy[];
 };
 
+/**
+ * Point a section's CTA at the lead funnel with this service preselected.
+ * Rewrites legacy `/quote` links (and bare leads links) to
+ * `…/quote/<service>/1`; leaves unrelated CTAs (e.g. `/about`) untouched.
+ */
+function withServiceLeadCta<
+  T extends { cta?: { label: string; href: string } } | undefined,
+>(section: T, slug: string): T {
+  if (section?.cta && isLeadFunnelHref(section.cta.href)) {
+    return { ...section, cta: { ...section.cta, href: leadsUrl(slug) } };
+  }
+  return section;
+}
+
 export function ServicePageRenderer({
   slug,
   data,
@@ -38,9 +53,9 @@ export function ServicePageRenderer({
   caseStudies = [],
 }: Props) {
   const {
-    hero,
+    hero: rawHero,
     prototypes,
-    weGotYou,
+    weGotYou: rawWeGotYou,
     whyUs,
     process,
     support,
@@ -51,6 +66,9 @@ export function ServicePageRenderer({
     designsAdapt,
     moreAbout,
   } = data;
+
+  const hero = withServiceLeadCta(rawHero, slug);
+  const weGotYou = withServiceLeadCta(rawWeGotYou, slug);
 
   // Accordion items come from the FAQ collection (filtered by service category);
   // fall back to the section's own seeded items when no FAQs match.
