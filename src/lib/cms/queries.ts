@@ -469,120 +469,162 @@ export const getHomePage = async (): Promise<HomePageData> => {
  * Orderbase Page (single type)
  * ------------------------------------------------------------------ */
 export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
-  const mUrl = (m: any) => (m ? strapiMedia(m.url) ?? m.url : undefined);
-  const iconCard = (c: any) => ({
-    icon: c.icon,
-    title: c.title ?? undefined,
-    description: blocksToText(c.description),
-  });
+  const { fixtureOrderbasePage: fx } = await import("./fixtures");
+  const mUrl = (m: any) => (m ? (strapiMedia(m?.url) ?? m?.url) : undefined);
+  // json/repeatable string arrays -> string[]
+  const strs = (v: any): string[] | undefined =>
+    Array.isArray(v)
+      ? v.map((x) => (typeof x === "string" ? x : (x?.value ?? x?.label ?? x?.word ?? "")))
+      : undefined;
+
   try {
     const raw = await getSingle<Record<string, any>>("/orderbase-page", {
       revalidate: 300,
       query: {
-        "populate[hero]": "*",
-        "populate[brands][populate]": "*",
-        "populate[meet][populate]": "*",
-        "populate[challenge][populate][items][populate]": "*",
-        "populate[moreAbout][populate]": "*",
-        "populate[journey][populate][steps][populate]": "*",
-        "populate[delivery][populate]": "*",
+        "populate[nav][populate]": "*",
+        "populate[hero][populate]": "*",
+        "populate[audience][populate]": "*",
+        "populate[challenges][populate]": "*",
+        "populate[opportunity][populate]": "*",
+        "populate[platform][populate]": "*",
+        "populate[showcase][populate]": "*",
+        "populate[core][populate]": "*",
+        "populate[featureTabs][populate][tabs][populate]": "*",
+        "populate[payments][populate]": "*",
+        "populate[integrations][populate]": "*",
+        "populate[why][populate]": "*",
         "populate[pricing][populate][plans][populate]": "*",
-        "populate[sinceFrom][populate]": "*",
-        "populate[readyToOwn]": "*",
+        "populate[contact][populate]": "*",
+        "populate[footer][populate][columns][populate]": "*",
       },
     });
-    if (raw?.hero) {
-      return {
-        hero: raw.hero
-          ? { ...raw.hero, description: blocksToText(raw.hero.description) }
-          : undefined,
-        brands: (raw.brands ?? []).map((b: any) => ({
-          name: b.name,
-          logo: mUrl(b.logo),
-        })),
-        meet: raw.meet
-          ? { ...raw.meet, features: (raw.meet.features ?? []).map(iconCard) }
-          : undefined,
-        challenge: raw.challenge
-          ? {
-              label: raw.challenge.label ?? undefined,
-              title: raw.challenge.title ?? undefined,
-              items: (raw.challenge.items ?? []).map((i: any) => ({
-                title: i.title,
-                description: blocksToText(i.description),
-                image: mUrl(i.image),
+    if (!raw || !(raw.hero || raw.pricing)) return fx;
+
+    // Every section falls back to its fixture when the CMS field is empty, so a
+    // partially-filled Orderbase entry still renders a complete page.
+    const hero = raw.hero
+      ? {
+          ...fx.hero,
+          ...raw.hero,
+          image: mUrl(raw.hero.image) ?? fx.hero?.image,
+          stats: raw.hero.stats?.length ? raw.hero.stats : (fx.hero?.stats ?? []),
+          floatCards: raw.hero.floatCards?.length
+            ? raw.hero.floatCards
+            : (fx.hero?.floatCards ?? []),
+        }
+      : fx.hero;
+
+    const challenges = raw.challenges
+      ? {
+          ...fx.challenges,
+          ...raw.challenges,
+          image: mUrl(raw.challenges.image) ?? fx.challenges?.image,
+          items: raw.challenges.items?.length
+            ? raw.challenges.items
+            : (fx.challenges?.items ?? []),
+        }
+      : fx.challenges;
+
+    const showcase = raw.showcase
+      ? {
+          ...fx.showcase,
+          ...raw.showcase,
+          image: mUrl(raw.showcase.image) ?? fx.showcase?.image,
+          features: raw.showcase.features?.length
+            ? raw.showcase.features
+            : (fx.showcase?.features ?? []),
+        }
+      : fx.showcase;
+
+    const payments = raw.payments
+      ? {
+          ...fx.payments,
+          ...raw.payments,
+          features: raw.payments.features?.length
+            ? raw.payments.features
+            : (fx.payments?.features ?? []),
+          images: raw.payments.images?.length
+            ? raw.payments.images.map((im: any) => ({
+                src: mUrl(im.image) ?? im.src,
+                alt: im.alt,
+                slot: im.slot,
+              }))
+            : (fx.payments?.images ?? []),
+        }
+      : fx.payments;
+
+    const pricing = raw.pricing
+      ? {
+          ...fx.pricing,
+          ...raw.pricing,
+          plans: raw.pricing.plans?.length
+            ? raw.pricing.plans.map((p: any) => ({
+                ...p,
+                features: strs(p.features) ?? [],
+                priceRows: p.priceRows ?? [],
+              }))
+            : (fx.pricing?.plans ?? []),
+          // gmv + compare are json fields (complex tables) — used as-is
+          gmv: raw.pricing.gmv ?? fx.pricing?.gmv,
+          compare: raw.pricing.compare ?? fx.pricing?.compare,
+        }
+      : fx.pricing;
+
+    return {
+      meta: raw.meta ?? fx.meta,
+      nav: raw.nav ?? fx.nav,
+      hero,
+      ribbon: strs(raw.ribbon) ?? fx.ribbon,
+      audience: raw.audience ?? fx.audience,
+      challenges,
+      opportunity: raw.opportunity ?? fx.opportunity,
+      platform: raw.platform
+        ? {
+            ...fx.platform,
+            ...raw.platform,
+            handleItems: strs(raw.platform.handleItems) ?? (fx.platform?.handleItems ?? []),
+          }
+        : fx.platform,
+      showcase,
+      core: raw.core ?? fx.core,
+      // Strapi reserves `id`, so the tab component stores it as `slug`.
+      featureTabs: raw.featureTabs?.tabs?.length
+        ? {
+            ...raw.featureTabs,
+            tabs: raw.featureTabs.tabs.map((t: any) => ({
+              id: t.slug ?? t.id ?? t.label,
+              label: t.label,
+              items: (t.items ?? []).map((it: any) => ({
+                label: it.label,
+                infoKey: it.infoKey ?? undefined,
               })),
-            }
-          : undefined,
-        moreAbout: raw.moreAbout
-          ? {
-              ...raw.moreAbout,
-              description: blocksToText(raw.moreAbout.description),
-              features: (raw.moreAbout.features ?? []).map(iconCard),
-            }
-          : undefined,
-        journey: raw.journey
-          ? {
-              title: raw.journey.title ?? undefined,
-              subtitle: raw.journey.subtitle ?? undefined,
-              ctaLabel: raw.journey.ctaLabel ?? undefined,
-              ctaHref: raw.journey.ctaHref ?? undefined,
-              steps: (raw.journey.steps ?? []).map((s: any) => ({
-                number: s.number,
-                title: s.title,
-                description: blocksToText(s.description),
-                image: mUrl(s.image),
-              })),
-            }
-          : undefined,
-        delivery: raw.delivery
-          ? {
-              title: raw.delivery.title ?? undefined,
-              subtitle: raw.delivery.subtitle ?? undefined,
-              leftCards: (raw.delivery.leftCards ?? []).map(iconCard),
-              rightCards: (raw.delivery.rightCards ?? []).map(iconCard),
-            }
-          : undefined,
-        pricing: raw.pricing
-          ? {
-              title: raw.pricing.title ?? undefined,
-              subtitle: raw.pricing.subtitle ?? undefined,
-              plans: (raw.pricing.plans ?? []).map((p: any) => ({
-                name: p.name,
-                tagline: p.tagline ?? undefined,
-                price: p.price ?? undefined,
-                setupFee: p.setupFee ?? undefined,
-                recommended: p.recommended ?? undefined,
-                highlighted: p.highlighted ?? undefined,
-                ctaLabel: p.ctaLabel ?? undefined,
-                ctaHref: p.ctaHref ?? undefined,
-                features: (p.features ?? []).map((f: any) => ({
-                  label: f.label,
-                  disabled: f.disabled ?? undefined,
-                })),
-              })),
-            }
-          : undefined,
-        sinceFrom: raw.sinceFrom
-          ? {
-              pill: raw.sinceFrom.pill ?? undefined,
-              title: raw.sinceFrom.title ?? undefined,
-              description: blocksToText(raw.sinceFrom.description),
-              statsTitle: raw.sinceFrom.statsTitle ?? undefined,
-              stats: (raw.sinceFrom.stats ?? []).map((s: any) => ({
-                value: s.value,
-                label: s.label ?? undefined,
-              })),
-            }
-          : undefined,
-        readyToOwn: raw.readyToOwn ?? undefined,
-      };
-    }
+            })),
+          }
+        : fx.featureTabs,
+      payments,
+      integrations: raw.integrations
+        ? {
+            ...raw.integrations,
+            cards: (raw.integrations.cards ?? []).map((c: any) => ({
+              ...c,
+              chips: strs(c.chips) ?? [],
+            })),
+          }
+        : fx.integrations,
+      why: raw.why ?? fx.why,
+      pricing,
+      contact: raw.contact
+        ? {
+            ...fx.contact,
+            ...raw.contact,
+            planOptions: strs(raw.contact.planOptions) ?? (fx.contact?.planOptions ?? []),
+          }
+        : fx.contact,
+      footer: raw.footer ?? fx.footer,
+    };
   } catch {
-    /* fall through to fixture */
+    return fx;
   }
-  const { fixtureOrderbasePage } = await import("./fixtures");
-  return fixtureOrderbasePage;
 };
 
 /* ------------------------------------------------------------------

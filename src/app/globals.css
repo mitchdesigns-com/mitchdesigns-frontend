@@ -26,6 +26,26 @@
   --color-card-border: #282828; /* testimonial / review card border */
   --color-tech-card-border: #e8e8e8; /* tech card border (light mode) */
 
+  /* ---------------- Orderbase landing (bespoke microsite) ----------------
+     Scoped palette + fonts + radii/shadows for the /orderbase page. Ported
+     from the design source. Consumed as `bg-ob-red`, `rounded-ob`, `font-ob-display`, … */
+  --color-ob-red: #ed2e26;
+  --color-ob-red-dark: #c31e18;
+  --color-ob-red-soft: #ff5a4d;
+  --color-ob-ink: #0e0e10;
+  --color-ob-ink-2: #1c1c20;
+  --color-ob-paper: #ffffff;
+  --color-ob-mist: #f5f5f6;
+  --color-ob-mist-2: #ececee;
+  --color-ob-line: #e4e4e7;
+  --color-ob-muted: #6b6b73;
+  --color-ob-green: #27a85a;
+  --radius-ob: 22px;
+  --shadow-ob: 0 24px 60px -22px rgba(14, 14, 16, 0.3);
+  --shadow-ob-sm: 0 10px 30px -16px rgba(14, 14, 16, 0.35);
+  --font-ob-display: var(--font-ob-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-ob-body: var(--font-ob-inter), "Inter", system-ui, sans-serif;
+
   /* Semantic aliases — use these in components.
      Surfaces flip via [data-theme="dark"] below. */
   --color-bg: var(--color-white);

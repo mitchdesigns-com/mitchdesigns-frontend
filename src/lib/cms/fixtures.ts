@@ -1132,155 +1132,1280 @@ export const fixtureCareersPage: CareersPageData = {
 };
 
 export const fixtureOrderbasePage: OrderbasePageData = {
-  hero: {
-    title: "The Operating System for",
-    titleHighlight: "Food e-Commerce",
-    description:
-      "Built for restaurants, bakeries & multi-branch F&B brands in Egypt. Sell direct, fulfill smarter, own your customers.",
-    primaryCtaLabel: "Contact Sales",
-    primaryCtaHref: "#",
-    secondaryCtaLabel: "See How It Works",
-    secondaryCtaHref: "#",
+  "meta": {
+    "title": "Orderbase — eCommerce Platform for Food Brands | Mitch Designs",
+    "description": "Orderbase is the headless eCommerce operating system for multi-branch food brands. Sell, manage and fulfill orders across every branch from one platform. Built by Mitch Designs, Cairo."
   },
-  brands: [
-    { name: "Almaza", logo: "/images/client-logos/Almaza.png" },
-    { name: "Joula", logo: "/images/client-logos/Joula.png" },
-    { name: "Abu Auf", logo: "/images/client-logos/abu-auf.png" },
-    { name: "Lychee", logo: "/images/client-logos/lychee.png" },
-    { name: "Gobill", logo: "/images/client-logos/gobill.png" },
+  "nav": {
+    "links": [
+      {
+        "label": "Challenges",
+        "href": "#challenges"
+      },
+      {
+        "label": "Platform",
+        "href": "#platform"
+      },
+      {
+        "label": "Features",
+        "href": "#features"
+      },
+      {
+        "label": "Integrations",
+        "href": "#integrations"
+      },
+      {
+        "label": "Pricing",
+        "href": "#pricing"
+      },
+      {
+        "label": "Contact",
+        "href": "#contact"
+      }
+    ],
+    "ctaLabel": "Talk to us",
+    "ctaHref": "https://wa.me/201014430669"
+  },
+  "hero": {
+    "pill": "Headless eCommerce for Food Brands",
+    "titleLead": "The eCommerce ",
+    "titleAccent": "operating system",
+    "titleTail": " for food brands",
+    "subtitle": "Built for multi-branch restaurants, bakeries and food stores selling directly to consumers — locally and internationally.",
+    "primaryCta": {
+      "label": "See pricing & plans",
+      "href": "#pricing"
+    },
+    "secondaryCta": {
+      "label": "Explore the platform",
+      "href": "#platform"
+    },
+    "stats": [
+      {
+        "value": "20",
+        "suffix": "+",
+        "label": "years building digital platforms"
+      },
+      {
+        "value": "4",
+        "label": "flexible plans to launch & scale"
+      },
+      {
+        "value": "D2C",
+        "accent": true,
+        "label": "own your customers & data"
+      }
+    ],
+    "image": "/images/orderbase/landing/hero-dashboard.png",
+    "imageAlt": "Orderbase analytics dashboard on mobile",
+    "floatCards": [
+      {
+        "icon": "cart",
+        "title": "Order placed",
+        "subtitle": "Branch · 2 min ago"
+      },
+      {
+        "icon": "check",
+        "title": "Out for delivery",
+        "subtitle": "Nearest branch · live"
+      }
+    ]
+  },
+  "ribbon": [
+    "ORDER",
+    "ONLINE",
+    "SHOP",
+    "FOOD",
+    "EGYPT",
+    "D2C",
+    "DELIVERY",
+    "ORDERBASE"
   ],
-  meet: {
-    title: "Meet Orderbase",
-    subtitle: "Your digital operating system for food eCommerce",
-    ctaLabel: "Contact Sales",
-    ctaHref: "#",
-    features: [
-      { icon: "user", title: "Customer Data", description: "Keep your guest data. Build loyalty profiles, track behavior, and trigger targeted promotions." },
-      { icon: "shopping-bag", title: "Online Storefront", description: "Launch a branded ordering experience. No marketplace fees, no middlemen — your store, your rules." },
-      { icon: "scooter", title: "Delivery Management", description: "Manage in-house or third-party drivers from one screen. Real-time tracking included." },
-      { icon: "building", title: "Multi-branch Support", description: "Run every branch from a single dashboard. Menus, orders, and staff all in one place." },
-      { icon: "bar-chart", title: "Sales Analytics", description: "Know what's selling, when, and to whom. Make decisions backed by real order data." },
-      { icon: "map-pin", title: "Zone-based Pricing", description: "Set delivery fees and availability by delivery zone. Serve more areas without losing margin." },
-    ],
-  },
-  challenge: {
-    label: "The Challenge",
-    title: "Running Your Own Ordering\nSystem Isn't Simple.",
-    items: [
-      { title: "Scattered Operations", description: "Order management is fragmented across different sales channels." },
-      { title: "Inventory Sync Issues", description: "Inventory items are hard to manage due to variations from one branch to another." },
-      { title: "High Expectations", description: "Customers anticipate quick checkout processes and efficient order tracking." },
-      { title: "Not Built for F&B", description: "Basic eCommerce solutions do not solve the unique needs of food operations." },
-    ],
-  },
-  moreAbout: {
-    title: "Your Kitchen And Your Courier Finally In The Same System",
-    description:
-      "Take control of your margins, operations, and customer relationships by building your own direct digital channel.",
-    ctaLabel: "Contact Sales",
-    ctaHref: "#",
-    features: [
-      { icon: "shopping-bag", description: "Deliver a custom-branded journey that retains customers." },
-      { icon: "database", description: "Capture insights and contact info to drive marketing campaigns." },
-      { icon: "map-pin", description: "Manage inventory and fulfillment across your physical footprint." },
-      { icon: "trending-up", description: "Build a resilient digital infrastructure that grows with you." },
-    ],
-  },
-  journey: {
-    title: "Your System's Journey",
-    subtitle:
-      "From the customer's screen right to their door, fully automated and synced.",
-    ctaLabel: "Contact Sales",
-    ctaHref: "#",
-    steps: [
-      { number: "01", title: "Order Capture", description: "Customer places an order via your custom-branded platform, offering a premium, native-feeling checkout experience." },
-      { number: "02", title: "Routing & Inventory", description: "OrderBase instantly routes the order to the nearest operational branch, automatically updating centralized stock to prevent overselling." },
-      { number: "03", title: "Fulfillment & Tracking", description: "The kitchen receives a streamlined ticket while the integrated courier app handles dispatching and live status updates." },
-    ],
-  },
-  delivery: {
-    title: "Delivery Operations, Fully Connected",
-    subtitle:
-      "Give your couriers the tools to deliver faster, smarter, and with full operational control.",
-    leftCards: [
-      { icon: "scooter", title: "Friendly to couriers", description: "A simple, straightforward interface that any courier can pick up and use instantly." },
-      { icon: "route", title: "Full control on couriers", description: "Manage dispatching, routing, and fleet performance centrally and efficiently." },
-    ],
-    rightCards: [
-      { icon: "app-window", title: "One integrated platform", description: "Sync orders from kitchen to customer without using any other third-party apps." },
-      { icon: "map-pin", title: "Full monitoring on delivery process", description: "Track live locations, status updates, and delivery times so much easier with our system." },
-    ],
-  },
-  pricing: {
-    title: "Start with OrderBase in 3 ways",
-    subtitle: "Transparent pricing for growing food brands.",
-    plans: [
+  "audience": {
+    "eyebrow": "Built for food brands",
+    "title": "Designed to sell, manage & fulfill across every branch",
+    "lead": "If you sell food, drinks, desserts or groceries, this system is for you.",
+    "cards": [
       {
-        name: "Standard",
-        tagline: "Launch Fast",
-        price: "15,000",
-        setupFee: "+ 90,000 EGP One-time Setup",
-        ctaLabel: "Contact Sales",
-        ctaHref: "#",
-        features: [
-          { label: "Up to 2 Branches" },
-          { label: "Standard Interface Design" },
-          { label: "Basic Order Management" },
-          { label: "Guest Checkout Only", disabled: true },
-          { label: "No ERP Integrations", disabled: true },
-        ],
+        "num": "01",
+        "title": "Operate restaurants, bakeries & dessert brands"
       },
       {
-        name: "Pro",
-        tagline: "Custom & Scalable",
-        price: "22,000",
-        setupFee: "+ 180,000 EGP One-time Setup",
-        recommended: true,
-        highlighted: true,
-        ctaLabel: "Contact Sales",
-        ctaHref: "#",
-        features: [
-          { label: "Up to 10 Branches" },
-          { label: "Custom Interface Design" },
-          { label: "Multi-Branch & Stop Sale Logic" },
-          { label: "User Accounts & Vouchers" },
-          { label: "Standard ERP Integrations" },
-        ],
+        "num": "02",
+        "title": "Sell directly to consumers (D2C)"
       },
       {
-        name: "Elite",
-        tagline: "Full Digital Infrastructure",
-        price: "40,000",
-        setupFee: "+ 280,000 EGP One-time Setup",
-        ctaLabel: "Contact Sales",
-        ctaHref: "#",
-        features: [
-          { label: "Up to 30 Branches" },
-          { label: "Delivery Driver App & API" },
-          { label: "Loyalty & Wallet System" },
-          { label: "Build Your Own Product" },
-          { label: "Custom Integrations & Reporting" },
-        ],
+        "num": "03",
+        "title": "Run multiple branches & fulfill from the nearest location"
       },
+      {
+        "num": "04",
+        "title": "Manage fresh inventory, fast delivery & high order volume"
+      }
+    ]
+  },
+  "challenges": {
+    "eyebrow": "Your daily challenges",
+    "title": "Selling direct is powerful — running it is hard",
+    "items": [
+      {
+        "text": "Orders from your website and mobile app aren't always centralized in one system."
+      },
+      {
+        "text": "Stock differs between branches because of real-time sales and walk-in customers."
+      },
+      {
+        "text": "Customers expect fast checkout and live order tracking — like the delivery apps."
+      },
+      {
+        "text": "Aggregator platforms own your customer data and your marketing insights."
+      },
+      {
+        "text": "Most e-commerce solutions don't understand the complexity of food operations."
+      }
     ],
+    "image": "/images/orderbase/landing/challenge-bags.png",
+    "imageAlt": "Food brand fulfilling multi-branch orders with Orderbase delivery bags"
   },
-  sinceFrom: {
-    pill: "Since 2005",
-    title: "Built By\nMitchDesigns",
-    description:
-      "Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.",
-    statsTitle: "Our Experience",
-    stats: [
-      { value: "+400", label: "Projects Delivered" },
-      { value: "+20", label: "Years of Experience" },
-      { value: "+30", label: "Dedicated Experts" },
+  "opportunity": {
+    "eyebrow": "The opportunity",
+    "title": "Growing food brands build their own digital sales channel",
+    "lead": "They don't depend only on aggregators. Here's what a growing food brand needs today:",
+    "cards": [
+      {
+        "icon": "phone",
+        "title": "Branded web & app",
+        "description": "Your own website and mobile app that customers recognize and trust."
+      },
+      {
+        "icon": "stopwatch",
+        "title": "Fast, beautiful ordering",
+        "description": "A quick, well-designed ordering experience that reflects your brand."
+      },
+      {
+        "icon": "cube",
+        "title": "Real-time stock",
+        "description": "Inventory synced across all branches to avoid selling unavailable items."
+      },
+      {
+        "icon": "shield",
+        "title": "Own your data",
+        "description": "Full ownership of customer data to build loyalty and repeat orders."
+      },
+      {
+        "icon": "rocket",
+        "title": "Launch & scale",
+        "description": "The ability to launch quickly and scale your channel independently."
+      }
+    ]
+  },
+  "platform": {
+    "eyebrow": "Introducing Orderbase",
+    "titleLead": "Your digital operating system for ",
+    "titleAccent": "food brands",
+    "lead": "Orderbase powers your website and mobile app while managing orders, stock and operations across all your branches.",
+    "categories": [
+      {
+        "icon": "plate",
+        "label": "Restaurants & food brands"
+      },
+      {
+        "icon": "bag",
+        "label": "Grocery & packaged food"
+      },
+      {
+        "icon": "cupcake",
+        "label": "Dessert shops & bakeries"
+      },
+      {
+        "icon": "store",
+        "label": "Multi-branch retail food"
+      }
     ],
+    "handleTitle": "Built to handle",
+    "handleItems": [
+      "High-volume order handling",
+      "Web & mobile ordering",
+      "Fast, branch-based delivery",
+      "Real-time inventory tracking",
+      "Loyalty & repeat purchase growth"
+    ]
   },
-  readyToOwn: {
-    title: "Ready To Own Your System?",
-    subtitle:
-      "Stop renting your customers from aggregators. Launch fast, scale across branches, and take back your margins.",
-    ctaLabel: "Contact Sales",
-    ctaHref: "#",
+  "showcase": {
+    "eyebrow": "One platform, every screen",
+    "titleLead": "Not a website. Your eCommerce ",
+    "titleAccent": "operating system.",
+    "image": "/images/orderbase/landing/showcase-mockup.png",
+    "imageAlt": "Orderbase dashboard on laptop and mobile app",
+    "features": [
+      {
+        "icon": "network",
+        "title": "Sell & fulfill from all branches",
+        "description": "One unified system across every location and channel."
+      },
+      {
+        "icon": "cube",
+        "title": "Real-time stock across branches",
+        "description": "Never sell what you can't fulfill — inventory stays in sync."
+      },
+      {
+        "icon": "pin",
+        "title": "Live order tracking",
+        "description": "Give customers the delivery-app experience they expect."
+      },
+      {
+        "icon": "medal",
+        "title": "Customers, wallets & loyalty",
+        "description": "Accounts, points, order history and repeat-purchase growth."
+      }
+    ]
   },
+  "core": {
+    "eyebrow": "Core features",
+    "title": "Everything that runs your digital food business",
+    "cards": [
+      {
+        "num": "01",
+        "title": "Unified order fulfillment",
+        "description": "Sell and fulfill orders from all your branches in one system."
+      },
+      {
+        "num": "02",
+        "title": "Customer management",
+        "description": "Accounts, wallets, loyalty points and full order history."
+      },
+      {
+        "num": "03",
+        "title": "Real-time inventory",
+        "description": "Manage stock live across every branch."
+      },
+      {
+        "num": "04",
+        "title": "Order tracking",
+        "description": "Live order tracking for every customer."
+      },
+      {
+        "num": "05",
+        "title": "Promotions engine",
+        "description": "Control promos, vouchers, flash sales and marketing campaigns."
+      },
+      {
+        "num": "06",
+        "title": "Deep integrations",
+        "description": "ERP, payment gateways and delivery operations, connected."
+      }
+    ]
+  },
+  "featureTabs": {
+    "eyebrow": "Complete eCommerce features",
+    "title": "Everything you need to run & grow",
+    "lead": "A full commerce toolkit, purpose-built for food operations.",
+    "tabs": [
+      {
+        "id": "orders",
+        "label": "Checkout & Orders",
+        "items": [
+          {
+            "label": "Fast checkout designed for high conversion",
+            "infoKey": "fastCheckout"
+          },
+          {
+            "label": "Guest checkout and registered accounts",
+            "infoKey": "guestCheckout"
+          },
+          {
+            "label": "Delivery notes and special instructions",
+            "infoKey": "deliveryNotes"
+          },
+          {
+            "label": "Multiple payment methods (card, cash, wallet)",
+            "infoKey": "paymentMethods"
+          },
+          {
+            "label": "Scheduled delivery with time slots",
+            "infoKey": "scheduledDelivery"
+          },
+          {
+            "label": "Store pickup / click-and-collect",
+            "infoKey": "pickup"
+          },
+          {
+            "label": "Wallet and stored credit",
+            "infoKey": "wallet"
+          },
+          {
+            "label": "Loyalty points and rewards",
+            "infoKey": "loyalty"
+          }
+        ]
+      },
+      {
+        "id": "catalog",
+        "label": "Product Catalog",
+        "items": [
+          {
+            "label": "Product options (sizes, flavors, attributes)",
+            "infoKey": "variants"
+          },
+          {
+            "label": "Add-ons and extras (sauces, toppings, packaging)",
+            "infoKey": "addons"
+          },
+          {
+            "label": "Bundles, combos and meal boxes",
+            "infoKey": "bundlesCombos"
+          },
+          {
+            "label": "Build Your Own / customize product with step-based options",
+            "infoKey": "byo"
+          },
+          {
+            "label": "Upsells and product add-ons",
+            "infoKey": "upsells"
+          },
+          {
+            "label": "Product search, filters, sorting and comparison",
+            "infoKey": "searchFilter"
+          }
+        ]
+      },
+      {
+        "id": "customer",
+        "label": "Customer Features",
+        "items": [
+          {
+            "label": "Easy account creation using mobile number",
+            "infoKey": "mobileSignup"
+          },
+          {
+            "label": "Favorites and wishlist",
+            "infoKey": "wishlist"
+          },
+          {
+            "label": "Reorder and repeat orders",
+            "infoKey": "reorder"
+          },
+          {
+            "label": "Address book for faster checkout",
+            "infoKey": "addressBook"
+          },
+          {
+            "label": "Wallet and stored credit",
+            "infoKey": "wallet"
+          },
+          {
+            "label": "Loyalty points and rewards",
+            "infoKey": "loyalty"
+          }
+        ]
+      },
+      {
+        "id": "promos",
+        "label": "Promotions Engine",
+        "items": [
+          {
+            "label": "Promo codes (fixed, percentage, free delivery)",
+            "infoKey": "promoCodes"
+          },
+          {
+            "label": "Minimum order rules and usage limits",
+            "infoKey": "minOrderRules"
+          },
+          {
+            "label": "Automatic rule-based discounts",
+            "infoKey": "autoDiscounts"
+          },
+          {
+            "label": "Flash sales and time-based offers",
+            "infoKey": "flashSales"
+          },
+          {
+            "label": "Sale pricing with strike-through display",
+            "infoKey": "salePricing"
+          },
+          {
+            "label": "Vouchers and gift cards",
+            "infoKey": "vouchers"
+          },
+          {
+            "label": "Campaign rules by product, category, branch or time window",
+            "infoKey": "campaignRules"
+          }
+        ]
+      },
+      {
+        "id": "reports",
+        "label": "Reporting & Insights",
+        "items": [
+          {
+            "label": "Sales reports by day, branch, product or channel",
+            "infoKey": "salesReports"
+          },
+          {
+            "label": "Revenue tracking and performance dashboards",
+            "infoKey": "revenueDash"
+          },
+          {
+            "label": "Order volume and operational reports",
+            "infoKey": "opsReports"
+          },
+          {
+            "label": "Customer behavior and purchase analytics",
+            "infoKey": "custAnalytics"
+          },
+          {
+            "label": "Product performance and best-selling items",
+            "infoKey": "productPerf"
+          },
+          {
+            "label": "Branch-level reporting and comparisons",
+            "infoKey": "branchReports"
+          }
+        ]
+      }
+    ]
+  },
+  "payments": {
+    "eyebrow": "Payments",
+    "title": "Secure payments, saved for one-tap reorder",
+    "lead": "Give customers the frictionless checkout they expect — with cards saved safely in your mobile app for instant repeat orders.",
+    "features": [
+      {
+        "icon": "card",
+        "title": "Save cards for one-tap reorder",
+        "description": "Cards are securely tokenized (PCI-compliant — no raw card data stored), so customers save a card once in your app and reorder in a single tap."
+      },
+      {
+        "icon": "shield",
+        "title": "Payment inside your platform",
+        "description": "Customers pay right inside your website or app via our direct MPGS / Crédit Agricole integration — no redirect to a third-party processor. One seamless, consistent experience end to end."
+      },
+      {
+        "icon": "wallet",
+        "title": "Wallet, Apple Pay & cash",
+        "description": "In-app wallet and stored credit, Apple Pay, cards, and cash on delivery — whatever your customers prefer."
+      },
+      {
+        "icon": "globe",
+        "title": "Multi-currency gateways",
+        "description": "Local and regional gateways across Egypt and the GCC, plus any local payment processor — ready for multiple markets and currencies."
+      }
+    ],
+    "images": [
+      {
+        "src": "/images/orderbase/landing/pay-phone.png",
+        "alt": "Orderbase mobile checkout screen",
+        "slot": "phone"
+      },
+      {
+        "src": "/images/orderbase/landing/pay-credit.png",
+        "alt": "Credit card details form",
+        "slot": "credit"
+      },
+      {
+        "src": "/images/orderbase/landing/pay-wallet.png",
+        "alt": "Use wallet balance toggle",
+        "slot": "wallet"
+      }
+    ]
+  },
+  "integrations": {
+    "eyebrow": "Seamless integrations",
+    "title": "Connects with the systems you already use",
+    "cards": [
+      {
+        "num": "01",
+        "icon": "database",
+        "title": "ERP integration",
+        "description": "Connect your enterprise systems for end-to-end operations.",
+        "chips": [
+          "Microsoft Dynamics",
+          "SAP",
+          "Oracle",
+          "Custom ERP"
+        ]
+      },
+      {
+        "num": "02",
+        "icon": "pos",
+        "title": "POS integration",
+        "description": "Sync orders, menu and live stock with your in-store point-of-sale system.",
+        "chips": [
+          "In-store POS",
+          "Unified menu & stock",
+          "Branch sync"
+        ]
+      },
+      {
+        "num": "03",
+        "icon": "truck",
+        "title": "Shipping & delivery",
+        "description": "Connect any shipping or delivery provider you prefer.",
+        "chips": [
+          "Logistics partners",
+          "Delivery fleets",
+          "Custom couriers"
+        ]
+      }
+    ]
+  },
+  "why": {
+    "eyebrow": "Who is behind Orderbase",
+    "title": "Why Mitch Designs is the right partner",
+    "lockupTag": "Software house & digital agency · since 2005",
+    "points": [
+      {
+        "value": "20",
+        "suffix": "+",
+        "title": "Years of experience",
+        "description": "In digital platforms, e-commerce and performance marketing."
+      },
+      {
+        "value": "F&B",
+        "title": "Trusted by leaders",
+        "description": "By leading food and restaurant brands across Egypt."
+      },
+      {
+        "value": "100%",
+        "title": "Full in-house team",
+        "description": "UX design, web & mobile development and digital marketing."
+      },
+      {
+        "value": "24/7",
+        "title": "Responsive support",
+        "description": "A team that speaks the language of your business, not just tech."
+      }
+    ],
+    "banner": "We don't just build systems — we help you grow your sales."
+  },
+  "pricing": {
+    "eyebrow": "Pricing",
+    "title": "Start with Orderbase in 4 ways",
+    "lead": "Choose the plan that fits where your brand is today — and scale up anytime.",
+    "plans": [
+      {
+        "icon": "planStandard",
+        "name": "Standard",
+        "tagline": "Launch Fast",
+        "audience": "Best for new or small F&B brands starting online.",
+        "priceRows": [
+          {
+            "label": "Setup fee",
+            "value": "90,000",
+            "unit": "EGP"
+          },
+          {
+            "label": "Monthly",
+            "value": "18,000",
+            "unit": "EGP"
+          }
+        ],
+        "features": [
+          "Essential core store & product catalog",
+          "Streamlined cart & fast checkout",
+          "Cash + card payments, promo codes",
+          "Single-branch inventory & basic reporting",
+          "Up to 2 branches"
+        ],
+        "ctaLabel": "Choose Standard",
+        "ctaHref": "#contact",
+        "ctaVariant": "outline"
+      },
+      {
+        "icon": "planPro",
+        "name": "Pro",
+        "tagline": "Custom & Scalable",
+        "audience": "Best for growing brands with multiple branches.",
+        "featured": true,
+        "badge": "★ Most recommended",
+        "priceRows": [
+          {
+            "label": "Setup fee",
+            "value": "180,000",
+            "unit": "EGP"
+          },
+          {
+            "label": "Monthly base",
+            "value": "25,000",
+            "unit": "EGP"
+          }
+        ],
+        "gmvNote": "+ 0.8% of monthly GMV above 500,000 EGP",
+        "features": [
+          "Everything in Standard, plus:",
+          "Multi-branch inventory & nearest-branch fulfillment",
+          "Fully custom UI/UX & user accounts",
+          "Vouchers, flash sales & advanced discounts",
+          "ERP, payments, shipping & marketing tracking",
+          "Up to 10 branches"
+        ],
+        "ctaLabel": "Choose Pro",
+        "ctaHref": "#contact",
+        "ctaVariant": "red"
+      },
+      {
+        "icon": "planElite",
+        "name": "Elite",
+        "tagline": "Full Digital Infrastructure",
+        "audience": "For brands needing the ultimate optimized setup.",
+        "priceRows": [
+          {
+            "label": "Setup fee",
+            "value": "280,000",
+            "unit": "EGP"
+          },
+          {
+            "label": "Monthly base",
+            "value": "40,000",
+            "unit": "EGP"
+          }
+        ],
+        "gmvNote": "+ 1.0% of monthly GMV above 1,000,000 EGP",
+        "features": [
+          "Everything in Pro, plus:",
+          "Native iOS & Android mobile app",
+          "Membership, loyalty points & wallet system",
+          "Apple Pay, tokenized cards, multi-currency",
+          "Dedicated account manager & priority support",
+          "Up to 30 branches"
+        ],
+        "ctaLabel": "Choose Elite",
+        "ctaHref": "#contact",
+        "ctaVariant": "dark"
+      },
+      {
+        "icon": "planCustom",
+        "name": "Custom",
+        "tagline": "Bespoke",
+        "audience": "For enterprises needing a fully tailored build.",
+        "priceRows": [
+          {
+            "label": "Setup fee",
+            "value": "Negotiated",
+            "small": true
+          },
+          {
+            "label": "Monthly",
+            "value": "Negotiated",
+            "small": true
+          }
+        ],
+        "gmvNote": "Custom GMV terms, tailored to your volume",
+        "features": [
+          "Everything in Elite, plus:",
+          "Bespoke feature & workflow development",
+          "Custom API & third-party integrations",
+          "Dedicated infrastructure & white-glove SLA",
+          "Multi-region & enterprise scale",
+          "30+ branches"
+        ],
+        "ctaLabel": "Talk to us",
+        "ctaHref": "#contact",
+        "ctaVariant": "outline"
+      }
+    ],
+    "gmv": {
+      "title": "Monthly fee examples by GMV volume",
+      "lead": "Transparent scaling — the GMV component applies only above each plan's threshold.",
+      "columns": [
+        "Monthly GMV",
+        "Standard",
+        "Pro",
+        "Elite"
+      ],
+      "rows": [
+        {
+          "cells": [
+            "500,000 EGP",
+            "18,000",
+            "25,000",
+            "—"
+          ]
+        },
+        {
+          "cells": [
+            "1,000,000 EGP",
+            "18,000",
+            "29,000",
+            "40,000"
+          ]
+        },
+        {
+          "cells": [
+            "2,000,000 EGP",
+            "18,000",
+            "37,000",
+            "50,000"
+          ]
+        },
+        {
+          "cells": [
+            "3,000,000 EGP",
+            "18,000",
+            "45,000",
+            "60,000"
+          ]
+        },
+        {
+          "cells": [
+            "5,000,000 EGP",
+            "18,000",
+            "57,000*",
+            "80,000"
+          ]
+        }
+      ],
+      "footnote": "* All fees in EGP. The GMV component applies only above each package's stated threshold."
+    },
+    "compare": {
+      "title": "Compare all features",
+      "columns": [
+        {
+          "id": "s",
+          "name": "Standard",
+          "tagline": "Launch Fast"
+        },
+        {
+          "id": "p",
+          "name": "Pro",
+          "tagline": "Custom & Scalable",
+          "featured": true
+        },
+        {
+          "id": "e",
+          "name": "Elite",
+          "tagline": "Full Infrastructure"
+        },
+        {
+          "id": "c",
+          "name": "Custom",
+          "tagline": "Bespoke"
+        }
+      ],
+      "groups": [
+        {
+          "name": "Storefront & Catalog",
+          "rows": [
+            {
+              "label": "Shop website",
+              "key": "shopWebsite",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Mobile app",
+              "key": "mobileApp",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Custom interface design",
+              "key": "customUi",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Website mobile friendly",
+              "key": "mobileFriendly",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Product catalog",
+              "key": "catalog",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Product options",
+              "key": "variants",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Add-ons & extras",
+              "key": "addons",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Bundles & combos",
+              "key": "bundlesCombos",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Build your own product",
+              "key": "byo",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Search / sort / filter products",
+              "key": "searchFilter",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Localization (Efalse/AR)",
+              "key": "localization",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Checkout & Payments",
+          "rows": [
+            {
+              "label": "Fast checkout",
+              "key": "fastCheckout",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Payment gateways",
+              "key": "paymentGateways",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Wallet system",
+              "key": "wallet",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Save credit cards (tokenization)",
+              "key": "tokenization",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Apple Pay",
+              "key": "applePay",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Multiple currencies",
+              "key": "currencies",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Multiple markets (countries)",
+              "key": "markets",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Customers & Loyalty",
+          "rows": [
+            {
+              "label": "User accounts",
+              "key": "userAccounts",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Loyalty points",
+              "key": "loyalty",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Membership system",
+              "key": "membership",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Send orders as a gift",
+              "key": "gift",
+              "values": [
+                false,
+                false,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Marketing & Promotions",
+          "rows": [
+            {
+              "label": "Promo codes",
+              "key": "promoCodes",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Vouchers & gift cards",
+              "key": "vouchers",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Flash sales",
+              "key": "flashSales",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Operations & Fulfilment",
+          "rows": [
+            {
+              "label": "Branches",
+              "key": "branches",
+              "values": [
+                "Up to 2",
+                "Up to 10",
+                "Up to 30",
+                "30+"
+              ]
+            },
+            {
+              "label": "Order management",
+              "key": "orderMgmt",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Stop sale per branch",
+              "key": "stopSale",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "User roles",
+              "key": "userRoles",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Delivery driver app",
+              "key": "driverApp",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Pick up from store",
+              "key": "pickup",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Shipping & delivery rates",
+              "key": "shippingRules",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Integrations",
+          "rows": [
+            {
+              "label": "ERP integration",
+              "key": "erp",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "POS integration",
+              "key": "pos",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Reporting & Insights",
+          "rows": [
+            {
+              "label": "Reports & analytics",
+              "key": "reports",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Support & Service",
+          "rows": [
+            {
+              "label": "Technical support",
+              "key": "support",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "SLA guarantee",
+              "key": "sla",
+              "values": [
+                true,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Dedicated eCommerce account manager",
+              "key": "accountManager",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "label": "Priority support",
+              "key": "priority",
+              "values": [
+                false,
+                true,
+                true,
+                true
+              ]
+            }
+          ]
+        }
+      ],
+      "footnote": "Setup & monthly fees shown in EGP. All plans include localization (EN/AR) and technical support."
+    }
+  },
+  "contact": {
+    "eyebrow": "Let's talk",
+    "title": "Ready to launch your branded food channel?",
+    "lead": "Tell us about your brand and we'll show you exactly how Orderbase fits. Reach us whichever way is easiest.",
+    "methods": [
+      {
+        "icon": "wa",
+        "label": "WhatsApp",
+        "value": "+20 101 443 0669",
+        "href": "https://wa.me/201014430669"
+      },
+      {
+        "icon": "call",
+        "label": "Call us",
+        "value": "+20 101 443 0669",
+        "href": "tel:+201014430669"
+      },
+      {
+        "icon": "mail",
+        "label": "Email",
+        "value": "agency@mitchdesigns.com",
+        "href": "mailto:agency@mitchdesigns.com"
+      },
+      {
+        "icon": "web",
+        "label": "Website",
+        "value": "www.mitchdesigns.com",
+        "href": "https://www.mitchdesigns.com"
+      }
+    ],
+    "formTitle": "Request a demo",
+    "formNote": "We'll reply via WhatsApp or email within one business day.",
+    "planOptions": [
+      "Not sure yet",
+      "Standard — Launch Fast",
+      "Pro — Custom & Scalable",
+      "Elite — Full Infrastructure",
+      "Custom — Bespoke"
+    ],
+    "whatsappNumber": "201014430669",
+    "submitLabel": "Send via WhatsApp"
+  },
+  "footer": {
+    "tagline": "The headless eCommerce operating system for multi-branch food brands. Built by Mitch Designs — Cairo, Egypt.",
+    "columns": [
+      {
+        "title": "Explore",
+        "links": [
+          {
+            "label": "Platform",
+            "href": "#platform"
+          },
+          {
+            "label": "Features",
+            "href": "#features"
+          },
+          {
+            "label": "Integrations",
+            "href": "#integrations"
+          },
+          {
+            "label": "Pricing",
+            "href": "#pricing"
+          }
+        ]
+      },
+      {
+        "title": "Get in touch",
+        "links": [
+          {
+            "label": "WhatsApp",
+            "href": "https://wa.me/201014430669"
+          },
+          {
+            "label": "+20 101 443 0669",
+            "href": "tel:+201014430669"
+          },
+          {
+            "label": "agency@mitchdesigns.com",
+            "href": "mailto:agency@mitchdesigns.com"
+          },
+          {
+            "label": "www.mitchdesigns.com",
+            "href": "https://www.mitchdesigns.com"
+          }
+        ]
+      }
+    ],
+    "bottomLeft": "Mitch Designs · Software House & Digital Agency · 22 El Horeya Street, Heliopolis, Cairo",
+    "bottomRight": "Orderbase™ — eCommerce for Food Brands"
+  }
 };
