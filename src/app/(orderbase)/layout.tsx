@@ -1,17 +1,28 @@
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./orderbase/_lib/orderbase.css";
 
-// Bespoke type pairing for the Orderbase microsite. Exposed as CSS vars that the
-// @theme `--font-ob-*` tokens reference; scoped to this route group only.
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+// Self-hosted to avoid a build-time Google Fonts fetch (the CI runner can't
+// reach fonts.gstatic.com reliably). Files are the basic-latin woff2 subsets
+// from the design source. Exposed as CSS vars the @theme `--font-ob-*` tokens
+// reference; scoped to this route group only.
+const jakarta = localFont({
+  src: [
+    { path: "./orderbase/_lib/fonts/jakarta-400.woff2", weight: "400", style: "normal" },
+    { path: "./orderbase/_lib/fonts/jakarta-500.woff2", weight: "500", style: "normal" },
+    { path: "./orderbase/_lib/fonts/jakarta-600.woff2", weight: "600", style: "normal" },
+    { path: "./orderbase/_lib/fonts/jakarta-700.woff2", weight: "700", style: "normal" },
+    { path: "./orderbase/_lib/fonts/jakarta-800.woff2", weight: "800", style: "normal" },
+  ],
   variable: "--font-ob-jakarta",
   display: "swap",
 });
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const inter = localFont({
+  src: [
+    { path: "./orderbase/_lib/fonts/inter-400.woff2", weight: "400", style: "normal" },
+    { path: "./orderbase/_lib/fonts/inter-500.woff2", weight: "500", style: "normal" },
+    { path: "./orderbase/_lib/fonts/inter-600.woff2", weight: "600", style: "normal" },
+    { path: "./orderbase/_lib/fonts/inter-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-ob-inter",
   display: "swap",
 });
