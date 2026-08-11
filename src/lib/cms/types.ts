@@ -556,77 +556,175 @@ export type OrderbaseIconCard = {
   description: string;
 };
 
-export type OrderbasePricingPlan = {
+/* ------------------------------------------------------------------
+ * Orderbase landing (V2) — the /orderbase microsite. Every section's copy
+ * and numbers are editable in Strapi; the shape below is the contract shared
+ * by the query mapper, fixtures, and the section components.
+ *
+ * `OrbIcon` is a 3D-icon key (see app/(orderbase)/orderbase/_lib/icons3d.ts).
+ * Kept as a plain string so the CMS can reference any key without type churn.
+ * ------------------------------------------------------------------ */
+export type OrbIcon = string;
+export type ObLink = { label: string; href: string };
+export type ObCtaVariant = "red" | "dark" | "outline" | "ghost";
+
+export type OrbPricingPlan = {
+  icon: OrbIcon;
   name: string;
   tagline?: string;
-  price?: string;
-  setupFee?: string;
-  recommended?: boolean;
-  highlighted?: boolean;
+  /** the "Best for …" line */
+  audience?: string;
+  /** Pro-style highlighted card */
+  featured?: boolean;
+  badge?: string;
+  priceRows: Array<{ label: string; value: string; unit?: string; small?: boolean }>;
+  gmvNote?: string;
+  features: string[];
   ctaLabel?: string;
   ctaHref?: string;
-  features: Array<{ label: string; disabled?: boolean }>;
+  ctaVariant?: ObCtaVariant;
+};
+
+/** A row in the "Compare all features" matrix. `values` aligns to `compare.columns`.
+ *  A cell of `true` = yes tick, `false` = no dash, string = text (e.g. "Up to 10"). */
+export type OrbCompareRow = {
+  label: string;
+  /** feature id, links to the explainer popover (FEAT_INFO) */
+  key?: string;
+  values: Array<boolean | string>;
 };
 
 export type OrderbasePageData = {
+  meta?: { title?: string; description?: string };
+  nav?: {
+    links: ObLink[];
+    ctaLabel?: string;
+    ctaHref?: string;
+  };
   hero?: {
-    title: string;
-    titleHighlight?: string;
-    description?: string;
-    primaryCtaLabel?: string;
-    primaryCtaHref?: string;
-    secondaryCtaLabel?: string;
-    secondaryCtaHref?: string;
-  };
-  brands: Array<{ name: string; logo?: string }>;
-  meet?: {
-    title?: string;
+    pill?: string;
+    titleLead: string;
+    titleAccent?: string;
+    titleTail?: string;
     subtitle?: string;
-    ctaLabel?: string;
-    ctaHref?: string;
-    features: OrderbaseIconCard[];
+    primaryCta?: ObLink;
+    secondaryCta?: ObLink;
+    stats: Array<{ value: string; suffix?: string; accent?: boolean; label: string }>;
+    image?: string;
+    imageAlt?: string;
+    floatCards: Array<{ icon: OrbIcon; title: string; subtitle?: string }>;
   };
-  challenge?: {
-    label?: string;
+  ribbon: string[];
+  audience?: {
+    eyebrow?: string;
     title?: string;
-    items: Array<{ title: string; description?: string; image?: string }>;
+    lead?: string;
+    cards: Array<{ num: string; title: string }>;
   };
-  moreAbout?: {
+  challenges?: {
+    eyebrow?: string;
     title?: string;
-    description?: string;
-    ctaLabel?: string;
-    ctaHref?: string;
-    features: OrderbaseIconCard[];
+    items: Array<{ text: string }>;
+    image?: string;
+    imageAlt?: string;
   };
-  journey?: {
+  opportunity?: {
+    eyebrow?: string;
     title?: string;
-    subtitle?: string;
-    ctaLabel?: string;
-    ctaHref?: string;
-    steps: Array<{ number: string; title: string; description?: string; image?: string }>;
+    lead?: string;
+    cards: Array<{ icon: OrbIcon; title: string; description?: string }>;
   };
-  delivery?: {
+  platform?: {
+    eyebrow?: string;
+    titleLead?: string;
+    titleAccent?: string;
+    lead?: string;
+    categories: Array<{ icon: OrbIcon; label: string }>;
+    handleTitle?: string;
+    handleItems: string[];
+  };
+  showcase?: {
+    eyebrow?: string;
+    titleLead?: string;
+    titleAccent?: string;
+    image?: string;
+    imageAlt?: string;
+    features: Array<{ icon: OrbIcon; title: string; description?: string }>;
+  };
+  core?: {
+    eyebrow?: string;
     title?: string;
-    subtitle?: string;
-    leftCards: OrderbaseIconCard[];
-    rightCards: OrderbaseIconCard[];
+    cards: Array<{ num: string; title: string; description?: string }>;
+  };
+  featureTabs?: {
+    eyebrow?: string;
+    title?: string;
+    lead?: string;
+    tabs: Array<{
+      id: string;
+      label: string;
+      items: Array<{ label: string; infoKey?: string }>;
+    }>;
+  };
+  payments?: {
+    eyebrow?: string;
+    title?: string;
+    lead?: string;
+    features: Array<{ icon: OrbIcon; title: string; description?: string }>;
+    images: Array<{ src: string; alt?: string; slot: "phone" | "credit" | "wallet" }>;
+  };
+  integrations?: {
+    eyebrow?: string;
+    title?: string;
+    cards: Array<{
+      num: string;
+      icon: OrbIcon;
+      title: string;
+      description?: string;
+      chips: string[];
+    }>;
+  };
+  why?: {
+    eyebrow?: string;
+    title?: string;
+    lockupTag?: string;
+    points: Array<{ value: string; suffix?: string; title: string; description?: string }>;
+    banner?: string;
   };
   pricing?: {
+    eyebrow?: string;
     title?: string;
-    subtitle?: string;
-    plans: OrderbasePricingPlan[];
+    lead?: string;
+    plans: OrbPricingPlan[];
+    gmv?: {
+      title?: string;
+      lead?: string;
+      columns: string[];
+      rows: Array<{ cells: string[] }>;
+      footnote?: string;
+    };
+    compare?: {
+      title?: string;
+      columns: Array<{ id: string; name: string; tagline?: string; featured?: boolean }>;
+      groups: Array<{ name: string; rows: OrbCompareRow[] }>;
+      footnote?: string;
+    };
   };
-  sinceFrom?: {
-    pill?: string;
+  contact?: {
+    eyebrow?: string;
     title?: string;
-    description?: string;
-    statsTitle?: string;
-    stats: Array<{ value: string; label?: string }>;
+    lead?: string;
+    methods: Array<{ icon: OrbIcon; label: string; value: string; href: string }>;
+    formTitle?: string;
+    formNote?: string;
+    planOptions: string[];
+    whatsappNumber?: string;
+    submitLabel?: string;
   };
-  readyToOwn?: {
-    title?: string;
-    subtitle?: string;
-    ctaLabel?: string;
-    ctaHref?: string;
+  footer?: {
+    tagline?: string;
+    columns: Array<{ title: string; links: ObLink[] }>;
+    bottomLeft?: string;
+    bottomRight?: string;
   };
 };

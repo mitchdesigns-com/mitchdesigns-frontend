@@ -1,0 +1,189 @@
+/* ============================================================
+   Orderbase landing — scoped animation + a few effects that are
+   impractical as pure Tailwind utilities. Everything visual that
+   Tailwind can express lives inline in the components; this file is
+   only keyframes, the scroll-reveal state machine, and the feature
+   popover chrome. All rules are scoped under [data-ob] so nothing
+   leaks into the rest of the site.
+   ============================================================ */
+
+/* Base resets live in @layer base so Tailwind utilities (text-white, etc.)
+   still win — an unlayered `[data-ob] a { color: inherit }` was overriding
+   utility text colors on the nav links, logo and every anchor button. */
+@layer base {
+[data-ob] {
+  --ob-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  font-family: var(--font-ob-body);
+  color: var(--color-ob-ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+[data-ob] h1,
+[data-ob] h2,
+[data-ob] h3,
+[data-ob] h4,
+[data-ob] h5 {
+  font-family: var(--font-ob-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+[data-ob] p {
+  text-wrap: pretty;
+}
+[data-ob] a {
+  color: inherit;
+  text-decoration: none;
+}
+[data-ob] img {
+  max-width: 100%;
+  display: block;
+}
+[data-ob] ::selection {
+  background: var(--color-ob-red);
+  color: #fff;
+}
+}
+
+/* ---------- scroll reveal ---------- */
+[data-ob] .ob-reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.7s var(--ob-ease),
+    transform 0.7s var(--ob-ease);
+}
+[data-ob] .ob-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+[data-ob] .ob-reveal.d1 {
+  transition-delay: 0.08s;
+}
+[data-ob] .ob-reveal.d2 {
+  transition-delay: 0.16s;
+}
+[data-ob] .ob-reveal.d3 {
+  transition-delay: 0.24s;
+}
+[data-ob] .ob-reveal.d4 {
+  transition-delay: 0.32s;
+}
+/* if JS never runs, never leave content invisible */
+@media (prefers-reduced-motion: reduce) {
+  [data-ob] .ob-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- keyframes ---------- */
+@keyframes ob-marq {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes ob-floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-13px);
+  }
+}
+@keyframes ob-blip {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 90, 77, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 90, 77, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 90, 77, 0);
+  }
+}
+@keyframes ob-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[data-ob] .ob-marquee {
+  animation: ob-marq 26s linear infinite;
+}
+[data-ob] .ob-floaty {
+  animation: ob-floaty 5s ease-in-out infinite;
+}
+[data-ob] .ob-floaty-2 {
+  animation: ob-floaty 5.6s ease-in-out infinite 0.4s;
+}
+[data-ob] .ob-blip {
+  animation: ob-blip 2s infinite;
+}
+[data-ob] .ob-fade {
+  animation: ob-fade 0.4s ease;
+}
+
+/* ---------- 3D icons ---------- */
+[data-ob] .ob-i3d svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* ---------- logo artwork ---------- */
+[data-ob] .ob-logo svg {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+[data-ob] .ob-lockup svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---------- feature explainer popover ---------- */
+[data-ob] .ob-pop {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.16s,
+    transform 0.16s;
+}
+[data-ob] .ob-finfo:hover .ob-pop,
+[data-ob] .ob-finfo:focus-within .ob-pop,
+[data-ob] .ob-pop[data-open="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+[data-ob] .ob-finfo:hover .ob-finfo-label {
+  color: var(--color-ob-red);
+}
+/* small "info" marker after a feature label */
+[data-ob] .ob-info-dot {
+  display: inline-block;
+  margin-left: 6px;
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.15em;
+  background-color: var(--color-ob-red-dark);
+  -webkit-mask: var(--ob-alert) center / contain no-repeat;
+  mask: var(--ob-alert) center / contain no-repeat;
+}
+[data-ob] {
+  --ob-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 16h.01' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M12 13V8' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='12' r='10' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+}
