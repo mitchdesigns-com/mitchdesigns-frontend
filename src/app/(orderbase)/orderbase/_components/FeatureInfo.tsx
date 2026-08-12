@@ -31,7 +31,7 @@ export function FeatureItem({
       <span
         className={`ob-finfo-label text-[0.92rem] transition-colors ${info ? "cursor-help" : ""}`}
       >
-        {label}
+        {field ? <Ed f={field}>{label}</Ed> : label}
         {info && <i className="ob-info-dot" aria-hidden="true" />}
       </span>
 

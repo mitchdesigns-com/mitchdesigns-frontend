@@ -1,19 +1,27 @@
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Section, Eyebrow, SectionTitle } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 
 export function CoreFeatures({
   data,
+  edit,
 }: {
   data: NonNullable<OrderbasePageData["core"]>;
+  edit?: Edit;
 }) {
+  const Ed = makeEd(edit);
   return (
     <Section tone="dark">
       <Reveal className="mb-2 text-center">
-        {data.eyebrow && <Eyebrow>{data.eyebrow}</Eyebrow>}
+        {data.eyebrow && (
+          <Eyebrow>
+            <Ed f="core.eyebrow">{data.eyebrow}</Ed>
+          </Eyebrow>
+        )}
         {data.title && (
           <SectionTitle className="mx-auto mt-[14px] text-white">
-            {data.title}
+            <Ed f="core.title">{data.title}</Ed>
           </SectionTitle>
         )}
       </Reveal>
@@ -25,9 +33,13 @@ export function CoreFeatures({
               <span className="mb-[14px] block font-ob-display text-[0.85rem] font-extrabold text-ob-red-soft">
                 {c.num}
               </span>
-              <h4 className="mb-[7px] text-[1.06rem] text-white">{c.title}</h4>
+              <h4 className="mb-[7px] text-[1.06rem] text-white">
+                <Ed f={`core.cards.${i}.title`}>{c.title}</Ed>
+              </h4>
               {c.description && (
-                <p className="text-[0.9rem] text-[#b6b6bd]">{c.description}</p>
+                <p className="text-[0.9rem] text-[#b6b6bd]">
+                  <Ed f={`core.cards.${i}.description`}>{c.description}</Ed>
+                </p>
               )}
             </div>
           </Reveal>

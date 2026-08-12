@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Section, Eyebrow, SectionTitle, Btn } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 import { OrbIcon } from "../_lib/OrbIcon";
 
 export function Contact({
   data,
+  edit,
 }: {
   data: NonNullable<OrderbasePageData["contact"]>;
+  edit?: Edit;
 }) {
+  const Ed = makeEd(edit);
   const [form, setForm] = useState({
     name: "",
     brand: "",
@@ -42,18 +46,24 @@ export function Contact({
     <Section id="contact" tone="dark">
       <div className="grid items-center gap-[54px] md:grid-cols-2">
         <Reveal>
-          {data.eyebrow && <Eyebrow>{data.eyebrow}</Eyebrow>}
+          {data.eyebrow && (
+            <Eyebrow>
+              <Ed f="contact.eyebrow">{data.eyebrow}</Ed>
+            </Eyebrow>
+          )}
           {data.title && (
-            <SectionTitle className="mt-[14px] text-white">{data.title}</SectionTitle>
+            <SectionTitle className="mt-[14px] text-white">
+              <Ed f="contact.title">{data.title}</Ed>
+            </SectionTitle>
           )}
           {data.lead && (
             <p className="mt-4 max-w-[60ch] text-[clamp(1.02rem,1.6vw,1.18rem)] text-[#c2c2c9]">
-              {data.lead}
+              <Ed f="contact.lead">{data.lead}</Ed>
             </p>
           )}
 
           <div className="mt-[30px] flex flex-col gap-[13px]">
-            {data.methods.map((m) => (
+            {data.methods.map((m, i) => (
               <a
                 key={m.label}
                 href={m.href}
@@ -66,7 +76,9 @@ export function Contact({
                 </span>
                 <span className="block">
                   <small className="block text-[0.76rem] text-[#9a9aa2]">{m.label}</small>
-                  <b className="font-ob-display text-[1rem]">{m.value}</b>
+                  <b className="font-ob-display text-[1rem]">
+                    <Ed f={`contact.methods.${i}.value`}>{m.value}</Ed>
+                  </b>
                 </span>
               </a>
             ))}
@@ -78,9 +90,15 @@ export function Contact({
             onSubmit={onSubmit}
             className="rounded-[24px] bg-white p-[34px] text-ob-ink shadow-ob"
           >
-            {data.formTitle && <h3 className="mb-[6px] text-[1.35rem]">{data.formTitle}</h3>}
+            {data.formTitle && (
+              <h3 className="mb-[6px] text-[1.35rem]">
+                <Ed f="contact.formTitle">{data.formTitle}</Ed>
+              </h3>
+            )}
             {data.formNote && (
-              <p className="mb-[22px] text-[0.9rem] text-ob-muted">{data.formNote}</p>
+              <p className="mb-[22px] text-[0.9rem] text-ob-muted">
+                <Ed f="contact.formNote">{data.formNote}</Ed>
+              </p>
             )}
 
             <Label text="Your name">
@@ -133,7 +151,9 @@ export function Contact({
             </Label>
 
             <Btn variant="red" type="submit" className="mt-[6px] w-full">
-              {data.submitLabel ?? "Send via WhatsApp"}
+              <Ed f="contact.submitLabel">
+                {data.submitLabel ?? "Send via WhatsApp"}
+              </Ed>
             </Btn>
           </form>
         </Reveal>
