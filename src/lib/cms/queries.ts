@@ -524,32 +524,43 @@ export const getOrderbasePage = async (
         }
       : undefined;
 
-  try {
-    const raw = await getSingle<Record<string, any>>("/orderbase-page", {
-      revalidate: opts.draft ? 0 : 300,
-      query: {
-        ...(opts.draft ? { status: "draft" } : {}),
-        "populate[nav][populate]": "*",
-        "populate[hero][populate]": "*",
-        "populate[audience][populate]": "*",
-        "populate[challenges][populate]": "*",
-        "populate[opportunity][populate]": "*",
-        "populate[platform][populate]": "*",
-        "populate[showcase][populate]": "*",
-        "populate[core][populate]": "*",
-        "populate[featureTabs][populate][tabs][populate]": "*",
-        "populate[payments][populate]": "*",
-        "populate[integrations][populate][cards][populate]": "*",
-        "populate[why][populate]": "*",
-        "populate[ribbon]": "true",
-        "populate[pricing][populate][plans][populate]": "*",
-        "populate[pricing][populate][gmv][populate]": "*",
-        "populate[pricing][populate][compare][populate][columns]": "true",
-        "populate[pricing][populate][compare][populate][groups][populate][rows]": "true",
-        "populate[contact][populate]": "*",
-        "populate[footer][populate][columns][populate]": "*",
-      },
+  const populate = {
+    "populate[nav][populate]": "*",
+    "populate[hero][populate]": "*",
+    "populate[audience][populate]": "*",
+    "populate[challenges][populate]": "*",
+    "populate[opportunity][populate]": "*",
+    "populate[platform][populate]": "*",
+    "populate[showcase][populate]": "*",
+    "populate[core][populate]": "*",
+    "populate[featureTabs][populate][tabs][populate]": "*",
+    "populate[payments][populate]": "*",
+    "populate[integrations][populate][cards][populate]": "*",
+    "populate[why][populate]": "*",
+    "populate[ribbon]": "true",
+    "populate[pricing][populate][plans][populate]": "*",
+    "populate[pricing][populate][gmv][populate]": "*",
+    "populate[pricing][populate][compare][populate][columns]": "true",
+    "populate[pricing][populate][compare][populate][groups][populate][rows]": "true",
+    "populate[contact][populate]": "*",
+    "populate[footer][populate][columns][populate]": "*",
+  };
+  const fetchOb = (draft: boolean) =>
+    getSingle<Record<string, any>>("/orderbase-page", {
+      revalidate: draft ? 0 : 300,
+      query: { ...(draft ? { status: "draft" } : {}), ...populate },
     });
+
+  try {
+    let raw: Record<string, any> | null;
+    try {
+      raw = await fetchOb(Boolean(opts.draft));
+    } catch (e) {
+      // A read-only token can't read drafts — fall back to published so edit
+      // mode still gets the documentId (edits write to draft regardless).
+      if (opts.draft) raw = await fetchOb(false);
+      else throw e;
+    }
     if (!raw || !(raw.hero || raw.pricing)) return fx;
 
     // Every section falls back to its fixture when the CMS field is empty, so a
