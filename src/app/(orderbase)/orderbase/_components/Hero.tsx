@@ -1,10 +1,18 @@
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Container, Btn, Img } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 import { Counter } from "../_lib/Counter";
 import { OrbIcon } from "../_lib/OrbIcon";
 
-export function Hero({ data }: { data: NonNullable<OrderbasePageData["hero"]> }) {
+export function Hero({
+  data,
+  edit,
+}: {
+  data: NonNullable<OrderbasePageData["hero"]>;
+  edit?: Edit;
+}) {
+  const Ed = makeEd(edit);
   return (
     <header
       id="top"
@@ -25,34 +33,38 @@ export function Hero({ data }: { data: NonNullable<OrderbasePageData["hero"]> })
             {data.pill && (
               <span className="mb-[14px] inline-flex items-center gap-[9px] rounded-full border border-white/[0.18] bg-white/[0.08] px-[15px] py-[7px] text-[0.82rem] font-semibold">
                 <span className="ob-blip size-2 rounded-full bg-ob-red-soft" />
-                {data.pill}
+                <Ed f="hero.pill">{data.pill}</Ed>
               </span>
             )}
             <h1 className="text-[clamp(2.5rem,5.6vw,4.35rem)] tracking-[-0.03em]">
-              {data.titleLead}
-              {data.titleAccent && <span className="text-ob-red">{data.titleAccent}</span>}
-              {data.titleTail}
+              <Ed f="hero.titleLead">{data.titleLead}</Ed>
+              {data.titleAccent && (
+                <Ed as="span" className="text-ob-red" f="hero.titleAccent">
+                  {data.titleAccent}
+                </Ed>
+              )}
+              {data.titleTail && <Ed f="hero.titleTail">{data.titleTail}</Ed>}
             </h1>
             {data.subtitle && (
               <p className="my-[22px] mb-8 max-w-[46ch] text-[1.15rem] text-[#c9c9cf]">
-                {data.subtitle}
+                <Ed f="hero.subtitle">{data.subtitle}</Ed>
               </p>
             )}
             <div className="flex flex-wrap gap-[14px] max-sm:flex-col max-sm:items-stretch">
               {data.primaryCta && (
                 <Btn variant="red" href={data.primaryCta.href}>
-                  {data.primaryCta.label}
+                  <Ed f="hero.primaryCta.label">{data.primaryCta.label}</Ed>
                 </Btn>
               )}
               {data.secondaryCta && (
                 <Btn variant="ghost" href={data.secondaryCta.href}>
-                  {data.secondaryCta.label}
+                  <Ed f="hero.secondaryCta.label">{data.secondaryCta.label}</Ed>
                 </Btn>
               )}
             </div>
 
             <div className="mt-[54px] flex flex-wrap gap-[26px] border-t border-white/[0.12] pb-[56px] pt-[30px] sm:gap-[42px]">
-              {data.stats.map((s) => (
+              {data.stats.map((s, i) => (
                 <div key={s.label}>
                   <div className="font-ob-display text-[2.3rem] font-extrabold text-white">
                     <Counter
@@ -62,7 +74,7 @@ export function Hero({ data }: { data: NonNullable<OrderbasePageData["hero"]> })
                     />
                   </div>
                   <div className="max-w-[18ch] text-[0.86rem] text-[#a9a9b2]">
-                    {s.label}
+                    <Ed f={`hero.stats.${i}.label`}>{s.label}</Ed>
                   </div>
                 </div>
               ))}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { FEAT_INFO } from "../_lib/featInfo";
 import { ObCheck } from "./ui";
 
@@ -19,7 +20,8 @@ function Cell({ value }: { value: boolean | string }) {
   return <span className="h-[2px] w-[22px] rounded bg-[#cfcfd4]" />;
 }
 
-export function CompareTable({ data }: { data: Compare }) {
+export function CompareTable({ data, edit }: { data: Compare; edit?: Edit }) {
+  const Ed = makeEd(edit);
   const cols = data.columns;
   const [sel, setSel] = useState(cols[0]?.id);
 
@@ -32,7 +34,9 @@ export function CompareTable({ data }: { data: Compare }) {
     <div>
       {data.title && (
         <div className="mt-[74px] text-center">
-          <h3 className="text-[clamp(1.5rem,3vw,2rem)]">{data.title}</h3>
+          <h3 className="text-[clamp(1.5rem,3vw,2rem)]">
+            <Ed f="pricing.compare.title">{data.title}</Ed>
+          </h3>
         </div>
       )}
 
@@ -58,19 +62,21 @@ export function CompareTable({ data }: { data: Compare }) {
         {/* header */}
         <div className={`${rowGrid} bg-ob-ink text-white`}>
           <div className="p-[18px]" />
-          {cols.map((c) => (
+          {cols.map((c, ci) => (
             <div
               key={c.id}
               className={`${cellVis(c.id)} flex-col items-center gap-[2px] border-l border-white/10 p-[18px] text-center ${
                 c.featured ? "bg-ob-red" : ""
               }`}
             >
-              <b className="font-ob-display text-[1.05rem]">{c.name}</b>
+              <b className="font-ob-display text-[1.05rem]">
+                <Ed f={`pricing.compare.columns.${ci}.name`}>{c.name}</Ed>
+              </b>
               {c.tagline && (
                 <span
                   className={`text-[0.74rem] ${c.featured ? "text-[#ffd9d6]" : "text-[#a9a9b2]"}`}
                 >
-                  {c.tagline}
+                  <Ed f={`pricing.compare.columns.${ci}.tagline`}>{c.tagline}</Ed>
                 </span>
               )}
             </div>
@@ -78,12 +84,12 @@ export function CompareTable({ data }: { data: Compare }) {
         </div>
 
         {/* groups */}
-        {data.groups.map((g) => (
+        {data.groups.map((g, gi) => (
           <div key={g.name}>
             <div className="border-t-2 border-ob-red bg-ob-mist-2 px-[18px] py-3 font-ob-display text-[0.66rem] font-extrabold uppercase tracking-[0.13em] text-ob-ink">
-              {g.name}
+              <Ed f={`pricing.compare.groups.${gi}.name`}>{g.name}</Ed>
             </div>
-            {g.rows.map((r) => {
+            {g.rows.map((r, ri) => {
               const info = r.key ? FEAT_INFO[r.key] : undefined;
               return (
                 <div
@@ -94,7 +100,9 @@ export function CompareTable({ data }: { data: Compare }) {
                     className="flex items-center border-l-0 p-[13px] text-left text-[0.9rem] font-semibold"
                     title={info?.w}
                   >
-                    {r.label}
+                    <Ed f={`pricing.compare.groups.${gi}.rows.${ri}.label`}>
+                      {r.label}
+                    </Ed>
                     {info && <i className="ob-info-dot" aria-hidden="true" />}
                   </div>
                   {cols.map((c, i) => (
@@ -116,7 +124,7 @@ export function CompareTable({ data }: { data: Compare }) {
 
       {data.footnote && (
         <p className="mt-[18px] text-center text-[0.84rem] text-ob-muted">
-          {data.footnote}
+          <Ed f="pricing.compare.footnote">{data.footnote}</Ed>
         </p>
       )}
     </div>
