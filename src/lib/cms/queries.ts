@@ -471,10 +471,55 @@ export const getHomePage = async (): Promise<HomePageData> => {
 export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
   const { fixtureOrderbasePage: fx } = await import("./fixtures");
   const mUrl = (m: any) => (m ? (strapiMedia(m?.url) ?? m?.url) : undefined);
-  // json/repeatable string arrays -> string[]
+  // repeatable {label} components (or raw string arrays) -> string[]
   const strs = (v: any): string[] | undefined =>
     Array.isArray(v)
       ? v.map((x) => (typeof x === "string" ? x : (x?.value ?? x?.label ?? x?.word ?? "")))
+      : undefined;
+  // compare-cell "yes"/"no"/free-text -> boolean | string
+  const cell = (v: any): boolean | string => {
+    if (v == null || v === "") return false;
+    const s = String(v).trim().toLowerCase();
+    if (["yes", "true", "y", "✓"].includes(s)) return true;
+    if (["no", "false", "n", "-", "—"].includes(s)) return false;
+    return v;
+  };
+  // gmv-table component -> { columns[], rows[{cells[]}] } render shape
+  const mapGmv = (g: any) =>
+    g && g.rows?.length && "gmv" in g.rows[0]
+      ? {
+          title: g.title ?? undefined,
+          lead: g.lead ?? undefined,
+          footnote: g.footnote ?? undefined,
+          columns: [g.colGmv, g.colStandard, g.colPro, g.colElite].filter(
+            (x) => x != null && x !== "",
+          ),
+          rows: g.rows.map((r: any) => ({
+            cells: [r.gmv, r.standard, r.pro, r.elite],
+          })),
+        }
+      : undefined;
+  // compare-table component -> { columns[], groups[{rows[{values[]}]}] } render shape
+  const mapCompare = (c: any) =>
+    c && c.groups?.length && c.groups[0]?.rows?.length && "standard" in c.groups[0].rows[0]
+      ? {
+          title: c.title ?? undefined,
+          footnote: c.footnote ?? undefined,
+          columns: (c.columns ?? []).map((col: any) => ({
+            id: col.colId,
+            name: col.name,
+            tagline: col.tagline ?? undefined,
+            featured: col.featured ?? undefined,
+          })),
+          groups: c.groups.map((g: any) => ({
+            name: g.name,
+            rows: (g.rows ?? []).map((r: any) => ({
+              label: r.label,
+              key: r.infoKey ?? undefined,
+              values: [cell(r.standard), cell(r.pro), cell(r.elite), cell(r.custom)],
+            })),
+          })),
+        }
       : undefined;
 
   try {
@@ -491,9 +536,13 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
         "populate[core][populate]": "*",
         "populate[featureTabs][populate][tabs][populate]": "*",
         "populate[payments][populate]": "*",
-        "populate[integrations][populate]": "*",
+        "populate[integrations][populate][cards][populate]": "*",
         "populate[why][populate]": "*",
+        "populate[ribbon]": "true",
         "populate[pricing][populate][plans][populate]": "*",
+        "populate[pricing][populate][gmv][populate]": "*",
+        "populate[pricing][populate][compare][populate][columns]": "true",
+        "populate[pricing][populate][compare][populate][groups][populate][rows]": "true",
         "populate[contact][populate]": "*",
         "populate[footer][populate][columns][populate]": "*",
       },
@@ -564,9 +613,9 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
                 priceRows: p.priceRows ?? [],
               }))
             : (fx.pricing?.plans ?? []),
-          // gmv + compare are json fields (complex tables) — used as-is
-          gmv: raw.pricing.gmv ?? fx.pricing?.gmv,
-          compare: raw.pricing.compare ?? fx.pricing?.compare,
+          // gmv + compare are components — transformed back to the render shape
+          gmv: mapGmv(raw.pricing.gmv) ?? fx.pricing?.gmv,
+          compare: mapCompare(raw.pricing.compare) ?? fx.pricing?.compare,
         }
       : fx.pricing;
 
