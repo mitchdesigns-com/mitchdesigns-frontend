@@ -468,7 +468,9 @@ export const getHomePage = async (): Promise<HomePageData> => {
 /* ------------------------------------------------------------------
  * Orderbase Page (single type)
  * ------------------------------------------------------------------ */
-export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
+export const getOrderbasePage = async (
+  opts: { draft?: boolean } = {},
+): Promise<OrderbasePageData> => {
   const { fixtureOrderbasePage: fx } = await import("./fixtures");
   const mUrl = (m: any) => (m ? (strapiMedia(m?.url) ?? m?.url) : undefined);
   // json/repeatable string arrays -> string[]
@@ -479,8 +481,9 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
 
   try {
     const raw = await getSingle<Record<string, any>>("/orderbase-page", {
-      revalidate: 300,
+      revalidate: opts.draft ? 0 : 300,
       query: {
+        ...(opts.draft ? { status: "draft" } : {}),
         "populate[nav][populate]": "*",
         "populate[hero][populate]": "*",
         "populate[audience][populate]": "*",
@@ -571,6 +574,7 @@ export const getOrderbasePage = async (): Promise<OrderbasePageData> => {
       : fx.pricing;
 
     return {
+      documentId: raw.documentId,
       meta: raw.meta ?? fx.meta,
       nav: raw.nav ?? fx.nav,
       hero,

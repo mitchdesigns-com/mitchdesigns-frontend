@@ -595,6 +595,8 @@ export type OrbCompareRow = {
 };
 
 export type OrderbasePageData = {
+  /** Strapi documentId — needed by the front-edit overlay to target this entry. */
+  documentId?: string;
   meta?: { title?: string; description?: string };
   nav?: {
     links: ObLink[];
