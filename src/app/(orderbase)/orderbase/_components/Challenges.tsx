@@ -1,20 +1,28 @@
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Section, Eyebrow, SectionTitle, Img } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 
 export function Challenges({
   data,
+  edit,
 }: {
   data: NonNullable<OrderbasePageData["challenges"]>;
+  edit?: Edit;
 }) {
+  const Ed = makeEd(edit);
   return (
     <Section id="challenges" tone="dark">
       <div className="grid items-center gap-14 md:grid-cols-[1.1fr_1fr]">
         <Reveal>
-          {data.eyebrow && <Eyebrow>{data.eyebrow}</Eyebrow>}
+          {data.eyebrow && (
+            <Eyebrow>
+              <Ed f="challenges.eyebrow">{data.eyebrow}</Ed>
+            </Eyebrow>
+          )}
           {data.title && (
             <SectionTitle className="my-[14px] mb-5 text-white">
-              {data.title}
+              <Ed f="challenges.title">{data.title}</Ed>
             </SectionTitle>
           )}
           <div className="flex flex-col gap-[10px]">
@@ -26,7 +34,9 @@ export function Challenges({
                 <span className="grid size-[30px] flex-none place-items-center rounded-[9px] bg-ob-red/[0.18] font-ob-display font-extrabold text-ob-red-soft">
                   {i + 1}
                 </span>
-                <p className="text-[0.98rem] text-[#d4d4d9]">{it.text}</p>
+                <p className="text-[0.98rem] text-[#d4d4d9]">
+                  <Ed f={`challenges.items.${i}.text`}>{it.text}</Ed>
+                </p>
               </div>
             ))}
           </div>

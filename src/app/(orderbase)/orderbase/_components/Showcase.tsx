@@ -1,13 +1,17 @@
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Section, Eyebrow, SectionTitle, Img } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 import { OrbIcon } from "../_lib/OrbIcon";
 
 export function Showcase({
   data,
+  edit,
 }: {
   data: NonNullable<OrderbasePageData["showcase"]>;
+  edit?: Edit;
 }) {
+  const Ed = makeEd(edit);
   return (
     <Section tone="showcase">
       <div className="grid items-center gap-14 md:grid-cols-[1.55fr_1fr]">
@@ -26,23 +30,23 @@ export function Showcase({
         </Reveal>
 
         <Reveal delay="d2">
-          {data.eyebrow && <Eyebrow>{data.eyebrow}</Eyebrow>}
+          {data.eyebrow && <Eyebrow><Ed f="showcase.eyebrow">{data.eyebrow}</Ed></Eyebrow>}
           {(data.titleLead || data.titleAccent) && (
             <SectionTitle className="my-[14px] mb-[26px]">
-              {data.titleLead}
-              {data.titleAccent && <span className="text-ob-red">{data.titleAccent}</span>}
+              <Ed f="showcase.titleLead">{data.titleLead}</Ed>
+              {data.titleAccent && <Ed as="span" className="text-ob-red" f="showcase.titleAccent">{data.titleAccent}</Ed>}
             </SectionTitle>
           )}
           <div className="flex flex-col gap-[18px]">
-            {data.features.map((f) => (
+            {data.features.map((f, i) => (
               <div key={f.title} className="group flex items-start gap-[15px]">
                 <span className="grid size-[56px] flex-none place-items-center rounded-[13px] border border-ob-line bg-white text-ob-red transition-transform duration-300 group-hover:-rotate-6">
                   <OrbIcon name={f.icon} className="size-[38px]" />
                 </span>
                 <div>
-                  <h4 className="mb-[3px] text-[1.02rem]">{f.title}</h4>
+                  <h4 className="mb-[3px] text-[1.02rem]"><Ed f={`showcase.features.${i}.title`}>{f.title}</Ed></h4>
                   {f.description && (
-                    <p className="text-[0.9rem] text-ob-muted">{f.description}</p>
+                    <p className="text-[0.9rem] text-ob-muted"><Ed f={`showcase.features.${i}.description`}>{f.description}</Ed></p>
                   )}
                 </div>
               </div>

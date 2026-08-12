@@ -1,20 +1,34 @@
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Section, Eyebrow, SectionTitle, Lead } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 
 export function Audience({
   data,
+  edit,
 }: {
   data: NonNullable<OrderbasePageData["audience"]>;
+  edit?: Edit;
 }) {
+  const Ed = makeEd(edit);
   return (
     <Section>
       <Reveal className="mb-[50px] text-center">
-        {data.eyebrow && <Eyebrow>{data.eyebrow}</Eyebrow>}
-        {data.title && (
-          <SectionTitle className="mx-auto mt-[14px]">{data.title}</SectionTitle>
+        {data.eyebrow && (
+          <Eyebrow>
+            <Ed f="audience.eyebrow">{data.eyebrow}</Ed>
+          </Eyebrow>
         )}
-        {data.lead && <Lead className="mx-auto mt-4">{data.lead}</Lead>}
+        {data.title && (
+          <SectionTitle className="mx-auto mt-[14px]">
+            <Ed f="audience.title">{data.title}</Ed>
+          </SectionTitle>
+        )}
+        {data.lead && (
+          <Lead className="mx-auto mt-4">
+            <Ed f="audience.lead">{data.lead}</Ed>
+          </Lead>
+        )}
       </Reveal>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -24,7 +38,9 @@ export function Audience({
               <div className="mb-4 grid size-[42px] place-items-center rounded-[12px] bg-white font-ob-display text-[0.9rem] font-extrabold text-ob-red shadow-ob-sm transition-colors group-hover:bg-ob-red group-hover:text-white">
                 {c.num}
               </div>
-              <h4 className="text-[1.06rem]">{c.title}</h4>
+              <h4 className="text-[1.06rem]">
+                <Ed f={`audience.cards.${i}.title`}>{c.title}</Ed>
+              </h4>
             </div>
           </Reveal>
         ))}

@@ -41,19 +41,19 @@ export default async function OrderbasePage() {
       {data.nav && <OrderbaseNav nav={data.nav} />}
       {data.hero && <Hero data={data.hero} edit={edit} />}
       {data.ribbon?.length > 0 && <Ribbon words={data.ribbon} />}
-      {data.audience && <Audience data={data.audience} />}
-      {data.challenges && <Challenges data={data.challenges} />}
-      {data.opportunity && <Opportunity data={data.opportunity} />}
-      {data.platform && <Platform data={data.platform} />}
-      {data.showcase && <Showcase data={data.showcase} />}
-      {data.core && <CoreFeatures data={data.core} />}
-      {data.featureTabs && <FeatureTabs data={data.featureTabs} />}
-      {data.payments && <Payments data={data.payments} />}
-      {data.integrations && <Integrations data={data.integrations} />}
-      {data.why && <WhyMitch data={data.why} />}
+      {data.audience && <Audience data={data.audience} edit={edit} />}
+      {data.challenges && <Challenges data={data.challenges} edit={edit} />}
+      {data.opportunity && <Opportunity data={data.opportunity} edit={edit} />}
+      {data.platform && <Platform data={data.platform} edit={edit} />}
+      {data.showcase && <Showcase data={data.showcase} edit={edit} />}
+      {data.core && <CoreFeatures data={data.core} edit={edit} />}
+      {data.featureTabs && <FeatureTabs data={data.featureTabs} edit={edit} />}
+      {data.payments && <Payments data={data.payments} edit={edit} />}
+      {data.integrations && <Integrations data={data.integrations} edit={edit} />}
+      {data.why && <WhyMitch data={data.why} edit={edit} />}
       {data.pricing && <Pricing data={data.pricing} edit={edit} />}
-      {data.contact && <Contact data={data.contact} />}
-      {data.footer && <Footer data={data.footer} />}
+      {data.contact && <Contact data={data.contact} edit={edit} />}
+      {data.footer && <Footer data={data.footer} edit={edit} />}
       {editMode && strapi && (
         <script src={`${strapi}/api/front-edit/overlay.js`} defer />
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { FEAT_INFO } from "../_lib/featInfo";
+import { makeEd, type Edit } from "../_lib/edit";
 import { ObCheck } from "./ui";
 
 const ROWS: Array<[keyof (typeof FEAT_INFO)[string], string]> = [
@@ -17,10 +18,15 @@ const ROWS: Array<[keyof (typeof FEAT_INFO)[string], string]> = [
 export function FeatureItem({
   label,
   infoKey,
+  edit,
+  field,
 }: {
   label: string;
   infoKey?: string;
+  edit?: Edit;
+  field?: string;
 }) {
+  const Ed = makeEd(edit);
   const info = infoKey ? FEAT_INFO[infoKey] : undefined;
 
   return (
@@ -31,7 +37,7 @@ export function FeatureItem({
       <span
         className={`ob-finfo-label text-[0.92rem] transition-colors ${info ? "cursor-help" : ""}`}
       >
-        {label}
+        {field ? <Ed f={field}>{label}</Ed> : label}
         {info && <i className="ob-info-dot" aria-hidden="true" />}
       </span>
 

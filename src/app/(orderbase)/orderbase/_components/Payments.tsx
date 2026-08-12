@@ -1,4 +1,5 @@
 import type { OrderbasePageData } from "@/lib/cms/types";
+import { makeEd, type Edit } from "../_lib/edit";
 import { Section, Eyebrow, SectionTitle, Lead, Img } from "./ui";
 import { Reveal } from "../_lib/Reveal";
 import { OrbIcon } from "../_lib/OrbIcon";
@@ -14,30 +15,33 @@ const SLOT: Record<string, string> = {
 
 export function Payments({
   data,
+  edit,
 }: {
   data: NonNullable<OrderbasePageData["payments"]>;
+  edit?: Edit;
 }) {
+  const Ed = makeEd(edit);
   return (
     <Section id="payments">
       <div className="grid items-center gap-14 md:grid-cols-[1.1fr_.9fr]">
         <Reveal className="order-2 md:order-1">
-          {data.eyebrow && <Eyebrow>{data.eyebrow}</Eyebrow>}
+          {data.eyebrow && <Eyebrow><Ed f="payments.eyebrow">{data.eyebrow}</Ed></Eyebrow>}
           {data.title && (
-            <SectionTitle className="my-[14px] mb-4">{data.title}</SectionTitle>
+            <SectionTitle className="my-[14px] mb-4"><Ed f="payments.title">{data.title}</Ed></SectionTitle>
           )}
-          {data.lead && <Lead className="mb-[6px]">{data.lead}</Lead>}
+          {data.lead && <Lead className="mb-[6px]"><Ed f="payments.lead">{data.lead}</Ed></Lead>}
 
           <div className="mt-[30px] flex flex-col gap-[22px]">
-            {data.features.map((f) => (
+            {data.features.map((f, i) => (
               <div key={f.title} className="group flex items-start gap-4">
                 <OrbIcon
                   name={f.icon}
                   className="size-[56px] flex-none transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-[1.05]"
                 />
                 <div>
-                  <h4 className="mb-[3px] text-[1.05rem]">{f.title}</h4>
+                  <h4 className="mb-[3px] text-[1.05rem]"><Ed f={`payments.features.${i}.title`}>{f.title}</Ed></h4>
                   {f.description && (
-                    <p className="text-[0.9rem] text-ob-muted">{f.description}</p>
+                    <p className="text-[0.9rem] text-ob-muted"><Ed f={`payments.features.${i}.description`}>{f.description}</Ed></p>
                   )}
                 </div>
               </div>
