@@ -37,7 +37,7 @@ export function makeEd(edit?: Edit): Ed {
         documentId={edit?.documentId}
         field={f}
         editMode={Boolean(edit?.mode)}
-        shared
+        shared={false}
         {...rest}
       >
         {children}
