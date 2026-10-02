@@ -18,6 +18,9 @@ type HeaderConfigValue = {
   ctaInView: boolean;
   /** CTA sentinels report their viewport visibility here, keyed by a stable id. */
   reportCtaInView: (id: string, visible: boolean) => void;
+  /** True while a hero plays full-screen — site chrome (header, floating CTAs) steps aside. */
+  immersive: boolean;
+  setImmersive: (v: boolean) => void;
 };
 
 export const HeaderConfigContext = createContext<HeaderConfigValue>({
@@ -27,12 +30,15 @@ export const HeaderConfigContext = createContext<HeaderConfigValue>({
   setShowCta: () => {},
   ctaInView: false,
   reportCtaInView: () => {},
+  immersive: false,
+  setImmersive: () => {},
 });
 
 export function HeaderConfigProvider({ children }: { children: React.ReactNode }) {
   const [sticky, setSticky] = useState(true);
   const [showCta, setShowCta] = useState(true);
   const [ctaInView, setCtaInView] = useState(false);
+  const [immersive, setImmersive] = useState(false);
   // Ref-counted set of on-screen CTAs — the header hides its own CTA while any
   // page-level CTA is visible, so we track them all rather than a single flag.
   const visibleCtas = useRef<Set<string>>(new Set());
@@ -53,6 +59,8 @@ export function HeaderConfigProvider({ children }: { children: React.ReactNode }
         setShowCta,
         ctaInView,
         reportCtaInView,
+        immersive,
+        setImmersive,
       }}
     >
       {children}

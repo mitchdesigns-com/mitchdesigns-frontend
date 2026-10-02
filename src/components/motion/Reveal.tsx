@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type UseInViewOptions } from "framer-motion";
 import { fadeUp, EASE_LUXE } from "./variants";
 import { useReveal } from "./useReveal";
 
@@ -13,6 +13,9 @@ type Props = {
    *  above-the-fold content that is already visible on first paint — the
    *  shared scroll trigger (margin: "-40% 0px") otherwise never fires for it. */
   immediate?: boolean;
+  /** Override the shared trigger (e.g. content sitting near the top of a
+   *  full-screen section never crosses the default mid-screen band). */
+  viewport?: UseInViewOptions;
 };
 
 export function Reveal({
@@ -21,8 +24,9 @@ export function Reveal({
   delay = 0,
   duration = 0.8,
   immediate = false,
+  viewport,
 }: Props) {
-  const { ref, inView } = useReveal();
+  const { ref, inView } = useReveal(viewport);
   const reduced = useReducedMotion();
 
   return (

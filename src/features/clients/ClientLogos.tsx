@@ -20,11 +20,13 @@ const fallbackLogos: LogoEntry[] = fixtureClientLogos.map((item) => ({
 
 const GRID_SIZE = 15;
 
-const HALF_DURATION = 0.55;
+const HALF_DURATION = 0.35;
 const EASE_IN: [number, number, number, number] = [0.65, 0, 1, 0];
 const EASE_OUT: [number, number, number, number] = [0, 0, 0.35, 1];
-const MIN_DELAY = 2000;
-const MAX_DELAY = 4500;
+const MIN_DELAY = 1000;
+const MAX_DELAY = 2600;
+// Only one card flips at a time across the grid.
+const MAX_ACTIVE = 1;
 
 function pickNext(pool: LogoEntry[], exclude: LogoEntry): LogoEntry {
   const candidates = pool.length > 1 ? pool.filter((l) => l !== exclude) : pool;
@@ -35,7 +37,7 @@ function buildInitial(pool: LogoEntry[]): LogoEntry[] {
   return Array.from({ length: GRID_SIZE }, (_, i) => pool[i % pool.length]!);
 }
 
-let activeCard: number | null = null;
+const activeCards = new Set<number>();
 
 function LogoCard({
   pool,
@@ -61,12 +63,12 @@ function LogoCard({
     const tryFlip = () => {
       if (!mountedRef.current) return;
 
-      if (activeCard !== null) {
-        timeoutRef.current = setTimeout(tryFlip, 250);
+      if (activeCards.size >= MAX_ACTIVE) {
+        timeoutRef.current = setTimeout(tryFlip, 150);
         return;
       }
 
-      activeCard = cardId;
+      activeCards.add(cardId);
 
       animate(rotY, 90, {
         duration: HALF_DURATION,
@@ -83,7 +85,7 @@ function LogoCard({
             ease: EASE_OUT,
             onComplete() {
               if (!mountedRef.current) return;
-              activeCard = null;
+              activeCards.delete(cardId);
               timeoutRef.current = setTimeout(tryFlip, getRandomDelay());
             },
           });
@@ -96,7 +98,7 @@ function LogoCard({
     return () => {
       mountedRef.current = false;
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (activeCard === cardId) activeCard = null;
+      activeCards.delete(cardId);
     };
   }, [cardId, pool, rotY]);
 

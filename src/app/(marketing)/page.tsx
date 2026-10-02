@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HeaderConfig } from "@/context/HeaderConfigContext";
-import { CreativeHero } from "@/features/hero";
+import { HeroReveal, VideoHero } from "@/features/hero";
 import { AboutSection } from "@/features/about";
 import { ClientLogos } from "@/features/clients";
 import { ClientsTrustFetcher } from "@/features/ClientsTrust";
@@ -12,7 +12,6 @@ import { TalksSection } from "@/features/talks";
 import { CTABanner } from "@/features/cta";
 import { FAQSection } from "@/features/faqs";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { V2FloatButton } from "@/features/v2/V2FloatButton";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -142,35 +141,34 @@ export default async function HomePage() {
     <>
       <JsonLd data={homeGraph} />
       <HeaderConfig sticky={false} />
-      <CreativeHero {...home.hero} cards={home.heroCards} />
+      <HeroReveal hero={<VideoHero {...home.hero} />}>
+        <AboutSection {...home.about} />
 
-      <AboutSection {...home.about} />
+        <ClientLogos logos={home.clientLogos} />
 
-      <ClientLogos logos={home.clientLogos} />
+        <FeaturedProjects caseStudies={caseStudies} theme="dark" />
 
-      <FeaturedProjects caseStudies={caseStudies} theme="dark" />
+        <OurServices services={services} />
 
-      <OurServices services={services} />
+        <TestimonialMarqueeFetcher />
 
-      <TestimonialMarqueeFetcher />
+        <TechStackFetcher />
 
-      <TechStackFetcher />
+        <TalksSection talks={talks} />
 
-      <TalksSection talks={talks} />
+        <FAQSection
+          faqs={faqs}
+          title={home.faqHeading ?? "Got Questions?"}
+          description={
+            home.faqDescription ??
+            "We've answered the most common ones to help you understand how we work and what to expect."
+          }
+          defaultCategory="Corporate Websites"
+        />
 
-      <FAQSection
-        faqs={faqs}
-        title={home.faqHeading ?? "Got Questions?"}
-        description={
-          home.faqDescription ??
-          "We've answered the most common ones to help you understand how we work and what to expect."
-        }
-        defaultCategory="Corporate Websites"
-      />
-
-      <ClientsTrustFetcher />
-      <CTABanner {...ctaBanner} />
-      <V2FloatButton />
+        <ClientsTrustFetcher />
+        <CTABanner {...ctaBanner} />
+      </HeroReveal>
     </>
   );
 }

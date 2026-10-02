@@ -1,21 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/motion";
-import { DragCursor } from "@/components/icons/DragCursor";
-import { ArrowRight } from "@/components/icons/ArrowRight";
 import type { CaseStudy } from "@/lib/cms/types";
+import { LiquidCursor } from "@/components/ui/LiquidCursor";
 
 const DRAG_THRESHOLD = 50;
 
 // ── Layout constants (px, based on design at ~1512px) ──────────────────────
 const CENTER_W = 928; // 58rem
 const SIDE_W = 560; // 35rem
-const GAP = 24; // 1.5rem
+const GAP = 120; // layout gap; the 3D turn pulls side cards ~60px inwards, leaving ~60px visible
 const CARD_AR = 911 / 800; // image width / height
 const META_H = 120; // title + year row below the image (room so "Since {year}" isn't clipped)
 
@@ -23,11 +22,16 @@ type Slot = "left" | "center" | "right" | "hiddenLeft" | "hiddenRight";
 
 type SlotGeom = {
   x: number;
-  rotate: number;
+  /** Turn toward the stage centre, degrees (3D, seen through the stage perspective). */
+  rotateY: number;
+  /** Depth push, px — negative sits further back. */
+  z: number;
   scale: number;
   opacity: number;
   zIndex: number;
   width: number;
+  /** Black wash over the image — side cards read further away. */
+  dim: number;
 };
 
 type Dims = { center: number; side: number; offset: number; height: number };
@@ -38,22 +42,28 @@ function getDims(vw: number): Dims {
   const desktop = vw >= 1024;
   const center = desktop ? CENTER_W : Math.max(240, vw * 0.82);
   const side = center * (SIDE_W / CENTER_W);
-  const gap = desktop ? GAP : 16;
+  const gap = desktop ? GAP : 44;
   const offset = center / 2 + gap + side / 2;
   const height = center / CARD_AR + META_H;
   return { center, side, offset, height };
 }
 
+// Coverflow: side cards turn their faces toward the centre (left card's inner
+// edge recedes, outer edge comes forward — and mirrored on the right), sit a
+// step back and dim; cards off-stage swing further round and fade out.
 function buildSlotMap(d: Dims): Record<Slot, SlotGeom> {
   const off = d.offset;
   return {
-    left: { x: -off, rotate: 5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
-    center: { x: 0, rotate: 0, scale: 1, opacity: 1, zIndex: 10, width: d.center },
-    right: { x: off, rotate: -5, scale: 1, opacity: 1, zIndex: 1, width: d.side },
-    hiddenLeft: { x: -off * 2.4, rotate: 8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
-    hiddenRight: { x: off * 2.4, rotate: -8, scale: 0.7, opacity: 0, zIndex: 0, width: d.side },
+    left: { x: -off, rotateY: 32, z: -140, scale: 0.94, opacity: 1, zIndex: 1, width: d.side, dim: 0.45 },
+    center: { x: 0, rotateY: 0, z: 0, scale: 1, opacity: 1, zIndex: 10, width: d.center, dim: 0 },
+    right: { x: off, rotateY: -32, z: -140, scale: 0.94, opacity: 1, zIndex: 1, width: d.side, dim: 0.45 },
+    hiddenLeft: { x: -off * 2.2, rotateY: 55, z: -420, scale: 0.8, opacity: 0, zIndex: 0, width: d.side, dim: 0.8 },
+    hiddenRight: { x: off * 2.2, rotateY: -55, z: -420, scale: 0.8, opacity: 0, zIndex: 0, width: d.side, dim: 0.8 },
   };
 }
+
+// One spring for every property so position, turn and depth stay in step.
+const CARD_SPRING = { type: "spring", stiffness: 170, damping: 26, mass: 1 } as const;
 
 function getSlot(idx: number, active: number, n: number): Slot {
   const diff = (((idx - active) % n) + n) % n;
@@ -119,13 +129,14 @@ function Card({
     <motion.div
       animate={{
         x: s.x,
-        rotate: s.rotate,
+        rotateY: s.rotateY,
+        z: s.z,
         scale: s.scale,
         opacity: s.opacity,
         width: s.width,
         zIndex: s.zIndex,
       }}
-      transition={{ type: "spring", stiffness: 240, damping: 28 }}
+      transition={CARD_SPRING}
       className="absolute"
       style={{
         left: "50%",
@@ -161,6 +172,15 @@ function Card({
           fill
           sizes={isCenter ? "(min-width: 1024px) 928px, 82vw" : "560px"}
           className="object-contain p-6 md:p-8"
+        />
+
+        {/* Depth wash — side cards recede into the dark */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-black"
+          initial={false}
+          animate={{ opacity: s.dim }}
+          transition={CARD_SPRING}
         />
 
         {/* Center card links to the project; hovering it swaps the stage
@@ -261,11 +281,9 @@ export function FeaturedProjects({
   const dims = getDims(vw);
   const slotMap = buildSlotMap(dims);
 
-  // Custom cursor position
+  // Custom cursor position (raw; LiquidCursor adds its own trailing spring)
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
-  const cursorX = useSpring(rawX, { stiffness: 400, damping: 35 });
-  const cursorY = useSpring(rawY, { stiffness: 400, damping: 35 });
 
   // Drag tracking
   const dragStartX = useRef<number | null>(null);
@@ -351,8 +369,9 @@ export function FeaturedProjects({
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
         >
-          {/* Cards — clipped separately */}
-          <div className="absolute inset-0 overflow-hidden">
+          {/* Cards — clipped separately. One shared perspective for the whole
+              stage (vanishing point at its centre) gives the coverflow depth. */}
+          <div className="absolute inset-0 overflow-hidden perspective-distant">
             {caseStudies.map((project, i) => {
               const slot = getSlot(i, activeIndex, n);
               return (
@@ -372,30 +391,8 @@ export function FeaturedProjects({
             })}
           </div>
 
-          {/* Custom drag cursor */}
-          <motion.div
-            className="pointer-events-none absolute z-50"
-            style={{
-              left: cursorX,
-              top: cursorY,
-              translateX: "-50%",
-              translateY: "-50%",
-            }}
-            animate={{
-              opacity: isHovering ? 1 : 0,
-              scale: isHovering ? 1 : 0.5,
-            }}
-            transition={{ duration: 0.2 }}
-          >
-            {overCenter ? (
-              <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-yellow px-7 py-4 text-lg font-semibold text-black shadow-lg">
-                Explore Project
-                <ArrowRight size={20} className="-rotate-45" />
-              </span>
-            ) : (
-              <DragCursor size={100} />
-            )}
-          </motion.div>
+          {/* Custom drag / explore cursor */}
+          <LiquidCursor x={rawX} y={rawY} visible={isHovering} explore={overCenter} />
         </div>
 
         <Dots

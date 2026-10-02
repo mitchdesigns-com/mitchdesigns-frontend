@@ -1,12 +1,25 @@
 "use client";
 
 import { useRef, useState, useLayoutEffect } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { cn } from "@/lib/cn";
 
 type MarqueeProps = React.HTMLAttributes<HTMLDivElement> & {
   direction?: "left" | "right";
   gap?: number; // px between items
+  /**
+   * Extra px offset added on top of the scroll drift (e.g. a shared drag /
+   * swipe scrub). Follows `direction`, so a "right" row moves the opposite
+   * way to a "left" one — just like the scroll drift.
+   */
+  offset?: MotionValue<number>;
 };
 
 // How far the strip travels per px of page scroll.
@@ -21,6 +34,7 @@ function wrap(min: number, max: number, v: number) {
 export function Marquee({
   direction = "left",
   gap = 48,
+  offset,
   className,
   children,
   ...props
@@ -56,9 +70,11 @@ export function Marquee({
   // direction, scrolling up reverses it. `direction="right"` flips the base.
   const { scrollY } = useScroll();
   const smooth = useSpring(scrollY, { damping: 40, stiffness: 200, mass: 0.5 });
+  const zero = useMotionValue(0);
+  const extra = offset ?? zero;
   const dir = direction === "right" ? -1 : 1;
-  const x = useTransform(smooth, (s) =>
-    chunkWidth ? `${wrap(-chunkWidth, 0, -s * SCROLL_RATIO * dir)}px` : "0px",
+  const x = useTransform([smooth, extra], ([s, o]: number[]) =>
+    chunkWidth ? `${wrap(-chunkWidth, 0, (-s * SCROLL_RATIO + o) * dir)}px` : "0px",
   );
 
   return (

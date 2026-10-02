@@ -1,9 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { easeOutSoft, fadeUp, stagger } from "@/lib/motion";
+import { DEFAULT_ROTATING_WORDS, RotatingWord } from "./RotatingWord";
 
 type HeroProps = {
   eyebrow?: string;
@@ -17,34 +17,13 @@ type HeroProps = {
   transparent?: boolean;
 };
 
-const DEFAULT_WORDS = [
-  "Convert",
-  "Engage",
-  "Interact",
-  "Succeed",
-  "Grow",
-] as const;
-
 export function Hero({
   eyebrow,
   headline,
-  rotatingWords = DEFAULT_WORDS,
+  rotatingWords = DEFAULT_ROTATING_WORDS,
   rotationInterval = 2400,
   transparent = false,
 }: HeroProps) {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    if (rotatingWords.length < 2) return;
-    const id = window.setInterval(
-      () => setIndex((i) => (i + 1) % rotatingWords.length),
-      rotationInterval,
-    );
-    return () => window.clearInterval(id);
-  }, [rotatingWords.length, rotationInterval]);
-
-  const word = rotatingWords[index];
-
   return (
     <Section
       theme="dark"
@@ -72,24 +51,7 @@ export function Hero({
           className="mt-[10px] font-black tracking-[0.01em] text-white text-balance text-[1.5rem] leading-[1.15] sm:text-[2.75rem] sm:leading-[1.05] md:text-[4.5rem] md:leading-[1.08] lg:text-hero-1 relative z-30"
         >
           {headline}{" "}
-          <span
-            aria-live="polite"
-            aria-atomic="true"
-            className="relative inline-flex items-end align-bottom pb-[0.05em] min-w-[5ch]"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={word}
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
-                transition={{ duration: 0.55, ease: easeOutSoft }}
-                className="inline-flex items-end min-h-[1.3em] whitespace-nowrap leading-none text-yellow"
-              >
-                {word}
-              </motion.span>
-            </AnimatePresence>
-          </span>
+          <RotatingWord words={rotatingWords} interval={rotationInterval} />
         </motion.h1>
       </motion.div>
     </Section>

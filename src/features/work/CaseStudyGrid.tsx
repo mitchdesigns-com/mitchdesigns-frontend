@@ -23,7 +23,6 @@ function ServiceBullet({ label }: { label: string }) {
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
   const coverSrc = strapiMedia(cs.cover?.url);
-  const avatarSrc = strapiMedia(cs.testimonial?.avatar?.url);
 
   return (
     <Link
@@ -74,47 +73,6 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         )}
       </div>
 
-      {/* Right — testimonial panel (hidden entirely when there's no testimonial) */}
-      {cs.testimonial ? (
-        <div className="flex w-full shrink-0 flex-col justify-between gap-6 bg-space-grey p-10 lg:w-[30%] lg:gap-0">
-          {/* Opening quote mark */}
-          <span className="text-hero-1 leading-none text-yellow" aria-hidden>
-            &ldquo;
-          </span>
-
-          {/* Quote */}
-          <p className="text-hero-5 text-white text-balance">
-            {cs.testimonial.quote}
-          </p>
-
-          {/* Author */}
-          <div className="flex flex-col gap-10 mt-10">
-            <div className="h-px w-full bg-grey-500" />
-            <div className="flex items-center gap-5">
-              {avatarSrc ? (
-                <div className="relative size-16 shrink-0 overflow-hidden rounded-full">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={avatarSrc}
-                    alt={cs.testimonial.author}
-                    className="absolute inset-0 size-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="size-16 shrink-0 rounded-full bg-grey-600" />
-              )}
-              <div className="flex flex-col gap-1">
-                <span className="text-xl font-medium leading-tight text-white">
-                  {cs.testimonial.author}
-                </span>
-                <span className="text-base leading-tight text-yellow">
-                  {cs.testimonial.role}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </Link>
   );
 }

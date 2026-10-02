@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
 import { Section } from "@/components/layout/Section";
-import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
+import { Reveal } from "@/components/motion";
 import type { TechItem } from "@/lib/cms/types";
+import { TechPile } from "./TechPile";
 
 type TechStackProps = {
   items: Array<TechItem & { id: number }>;
@@ -68,56 +68,34 @@ export function TechStack({
   highlight,
 }: TechStackProps) {
   return (
-    <Section className="py-20">
-      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
-        {/* Left: heading + description */}
-        <Reveal className="flex flex-col gap-4 lg:max-w-[415px] lg:shrink-0">
-          <h2 className="text-center text-[1.5rem] font-bold leading-[1.3] text-space-grey lg:text-left lg:text-hero-4 lg:leading-[110%]">
-            <HighlightedTitle title={title} highlight={highlight} />
-          </h2>
-          {description && (
-            <p className="text-xl leading-[130%] text-fg-muted text-balance">
-              {description}
-            </p>
-          )}
-        </Reveal>
+    // Desktop: a fixed-height stage — copy top-left, the tech cards drop in from
+    // the top edge and pile up bottom-right (see TechPile).
+    <Section bleed className="overflow-hidden bg-panel py-20 lg:h-190">
+      <div className="container-page h-full">
+        <div className="relative flex h-full flex-col gap-10">
+          <Reveal
+            className="relative flex flex-col gap-4 lg:max-w-160"
+            viewport={{ margin: "0px 0px -20% 0px" }}
+          >
+            <h2 className="text-center text-[1.5rem] font-bold leading-[1.3] text-space-grey lg:text-left lg:text-hero-4 lg:leading-[110%]">
+              <HighlightedTitle title={title} highlight={highlight} />
+            </h2>
+            {description && (
+              <p className="text-xl leading-[130%] text-grey-600 text-balance">
+                {description}
+              </p>
+            )}
+          </Reveal>
 
-        {/* Right: responsive grid of tech cards */}
-        <RevealStagger
-          className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6"
-          stagger={0.07}
-        >
-          {items.map((t) => {
-            // const logo = strapiMedia(t.logo?.url);
-            const logo = t.logo?.url;
-            return (
-              <RevealItem
-                key={t.id}
-                className="flex h-[88px] w-full items-center gap-3 rounded-card-sm border border-tech-card-border bg-white p-4 shadow-tech-card sm:gap-5 lg:h-[100px] lg:p-5"
-              >
-                {logo ? (
-                  <Image
-                    src={logo}
-                    alt={t.name}
-                    width={60}
-                    height={60}
-                    className="size-[44px] shrink-0 object-contain lg:size-[60px]"
-                  />
-                ) : (
-                  <span className="size-[44px] shrink-0 rounded-lg bg-bg-alt lg:size-[60px]" />
-                )}
-                <div className="flex min-w-0 flex-col">
-                  <span className="truncate text-base font-medium leading-[125%] text-space-grey lg:text-xl">
-                    {t.name}
-                  </span>
-                  <span className="truncate text-sm font-medium leading-[125%] text-fg-muted lg:text-base">
-                    {formatCategory(t.category)}
-                  </span>
-                </div>
-              </RevealItem>
-            );
-          })}
-        </RevealStagger>
+          <TechPile
+            items={items.map((t) => ({
+              id: t.id,
+              name: t.name,
+              category: formatCategory(t.category),
+              logo: t.logo?.url,
+            }))}
+          />
+        </div>
       </div>
     </Section>
   );

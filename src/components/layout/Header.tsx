@@ -17,7 +17,7 @@ const HEADER_HEIGHT = 108;
 const FAB_SHOW_AFTER = 1300;
 
 export function Header() {
-  const { sticky, showCta, ctaInView } = useContext(HeaderConfigContext);
+  const { sticky, showCta, ctaInView, immersive } = useContext(HeaderConfigContext);
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
   const [atTop, setAtTop] = useState(true);
@@ -76,8 +76,14 @@ export function Header() {
   return (
     <>
       <motion.header
-        animate={{ y: sticky && !visible ? -HEADER_HEIGHT : 0 }}
-        transition={{ duration: 0.35, ease: EASE }}
+        animate={{
+          y: immersive || (sticky && !visible) ? -HEADER_HEIGHT : 0,
+          opacity: immersive ? 0 : 1,
+        }}
+        // Non-sticky headers only ever move for the immersive hero, so they get
+        // the slower, cinematic timing; sticky scroll-hide keeps its snappy one.
+        transition={{ duration: sticky ? 0.35 : 0.7, ease: EASE }}
+        inert={immersive}
         className={cn(
           "inset-x-0 top-0 z-60 transition-colors duration-300 ease-out-soft",
           sticky ? "fixed" : "absolute",
