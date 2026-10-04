@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   motion,
+  useInView,
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
@@ -57,20 +58,165 @@ type Box = { w: number; h: number; tx: number; ty: number; tw: number; th: numbe
 const EMPTY: Box = { w: 0, h: 0, tx: 0, ty: 0, tw: 0, th: 0, cx: 0, cy: 0, pr: 0, pt: 0, pb: 0 };
 
 
-function renderTitle(title: string, highlights: string[] = []) {
-  if (!highlights.length) return title;
+type Mark = { x: number; y: number; w: number; h: number };
+
+/**
+ * Title with its highlight words written in: each highlight word (black,
+ * extra-bold — never yellow text on white) rises in letter by letter, then a
+ * hand-drawn yellow oval draws around it, then a curved arrow draws from the
+ * first highlight to the last. Plays when `on` turns true, reverses when off.
+ */
+function HighlightTitle({
+  title,
+  highlights = [],
+  Tag,
+  on,
+}: {
+  title: string;
+  highlights?: string[];
+  Tag: "h2" | "h3";
+  /** Driven by the scroll scene; omitted → plays when the title is in view. */
+  on?: boolean;
+}) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(boxRef, { amount: 0.8 });
+  const active = on ?? inView;
+  const markRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const [marks, setMarks] = useState<Mark[]>([]);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const box = boxRef.current?.getBoundingClientRect();
+      if (!box) return;
+      setMarks(
+        markRefs.current.filter(Boolean).map((el) => {
+          const r = el!.getBoundingClientRect();
+          return { x: r.left - box.left, y: r.top - box.top, w: r.width, h: r.height };
+        }),
+      );
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (boxRef.current) ro.observe(boxRef.current);
+    return () => ro.disconnect();
+  }, [title]);
+
   const words = title.split(/\s+/);
-  return words.map((word, i) => {
-    const bare = word.replace(/[.,!?;:]+$/, "");
-    const trail = word.slice(bare.length);
-    return (
-      <Fragment key={i}>
-        {highlights.includes(bare) ? <span className="text-accent">{bare}</span> : bare}
-        {trail}
-        {i < words.length - 1 ? " " : ""}
-      </Fragment>
-    );
-  });
+  let hi = -1;
+  const LETTER = 0.045;
+  const letterCount = (w: string) => w.replace(/[.,!?;:]+$/, "").length;
+  const writeTime = 0.3 + words.filter((w) => highlights.includes(w.replace(/[.,!?;:]+$/, ""))).reduce((t, w) => t + letterCount(w) * LETTER, 0);
+
+  // Curved arrow from under the first highlight to under the last.
+  const first = marks[0];
+  const last = marks[marks.length - 1];
+  const arrow =
+    first && last && marks.length > 1
+      ? (() => {
+          const x1 = first.x + first.w / 2, y1 = first.y + first.h + 6;
+          const x2 = last.x + last.w / 2, y2 = last.y + last.h + 6;
+          const dip = Math.max(y1, y2) + 26;
+          const head = 9;
+          return {
+            body: `M${x1} ${y1} C${x1 + 10} ${dip}, ${x2 - 10} ${dip}, ${x2} ${y2 + 2}`,
+            head: `M${x2 - head} ${y2 + head + 2} L${x2} ${y2 + 2} L${x2 + head * 0.9} ${y2 + head + 3}`,
+          };
+        })()
+      : null;
+
+  return (
+    <div ref={boxRef} className={`relative ${marks.length > 1 ? "mb-4" : ""}`}>
+      <Tag className="text-hero-5 text-balance">
+        {words.map((word, i) => {
+          const bare = word.replace(/[.,!?;:]+$/, "");
+          const trail = word.slice(bare.length);
+          const space = i < words.length - 1 ? " " : "";
+          if (!highlights.includes(bare)) return <Fragment key={i}>{word}{space}</Fragment>;
+          hi += 1;
+          const k = hi;
+          const start = 0.15 + k * (letterCount(word) * LETTER + 0.1);
+          return (
+            <Fragment key={i}>
+              <span
+                ref={(el) => {
+                  markRefs.current[k] = el;
+                }}
+                className="relative inline-block font-black"
+              >
+                <span className="sr-only">{bare}</span>
+                <span aria-hidden>
+                  {Array.from(bare).map((ch, j) => (
+                    <motion.span
+                      key={j}
+                      className="inline-block"
+                      initial={false}
+                      animate={active ? { opacity: 1, y: 0, rotate: 0 } : { opacity: 0, y: "40%", rotate: 8 }}
+                      transition={
+                        active
+                          ? { type: "spring", stiffness: 420, damping: 18, delay: start + j * LETTER }
+                          : { duration: 0.15 }
+                      }
+                    >
+                      {ch}
+                    </motion.span>
+                  ))}
+                </span>
+                {/* Hand-drawn oval around the word */}
+                <span aria-hidden className="pointer-events-none absolute -inset-x-3 -inset-y-2">
+                <svg
+                  className="size-full overflow-visible"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    d="M8 52C6 22 40 6 62 9c26 3 36 22 32 44-4 24-38 40-64 34C9 82 3 64 12 40 18 26 34 15 52 13"
+                    fill="none"
+                    className="stroke-yellow"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    initial={false}
+                    animate={{ pathLength: active ? 1 : 0, opacity: active ? 1 : 0 }}
+                    transition={active ? { duration: 0.6, ease: easeInOutSoft, delay: writeTime + k * 0.25 } : { duration: 0.15 }}
+                  />
+                </svg>
+                </span>
+              </span>
+              {trail}
+              {space}
+            </Fragment>
+          );
+        })}
+      </Tag>
+
+      {/* Curved arrow: first highlight → last highlight */}
+      {arrow && (
+        <svg aria-hidden className="pointer-events-none absolute inset-0 size-full overflow-visible">
+          <motion.path
+            d={arrow.body}
+            fill="none"
+            className="stroke-yellow"
+            strokeWidth={3}
+            strokeLinecap="round"
+            initial={false}
+            animate={{ pathLength: active ? 1 : 0, opacity: active ? 1 : 0 }}
+            transition={active ? { duration: 0.7, ease: easeInOutSoft, delay: writeTime + 0.6 } : { duration: 0.15 }}
+          />
+          <motion.path
+            d={arrow.head}
+            fill="none"
+            className="stroke-yellow"
+            strokeWidth={3}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={false}
+            animate={{ pathLength: active ? 1 : 0, opacity: active ? 1 : 0 }}
+            transition={active ? { duration: 0.25, ease: easeOutSoft, delay: writeTime + 1.25 } : { duration: 0.1 }}
+          />
+        </svg>
+      )}
+    </div>
+  );
 }
 
 /** Yellow pill eyebrow: the pill paints in left→right while the letters are
@@ -293,7 +439,7 @@ function OrbitScene({
           {label}
         </span>
       ))}
-      <Title className="text-hero-5 text-balance">{renderTitle(title, titleHighlights)}</Title>
+      <HighlightTitle title={title} highlights={titleHighlights} Tag={Title} on={scene ? written : undefined} />
       {scene ? (
         <p ref={paraRef} className="text-scroll-copy text-balance text-black">
           <span className="sr-only">{paragraph}</span>
