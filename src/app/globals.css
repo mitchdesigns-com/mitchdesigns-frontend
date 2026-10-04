@@ -83,8 +83,8 @@
 
   /* Homepage video hero headline — sized so it always fits on two lines: its
      longest line ("Experiences that Succeed") runs ~11.8em, so the size tracks
-     the text width ÷ 12.2 (100vw − 2×1.5rem padding), capped at 110px — the
-     1344px text width of the 1392px container, ÷ 12.2. */
+     the text width ÷ 12.2 (100vw − both side gutters), capped at 110px.
+     The ≥1024 / ≥1536 gutters are swapped in under @layer base. */
   --text-hero-video: clamp(1.5rem, calc((100vw - 3rem) / 12.2), 6.875rem);
   --text-hero-video--line-height: 0.95;
   --text-hero-video--font-weight: 900;
@@ -192,9 +192,13 @@
   --aspect-card-media: 37 / 25; /* why-us card image (296×200) */
 
   /* ---------------- Layout ---------------- */
-  --container-max: 1392px; /* 1512 canvas - 60px×2 padding */
-  --container-padding: 1rem; /* mobile */
-  --container-padding-lg: 1.5rem; /* 60px @ desktop */
+  /* Side gutters: 16px mobile, 60px laptop (≥1024), 100px big screens
+     (≥1536). The box (padding included) caps at 1920px, so wider screens
+     keep a 1720px content column and the gutters grow past 100px. */
+  --container-max: 120rem; /* 1920px */
+  --container-padding: 1rem; /* 16px — mobile */
+  --container-padding-lg: 3.75rem; /* 60px — laptop */
+  --container-padding-xl: 6.25rem; /* 100px — big screens */
 
   /* ---------------- Easings ---------------- */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -252,6 +256,17 @@
   body {
     max-width: 100%;
   }
+  /* Video hero headline follows the wider laptop / big-screen gutters. */
+  @media (min-width: 1024px) {
+    :root {
+      --text-hero-video: clamp(1.5rem, calc((100vw - 7.5rem) / 12.2), 6.875rem);
+    }
+  }
+  @media (min-width: 1536px) {
+    :root {
+      --text-hero-video: clamp(1.5rem, calc((100vw - 12.5rem) / 12.2), 6.875rem);
+    }
+  }
   ::selection {
     background: var(--color-accent);
     color: var(--color-accent-fg);
@@ -293,6 +308,11 @@
   @media (min-width: 1024px) {
     .container-page {
       padding-inline: var(--container-padding-lg);
+    }
+  }
+  @media (min-width: 1536px) {
+    .container-page {
+      padding-inline: var(--container-padding-xl);
     }
   }
 
@@ -343,6 +363,18 @@
       scroll-padding-inline-start: max(
         var(--container-padding-lg),
         calc((100vw - var(--container-max)) / 2 + var(--container-padding-lg))
+      );
+    }
+  }
+  @media (min-width: 1536px) {
+    .bleed-carousel {
+      padding-inline-start: max(
+        var(--container-padding-xl),
+        calc((100vw - var(--container-max)) / 2 + var(--container-padding-xl))
+      );
+      scroll-padding-inline-start: max(
+        var(--container-padding-xl),
+        calc((100vw - var(--container-max)) / 2 + var(--container-padding-xl))
       );
     }
   }
