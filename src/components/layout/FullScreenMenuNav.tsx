@@ -46,7 +46,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
   }, [showServices]);
 
   return (
-    <nav className="flex flex-1 flex-col justify-center pb-16">
+    <nav className="flex flex-1 flex-col justify-start pt-8 pb-16 md:pt-12">
       <div
         ref={panelRef}
         className="container-page relative flex flex-col md:flex-row md:items-center md:gap-8"
@@ -88,7 +88,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                       )}
                     />
                     <div className="relative flex items-center py-1.5">
-                      <span className="text-menu font-light uppercase leading-none tracking-[-0.01em] text-black">
+                      <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>
                     </div>
@@ -109,7 +109,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                       )}
                     />
                     <div className="relative flex items-center gap-4 py-1.5">
-                      <span className="text-menu font-light uppercase leading-none tracking-[-0.01em] text-black">
+                      <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>
                       <motion.span
@@ -158,7 +158,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                       aria-hidden
                       className="absolute right-full mr-5 hidden h-0.5 w-11 origin-right scale-x-0 bg-black transition-transform duration-300 ease-out-soft group-hover:scale-x-100 md:block"
                     />
-                    <span className="text-menu font-light leading-tight text-black">
+                    <span className="text-menu font-black leading-tight text-black">
                       {s.title}
                     </span>
                   </Link>

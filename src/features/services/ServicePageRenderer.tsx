@@ -6,8 +6,10 @@ import type {
 } from "@/lib/cms/types";
 import { isLeadFunnelHref, leadsUrl } from "@/config/nav";
 import { ServiceHero } from "./sections/ServiceHero";
+import { CORPORATE_REEL } from "@/config/serviceReels";
 import { PrototypesSection } from "./sections/PrototypesSection";
 import { WeGotYou } from "./sections/WeGotYou";
+import { WeGotYouOrbit } from "./sections/WeGotYouOrbit";
 import { WhyUsSection } from "./sections/WhyUsSection";
 import { ProcessSection } from "./sections/ProcessSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -84,9 +86,13 @@ export function ServicePageRenderer({
     case "corporate":
       return (
         <>
-          <ServiceHero {...hero} />
-          <PrototypesSection {...prototypes} />
-          {weGotYou && <WeGotYou {...weGotYou} />}
+          <ServiceHero {...hero} reel={CORPORATE_REEL} />
+          {weGotYou && (
+            <WeGotYouOrbit
+              {...weGotYou}
+              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+            />
+          )}
           {whyUs && <WhyUsSection {...whyUs} />}
           {process && <ProcessSection {...process} />}
           <TechStackFetcher

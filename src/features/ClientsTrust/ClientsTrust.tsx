@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
-import { Reveal, RevealItem, RevealStagger } from "@/components/motion";
+import { Reveal, RevealItem, RevealStagger, useTilt } from "@/components/motion";
 import { ClientsTrustCard } from "./ClientsTrustCard";
 import { LEADS_URL } from "@/config/nav";
 
@@ -19,7 +19,6 @@ type Cta = { label: string; href: string };
 
 /** Max grid tilt (deg) when the pointer reaches the section edge. */
 const MAX_TILT = 8;
-const TILT_SPRING = { stiffness: 50, damping: 18, mass: 0.8 };
 
 /** Ambient particles — deterministic spread so server and client match. */
 const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
@@ -51,30 +50,14 @@ export function ClientsTrust({
   intro = DEFAULT_INTRO,
   cta = DEFAULT_CTA,
 }: Props) {
-  const reduced = useReducedMotion();
-  const rotateX = useSpring(0, TILT_SPRING);
-  const rotateY = useSpring(0, TILT_SPRING);
-
   // Tilt the whole grid toward the pointer (mouse only — touch keeps it flat).
-  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    if (reduced || e.pointerType !== "mouse") return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    rotateY.set(x * 2 * MAX_TILT);
-    rotateX.set(-y * 2 * MAX_TILT);
-  };
-  const onPointerLeave = () => {
-    rotateX.set(0);
-    rotateY.set(0);
-  };
+  const { rotateX, rotateY, handlers } = useTilt(MAX_TILT);
 
   return (
     <Section
       theme="dark"
       className="overflow-hidden py-20"
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
+      {...handlers}
     >
       {/* Ambient particles */}
       <div aria-hidden className="pointer-events-none absolute inset-0">

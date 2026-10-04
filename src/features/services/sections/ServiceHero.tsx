@@ -11,6 +11,8 @@ import { isLeadsHref } from "@/config/nav";
 import { fadeUp, stagger } from "@/lib/motion";
 import type { ServiceHeroProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
+import { ShotReel } from "@/components/ui/ShotReel";
+import type { ReelShot } from "@/config/serviceReels";
 
 function renderTitle(title: string, titleHighlights: string[] = []) {
   if (!titleHighlights.length) {
@@ -40,7 +42,11 @@ export function ServiceHero({
   imageAlt,
   cta,
   reverseLayout = false,
-}: ServiceHeroProps) {
+  reel,
+}: ServiceHeroProps & {
+  /** Fast project montage shown instead of the CMS image (front-end only). */
+  reel?: ReelShot[];
+}) {
   // Swap to a local fallback image if the CMS image fails to load.
   const [imgSrc, setImgSrc] = useState(image);
   const ctaRef = useHeaderCtaInView<HTMLDivElement>(isLeadsHref(cta?.href));
@@ -82,7 +88,9 @@ export function ServiceHero({
           variants={fadeUp}
           className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-112"
         >
-          {image && (
+          {reel?.length ? (
+            <ShotReel shots={reel} sizes="(max-width: 768px) 100vw, 50vw" />
+          ) : image && (
             <Image
               src={imgSrc ?? image}
               alt={imageAlt ?? ""}

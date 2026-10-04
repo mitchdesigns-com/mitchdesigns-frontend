@@ -242,7 +242,7 @@ export function Header() {
               className="flex w-full items-center justify-center"
               style={{ height: HEADER_HEIGHT }}
             >
-              <Logo />
+              <Logo className="size-16 md:size-20" />
             </div>
 
             <FullScreenMenuNav onNavigate={closeAll} />

@@ -113,7 +113,7 @@
      visible on every desktop screen (caps at the display size on tall screens). */
   --text-menu: clamp(1.75rem, 5.5vh, 3.5rem);
   --text-menu--line-height: 1.1;
-  --text-menu--font-weight: 300;
+  --text-menu--font-weight: 900;
   --text-menu--letter-spacing: -0.01em;
 
   --text-hero-3: 2.875rem; /* 46px */
@@ -124,6 +124,9 @@
   --text-hero-4--line-height: 1.1;
   --text-hero-4--font-weight: 700;
 
+  --text-scroll-copy: 3.25rem; /* 52px — scroll-written statement copy */
+  --text-scroll-copy--line-height: 1.2;
+  --text-scroll-copy--font-weight: 500;
   --text-hero-5: 2rem; /* 32px */
   --text-hero-5--line-height: 1.1;
   --text-hero-5--font-weight: 700;
@@ -194,6 +197,7 @@
   --width-card-review: 24.5625rem; /* 393px — testimonial card */
   --width-card-review-sm: 10rem; /* 160px — compact testimonial card (mobile: ~2¼ in view) */
   --width-blog-sidebar: 27.4375rem; /* 439px — blog TOC sidebar */
+  --width-orbit-card: clamp(12rem, 16vw, 18rem); /* WeGotYou travelling image card */
 
   /* ---------------- Heights ---------------- */
   --height-hero-card-max: 38rem; /* 608px — hero showcase card */
@@ -221,6 +225,31 @@
   /* ---------------- Animations ---------------- */
   --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
   --animate-drift: drift 24s linear infinite; /* ambient section particles */
+  /* 3D card illustrations — gentle, endless; scale(1.06) keeps the image
+     edges hidden while it moves inside its frame */
+  --animate-illo-float: illo-float 4.6s var(--ease-in-out-soft) infinite;
+  --animate-illo-sway: illo-sway 5.4s var(--ease-in-out-soft) infinite;
+  --animate-illo-breathe: illo-breathe 5s var(--ease-in-out-soft) infinite;
+  --animate-illo-wander: illo-wander 6.4s var(--ease-in-out-soft) infinite;
+}
+
+@keyframes illo-float {
+  0%, 100% { transform: scale(1.06) translateY(2%); }
+  50% { transform: scale(1.06) translateY(-3%); }
+}
+@keyframes illo-sway {
+  0%, 100% { transform: scale(1.07) rotate(-2.5deg); }
+  50% { transform: scale(1.07) rotate(2.5deg); }
+}
+@keyframes illo-breathe {
+  0%, 100% { transform: scale(1.04); }
+  50% { transform: scale(1.11); }
+}
+@keyframes illo-wander {
+  0%, 100% { transform: scale(1.07) translate(0, 0); }
+  25% { transform: scale(1.07) translate(2%, -2%); }
+  50% { transform: scale(1.07) translate(0, -3%); }
+  75% { transform: scale(1.07) translate(-2%, -1.5%); }
 }
 
 @keyframes drift {
@@ -426,7 +455,8 @@
    (tagged with data-part in src/components/icons/*). Slow, eased,
    endless; switched off by the global reduced-motion rule.
    ============================================================ */
-:is(.icon-loop-compass, .icon-loop-layers, .icon-loop-link, .icon-loop-pen, .icon-loop-buoy, .icon-loop-gauge)
+:is(.icon-loop-compass, .icon-loop-layers, .icon-loop-link, .icon-loop-pen, .icon-loop-buoy, .icon-loop-gauge,
+  .icon-loop-headset, .icon-loop-chat, .icon-loop-server, .icon-loop-card, .icon-loop-board, .icon-loop-pulse)
   [data-part] {
   transform-box: view-box;
   transform-origin: 12px 12px;
@@ -514,6 +544,82 @@
   0%, 100% { transform: rotate(-80deg); }
   45% { transform: rotate(15deg); }
   60% { transform: rotate(5deg); }
+}
+
+/* Headset — the check badge pops now and then */
+.icon-loop-headset [data-part="badge"] {
+  transform-origin: 18px 17.5px;
+  animation-name: icon-badge;
+  animation-duration: 3s;
+}
+@keyframes icon-badge {
+  0%, 60%, 100% { transform: scale(1); }
+  70% { transform: scale(1.25); }
+  80% { transform: scale(0.95); }
+}
+
+/* Chat — the two bubbles bob in turn, like a conversation */
+.icon-loop-chat [data-part="a"] {
+  animation-name: icon-bob;
+  animation-duration: 2.8s;
+}
+.icon-loop-chat [data-part="b"] {
+  animation-name: icon-bob;
+  animation-duration: 2.8s;
+  animation-delay: -1.4s;
+}
+@keyframes icon-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.5px); }
+}
+
+/* Server — status lights blink alternately */
+.icon-loop-server [data-part="led1"] {
+  animation-name: icon-blink;
+  animation-duration: 1.8s;
+}
+.icon-loop-server [data-part="led2"] {
+  animation-name: icon-blink;
+  animation-duration: 1.8s;
+  animation-delay: -0.9s;
+}
+@keyframes icon-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+/* Card — tilts as if tapped to pay */
+.icon-loop-card [data-part="card"] {
+  animation-name: icon-card;
+  animation-duration: 3.4s;
+}
+@keyframes icon-card {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  40% { transform: rotate(-8deg) translateY(-1px); }
+  60% { transform: rotate(-8deg) translateY(-1px); }
+}
+
+/* Presentation — the chart line draws itself, holds, resets */
+.icon-loop-board [data-part="chart"] {
+  stroke-dasharray: 16;
+  animation-name: icon-draw;
+  animation-duration: 3s;
+}
+@keyframes icon-draw {
+  0% { stroke-dashoffset: 16; }
+  45%, 80% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -16; }
+}
+
+/* Pulse — a heartbeat travels along the line */
+.icon-loop-pulse [data-part="pulse"] {
+  stroke-dasharray: 14 30;
+  animation-name: icon-pulse;
+  animation-duration: 2.2s;
+  animation-timing-function: linear;
+}
+@keyframes icon-pulse {
+  to { stroke-dashoffset: -44; }
 }
 
 /* text-hero-2 / text-hero-3 — desktop keeps the @theme tokens (60px / 46px);
