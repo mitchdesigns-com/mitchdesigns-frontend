@@ -5,8 +5,8 @@ import { AnimatePresence } from "framer-motion";
 import { Hero } from "@/features/hero";
 import { VideoLightbox } from "@/features/hero/VideoLightbox";
 
-const BG_VIDEO = "/videos/hero-full-1.mp4";
-const FULL_VIDEO = "/videos/hero-full-3.mp4";
+const BG_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
+const FULL_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 
 type SpotlightHeroProps = {
   eyebrow?: string;

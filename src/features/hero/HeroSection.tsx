@@ -16,22 +16,22 @@ import { LEADS_URL } from "@/config/nav";
 const CARDS = [
   {
     alt: "Mountain View — website design",
-    previewSrc: "/videos/hero-preview-1.mp4",
-    videoSrc: "/videos/hero-full-1.mp4",
+    previewSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
+    videoSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     fanRotate: -12,
     zIndex: 30,
   },
   {
     alt: "Real estate app — mobile design",
-    previewSrc: "/videos/hero-preview-2.mp4",
-    videoSrc: "/videos/hero-full-2.mp4",
+    previewSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
+    videoSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     fanRotate: 6,
     zIndex: 20,
   },
   {
     alt: "Travel booking — product design",
-    previewSrc: "/videos/hero-preview-3.mp4",
-    videoSrc: "/videos/hero-full-3.mp4",
+    previewSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
+    videoSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     fanRotate: -6,
     zIndex: 10,
   },

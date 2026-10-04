@@ -18,15 +18,15 @@ import type { CSSProperties } from 'react';
 import { Hero } from './Hero';
 
 const PREVIEW_VIDEOS = [
-  '/videos/hero-preview-1.mp4',
-  '/videos/hero-preview-2.mp4',
-  '/videos/hero-preview-3.mp4',
+  '/videos/Mitch_Showreel_2026_Final_25MB.webm',
+  '/videos/Mitch_Showreel_2026_Final_25MB.webm',
+  '/videos/Mitch_Showreel_2026_Final_25MB.webm',
 ];
 
 const FULL_VIDEOS = [
-  '/videos/hero-full-1.mp4',
-  '/videos/hero-full-2.mp4',
-  '/videos/hero-full-3.mp4',
+  '/videos/Mitch_Showreel_2026_Final_25MB.webm',
+  '/videos/Mitch_Showreel_2026_Final_25MB.webm',
+  '/videos/Mitch_Showreel_2026_Final_25MB.webm',
 ];
 
 type CardDef = {

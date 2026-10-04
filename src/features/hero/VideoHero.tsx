@@ -22,7 +22,7 @@ import { cn } from "@/lib/cn";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";
 import { RotatingWord } from "./RotatingWord";
 
-const HERO_VIDEO = "/videos/Mitch%20Showreel%202026%201080p.webm";
+const HERO_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 const VOLUME_FADE_MS = 600;
 
 type VideoHeroProps = {
