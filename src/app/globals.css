@@ -73,6 +73,12 @@
   --text-wordmark--line-height: 1;
   --text-signature: clamp(2.4rem, 12vw, 10.25rem);
   --text-signature--line-height: 1;
+  /* Footer (≥1024px): also capped by viewport height so the whole footer
+     fits one screen on short laptops (≈ the width-based size on 1920×1080). */
+  --text-wordmark-fit: min(12.5vw, 14svh, 10.625rem);
+  --text-wordmark-fit--line-height: 1;
+  --text-signature-fit: min(12vw, 13.5svh, 10.25rem);
+  --text-signature-fit--line-height: 1;
 
   /* Type scale — Hero (display, tight 1.1) */
   --text-jumbo: 18.75rem; /* 300px — "Innovate Or Die" display */
@@ -178,6 +184,11 @@
   --shadow-soft: 0 4px 24px -8px rgb(7 2 13 / 0.08);
   --shadow-soft-lg: 0 12px 48px -12px rgb(7 2 13 / 0.12);
   --shadow-tech-card: 5px 5px 20px 0 rgb(0 0 0 / 0.1);
+  /* Floating trust-card grid — resting depth, and the yellow hover glow */
+  --shadow-card-deep: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+  --shadow-glow-accent:
+    0 0 40px 2px color-mix(in srgb, var(--color-yellow) 30%, transparent),
+    0 25px 50px -12px rgb(0 0 0 / 0.5);
 
   /* ---------------- Widths ---------------- */
   --width-card-review: 24.5625rem; /* 393px — testimonial card */
@@ -199,6 +210,9 @@
   --container-padding: 1rem; /* 16px — mobile */
   --container-padding-lg: 3.75rem; /* 60px — laptop */
   --container-padding-xl: 6.25rem; /* 100px — big screens */
+  /* Footer rhythm (≥1024px) — scales with viewport height so it fits */
+  --spacing-footer-y: clamp(1.5rem, 5svh, 5rem); /* block spacing */
+  --spacing-footer-list: clamp(0.625rem, 2.2svh, 1.5rem); /* link list gap */
 
   /* ---------------- Easings ---------------- */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -206,6 +220,22 @@
 
   /* ---------------- Animations ---------------- */
   --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-drift: drift 24s linear infinite; /* ambient section particles */
+}
+
+@keyframes drift {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-8rem);
+    opacity: 0;
+  }
 }
 
 @keyframes marquee {
@@ -298,6 +328,17 @@
   }
 }
 
+/* Short screens (under 900px tall, e.g. 1280×720 / 1366×768 laptops) —
+   used with lg: to tighten blocks that must fit one viewport (footer). */
+@custom-variant short (@media (max-height: 56.24rem));
+
+/* Reserve exactly two lines of the element's own line-height, so a 1-line
+   and a 2-line title (or clamped excerpt) take the same space and card rows
+   stay aligned. Pair with line-clamp-2. */
+@utility min-h-lines-2 {
+  min-height: 2lh;
+}
+
 @layer utilities {
   .container-page {
     width: 100%;
@@ -378,6 +419,101 @@
       );
     }
   }
+}
+
+/* ============================================================
+   Trust icon loops — each trust-card icon moves its own parts
+   (tagged with data-part in src/components/icons/*). Slow, eased,
+   endless; switched off by the global reduced-motion rule.
+   ============================================================ */
+:is(.icon-loop-compass, .icon-loop-layers, .icon-loop-link, .icon-loop-pen, .icon-loop-buoy, .icon-loop-gauge)
+  [data-part] {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  animation-timing-function: var(--ease-in-out-soft);
+  animation-iteration-count: infinite;
+}
+
+/* Compass — needle hunts for north and settles */
+.icon-loop-compass [data-part="needle"] {
+  animation-name: icon-compass;
+  animation-duration: 5s;
+}
+@keyframes icon-compass {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(40deg); }
+  55% { transform: rotate(-20deg); }
+  75% { transform: rotate(8deg); }
+}
+
+/* Layers — the stack breathes apart and back together */
+.icon-loop-layers [data-part="top"] {
+  animation-name: icon-layers-top;
+  animation-duration: 3.2s;
+}
+.icon-loop-layers [data-part="bottom"] {
+  animation-name: icon-layers-bottom;
+  animation-duration: 3.2s;
+}
+@keyframes icon-layers-top {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes icon-layers-bottom {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(1.5px); }
+}
+
+/* Link — the two halves pull apart and click back together */
+.icon-loop-link [data-part="a"] {
+  animation-name: icon-link-a;
+  animation-duration: 3.6s;
+}
+.icon-loop-link [data-part="b"] {
+  animation-name: icon-link-b;
+  animation-duration: 3.6s;
+}
+@keyframes icon-link-a {
+  0%, 20%, 100% { transform: translate(0, 0); }
+  55% { transform: translate(1.5px, -1.5px); }
+}
+@keyframes icon-link-b {
+  0%, 20%, 100% { transform: translate(0, 0); }
+  55% { transform: translate(-1.5px, 1.5px); }
+}
+
+/* Pen — sways from its nib as if sketching a stroke */
+.icon-loop-pen [data-part="pen"] {
+  transform-origin: 3px 3px;
+  animation-name: icon-pen;
+  animation-duration: 4s;
+}
+@keyframes icon-pen {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-7deg); }
+  70% { transform: rotate(5deg); }
+}
+
+/* Lifebuoy — turns slowly, always on watch */
+.icon-loop-buoy [data-part="ring"] {
+  animation-name: icon-buoy;
+  animation-duration: 9s;
+  animation-timing-function: linear;
+}
+@keyframes icon-buoy {
+  to { transform: rotate(360deg); }
+}
+
+/* Gauge — needle revs up into the high range and eases back */
+.icon-loop-gauge [data-part="needle"] {
+  transform-origin: 12px 14px;
+  animation-name: icon-gauge;
+  animation-duration: 4.4s;
+}
+@keyframes icon-gauge {
+  0%, 100% { transform: rotate(-80deg); }
+  45% { transform: rotate(15deg); }
+  60% { transform: rotate(5deg); }
 }
 
 /* text-hero-2 / text-hero-3 — desktop keeps the @theme tokens (60px / 46px);

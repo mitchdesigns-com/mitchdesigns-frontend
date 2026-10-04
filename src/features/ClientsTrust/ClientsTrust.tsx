@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { motion, useReducedMotion, useSpring } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
-import { CardSlider } from "@/components/ui/CardSlider";
 import { ArrowRight } from "@/components/icons/ArrowRight";
-import { Reveal } from "@/components/motion";
+import { Reveal, RevealItem, RevealStagger } from "@/components/motion";
 import { ClientsTrustCard } from "./ClientsTrustCard";
 import { LEADS_URL } from "@/config/nav";
 
@@ -17,7 +17,19 @@ export type TrustReasonCard = {
 
 type Cta = { label: string; href: string };
 
-const SCROLL_STEP = 330 + 16; // card width + gap
+/** Max grid tilt (deg) when the pointer reaches the section edge. */
+const MAX_TILT = 8;
+const TILT_SPRING = { stiffness: 50, damping: 18, mass: 0.8 };
+
+/** Ambient particles — deterministic spread so server and client match. */
+const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
+  left: `${(i * 37 + 11) % 100}%`,
+  top: `${(i * 61 + 23) % 100}%`,
+  animationDelay: `${-(i * 1.7).toFixed(1)}s`,
+  animationDuration: `${20 + (i % 5) * 3}s`,
+  big: i % 3 === 0,
+  accent: i % 4 === 0,
+}));
 
 const DEFAULT_INTRO =
   "Because choosing a digital partner shouldn’t feel risky, it should feel right.";
@@ -39,10 +51,44 @@ export function ClientsTrust({
   intro = DEFAULT_INTRO,
   cta = DEFAULT_CTA,
 }: Props) {
+  const reduced = useReducedMotion();
+  const rotateX = useSpring(0, TILT_SPRING);
+  const rotateY = useSpring(0, TILT_SPRING);
+
+  // Tilt the whole grid toward the pointer (mouse only — touch keeps it flat).
+  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (reduced || e.pointerType !== "mouse") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    rotateY.set(x * 2 * MAX_TILT);
+    rotateX.set(-y * 2 * MAX_TILT);
+  };
+  const onPointerLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
   return (
-    <Section theme="dark" className="py-20">
+    <Section
+      theme="dark"
+      className="overflow-hidden py-20"
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+    >
+      {/* Ambient particles */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        {PARTICLES.map(({ big, accent, ...style }, i) => (
+          <span
+            key={i}
+            style={style}
+            className={`absolute animate-drift rounded-full ${big ? "size-1.5" : "size-1"} ${accent ? "bg-yellow/40" : "bg-white/20"}`}
+          />
+        ))}
+      </div>
+
       {/* Header */}
-      <Reveal className="mb-10 flex flex-col gap-5 lg:mb-15 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+      <Reveal className="relative mb-10 flex flex-col gap-5 lg:mb-15 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
         <h2 className="text-hero-3 font-bold text-fg">
           {heading ?? (
             <>
@@ -59,21 +105,32 @@ export function ClientsTrust({
         )}
       </Reveal>
 
-      {/* Slider */}
-      <CardSlider scrollStep={SCROLL_STEP} className="mb-6">
-        {reasons.map((reason) => (
-          <ClientsTrustCard key={reason.title} {...reason} />
-        ))}
-      </CardSlider>
+      {/* Floating 3D grid */}
+      <div className="relative mb-10 perspective-midrange lg:mb-15">
+        <motion.div className="transform-3d" style={{ rotateX, rotateY }}>
+          <RevealStagger
+            className="grid grid-cols-1 gap-4 transform-3d md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
+            stagger={0.08}
+          >
+            {reasons.map((reason, i) => (
+              <RevealItem key={reason.title} className="transform-3d">
+                <ClientsTrustCard {...reason} index={i + 1} />
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </motion.div>
+      </div>
 
       {/* CTA */}
       {cta && (
-        <Button size="lg" asChild className="max-md:w-full">
-          <Link href={cta.href}>
-            {cta.label}
-            <ArrowRight size={20} />
-          </Link>
-        </Button>
+        <div className="relative flex justify-center">
+          <Button size="lg" asChild className="max-md:w-full">
+            <Link href={cta.href}>
+              {cta.label}
+              <ArrowRight size={20} />
+            </Link>
+          </Button>
+        </div>
       )}
     </Section>
   );

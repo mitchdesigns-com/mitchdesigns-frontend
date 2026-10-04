@@ -829,17 +829,17 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
 
 export const fixtureTalks: Talk[] = [
   {
-    slug: "design-for-conversion-not-compliments",
-    title: "Design for Conversion, Not Compliments",
-    publishedAt: "2027-02-21T00:00:00.000Z",
+    slug: "orderbase-food-beverage-businesses",
+    title: "How Orderbase Powers Food & Beverage Businesses",
+    publishedAt: "2026-10-04T00:00:00.000Z",
     excerpt:
-      "Great design isn't the one that gets likes — it's the one that gets results. This talk breaks down how aesthetic decisions directly impact user behavior, trust, and revenue, and why 'pretty' alone is a business risk.",
-    category: "Design",
-    readTime: 6,
+      "Restaurants, cafés and food brands shouldn't hand every order and customer to an aggregator. Here's how Orderbase gives F&B businesses their own branded ordering channel, from menu to checkout to repeat orders.",
+    category: "Business",
+    readTime: 5,
     featured: true,
     cover: {
       url: "/images/talks/featured.webp",
-      alternativeText: "Design for Conversion talk",
+      alternativeText: "Restaurant manager reviewing orders on a tablet beside an open kitchen",
     },
     sections: [
       {
@@ -847,16 +847,65 @@ export const fixtureTalks: Talk[] = [
         body: [
           {
             type: "paragraph",
-            children: [{ type: "text", text: "Great design isn't about aesthetics alone — it's about outcomes. Every visual decision carries a behavioral consequence, and the most dangerous design is the kind that looks good but converts poorly." }],
+            children: [{ type: "text", text: "Food and beverage brands grow on repeat orders. Yet many restaurants, cafés and bakeries still sell mainly through delivery aggregators, which take a commission on every order and keep the customer relationship for themselves. Orderbase is the ordering platform we built so food businesses can sell through a channel they own." }],
           },
           {
             type: "heading",
             level: 2,
-            children: [{ type: "text", text: "Why Pretty Isn't Enough" }],
+            children: [{ type: "text", text: "Your Brand, Your Ordering Channel" }],
           },
           {
             type: "paragraph",
-            children: [{ type: "text", text: "Clients often measure design success by how much they like the result. But the real question is: does it work? Does it guide users toward action, build trust, and remove friction?" }],
+            children: [{ type: "text", text: "Orderbase gives every business its own web store and native iOS and Android ordering apps, designed around the brand rather than a shared template. Customers see your colours, your menu and your voice from the first screen to the receipt, and the app keeps a permanent icon on their home screen with push notifications to bring them back." }],
+          },
+          {
+            type: "heading",
+            level: 2,
+            children: [{ type: "text", text: "A Menu That Works Like Your Kitchen" }],
+          },
+          {
+            type: "paragraph",
+            children: [{ type: "text", text: "Real menus are not simple product lists, so the catalogue is built to model them:" }],
+          },
+          {
+            type: "list",
+            format: "unordered",
+            children: [
+              { type: "list-item", children: [{ type: "text", text: "Add-on groups with required and optional rules, like sauces, toppings and packaging." }] },
+              { type: "list-item", children: [{ type: "text", text: "Bundles, combos and meal boxes sold as a single purchase." }] },
+              { type: "list-item", children: [{ type: "text", text: "Build-your-own products with guided, step-by-step options." }] },
+            ],
+          },
+          {
+            type: "heading",
+            level: 2,
+            children: [{ type: "text", text: "A Checkout Designed to Finish the Order" }],
+          },
+          {
+            type: "paragraph",
+            children: [{ type: "text", text: "Checkout is a focused two-page flow: one page for order details and one for payment. Customers can order as a guest or sign up with just a mobile number, save their addresses, and pay by card, cash on delivery or an in-app wallet, with Apple Pay on the higher tiers." }],
+          },
+          {
+            type: "heading",
+            level: 2,
+            children: [{ type: "text", text: "Every Order, Every Branch, One Dashboard" }],
+          },
+          {
+            type: "paragraph",
+            children: [{ type: "text", text: "Behind the storefront, a central dashboard receives, tracks and processes every order. A dedicated driver app handles delivery, click-and-collect captures pickup demand at peak times, and branch-level reporting lets you compare locations side by side, so you always know how the business is performing right now." }],
+          },
+          {
+            type: "heading",
+            level: 2,
+            children: [{ type: "text", text: "Turning First Orders Into Regulars" }],
+          },
+          {
+            type: "paragraph",
+            children: [{ type: "text", text: "Because every order comes through your own channel, you build a first-party customer database you can actually market to. Loyalty points, stored wallet credit and automatic, rule-based discounts give customers a reason to come back, without a promo code in sight." }],
+          },
+          {
+            type: "paragraph",
+            children: [{ type: "text", text: "Well-known food businesses in Egypt already run on Orderbase. If you run a restaurant, café or food brand and want your own ordering channel, explore the platform on our Orderbase page or talk to our team." }],
           },
         ],
       },
@@ -872,7 +921,7 @@ export const fixtureTalks: Talk[] = [
     readTime: 4,
     cover: {
       url: "/images/talks/agency-ux.webp",
-      alternativeText: "Agency UX talk",
+      alternativeText: "MitchDesigns team designing mobile app screens in the office",
     },
   },
   {
@@ -884,8 +933,8 @@ export const fixtureTalks: Talk[] = [
     category: "Development",
     readTime: 5,
     cover: {
-      url: "/images/talks/responsive.webp",
-      alternativeText: "Responsive design talk",
+      url: "/images/talks/responsive-designer.webp",
+      alternativeText: "Designer working on a laptop in the MitchDesigns office",
     },
   },
   {
@@ -898,7 +947,7 @@ export const fixtureTalks: Talk[] = [
     readTime: 4,
     cover: {
       url: "/images/talks/branding.webp",
-      alternativeText: "Brand identity talk",
+      alternativeText: "Two MitchDesigns team members smiling at a meeting table with laptops",
     },
   },
   {

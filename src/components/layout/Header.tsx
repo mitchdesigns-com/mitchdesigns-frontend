@@ -15,6 +15,9 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
 // How far to scroll before the sticky floating menu button appears.
 const FAB_SHOW_AFTER = 1300;
+// The footer lists every link, so the floating menu button steps aside once
+// the footer's top passes this fraction of the viewport height.
+const FAB_HIDE_IN_FOOTER = 0.6;
 
 export function Header() {
   const { sticky, showCta, ctaInView, immersive } = useContext(HeaderConfigContext);
@@ -22,6 +25,7 @@ export function Header() {
   const [visible, setVisible] = useState(true);
   const [atTop, setAtTop] = useState(true);
   const [scrolledPast, setScrolledPast] = useState(false);
+  const [inFooter, setInFooter] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -31,6 +35,10 @@ export function Header() {
       const y = window.scrollY;
       setAtTop(y < 8);
       setScrolledPast(y > FAB_SHOW_AFTER);
+      const footer = document.querySelector("footer");
+      setInFooter(
+        !!footer && footer.getBoundingClientRect().top < window.innerHeight * FAB_HIDE_IN_FOOTER,
+      );
       if (!sticky) {
         setVisible(true);
       } else if (y < 8) {
@@ -69,9 +77,11 @@ export function Header() {
     : "/images/logo-black.webp";
 
   // Sticky floating menu button: shown once scrolled (and the inline header
-  // menu isn't already on screen), and kept on as the close (X) while the menu
-  // is open so there's always a visible way to dismiss it.
-  const fabShown = scrolledPast && (menuOpen || (sticky ? !visible : true));
+  // menu isn't already on screen), hidden over the footer (which lists every
+  // link), and kept on as the close (X) while the menu is open so there's
+  // always a visible way to dismiss it.
+  const fabShown =
+    scrolledPast && (menuOpen || (!inFooter && (sticky ? !visible : true)));
 
   return (
     <>
@@ -186,11 +196,11 @@ export function Header() {
                 exit={{ opacity: 0, scale: 0.6 }}
                 transition={{ duration: 0.25, ease: EASE }}
                 className={cn(
-                  "pointer-events-auto flex size-16 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-25",
+                  "pointer-events-auto flex size-16 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-20",
                   menuOpen ? "bg-black" : "bg-yellow",
                 )}
               >
-                <span className="relative block h-6 w-11">
+                <span className="relative block h-6 w-9">
                   <motion.span
                     animate={menuOpen ? { y: 6, rotate: 45 } : { y: 0, rotate: 0 }}
                     transition={{ duration: 0.3, ease: EASE }}
