@@ -63,8 +63,8 @@ type Mark = { x: number; y: number; w: number; h: number };
 /**
  * Title with its highlight words written in: each highlight word (black,
  * extra-bold — never yellow text on white) rises in letter by letter, then a
- * hand-drawn yellow oval draws around it, then a curved arrow draws from the
- * first highlight to the last. Plays when `on` turns true, reverses when off.
+ * hand-drawn yellow underline draws under it, then a curved arrow draws from
+ * the first highlight to the last. Plays when `on` turns true, reverses when off.
  */
 function HighlightTitle({
   title,
@@ -113,9 +113,9 @@ function HighlightTitle({
   const arrow =
     first && last && marks.length > 1
       ? (() => {
-          const x1 = first.x + first.w / 2, y1 = first.y + first.h + 6;
-          const x2 = last.x + last.w / 2, y2 = last.y + last.h + 6;
-          const dip = Math.max(y1, y2) + 26;
+          const x1 = first.x + first.w / 2, y1 = first.y + first.h + 16;
+          const x2 = last.x + last.w / 2, y2 = last.y + last.h + 16;
+          const dip = Math.max(y1, y2) + 22;
           const head = 9;
           return {
             body: `M${x1} ${y1} C${x1 + 10} ${dip}, ${x2 - 10} ${dip}, ${x2} ${y2 + 2}`,
@@ -125,7 +125,7 @@ function HighlightTitle({
       : null;
 
   return (
-    <div ref={boxRef} className={`relative ${marks.length > 1 ? "mb-4" : ""}`}>
+    <div ref={boxRef} className={`relative ${marks.length > 1 ? "mb-8" : ""}`}>
       <Tag className="text-hero-5 text-balance">
         {words.map((word, i) => {
           const bare = word.replace(/[.,!?;:]+$/, "");
@@ -161,25 +161,21 @@ function HighlightTitle({
                     </motion.span>
                   ))}
                 </span>
-                {/* Hand-drawn oval around the word */}
-                <span aria-hidden className="pointer-events-none absolute -inset-x-3 -inset-y-2">
-                <svg
-                  className="size-full overflow-visible"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                >
-                  <motion.path
-                    d="M8 52C6 22 40 6 62 9c26 3 36 22 32 44-4 24-38 40-64 34C9 82 3 64 12 40 18 26 34 15 52 13"
-                    fill="none"
-                    className="stroke-yellow"
-                    strokeWidth={3}
-                    strokeLinecap="round"
-                    vectorEffect="non-scaling-stroke"
-                    initial={false}
-                    animate={{ pathLength: active ? 1 : 0, opacity: active ? 1 : 0 }}
-                    transition={active ? { duration: 0.6, ease: easeInOutSoft, delay: writeTime + k * 0.25 } : { duration: 0.15 }}
-                  />
-                </svg>
+                {/* Hand-drawn underline */}
+                <span aria-hidden className="pointer-events-none absolute -inset-x-1 top-full h-3">
+                  <svg className="size-full overflow-visible" viewBox="0 0 100 12" preserveAspectRatio="none">
+                    <motion.path
+                      d="M2 7C14 3 26 9 40 6s28-4 40 1c6 2 12 2 18-1"
+                      fill="none"
+                      className="stroke-yellow"
+                      strokeWidth={3.5}
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                      initial={false}
+                      animate={{ pathLength: active ? 1 : 0, opacity: active ? 1 : 0 }}
+                      transition={active ? { duration: 0.5, ease: easeInOutSoft, delay: writeTime + k * 0.25 } : { duration: 0.15 }}
+                    />
+                  </svg>
                 </span>
               </span>
               {trail}
