@@ -20,6 +20,9 @@ const fallbackLogos: LogoEntry[] = fixtureClientLogos.map((item) => ({
 
 const GRID_SIZE = 15;
 
+/** Stable empty default, so the logo pool isn't rebuilt every render. */
+const NO_LOGOS: LogoEntry[] = [];
+
 const HALF_DURATION = 0.35;
 const EASE_IN: [number, number, number, number] = [0.65, 0, 1, 0];
 const EASE_OUT: [number, number, number, number] = [0, 0, 0.35, 1];
@@ -131,7 +134,14 @@ function LogoGridSkeleton() {
   );
 }
 
-export function ClientLogos({ logos: logosProp }: { logos?: LogoEntry[] } = {}) {
+export function ClientLogos({
+  logos: logosProp,
+  leadLogos = NO_LOGOS,
+}: {
+  logos?: LogoEntry[];
+  /** Shown first (case-study greyscale logos); the client logos fill the rest. */
+  leadLogos?: LogoEntry[];
+} = {}) {
   const hasCmsLogos = !!logosProp?.length;
   const [logos, setLogos] = useState<LogoEntry[] | null>(
     hasCmsLogos ? logosProp! : null,
@@ -149,7 +159,15 @@ export function ClientLogos({ logos: logosProp }: { logos?: LogoEntry[] } = {}) 
       .catch(() => setLogos(fallbackLogos));
   }, [hasCmsLogos, logosProp]);
 
-  const pool = logos ?? fallbackLogos;
+  const pool = useMemo(() => {
+    const seen = new Set<string>();
+    return [...leadLogos, ...(logos ?? fallbackLogos)].filter((l) => {
+      const key = l.alt.trim().toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [leadLogos, logos]);
   const initials = useMemo(() => buildInitial(pool), [pool]);
 
   return (

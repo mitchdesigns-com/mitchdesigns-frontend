@@ -24,6 +24,9 @@ function ServiceBullet({ label }: { label: string }) {
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
   const coverSrc = strapiMedia(cs.listCover?.url) ?? listCover(cs.slug) ?? strapiMedia(cs.cover?.url);
+  // The colored logo sits on the white panel; older entries only have `logo`.
+  const logo = cs.logoColored?.url ? cs.logoColored : cs.logo;
+  const logoSrc = strapiMedia(logo?.url);
 
   return (
     <Link
@@ -34,11 +37,11 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
       <div className="flex w-full shrink-0 flex-col gap-5 bg-white p-6 lg:w-[30%]">
         {/* Logo */}
         <div className="h-[70px] w-full">
-          {cs.logo?.url ? (
+          {logoSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={cs.logo.url}
-              alt={cs.logo.alternativeText ?? cs.client}
+              src={logoSrc}
+              alt={logo?.alternativeText ?? cs.client}
               className="h-full max-w-[120px] object-contain object-left"
             />
           ) : (

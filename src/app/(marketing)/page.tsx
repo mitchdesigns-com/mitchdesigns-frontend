@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 import {
   getCaseStudies,
+  getCaseStudyLogos,
   getCtaBanner,
   getFAQs,
   getHomePage,
@@ -44,7 +45,7 @@ async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
 }
 
 export default async function HomePage() {
-  const [services, caseStudies, testimonials, faqs, talks, home, ctaBanner] =
+  const [services, caseStudies, testimonials, faqs, talks, home, ctaBanner, caseStudyLogos] =
     await Promise.all([
       safe(getServices(), fixtureServices),
       safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
@@ -53,6 +54,7 @@ export default async function HomePage() {
       safe(getTalks(), fixtureTalks),
       getHomePage(),
       getCtaBanner(),
+      getCaseStudyLogos(),
     ]);
 
   // Only real Google reviews back the AggregateRating — never claim a rating
@@ -144,7 +146,7 @@ export default async function HomePage() {
       <HeroReveal hero={<VideoHero {...home.hero} />}>
         <AboutSection {...home.about} />
 
-        <ClientLogos logos={home.clientLogos} />
+        <ClientLogos logos={home.clientLogos} leadLogos={caseStudyLogos} />
 
         <FeaturedProjects caseStudies={caseStudies} theme="dark" />
 
