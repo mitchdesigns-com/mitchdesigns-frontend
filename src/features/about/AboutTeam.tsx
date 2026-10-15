@@ -4,11 +4,10 @@ import type { AboutContent } from "@/lib/cms/types";
 import { AboutVideo } from "./AboutVideo";
 import { Eyebrow } from "./Eyebrow";
 
-/** The short company film. Until it's ready, the 2026 showreel plays here —
- *  drop the film in public/videos/ and point this at it. */
+/** Fallback company film until `team.video` is uploaded in Strapi. */
 const ABOUT_FILM = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 
-/** Short line under the film (front-end only). */
+/** Fallback line under the film when `team.caption` is empty. */
 const FILM_CAPTION =
   "Step inside our studio — meet the designers, developers and strategists who turn bold ideas into digital products people love to use, and see how we work, day in and day out.";
 
@@ -24,12 +23,16 @@ export function AboutTeam({ team }: { team: AboutContent["team"] }) {
         <h2 className="text-hero-3 font-bold text-fg text-balance">{team.heading}</h2>
       </Reveal>
 
-      {/* The company film (front-end only), frozen until played. */}
+      {/* The company film, frozen until played. */}
       <div className="mt-14 md:mt-20">
-        <AboutVideo src={ABOUT_FILM} title="the MitchDesigns company film" />
+        <AboutVideo
+          src={team.video ?? ABOUT_FILM}
+          poster={team.videoPoster}
+          title={team.videoTitle ?? "the MitchDesigns company film"}
+        />
       </div>
       <Reveal className="mx-auto mt-10 max-w-2xl text-center md:mt-14">
-        <p className="text-xl text-fg-muted text-balance">{FILM_CAPTION}</p>
+        <p className="text-xl text-fg-muted text-balance">{team.caption ?? FILM_CAPTION}</p>
       </Reveal>
     </Section>
   );

@@ -1,9 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Section } from "@/components/layout/Section";
+import type { DeviceVideo } from "@/lib/cms/types";
 
 // three.js only loads (client-side) for this section.
 const MacbookScene = dynamic(() => import("./MacbookScene"), { ssr: false });
@@ -20,7 +21,15 @@ const VIDEO = {
  * Ads Manager recording on a loop. Scrolling back up closes it again.
  * Reduced motion: the laptop rests open.
  */
-export function MacbookVideoSection({ label = "Live Ads Manager results from our campaigns" }: { label?: string }) {
+export function MacbookVideoSection({ video }: { video?: DeviceVideo }) {
+  const label = video?.label ?? "Live Ads Manager results from our campaigns";
+  // CMS recording first (either format stands in for a missing one), else ours.
+  const webm = video?.webm ?? video?.mp4;
+  const mp4 = video?.mp4 ?? video?.webm;
+  const src = useMemo(
+    () => (webm && mp4 ? { webm, mp4 } : VIDEO),
+    [webm, mp4],
+  );
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   // Desktop pins the scene for a long scroll. Phones don't pin (no empty
@@ -44,7 +53,7 @@ export function MacbookVideoSection({ label = "Live Ads Manager results from our
     <div ref={ref} className="relative h-laptop-frame md:h-scene-laptop">
       <Section theme="light" className="h-full overflow-hidden md:sticky md:top-0 md:h-svh">
         <div role="img" aria-label={label} className="absolute inset-0">
-          <MacbookScene progress={open} src={VIDEO} />
+          <MacbookScene progress={open} src={src} />
         </div>
       </Section>
     </div>

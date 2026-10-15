@@ -9,9 +9,10 @@ import { useReveal } from "@/components/motion/useReveal";
 
 type Props = {
   image: StrapiImage;
+  poster?: StrapiImage | null;
 };
 
-export function SingleImageInRow({ image }: Props) {
+export function SingleImageInRow({ image, poster }: Props) {
   const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
 
@@ -30,6 +31,8 @@ export function SingleImageInRow({ image }: Props) {
         <Media
           src={src}
           alt={image.alternativeText ?? ""}
+          mime={image.mime}
+          poster={strapiMedia(poster?.url)}
           sizes="(max-width: 768px) 100vw, 1392px"
           className="object-cover"
         />

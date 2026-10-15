@@ -1,3 +1,4 @@
+import { pickedLineIcon } from "@/components/icons/lineIcons";
 import { CardIcon } from "@/components/icons/CardIcon";
 import { ChatIcon } from "@/components/icons/ChatIcon";
 import { GaugeIcon } from "@/components/icons/GaugeIcon";
@@ -17,7 +18,7 @@ type SupportIcon = {
   loop: string;
 };
 
-/** Support cards come from the CMS (no icon field), so the icon is picked
+/** Support cards come from the CMS (unless an editor picks one in the `icon` field), the icon is picked
  *  from the card title's meaning. Order matters: the first match wins. */
 const RULES: Array<[RegExp, SupportIcon]> = [
   [/manager|lead|contact/i, { Icon: HeadsetIcon, loop: "icon-loop-headset" }],
@@ -37,6 +38,6 @@ const RULES: Array<[RegExp, SupportIcon]> = [
 
 const FALLBACK = RULES.map(([, icon]) => icon);
 
-export function supportIconFor(title: string, index: number): SupportIcon {
-  return RULES.find(([re]) => re.test(title))?.[1] ?? FALLBACK[index % FALLBACK.length];
+export function supportIconFor(title: string, index: number, picked?: string | null): SupportIcon {
+  return pickedLineIcon(picked) ?? RULES.find(([re]) => re.test(title))?.[1] ?? FALLBACK[index % FALLBACK.length];
 }

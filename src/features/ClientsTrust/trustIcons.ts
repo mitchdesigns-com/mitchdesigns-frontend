@@ -1,3 +1,4 @@
+import { pickedLineIcon } from "@/components/icons/lineIcons";
 import { CompassIcon } from "@/components/icons/CompassIcon";
 import { GaugeIcon } from "@/components/icons/GaugeIcon";
 import { LayersIcon } from "@/components/icons/LayersIcon";
@@ -11,7 +12,7 @@ type TrustIcon = {
   loop: string;
 };
 
-/** Card titles come from the CMS (no icon field), so the icon is picked from
+/** Card titles come from the CMS (unless an editor picks one in the `icon` field), the icon is picked from
  *  the title's meaning. Order matters: the first match wins. */
 const RULES: Array<[RegExp, TrustIcon]> = [
   [/founder|decision|expert/i, { Icon: CompassIcon, loop: "icon-loop-compass" }],
@@ -24,6 +25,6 @@ const RULES: Array<[RegExp, TrustIcon]> = [
 
 const FALLBACK = RULES.map(([, icon]) => icon);
 
-export function trustIconFor(title: string, index: number): TrustIcon {
-  return RULES.find(([re]) => re.test(title))?.[1] ?? FALLBACK[index % FALLBACK.length];
+export function trustIconFor(title: string, index: number, picked?: string | null): TrustIcon {
+  return pickedLineIcon(picked) ?? RULES.find(([re]) => re.test(title))?.[1] ?? FALLBACK[index % FALLBACK.length];
 }

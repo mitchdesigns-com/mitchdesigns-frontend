@@ -17,7 +17,11 @@ export default async function CareersIndexPage() {
     <main>
       <CareersHero {...page.hero} />
       <OurDrive drives={page.drives} />
-      <OpenPositions jobs={jobs} />
+      <OpenPositions
+        jobs={jobs}
+        heading={page.positionsHeading}
+        applyLabel={page.applyLabel}
+      />
     </main>
   );
 }

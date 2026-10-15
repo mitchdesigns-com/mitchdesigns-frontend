@@ -1,3 +1,4 @@
+import { pickedLineIcon } from "@/components/icons/lineIcons";
 import { AtomIcon } from "@/components/icons/AtomIcon";
 import { BellRingIcon } from "@/components/icons/BellRingIcon";
 import { BoxIcon } from "@/components/icons/BoxIcon";
@@ -34,7 +35,7 @@ type LineIcon = {
 };
 const ic = (Icon: LineIcon["Icon"], loop: string): LineIcon => ({ Icon, loop: `icon-loop-${loop}` });
 
-/** "Why Us" cards come from the CMS (no icon field), so each gets a flat
+/** "Why Us" cards come from the CMS (unless an editor picks one in the `icon` field), each gets a flat
  *  outline icon picked from its title's meaning. Order matters: the first
  *  match wins, so the specific rules come before the general ones. */
 const RULES: Array<[RegExp, LineIcon]> = [
@@ -70,6 +71,6 @@ const RULES: Array<[RegExp, LineIcon]> = [
 
 const FALLBACK = RULES.map(([, icon]) => icon);
 
-export function whyLineIconFor(title: string, index: number): LineIcon {
-  return RULES.find(([re]) => re.test(title))?.[1] ?? FALLBACK[index % FALLBACK.length];
+export function whyLineIconFor(title: string, index: number, picked?: string | null): LineIcon {
+  return pickedLineIcon(picked) ?? RULES.find(([re]) => re.test(title))?.[1] ?? FALLBACK[index % FALLBACK.length];
 }

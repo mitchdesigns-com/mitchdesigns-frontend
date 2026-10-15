@@ -154,7 +154,12 @@ export default async function HomePage() {
 
         <TechStackFetcher />
 
-        <TalksSection talks={talks} />
+        <TalksSection
+          talks={talks}
+          heading={home.talksHeading}
+          readMoreLabel={home.talksReadMoreLabel}
+          cta={home.talksCta}
+        />
 
         <FAQSection
           faqs={faqs}
@@ -163,10 +168,10 @@ export default async function HomePage() {
             home.faqDescription ??
             "We've answered the most common ones to help you understand how we work and what to expect."
           }
-          defaultCategory="Corporate Websites"
+          defaultCategory={home.faqDefaultCategory ?? "Corporate Websites"}
         />
 
-        <ClientsTrustFetcher />
+        <ClientsTrustFetcher heading={home.trustHeading} intro={home.trustIntro} cta={home.trustCta} />
         <CTABanner {...ctaBanner} />
       </HeroReveal>
     </>

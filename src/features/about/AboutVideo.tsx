@@ -10,7 +10,16 @@ import { easeOutSoft } from "@/lib/motion";
  * with a yellow play circle over it; clicking plays it right in the frame,
  * with sound and controls.
  */
-export function AboutVideo({ src, title }: { src: string; title: string }) {
+export function AboutVideo({
+  src,
+  title,
+  poster,
+}: {
+  src: string;
+  title: string;
+  /** Still shown before play; without one the frame at 1s is used. */
+  poster?: string;
+}) {
   const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const reduced = useReducedMotion();
@@ -28,7 +37,8 @@ export function AboutVideo({ src, title }: { src: string; title: string }) {
       {/* "#t=1" makes the browser load and show the frame at 1s as a still. */}
       <video
         ref={video}
-        src={`${src}#t=1`}
+        src={poster ? src : `${src}#t=1`}
+        poster={poster}
         preload="metadata"
         playsInline
         controls={playing}

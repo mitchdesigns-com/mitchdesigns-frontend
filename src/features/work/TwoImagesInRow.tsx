@@ -33,6 +33,7 @@ export function TwoImagesInRow({ left, right }: Props) {
             <Media
               src={leftSrc}
               alt={left.alternativeText ?? ""}
+              mime={left.mime}
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
@@ -51,6 +52,7 @@ export function TwoImagesInRow({ left, right }: Props) {
             <Media
               src={rightSrc}
               alt={right.alternativeText ?? ""}
+              mime={right.mime}
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />

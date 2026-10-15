@@ -20,7 +20,7 @@ function JobTag({ icon, label }: { icon: React.ReactNode; label: string }) {
  *  rolls up, the text (and tags) turn dark, and "Apply Today"
  *  becomes a yellow button whose arrow turns from ↗ to →. The row's padding
  *  sits inside a matching negative margin, so text stays on the grid. */
-function JobRow({ job }: { job: Career }) {
+function JobRow({ job, applyLabel }: { job: Career; applyLabel: string }) {
   return (
     <Link
       href={`/careers/${job.slug}`}
@@ -50,24 +50,32 @@ function JobRow({ job }: { job: Career }) {
         </div>
       </div>
       <span className="relative flex shrink-0 items-center gap-2 rounded-pill px-5 py-3 text-lg font-medium text-fg transition-colors delay-100 duration-300 group-hover:bg-yellow group-hover:text-black">
-        Apply Today
+        {applyLabel}
         <ArrowUpRight size={26} className="transition-transform duration-500 ease-out-soft group-hover:rotate-45" />
       </span>
     </Link>
   );
 }
 
-export function OpenPositions({ jobs }: { jobs: Career[] }) {
+export function OpenPositions({
+  jobs,
+  heading = "Open Positions",
+  applyLabel = "Apply Today",
+}: {
+  jobs: Career[];
+  heading?: string;
+  applyLabel?: string;
+}) {
   if (jobs.length === 0) return null;
 
   return (
     <Section theme="dark" className="overflow-x-clip pb-25">
       <div className="flex flex-col">
         <span className="text-lg font-medium text-yellow mb-6">
-          Open Positions
+          {heading}
         </span>
         {jobs.map((job) => (
-          <JobRow key={job.slug} job={job} />
+          <JobRow key={job.slug} job={job} applyLabel={applyLabel} />
         ))}
         <div className="border-t border-border" />
       </div>

@@ -1,7 +1,7 @@
 /**
- * Short one-line summaries for the work-steps list (front-end only — the CMS
- * process steps carry bullet lists, too long for the open row). Matched by
- * step title; unmatched steps fall back to the CMS text as one sentence.
+ * Short one-line summaries for the work-steps list (the CMS process steps
+ * carry bullet lists, too long for the open row). A step's CMS `summary` wins;
+ * otherwise matched by step title, then the CMS text as one sentence.
  */
 import type { ProcessCard } from "@/lib/cms/types";
 
@@ -32,6 +32,6 @@ function plainText(value: unknown): string {
   return "";
 }
 
-export function workStepSummary(card: Pick<ProcessCard, "title" | "description">): string {
-  return SUMMARIES.find(([re]) => re.test(card.title))?.[1] ?? plainText(card.description);
+export function workStepSummary(card: Pick<ProcessCard, "title" | "description" | "summary">): string {
+  return card.summary ?? SUMMARIES.find(([re]) => re.test(card.title))?.[1] ?? plainText(card.description);
 }

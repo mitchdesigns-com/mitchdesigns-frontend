@@ -5,17 +5,29 @@ type Props = {
   alt?: string;
   sizes?: string;
   className?: string;
+  /** Strapi mime type; wins over the file-extension check when present. */
+  mime?: string | null;
+  /** Still frame shown before a video loads. */
+  poster?: string | null;
 };
 
-export function Media({ src, alt = "", sizes, className }: Props) {
-  if (src.endsWith(".mp4")) {
+const VIDEO_EXT = /\.(mp4|webm|mov|m4v)(\?|#|$)/i;
+
+export function isVideo(src: string, mime?: string | null) {
+  return mime ? mime.startsWith("video/") : VIDEO_EXT.test(src);
+}
+
+export function Media({ src, alt = "", sizes, className, mime, poster }: Props) {
+  if (isVideo(src, mime)) {
     return (
       <video
         src={src}
+        poster={poster ?? undefined}
         autoPlay
         muted
         loop
         playsInline
+        preload="metadata"
         aria-label={alt || undefined}
         className={`absolute inset-0 w-full h-full ${className ?? ""}`}
       />

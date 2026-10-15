@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { SlideLabel } from "@/components/ui/SlideLabel";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { NAV_LINKS, SERVICES, serviceHref, LEADS_URL } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -29,6 +30,11 @@ export function FullScreenMenuNav({
   // One nav row = the label (1em of text-menu) + its py-1.5 padding.
   const rowHalf = "(var(--text-menu) + 0.75rem) / 2";
   const [showServices, setShowServices] = useState(false);
+  const { primaryCta } = useSiteSettings();
+  // The proposal item follows the CMS primary CTA.
+  const navLinks = NAV_LINKS.map((item) =>
+    item.href === LEADS_URL ? { ...item, label: primaryCta.label, href: primaryCta.href } : item,
+  );
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Close the services submenu on a click anywhere outside the nav body.
@@ -63,7 +69,7 @@ export function FullScreenMenuNav({
               : { height: `calc(75svh - ${anchorY}px + ${rowHalf})` }
           }
         >
-          {NAV_LINKS.map((item, i) => {
+          {navLinks.map((item, i) => {
             const isServices = item.href === null;
             const dimmed = showServices && !isServices;
             return (
@@ -177,11 +183,11 @@ export function FullScreenMenuNav({
       {/* Mobile-only quote CTA (inline header CTA is hidden on small screens) */}
       <div className="container-page mt-10 sm:hidden">
         <Link
-          href={LEADS_URL}
+          href={primaryCta.href}
           onClick={onNavigate}
           className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
         >
-          Get Detailed Proposal
+          {primaryCta.label}
         </Link>
       </div>
     </nav>

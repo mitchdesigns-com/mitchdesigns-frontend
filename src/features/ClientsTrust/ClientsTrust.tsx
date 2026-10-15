@@ -13,6 +13,7 @@ export type TrustReasonCard = {
   image?: string | null;
   title: string;
   body: string;
+  icon?: string | null;
 };
 
 type Cta = { label: string; href: string };

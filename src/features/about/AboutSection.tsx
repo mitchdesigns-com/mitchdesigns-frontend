@@ -35,7 +35,8 @@ const DEFAULT_SIGNATURE = "Mitch";
 
 // Phrases that get a hand-drawn yellow mark as the white sweep passes them.
 // Matched against the (CMS-editable) body; a phrase that isn't there is skipped.
-const MARKS: { phrase: string; shape: DoodleShape }[] = [
+// CMS `about.marks` replaces these.
+const DEFAULT_MARKS: { phrase: string; shape: DoodleShape }[] = [
   { phrase: "“pretty”", shape: "strike" },
   { phrase: "measurable success", shape: "wave" },
 ];
@@ -67,8 +68,8 @@ const PIN_SCROLL_SVH = 160;
 
 type Segment = { text: string; start: number; mark?: DoodleShape };
 
-function splitMarks(body: string): Segment[] {
-  const hits = MARKS.map((m) => ({ ...m, at: body.indexOf(m.phrase) }))
+function splitMarks(body: string, marks: { phrase: string; shape: DoodleShape }[]): Segment[] {
+  const hits = marks.map((m) => ({ ...m, at: body.indexOf(m.phrase) }))
     .filter((m) => m.at >= 0)
     .sort((a, b) => a.at - b.at);
   const segments: Segment[] = [];
@@ -145,6 +146,7 @@ export function AboutSection({
   body = DEFAULT_BODY,
   signature = DEFAULT_SIGNATURE,
   cta = { label: "About Us", href: "/about" },
+  marks = DEFAULT_MARKS,
 }: Partial<HomeAboutSection> = {}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const blockRef = useRef<HTMLDivElement>(null);
@@ -229,7 +231,7 @@ export function AboutSection({
   });
 
   const text = body ?? "";
-  const segments = useMemo(() => splitMarks(text), [text]);
+  const segments = useMemo(() => splitMarks(text, marks), [text, marks]);
   const bodyWriteAt = (i: number) => (i / text.length) * (WRITE_BODY_END - WRITE_WINDOW);
   const bodySweepAt = (i: number) => (i / text.length) * (SWEEP_END - SWEEP_WINDOW);
 

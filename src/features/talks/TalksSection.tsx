@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Talk } from "@/lib/cms/types";
+import type { CmsLink, Talk } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { Reveal, RevealItem, RevealStagger } from "@/components/motion";
 import { ArrowRight } from "@/components/icons/ArrowRight";
@@ -50,7 +50,7 @@ function ReadMoreArrow() {
 /** Featured talk — image left, white content box right with the yellow
  *  "Read More" bar. Hover: a yellow panel grows up from the bar to fill the
  *  box, and the bar turns black. */
-function FeaturedTalk({ talk }: { talk: Talk }) {
+function FeaturedTalk({ talk, readMoreLabel }: { talk: Talk; readMoreLabel: string }) {
   const date = talk.publishedAt ?? talk.date;
 
   return (
@@ -87,7 +87,7 @@ function FeaturedTalk({ talk }: { talk: Talk }) {
         </div>
 
         <div className="flex items-center justify-between bg-yellow px-6 py-5 text-sm font-medium tracking-1 text-black uppercase transition-colors duration-500 ease-out-soft group-hover:bg-black group-hover:text-yellow lg:px-10">
-          Read More
+          {readMoreLabel}
           <ReadMoreArrow />
         </div>
       </div>
@@ -99,7 +99,7 @@ function FeaturedTalk({ talk }: { talk: Talk }) {
  *  white title + excerpt over the image and a yellow "Read More" bar.
  *  Hover: a white panel grows up from the bar behind the text (text turns
  *  dark) and the bar turns black with yellow "Read More". */
-function TalkCard({ talk }: { talk: Talk }) {
+function TalkCard({ talk, readMoreLabel }: { talk: Talk; readMoreLabel: string }) {
   return (
     <Link href={`/talks/${talk.slug}`} className="group flex h-full flex-col">
       <div className="relative aspect-square overflow-hidden bg-space-grey">
@@ -133,14 +133,28 @@ function TalkCard({ talk }: { talk: Talk }) {
       </div>
 
       <div className="flex items-center justify-between bg-yellow px-6 py-5 text-sm font-medium tracking-1 text-black uppercase transition-colors duration-500 ease-out-soft group-hover:bg-black group-hover:text-yellow lg:px-8">
-        Read More
+        {readMoreLabel}
         <ReadMoreArrow />
       </div>
     </Link>
   );
 }
 
-export function TalksSection({ talks }: { talks: Talk[] }) {
+const DEFAULT_CTA: CmsLink = { label: "Explore All Talks", href: "/talks" };
+
+type Props = {
+  talks: Talk[];
+  heading?: string;
+  readMoreLabel?: string;
+  cta?: CmsLink;
+};
+
+export function TalksSection({
+  talks,
+  heading = "Talks",
+  readMoreLabel = "Read More",
+  cta = DEFAULT_CTA,
+}: Props) {
   if (!talks.length) return null;
 
   const featured = talks.find((t) => t.featured) ?? talks[0]!;
@@ -150,28 +164,28 @@ export function TalksSection({ talks }: { talks: Talk[] }) {
     <Section className="bg-panel py-20">
       <div className="flex flex-col gap-10 lg:gap-15">
         <Reveal>
-          <h2 className="text-hero-3 text-black">Talks</h2>
+          <h2 className="text-hero-3 text-black">{heading}</h2>
         </Reveal>
 
         <Reveal>
-          <FeaturedTalk talk={featured} />
+          <FeaturedTalk talk={featured} readMoreLabel={readMoreLabel} />
         </Reveal>
 
         {rest.length > 0 && (
           <RevealStagger className="grid gap-4 md:grid-cols-3 lg:gap-6" stagger={0.1}>
             {rest.map((t) => (
               <RevealItem key={t.slug}>
-                <TalkCard talk={t} />
+                <TalkCard talk={t} readMoreLabel={readMoreLabel} />
               </RevealItem>
             ))}
           </RevealStagger>
         )}
 
         <Link
-          href="/talks"
+          href={cta.href}
           className="inline-flex items-center gap-2 self-center rounded-pill bg-space-grey px-9 py-6 text-base font-medium whitespace-nowrap text-white max-md:w-full max-md:justify-center"
         >
-          Explore All Talks
+          {cta.label}
           <ArrowRight size={20} />
         </Link>
       </div>

@@ -19,7 +19,7 @@ export function WhyUsSection({
   const cardEls = cards.map((card, i) => {
     // Flat outline icon picked from the title, with its own looping motion
     // (the CMS image isn't shown).
-    const { Icon, loop } = whyLineIconFor(card.title, i);
+    const { Icon, loop } = whyLineIconFor(card.title, i, card.icon);
     return (
       <RevealItem key={card.title} className="h-full transform-3d">
         <GlowCard className="gap-6 p-5">

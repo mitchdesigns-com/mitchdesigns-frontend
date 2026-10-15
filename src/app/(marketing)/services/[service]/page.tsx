@@ -97,12 +97,16 @@ export default async function ServicePage({
   const { service } = await params;
   if (!SERVICE_SLUGS.includes(service)) notFound();
 
-  const [data, faqs, accordionFaqs, caseStudies] = await Promise.all([
+  const [data, faqs, caseStudies] = await Promise.all([
     getServicePageData(service),
     safe(getFAQs(), fixtureFAQs),
-    safe(getFAQs(SERVICE_FAQ_CATEGORY[service]), []),
     safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
   ]);
+  // The CMS can point a service at another FAQ category.
+  const accordionFaqs = await safe(
+    getFAQs(data.faqCategory ?? SERVICE_FAQ_CATEGORY[service]),
+    [],
+  );
 
   const meta = SERVICE_META[service];
   const title = data.seo?.metaTitle ?? meta.title;

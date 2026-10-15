@@ -20,7 +20,7 @@ export function SupportSection({ title, description, cards }: SupportSectionProp
         >
           {cards.map((card, i) => {
             // Animated line icon picked from the title (the CMS image isn't shown).
-            const { Icon, loop } = supportIconFor(card.title, i);
+            const { Icon, loop } = supportIconFor(card.title, i, card.icon);
             return (
               <RevealItem
                 key={card.title}

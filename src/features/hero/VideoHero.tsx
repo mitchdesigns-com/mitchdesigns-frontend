@@ -41,6 +41,11 @@ type VideoHeroProps = {
   eyebrow?: string;
   headline?: string;
   rotatingWords?: string[];
+  /** CMS showreel; falls back to the bundled webm. */
+  video?: string;
+  videoPoster?: string;
+  playLabel?: string;
+  stopLabel?: string;
 };
 
 /**
@@ -59,6 +64,10 @@ export function VideoHero({
   eyebrow = "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
   headline = "Start Building Digital Experiences that",
   rotatingWords,
+  video = HERO_VIDEO,
+  videoPoster,
+  playLabel = "Play Video",
+  stopLabel = "Stop",
 }: VideoHeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -386,7 +395,8 @@ export function VideoHero({
         >
           <video
             ref={videoRef}
-            src={HERO_VIDEO}
+            src={video}
+            poster={videoPoster}
             autoPlay
             muted
             loop
@@ -511,7 +521,7 @@ export function VideoHero({
             animate={{ scale: pillShown ? 1 : 0.5, opacity: pillShown ? 1 : 0 }}
             transition={{ duration: 0.25, ease: easeOutSoft }}
           >
-            <VideoPill playing={playing} />
+            <VideoPill playing={playing} playLabel={playLabel} stopLabel={stopLabel} />
           </motion.div>
         </motion.div>
       ) : (
@@ -519,14 +529,22 @@ export function VideoHero({
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-1/2 z-30 hidden -translate-x-1/2 -translate-y-1/2 lg:block"
         >
-          <VideoPill playing={playing} />
+          <VideoPill playing={playing} playLabel={playLabel} stopLabel={stopLabel} />
         </div>
       )}
     </section>
   );
 }
 
-function VideoPill({ playing }: { playing: boolean }) {
+function VideoPill({
+  playing,
+  playLabel,
+  stopLabel,
+}: {
+  playing: boolean;
+  playLabel: string;
+  stopLabel: string;
+}) {
   return (
     <span className="flex overflow-hidden rounded-pill bg-yellow px-6 py-3 text-lg font-medium tracking-1 text-black">
       <AnimatePresence mode="wait" initial={false}>
@@ -538,7 +556,7 @@ function VideoPill({ playing }: { playing: boolean }) {
           exit={{ y: -12, opacity: 0 }}
           transition={{ duration: 0.2, ease: easeOutSoft }}
         >
-          {playing ? "Stop" : "Play Video"}
+          {playing ? stopLabel : playLabel}
           {playing ? <Cancel /> : <Play />}
         </motion.span>
       </AnimatePresence>

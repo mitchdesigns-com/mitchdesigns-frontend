@@ -18,7 +18,8 @@ import { workStepSummary } from "./sections/workSteps";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
 import { appFlowSteps } from "./sections/appFlow/steps";
 
-/** "We Got You" card on eCommerce: one order from tap to doorstep. */
+/** "We Got You" card on eCommerce: one order from tap to doorstep
+ *  (fallback until `weGotYou.story` is filled in Strapi). */
 const ECOMMERCE_ORDER_STORY = [
   { src: "/images/services/ecommerce/story-1-order.webp", alt: "Customer ordering from an online store on her phone" },
   { src: "/images/services/ecommerce/we-got-you.webp", alt: "Store owner receiving the order on a tablet" },
@@ -36,6 +37,24 @@ import { FeaturedProjects } from "@/features/work/FeaturedProjects";
 import { TechStackFetcher } from "@/features/tech/TechStackFetcher";
 
 /** The service's work steps (CMS process) in the pinned steps-list style. */
+/** Tech stack heading copy: CMS `techStack` first, then the page's default. */
+function techStackCopy(
+  cms: ServicePageData["techStack"],
+  fallback: { title: string; description: string; highlight: string },
+) {
+  return {
+    title: cms?.title ?? fallback.title,
+    description: cms?.description ?? fallback.description,
+    highlight: cms?.highlight ?? fallback.highlight,
+  };
+}
+
+const PLATFORM_STACK = {
+  title: "Our Technology Stack",
+  description: "The tools and frameworks we use to build custom platforms that scale.",
+  highlight: "Technology Stack",
+};
+
 function WorkSteps({ process }: { process: ProcessSectionProps }) {
   return (
     <FeaturesSimplified
@@ -101,6 +120,9 @@ export function ServicePageRenderer({
     numbers,
     designsAdapt,
     moreAbout,
+    heroReel,
+    deviceVideo,
+    techStack,
   } = data;
 
   const hero = withServiceLeadCta(rawHero, slug);
@@ -117,7 +139,7 @@ export function ServicePageRenderer({
     case "corporate":
       return (
         <>
-          <ServiceHero {...hero} reel={CORPORATE_REEL} />
+          <ServiceHero {...hero} reel={heroReel ?? CORPORATE_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
@@ -126,11 +148,7 @@ export function ServicePageRenderer({
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
           {process && <WorkSteps process={process} />}
-          <TechStackFetcher
-            title="Our Technology Stack"
-            description="The tools and frameworks we use to build custom platforms that scale."
-            highlight="Technology Stack"
-          />
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -145,10 +163,10 @@ export function ServicePageRenderer({
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image is still a placeholder: the card tells an order's
-              // story instead — ordered, received, packed, delivered (front-end only).
+              // story instead — ordered, received, packed, delivered.
               image="/images/services/ecommerce/we-got-you.webp"
               imageAlt="Store owner managing orders on a tablet"
-              story={ECOMMERCE_ORDER_STORY}
+              story={weGotYou.story ?? ECOMMERCE_ORDER_STORY}
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
           )}
@@ -163,7 +181,7 @@ export function ServicePageRenderer({
     case "custom":
       return (
         <>
-          <ServiceHero {...hero} reel={CUSTOM_REEL} />
+          <ServiceHero {...hero} reel={heroReel ?? CUSTOM_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
@@ -183,11 +201,7 @@ export function ServicePageRenderer({
           {caseStudies.length > 0 && (
             <FeaturedProjects caseStudies={caseStudies} />
           )}
-          <TechStackFetcher
-            title="Our Technology Stack"
-            description="The tools and frameworks we use to build custom platforms that scale."
-            highlight="Technology Stack"
-          />
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} />
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>
@@ -210,8 +224,8 @@ export function ServicePageRenderer({
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
           )}
-          {/* Our Ads Manager recording on a MacBook that opens as you scroll (front-end only). */}
-          <MacbookVideoSection />
+          {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
+          <MacbookVideoSection video={deviceVideo} />
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -235,8 +249,8 @@ export function ServicePageRenderer({
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
           )}
-          {/* Our Google Ads recording on a tablet that rises as you scroll (front-end only). */}
-          <TabletVideoSection />
+          {/* Our Google Ads recording on a tablet that rises as you scroll. */}
+          <TabletVideoSection video={deviceVideo} />
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -269,7 +283,7 @@ export function ServicePageRenderer({
     case "mobile-app":
       return (
         <>
-          <ServiceHero {...hero} reel={MOBILE_REEL} />
+          <ServiceHero {...hero} reel={heroReel ?? MOBILE_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
@@ -280,11 +294,20 @@ export function ServicePageRenderer({
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
-          <AppFlowSection steps={appFlowSteps(process)} />
+          <AppFlowSection
+            steps={appFlowSteps(process)}
+            eyebrow={process?.eyebrow}
+            closingTitle={process?.closingTitle}
+            closingText={process?.closingText}
+            screens={process?.appScreens}
+          />
           <TechStackFetcher
-            title="Craft seamless digital platforms with our modern tech stack"
-            description="More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client."
-            highlight="modern tech stack"
+            {...techStackCopy(techStack, {
+              title: "Craft seamless digital platforms with our modern tech stack",
+              description:
+                "More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client.",
+              highlight: "modern tech stack",
+            })}
           />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />

@@ -26,7 +26,23 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * glowing, showing one last design (or the whole flow, if there is no extra
  * screen). Reduced motion: a plain list.
  */
-export function AppFlowSection({ steps, eyebrow = "How we build your app" }: { steps: FlowStep[]; eyebrow?: string }) {
+type Props = {
+  steps: FlowStep[];
+  eyebrow?: string;
+  /** Copy for the closing pose, after the last step. */
+  closingTitle?: string;
+  closingText?: string;
+  /** Phone screen designs, one per step; defaults to our bundled app shots. */
+  screens?: string[];
+};
+
+export function AppFlowSection({
+  steps,
+  eyebrow = "How we build your app",
+  closingTitle = "Idea to App Store",
+  closingText = "Every stage, one accountable partner — from the first idea to an app in your customers' hands.",
+  screens = APP_SCREENS,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -70,7 +86,7 @@ export function AppFlowSection({ steps, eyebrow = "How we build your app" }: { s
                 exit={{ opacity: 0, x: 40 }}
                 transition={{ duration: 0.45, ease: easeOutSoft }}
               >
-                {done ? "Idea to App Store" : step.title}
+                {done ? closingTitle : step.title}
               </motion.h2>
             </AnimatePresence>
           </div>
@@ -88,9 +104,7 @@ export function AppFlowSection({ steps, eyebrow = "How we build your app" }: { s
                 exit={{ opacity: 0, x: -40 }}
                 transition={{ duration: 0.45, ease: easeOutSoft }}
               >
-                {done
-                  ? "Every stage, one accountable partner — from the first idea to an app in your customers' hands."
-                  : step.description}
+                {done ? closingText : step.description}
               </motion.p>
             </AnimatePresence>
           </div>
@@ -98,7 +112,7 @@ export function AppFlowSection({ steps, eyebrow = "How we build your app" }: { s
 
         {/* The phone, centred in front of the copy */}
         <div className="pointer-events-none absolute inset-0 z-10">
-          <PhoneScene progress={scrollYProgress} steps={steps} screens={APP_SCREENS} />
+          <PhoneScene progress={scrollYProgress} steps={steps} screens={screens} />
         </div>
 
         {/* Progress along the bottom */}

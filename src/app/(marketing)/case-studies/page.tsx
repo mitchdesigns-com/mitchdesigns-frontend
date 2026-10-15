@@ -49,7 +49,11 @@ export default async function CaseStudiesIndexPage() {
   return (
     <>
       <JsonLd data={itemListSchema} />
-      <CaseStudyGrid caseStudies={caseStudies} title={page.hero?.title} />
+      <CaseStudyGrid
+        caseStudies={caseStudies}
+        title={page.hero?.title}
+        description={page.hero?.description}
+      />
     </>
   );
 }

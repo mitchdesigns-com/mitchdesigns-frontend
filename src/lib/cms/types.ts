@@ -12,9 +12,24 @@ import type { ServiceSlug } from "@/config/nav";
  */
 export type RichText = unknown;
 
+/** A CMS link component (`sections.link`). */
+export type CmsLink = { label: string; href: string };
+
+/** Keys of the shared animated line-icon set (`src/components/icons/lineIcons.ts`).
+ *  Mirrors the `icon` enumeration on Strapi cards. */
+export const LINE_ICON_KEYS = [
+  "compass", "layers", "link", "pen", "buoy", "gauge", "grid", "board", "sparkle",
+  "sync", "team", "phone", "target", "click", "funnel", "code", "globe", "search",
+  "receipt", "card", "tag", "box", "lock", "pulse", "ab", "atom", "trend", "bell",
+  "headset", "chat", "server", "monitor", "tablet",
+] as const;
+export type LineIconKey = (typeof LINE_ICON_KEYS)[number];
+
 export type StrapiImage = {
   url: string;
   alternativeText?: string | null;
+  /** e.g. "image/webp", "video/webm" — set by Strapi on every upload. */
+  mime?: string | null;
   width?: number;
   height?: number;
   formats?: {
@@ -35,7 +50,7 @@ export type CaseStudyTestimonial = {
 export type CaseStudyBlock =
   | { __component: "blocks.rich-text"; body: unknown }
   | { __component: "blocks.image-pair"; left: StrapiImage; right: StrapiImage }
-  | { __component: "blocks.media-block"; file: StrapiImage; caption?: string | null }
+  | { __component: "blocks.media-block"; file: StrapiImage; caption?: string | null; poster?: StrapiImage | null }
   | { __component: "blocks.centered-quote"; quote: string }
   | { __component: "blocks.color-palette"; swatches: Array<{ name: string; hex: string }> }
   | { __component: "blocks.case-point"; title: string; body: string }
@@ -51,6 +66,8 @@ export type CaseStudy = {
   year: number;
   cover: StrapiImage;
   thumbnail?: StrapiImage;
+  /** 940:580 card image for the /case-studies grid; falls back to the bundled cover, then `cover`. */
+  listCover?: StrapiImage;
   /** Image used by the Featured Projects coverflow; falls back to `cover`. */
   featuredThumbnail?: StrapiImage;
   content?: CaseStudyBlock[];
@@ -71,7 +88,7 @@ export type CaseStudy = {
 
 export type BlogSection =
   | { __component: "blocks.rich-text"; body: unknown }
-  | { __component: "blocks.media-block"; file: StrapiImage; caption?: string | null };
+  | { __component: "blocks.media-block"; file: StrapiImage; caption?: string | null; poster?: StrapiImage | null };
 
 export type Author = {
   name: string;
@@ -185,6 +202,7 @@ export type AboutContent = {
     description: string;
     panel: { title: string; body: string };
     images: AboutImage[];
+    cta?: CmsLink;
   };
   metrics: Array<{ value: string; label: string }>;
   approach: {
@@ -192,6 +210,7 @@ export type AboutContent = {
     title: string;
     body: string;
     image?: AboutImage | null;
+    cta?: CmsLink;
   };
   innovate: {
     /** Scrolling headline (e.g. "Innovate Or Die"). */
@@ -202,6 +221,11 @@ export type AboutContent = {
     badge: string;
     heading: string;
     groupPhoto?: AboutImage | null;
+    /** Company film; falls back to the bundled showreel. */
+    video?: string;
+    videoPoster?: string;
+    videoTitle?: string;
+    caption?: string;
   };
   story: {
     eyebrow: string;
@@ -238,6 +262,8 @@ export type TrustReason = {
   title: string;
   body: string;
   image?: StrapiImage | null;
+  /** Picks the card's line icon; unset → guessed from the title. */
+  icon?: LineIconKey | null;
   order?: number;
 };
 
@@ -277,6 +303,8 @@ export type WeGotYouProps = {
   cta?: { label: string; href: string };
   theme?: "light" | "dark" | "beige";
   imagePosition?: "left" | "right";
+  /** Image sequence played in place of `image` (e.g. the eCommerce order story). */
+  story?: Array<{ src: string; alt: string }>;
 };
 
 export type WhyUsCard = {
@@ -284,6 +312,8 @@ export type WhyUsCard = {
   image: string;
   imageAlt?: string;
   description: RichText;
+  /** Picks the card's line icon; unset → guessed from the title. */
+  icon?: LineIconKey;
 };
 
 export type WhyUsSectionProps = {
@@ -303,6 +333,8 @@ export type ProcessCard = {
   image: string;
   imageAlt?: string;
   description: RichText;
+  /** One-line summary shown on the work-steps cards. */
+  summary?: string;
 };
 
 export type ProcessSectionProps = {
@@ -310,6 +342,11 @@ export type ProcessSectionProps = {
   titleHighlights?: string[];
   description?: RichText;
   processCards: ProcessCard[];
+  /** Mobile app flow: eyebrow, closing pose copy and phone screens. */
+  eyebrow?: string;
+  closingTitle?: string;
+  closingText?: string;
+  appScreens?: string[];
 };
 
 export type SupportCard = {
@@ -317,6 +354,8 @@ export type SupportCard = {
   image: string;
   imageAlt?: string;
   description: RichText;
+  /** Picks the card's line icon; unset → guessed from the title. */
+  icon?: LineIconKey;
 };
 
 export type SupportSectionProps = {
@@ -370,6 +409,8 @@ export type DesignsAdaptCard = {
   description: RichText;
   image: string;
   imageAlt?: string;
+  /** Picks the card's line icon; unset → guessed from the title. */
+  icon?: LineIconKey;
 };
 
 export type DesignsAdaptProps = {
@@ -384,6 +425,8 @@ export type MoreAboutCard = {
   description: RichText;
   image: string;
   imageAlt?: string;
+  /** Picks the card's line icon; unset → guessed from the title. */
+  icon?: LineIconKey;
 };
 
 export type MoreAboutProps = {
@@ -404,8 +447,31 @@ export type SeoData = {
   structuredData?: unknown;
 };
 
+/** One shot in a service-page hero reel. */
+export type ServiceReelShot = {
+  src: string;
+  alt: string;
+  label: string;
+  /** Flat backdrop colour around the uncropped shot. */
+  backdrop: string;
+  /** Photographic shots fill the box edge to edge. */
+  cover?: boolean;
+};
+
+/** Screen recording played inside the laptop / tablet scene. */
+export type DeviceVideo = {
+  webm?: string;
+  mp4?: string;
+  label?: string;
+};
+
 export type ServicePageData = {
   seo?: SeoData;
+  heroReel?: ServiceReelShot[];
+  deviceVideo?: DeviceVideo;
+  techStack?: { title?: string; description?: string; highlight?: string };
+  /** FAQ category shown on this page; unset → derived from the slug. */
+  faqCategory?: string;
   hero: ServiceHeroProps;
   prototypes: PrototypesProps;
   weGotYou?: WeGotYouProps;
@@ -427,6 +493,11 @@ export type HomeHero = {
   eyebrow?: string;
   headline: string;
   rotatingWords?: string[];
+  /** Showreel; falls back to the bundled webm. */
+  video?: string;
+  videoPoster?: string;
+  playLabel?: string;
+  stopLabel?: string;
 };
 
 export type HomeStat = {
@@ -445,6 +516,8 @@ export type HomeAboutSection = {
   signature?: string;
   stats: HomeStat[];
   cta?: { label: string; href: string };
+  /** Hand-drawn marks over phrases in `body`. */
+  marks?: Array<{ phrase: string; shape: "strike" | "wave" | "swash" }>;
 };
 
 export type OrderbaseFeature = {
@@ -485,6 +558,14 @@ export type HomePageData = {
   faqHeading?: string;
   /** FAQ section intro; empty/undefined → page uses its default copy. */
   faqDescription?: string;
+  faqDefaultCategory?: string;
+  talksHeading?: string;
+  talksReadMoreLabel?: string;
+  talksCta?: CmsLink;
+  /** "{count}" is replaced with the number of trust reasons. */
+  trustHeading?: string;
+  trustIntro?: string;
+  trustCta?: CmsLink;
 };
 
 /* ------------------------------------------------------------------
@@ -502,6 +583,11 @@ export type SiteSettings = {
   tagline?: string;
   copyright?: string;
   socialLinks: Array<{ platform: SocialPlatform; url: string }>;
+  /** Site-wide "Get Detailed Proposal" button. */
+  primaryCta: CmsLink;
+  legalLinks: CmsLink[];
+  testimonialsHeading: string;
+  testimonialsIntro: string;
 };
 
 /* ------------------------------------------------------------------
@@ -530,9 +616,14 @@ export type CareersPageData = {
     title: string;
     description?: string;
   };
-  drives: Array<{ label: string }>;
+  drives: Array<{ label: string; image?: string | null }>;
   experienceHeading?: string;
   experienceCards?: Array<{ image: string | null; title: string; body: string }>;
+  positionsHeading?: string;
+  applyLabel?: string;
+  jobDetailsLabel?: string;
+  applyNowLabel?: string;
+  applyEmail?: string;
 };
 
 /* ------------------------------------------------------------------

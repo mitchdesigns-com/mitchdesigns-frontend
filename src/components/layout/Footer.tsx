@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ComponentType } from "react";
+import { Fragment, useRef, type ComponentType } from "react";
 import {
   motion,
   useInView,
@@ -16,8 +16,9 @@ import { Instagram } from "@/components/icons/Instagram";
 import { LinkedIn } from "@/components/icons/LinkedIn";
 import { YouTube } from "@/components/icons/YouTube";
 import { WhatsApp } from "@/components/icons/WhatsApp";
-import { COMPANY_LINKS, SERVICES, serviceHref, LEADS_URL } from "@/config/nav";
+import { COMPANY_LINKS, SERVICES, serviceHref } from "@/config/nav";
 import type { SiteSettings, SocialPlatform } from "@/lib/cms/types";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";
 
 const SERVICE_LINKS = SERVICES.map((s) => ({
@@ -134,11 +135,13 @@ function NavCol({ title, links }: { title: string; links: { label: string; href:
 
 export function Footer({
   hideTop = false,
-  settings,
+  settings: settingsProp,
 }: {
   hideTop?: boolean;
   settings?: SiteSettings;
 }) {
+  const contextSettings = useSiteSettings();
+  const settings = settingsProp ?? contextSettings;
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
 
@@ -207,7 +210,7 @@ export function Footer({
                 title="Company"
                 links={[
                   ...COMPANY_LINKS,
-                  { label: "Get Detailed Proposal", href: LEADS_URL, yellow: true },
+                  { ...settings.primaryCta, yellow: true },
                 ]}
               />
               <NavCol title="Services" links={SERVICE_LINKS} />
@@ -270,10 +273,12 @@ export function Footer({
             <a href={urlFor("linkedin", "https://linkedin.com/company/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
             <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
             <a href={urlFor("instagram", "https://instagram.com/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Instagram</a>
-            <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
-            <Link href="/privacy" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Privacy Policy</Link>
-            <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
-            <Link href="/terms" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Terms of Service</Link>
+            {settings.legalLinks.map((l) => (
+              <Fragment key={l.href}>
+                <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
+                <Link href={l.href} className="text-lg text-fg-muted transition-opacity hover:opacity-80">{l.label}</Link>
+              </Fragment>
+            ))}
           </div>
         </motion.div>
         </motion.div>

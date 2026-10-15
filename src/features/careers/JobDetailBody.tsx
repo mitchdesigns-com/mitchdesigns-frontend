@@ -27,17 +27,21 @@ function MetaRow({
   );
 }
 
+type Labels = { jobDetailsLabel?: string; applyNowLabel?: string };
+
 function JobSummaryCard({
   role,
   applyHref,
+  jobDetailsLabel = "Job Details",
+  applyNowLabel = "Apply Now",
 }: {
   role: Career;
   applyHref: string;
-}) {
+} & Labels) {
   return (
     <div className="flex flex-col gap-10 rounded-card bg-space-grey p-8">
       <div className="flex flex-col gap-2">
-        <span className="text-lg font-medium text-fg-muted">Job Details</span>
+        <span className="text-lg font-medium text-fg-muted">{jobDetailsLabel}</span>
         <h2 className="text-hero-4 font-bold text-fg">{role.title}</h2>
       </div>
 
@@ -56,7 +60,7 @@ function JobSummaryCard({
 
       <Button asChild size="lg" className="w-full">
         <a href={applyHref}>
-          Apply Now
+          {applyNowLabel}
           <ArrowUpRight size={20} />
         </a>
       </Button>
@@ -67,10 +71,11 @@ function JobSummaryCard({
 export function JobDetailBody({
   role,
   applyHref,
+  ...labels
 }: {
   role: Career;
   applyHref: string;
-}) {
+} & Labels) {
   // First on the page (as in Figma): dark from the top, so the header goes dark too.
   return (
     <Section theme="dark" className="pb-20 pt-36 md:pt-40">
@@ -78,7 +83,7 @@ export function JobDetailBody({
         {/* Sticky summary */}
         {/* Sticky on the grid item itself (the card inside has no room to stick). */}
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
-          <JobSummaryCard role={role} applyHref={applyHref} />
+          <JobSummaryCard role={role} applyHref={applyHref} {...labels} />
         </Reveal>
 
         {/* Content */}

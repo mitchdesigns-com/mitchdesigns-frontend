@@ -1,9 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Section } from "@/components/layout/Section";
+import type { DeviceVideo } from "@/lib/cms/types";
 
 // three.js only loads (client-side) for this section.
 const TabletScene = dynamic(() => import("./TabletScene"), { ssr: false });
@@ -20,7 +21,15 @@ const VIDEO = {
  * recording on a loop. Scrolling back up lays it down again. Phones don't
  * pin — it rises as it rides up the screen. Reduced motion: it rests upright.
  */
-export function TabletVideoSection({ label = "Live Google Ads results from our campaigns" }: { label?: string }) {
+export function TabletVideoSection({ video }: { video?: DeviceVideo }) {
+  const label = video?.label ?? "Live Google Ads results from our campaigns";
+  // CMS recording first (either format stands in for a missing one), else ours.
+  const webm = video?.webm ?? video?.mp4;
+  const mp4 = video?.mp4 ?? video?.webm;
+  const src = useMemo(
+    () => (webm && mp4 ? { webm, mp4 } : VIDEO),
+    [webm, mp4],
+  );
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   // Desktop pins the scene for a long scroll. Phones don't pin (no empty
@@ -44,7 +53,7 @@ export function TabletVideoSection({ label = "Live Google Ads results from our c
     <div ref={ref} className="relative h-laptop-frame md:h-scene-laptop">
       <Section theme="light" className="h-full overflow-hidden md:sticky md:top-0 md:h-svh">
         <div role="img" aria-label={label} className="absolute inset-0">
-          <TabletScene progress={open} src={VIDEO} />
+          <TabletScene progress={open} src={src} />
         </div>
       </Section>
     </div>

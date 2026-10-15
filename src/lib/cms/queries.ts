@@ -4,8 +4,10 @@ import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
 import { blocksToText } from "./blocks";
 import { LEADS_URL } from "@/config/nav";
+import { SITE_SETTINGS_FALLBACK } from "./siteDefaults";
 import type {
   AboutContent,
+  CmsLink,
   AboutImage,
   CaseStudy,
   Career,
@@ -31,6 +33,21 @@ import type {
 } from "./types";
 
 /* ------------------------------------------------------------------
+ * Shared mappers for fields added with the redesign
+ * ------------------------------------------------------------------ */
+/** Media URL, or undefined when the field is empty. */
+const mediaSrc = (m: any): string | undefined =>
+  m?.url ? (strapiMedia(m.url) ?? m.url) : undefined;
+
+/** `sections.link` component → link, or undefined when incomplete. */
+const cmsLink = (l: any): CmsLink | undefined =>
+  l?.label && l?.href ? { label: l.label, href: l.href } : undefined;
+
+/** Empty CMS strings count as unset so the hardcoded fallback shows. */
+const str = (v: unknown): string | undefined =>
+  typeof v === "string" && v.trim() ? v : undefined;
+
+/* ------------------------------------------------------------------
  * Case Studies
  * ------------------------------------------------------------------ */
 type CaseStudyRaw = Omit<CaseStudy, "services"> & {
@@ -49,6 +66,7 @@ export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number
         "populate[cover]": "true",
         "populate[thumbnail]": "true",
         "populate[featuredThumbnail]": "true",
+        "populate[listCover]": "true",
         "populate[logo]": "true",
         "populate[testimonial][populate]": "*",
         "populate[services]": "true",
@@ -305,6 +323,7 @@ function mapAboutPage(raw: any): AboutContent {
       images: (raw.hero?.images ?? [])
         .map(aboutImage)
         .filter((i: AboutImage | null): i is AboutImage => i !== null),
+      cta: cmsLink(raw.hero?.cta),
     },
     metrics: (raw.metrics ?? []).map((m: any) => ({
       value: m.value,
@@ -315,6 +334,7 @@ function mapAboutPage(raw: any): AboutContent {
       title: raw.approach?.title ?? "",
       body: blocksToText(raw.approach?.body) ?? "",
       image: aboutImage(raw.approach?.image),
+      cta: cmsLink(raw.approach?.cta),
     },
     innovate: {
       text: raw.innovate?.text ?? "",
@@ -326,6 +346,10 @@ function mapAboutPage(raw: any): AboutContent {
       badge: raw.team?.badge ?? "",
       heading: raw.team?.heading ?? "",
       groupPhoto: aboutImage(raw.team?.groupPhoto),
+      video: mediaSrc(raw.team?.video),
+      videoPoster: mediaSrc(raw.team?.videoPoster),
+      videoTitle: str(raw.team?.videoTitle),
+      caption: str(raw.team?.caption),
     },
     story: {
       eyebrow: raw.story?.eyebrow ?? "",
@@ -381,9 +405,11 @@ export const getHomePage = async (): Promise<HomePageData> => {
     const raw = await getSingle<Record<string, any>>("/home-page", {
       revalidate: 300,
       query: {
-        "populate[hero]": "*",
+        "populate[hero][populate]": "*",
         "populate[about][populate]": "*",
         "populate[orderbaseOverview][populate]": "*",
+        "populate[talksCta]": "true",
+        "populate[trustCta]": "true",
         "populate[clientLogos][populate]": "logo",
         "populate[heroCards][populate]": "*",
       },
@@ -392,11 +418,22 @@ export const getHomePage = async (): Promise<HomePageData> => {
       return {
         faqHeading: raw.faqHeading ?? undefined,
         faqDescription: raw.faqDescription ?? undefined,
+        faqDefaultCategory: str(raw.faqDefaultCategory),
+        talksHeading: str(raw.talksHeading),
+        talksReadMoreLabel: str(raw.talksReadMoreLabel),
+        talksCta: cmsLink(raw.talksCta),
+        trustHeading: str(raw.trustHeading),
+        trustIntro: str(raw.trustIntro),
+        trustCta: cmsLink(raw.trustCta),
         hero: raw.hero
           ? {
               eyebrow: raw.hero.eyebrow ?? undefined,
               headline: raw.hero.headline,
               rotatingWords: parseWords(raw.hero.rotatingWords),
+              video: mediaSrc(raw.hero.video),
+              videoPoster: mediaSrc(raw.hero.videoPoster),
+              playLabel: str(raw.hero.playLabel),
+              stopLabel: str(raw.hero.stopLabel),
             }
           : undefined,
         about: raw.about
@@ -410,6 +447,14 @@ export const getHomePage = async (): Promise<HomePageData> => {
               })),
               cta: raw.about.ctaLabel
                 ? { label: raw.about.ctaLabel, href: raw.about.ctaHref ?? "#" }
+                : undefined,
+              marks: Array.isArray(raw.about.marks) && raw.about.marks.length
+                ? raw.about.marks
+                    .filter((m: any) => m?.phrase)
+                    .map((m: any) => ({
+                      phrase: m.phrase,
+                      shape: m.shape === "strike" || m.shape === "swash" ? m.shape : "wave",
+                    }))
                 : undefined,
             }
           : undefined,
@@ -700,7 +745,7 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
       revalidate: 300,
       query: {
         "populate[hero]": "*",
-        "populate[drives]": "*",
+        "populate[drives][populate]": "*",
         "populate[experienceCards][populate]": "image",
       },
     });
@@ -713,7 +758,15 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
               description: blocksToText(raw.hero.description),
             }
           : undefined,
-        drives: (raw.drives ?? []).map((d: any) => ({ label: d.label })),
+        drives: (raw.drives ?? []).map((d: any) => ({
+          label: d.label,
+          image: mediaSrc(d.image) ?? null,
+        })),
+        positionsHeading: str(raw.positionsHeading),
+        applyLabel: str(raw.applyLabel),
+        jobDetailsLabel: str(raw.jobDetailsLabel),
+        applyNowLabel: str(raw.applyNowLabel),
+        applyEmail: str(raw.applyEmail),
         experienceHeading: raw.experienceHeading ?? undefined,
         experienceCards:
           Array.isArray(raw.experienceCards) && raw.experienceCards.length
@@ -765,31 +818,18 @@ export const getCtaBanner = async (): Promise<CtaBannerData> => {
 /* ------------------------------------------------------------------
  * Site Settings (single type) — global footer/contact/social
  * ------------------------------------------------------------------ */
-/** Defaults match the values previously hardcoded in the Footer. */
-const SITE_SETTINGS_FALLBACK: SiteSettings = {
-  contactEmail: undefined,
-  contactPhone: undefined,
-  whatsappNumber: "+201014430669",
-  whatsappLabel: "We’re on Whatsapp",
-  newsletterTitle: "Join Our Newsletter",
-  signatureText: "webdesign agency",
-  tagline: "Design. Technology. Performance.",
-  copyright: "© 2005-2026 Mitch Designs. All rights reserved.",
-  socialLinks: [
-    { platform: "facebook", url: "https://facebook.com/mitchdesigns" },
-    { platform: "instagram", url: "https://instagram.com/mitchdesigns" },
-    { platform: "linkedin", url: "https://linkedin.com/company/mitchdesigns" },
-    { platform: "youtube", url: "https://youtube.com/@mitchdesigns" },
-  ],
-};
+
 
 export const getSiteSettings = async (): Promise<SiteSettings> => {
   try {
     const raw = await getSingle<Record<string, any>>("/site-setting", {
       revalidate: 300,
-      query: { "populate[socialLinks]": "*" },
+      query: { "populate[socialLinks]": "*", "populate[legalLinks]": "*" },
     });
     if (raw && (raw.tagline || raw.whatsappNumber || raw.socialLinks?.length)) {
+      const legalLinks = (raw.legalLinks ?? [])
+        .map(cmsLink)
+        .filter((l: CmsLink | undefined): l is CmsLink => Boolean(l));
       return {
         contactEmail: raw.contactEmail ?? SITE_SETTINGS_FALLBACK.contactEmail,
         contactPhone: raw.contactPhone ?? SITE_SETTINGS_FALLBACK.contactPhone,
@@ -805,6 +845,15 @@ export const getSiteSettings = async (): Promise<SiteSettings> => {
               .filter((s: any) => s?.platform && s?.url)
               .map((s: any) => ({ platform: s.platform, url: s.url }))
           : SITE_SETTINGS_FALLBACK.socialLinks,
+        primaryCta: {
+          label: str(raw.primaryCtaLabel) ?? SITE_SETTINGS_FALLBACK.primaryCta.label,
+          href: str(raw.primaryCtaHref) ?? SITE_SETTINGS_FALLBACK.primaryCta.href,
+        },
+        legalLinks: legalLinks.length ? legalLinks : SITE_SETTINGS_FALLBACK.legalLinks,
+        testimonialsHeading:
+          str(raw.testimonialsHeading) ?? SITE_SETTINGS_FALLBACK.testimonialsHeading,
+        testimonialsIntro:
+          str(raw.testimonialsIntro) ?? SITE_SETTINGS_FALLBACK.testimonialsIntro,
       };
     }
   } catch {
@@ -976,8 +1025,36 @@ function mapServicePage(raw: any): ServicePageData {
   const hero = raw.hero;
   const prototypes = raw.prototypes;
 
+  const images = (list: any): any[] => (Array.isArray(list) ? list : []).filter((m) => m?.url);
   return {
     seo: mapSeo(raw.seo),
+    heroReel: Array.isArray(raw.heroReel) && raw.heroReel.some((r: any) => r?.image?.url)
+      ? raw.heroReel
+          .filter((r: any) => r?.image?.url)
+          .map((r: any) => ({
+            src: mediaSrc(r.image)!,
+            alt: r.image.alternativeText ?? r.label ?? "",
+            label: r.label ?? "",
+            backdrop: r.backdrop ?? "#1d1d1b",
+            cover: r.cover ?? undefined,
+          }))
+      : undefined,
+    deviceVideo:
+      raw.deviceVideo && (raw.deviceVideo.videoWebm || raw.deviceVideo.videoMp4)
+        ? {
+            webm: mediaSrc(raw.deviceVideo.videoWebm),
+            mp4: mediaSrc(raw.deviceVideo.videoMp4),
+            label: str(raw.deviceVideo.label),
+          }
+        : undefined,
+    techStack: raw.techStack
+      ? {
+          title: str(raw.techStack.title),
+          description: str(raw.techStack.description),
+          highlight: str(raw.techStack.highlight),
+        }
+      : undefined,
+    faqCategory: str(raw.faqCategory),
     hero: {
       title: hero.title,
       titleHighlights: hero.titleHighlights ?? undefined,
@@ -1005,6 +1082,12 @@ function mapServicePage(raw: any): ServicePageData {
           cta: raw.weGotYou.cta ?? undefined,
           theme: raw.weGotYou.theme ?? undefined,
           imagePosition: raw.weGotYou.imagePosition ?? undefined,
+          story: images(raw.weGotYou.story).length
+            ? images(raw.weGotYou.story).map((m: any) => ({
+                src: mediaSrc(m)!,
+                alt: m.alternativeText ?? "",
+              }))
+            : undefined,
         }
       : undefined,
     whyUs: raw.whyUs
@@ -1018,6 +1101,7 @@ function mapServicePage(raw: any): ServicePageData {
             image: mediaUrl(c.image),
             imageAlt: mediaAlt(c.image),
             description: c.description,
+            icon: c.icon ?? undefined,
           })),
         }
       : undefined,
@@ -1034,7 +1118,14 @@ function mapServicePage(raw: any): ServicePageData {
             image: mediaUrl(c.image),
             imageAlt: mediaAlt(c.image),
             description: c.description ?? undefined,
+            summary: str(c.summary),
           })),
+          eyebrow: str(raw.process.eyebrow),
+          closingTitle: str(raw.process.closingTitle),
+          closingText: str(raw.process.closingText),
+          appScreens: images(raw.process.appScreens).length
+            ? images(raw.process.appScreens).map((m: any) => mediaSrc(m)!)
+            : undefined,
         }
       : undefined,
     support: raw.support
@@ -1047,6 +1138,7 @@ function mapServicePage(raw: any): ServicePageData {
             image: mediaUrl(c.image),
             imageAlt: mediaAlt(c.image),
             description: c.description,
+            icon: c.icon ?? undefined,
           })),
         }
       : undefined,
@@ -1107,6 +1199,7 @@ function mapServicePage(raw: any): ServicePageData {
             description: c.description,
             image: mediaUrl(c.image),
             imageAlt: mediaAlt(c.image),
+            icon: c.icon ?? undefined,
           })),
         }
       : undefined,
@@ -1120,6 +1213,7 @@ function mapServicePage(raw: any): ServicePageData {
             description: c.description,
             image: mediaUrl(c.image),
             imageAlt: mediaAlt(c.image),
+            icon: c.icon ?? undefined,
           })),
         }
       : undefined,
@@ -1147,6 +1241,10 @@ export async function getServicePageData(
           // Sections with repeatable sub-components that have their own images
           "populate[whyUs][populate][cards][populate]": "*",
           "populate[process][populate][processCards][populate]": "*",
+          "populate[process][populate][appScreens]": "true",
+          "populate[heroReel][populate]": "*",
+          "populate[deviceVideo][populate]": "*",
+          "populate[techStack]": "true",
           "populate[support][populate][cards][populate]": "*",
           "populate[designsAdapt][populate][cards][populate]": "*",
           "populate[moreAbout][populate][cards][populate]": "*",

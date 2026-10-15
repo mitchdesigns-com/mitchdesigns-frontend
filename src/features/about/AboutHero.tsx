@@ -51,8 +51,8 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
         <Reveal immediate delay={0.4} className="flex flex-col gap-7 lg:col-span-5">
           <p className="text-xl text-black text-balance">{hero.description}</p>
           <Button size="lg" asChild>
-            <Link href={LEADS_URL} className="flex w-fit items-center gap-2">
-              Get Detailed Proposal
+            <Link href={hero.cta?.href ?? LEADS_URL} className="flex w-fit items-center gap-2">
+              {hero.cta?.label ?? "Get Detailed Proposal"}
               <ArrowRight size={20} />
             </Link>
           </Button>

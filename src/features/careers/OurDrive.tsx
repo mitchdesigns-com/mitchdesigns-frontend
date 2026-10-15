@@ -12,8 +12,8 @@ const DEFAULT_DRIVES = [
   { label: "Innovative Culture" },
 ];
 
-/** Studio photos (from the Figma design), one per drive — front-end only;
- *  each drive's label becomes its photo's description. */
+/** Fallback studio photos (from the Figma design), one per drive, used when
+ *  a drive has no CMS `image`; each drive's label becomes its photo's description. */
 const PHOTOS = [1, 2, 3, 4].map((n) => `/images/careers/drive-${n}.webp`);
 
 /** Resting tilt (deg); alternate photos lean the other way. */
@@ -32,7 +32,7 @@ function DrivePhoto({ src, label, lean, p }: { src: string; label: string; lean:
   );
 }
 
-type Props = { drives?: Array<{ label: string }> };
+type Props = { drives?: Array<{ label: string; image?: string | null }> };
 
 /**
  * "Our Drive": four studio photos, tilted alternately (as in Figma), each
@@ -65,8 +65,8 @@ export function OurDrive({ drives = DEFAULT_DRIVES }: Props = {}) {
         ref={ref}
         className="-mx-2 flex snap-x snap-mandatory gap-6 overflow-x-auto px-2 py-6 sm:snap-none sm:overflow-x-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {drives.map(({ label }, i) => (
-          <DrivePhoto key={label} src={PHOTOS[i % PHOTOS.length]} label={label} lean={i % 2 ? 1 : -1} p={p} />
+        {drives.map(({ label, image }, i) => (
+          <DrivePhoto key={label} src={image ?? PHOTOS[i % PHOTOS.length]} label={label} lean={i % 2 ? 1 : -1} p={p} />
         ))}
       </div>
     </Section>

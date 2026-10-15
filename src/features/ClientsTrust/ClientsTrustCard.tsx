@@ -8,14 +8,16 @@ type ClientsTrustCardProps = {
   image?: string | null;
   title: string;
   body: string;
+  /** CMS-picked icon key; unset → guessed from the title. */
+  icon?: string | null;
   /** 1-based position, shown as the "(01)" label. */
   index?: number;
 };
 
 /** One card of the floating trust grid (pointer-following glow comes from
  *  GlowCard; the parent grid supplies the 3D tilt). */
-export function ClientsTrustCard({ title, body, index = 1 }: ClientsTrustCardProps) {
-  const { Icon, loop } = trustIconFor(title, index - 1);
+export function ClientsTrustCard({ title, body, icon, index = 1 }: ClientsTrustCardProps) {
+  const { Icon, loop } = trustIconFor(title, index - 1, icon);
 
   return (
     <GlowCard className="gap-8 p-6 lg:p-8">

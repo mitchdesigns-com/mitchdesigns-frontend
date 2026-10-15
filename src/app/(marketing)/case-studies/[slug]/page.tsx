@@ -130,7 +130,7 @@ export default async function SingleCaseStudyPage({
           case "blocks.media-block":
             return (
               <Section key={i} data-theme="dark" className="py-10">
-                <SingleImageInRow image={block.file} />
+                <SingleImageInRow image={block.file} poster={block.poster} />
               </Section>
             );
           case "blocks.centered-quote":

@@ -23,7 +23,7 @@ function ServiceBullet({ label }: { label: string }) {
 // ── sub-components ─────────────────────────────────────────────────────────
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
-  const coverSrc = listCover(cs.slug) ?? strapiMedia(cs.cover?.url);
+  const coverSrc = strapiMedia(cs.listCover?.url) ?? listCover(cs.slug) ?? strapiMedia(cs.cover?.url);
 
   return (
     <Link

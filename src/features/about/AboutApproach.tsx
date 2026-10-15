@@ -25,8 +25,8 @@ export function AboutApproach({ approach }: { approach: AboutContent["approach"]
           </div>
           <p className="text-xl text-fg-muted text-balance">{approach.body}</p>
           <Button size="lg" asChild>
-            <Link href={LEADS_URL} className="flex w-fit items-center gap-2">
-              Get Detailed Proposal
+            <Link href={approach.cta?.href ?? LEADS_URL} className="flex w-fit items-center gap-2">
+              {approach.cta?.label ?? "Get Detailed Proposal"}
               <ArrowRight size={20} />
             </Link>
           </Button>

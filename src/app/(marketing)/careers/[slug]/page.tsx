@@ -50,13 +50,18 @@ export default async function SingleCareerPage({
   ]);
   if (!role) notFound();
 
-  const applyHref = `mailto:${APPLY_EMAIL}?subject=${encodeURIComponent(
+  const applyHref = `mailto:${careersPage?.applyEmail ?? APPLY_EMAIL}?subject=${encodeURIComponent(
     `Application — ${role.title}`,
   )}`;
 
   return (
     <main>
-      <JobDetailBody role={role} applyHref={applyHref} />
+      <JobDetailBody
+        role={role}
+        applyHref={applyHref}
+        jobDetailsLabel={careersPage?.jobDetailsLabel}
+        applyNowLabel={careersPage?.applyNowLabel}
+      />
       <CareerExperience
         heading={careersPage?.experienceHeading}
         cards={careersPage?.experienceCards}

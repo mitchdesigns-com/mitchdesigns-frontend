@@ -11,6 +11,7 @@ const poppins = Poppins({
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getSiteSettings } from "@/lib/cms/queries";
 import type { SiteSettings } from "@/lib/cms/types";
+import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 // import { UserbackWidget } from "@/components/Userback";
 
 const SITE_URL = "https://mitchdesigns.com";
@@ -118,7 +119,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-dvh antialiased">
         <JsonLd data={siteGraph} />
-        {children}
+        <SiteSettingsProvider settings={settings}>{children}</SiteSettingsProvider>
         {/* <UserbackWidget /> */}
       </body>
     </html>

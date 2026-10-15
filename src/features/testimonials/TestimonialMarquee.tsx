@@ -8,6 +8,7 @@ import { useDragScrub } from "@/components/ui/useDragScrub";
 import { cn } from "@/lib/cn";
 import { Marquee } from "@/components/ui/Marquee";
 import { Section } from "@/components/layout/Section";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { strapiMedia } from "@/lib/cms/media";
 import type { Testimonial } from "@/lib/cms/types";
 import { HeartBurst } from "./HeartBurst";
@@ -68,6 +69,7 @@ function ReviewCard({ t, compact }: { t: Testimonial & { id: number }; compact: 
 }
 
 export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
+  const { testimonialsHeading, testimonialsIntro } = useSiteSettings();
   // Compact cards + tighter gap on phones (the Marquee gap is a px value).
   const [compact, setCompact] = useState(false);
   useEffect(() => {
@@ -111,13 +113,13 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
       {/* Header */}
       <Reveal className="container-page mb-10 flex flex-col items-center gap-3.5 text-center">
         <h2 className="relative inline-flex items-center text-hero-3 font-bold text-white">
-          Loved By Clients
+          {testimonialsHeading}
           <span className="absolute -right-8 -top-1 rotate-15">
             <HeartBurst />
           </span>
         </h2>
         <p className="max-w-lg text-base text-white text-balance">
-          Hear it from the brands and people who trusted us — genuine feedback that tells our story better than we can.
+          {testimonialsIntro}
         </p>
       </Reveal>
 
