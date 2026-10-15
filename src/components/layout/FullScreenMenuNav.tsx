@@ -31,7 +31,18 @@ function SlideLabel({ label }: { label: string }) {
  * dim to 40% while the service list slides in on the right. Shared verbatim by
  * `Header` and `HeaderMinimal`; `onNavigate` closes the overlay on selection.
  */
-export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
+export function FullScreenMenuNav({
+  onNavigate,
+  anchorY,
+}: {
+  onNavigate: () => void;
+  /** Px from the top where the first item's centre should sit (e.g. level
+   *  with the close button). When set, the items spread down to 3/4 of the
+   *  screen height instead of stacking tightly. */
+  anchorY?: number;
+}) {
+  // One nav row = the label (1em of text-menu) + its py-1.5 padding.
+  const rowHalf = "(var(--text-menu) + 0.75rem) / 2";
   const [showServices, setShowServices] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +57,10 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
   }, [showServices]);
 
   return (
-    <nav className="flex flex-1 flex-col justify-start pt-8 pb-16 md:pt-12">
+    <nav
+      className={cn("flex flex-1 flex-col justify-start pb-16", anchorY === undefined && "pt-8 md:pt-12")}
+      style={anchorY === undefined ? undefined : { paddingTop: `calc(${anchorY}px - ${rowHalf})` }}
+    >
       <div
         ref={panelRef}
         className="container-page relative flex flex-col md:flex-row md:items-center md:gap-8"
@@ -55,8 +69,14 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
         <ul
           className={cn(
             "flex w-full flex-col transition-[width] duration-500 ease-out-soft",
+            anchorY !== undefined && "justify-between",
             showServices ? "md:w-1/2" : "md:w-full",
           )}
+          style={
+            anchorY === undefined
+              ? undefined
+              : { height: `calc(75svh - ${anchorY}px + ${rowHalf})` }
+          }
         >
           {NAV_LINKS.map((item, i) => {
             const isServices = item.href === null;
@@ -66,7 +86,7 @@ export function FullScreenMenuNav({ onNavigate }: { onNavigate: () => void }) {
                 key={item.label}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.05 + i * 0.04, ease: EASE }}
+                transition={{ duration: 0.45, delay: 0.18 + i * 0.05, ease: EASE }}
               >
                 {item.href ? (
                   <Link

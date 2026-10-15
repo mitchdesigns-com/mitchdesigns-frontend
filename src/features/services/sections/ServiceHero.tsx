@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -43,9 +43,12 @@ export function ServiceHero({
   cta,
   reverseLayout = false,
   reel,
+  scene,
 }: ServiceHeroProps & {
   /** Fast project montage shown instead of the CMS image (front-end only). */
   reel?: ReelShot[];
+  /** Coded animated scene shown instead of the CMS image (front-end only). */
+  scene?: ReactNode;
 }) {
   // Swap to a local fallback image if the CMS image fails to load.
   const [imgSrc, setImgSrc] = useState(image);
@@ -88,7 +91,9 @@ export function ServiceHero({
           variants={fadeUp}
           className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-112"
         >
-          {reel?.length ? (
+          {scene ? (
+            scene
+          ) : reel?.length ? (
             <ShotReel shots={reel} sizes="(max-width: 768px) 100vw, 50vw" />
           ) : image && (
             <Image

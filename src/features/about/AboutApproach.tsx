@@ -1,55 +1,46 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
-import { Reveal } from "@/components/motion";
+import { Parallax, ParallaxImage, Reveal } from "@/components/motion";
 import type { AboutContent } from "@/lib/cms/types";
 import { LEADS_URL } from "@/config/nav";
+import { aboutPhoto } from "./photos";
+import { Eyebrow } from "./Eyebrow";
 
-export function AboutApproach({
-  approach,
-}: {
-  approach: AboutContent["approach"];
-}) {
+/**
+ * "How We Work": the approach copy beside a photo that rides at its own
+ * scroll speed and drifts inside its frame, with a yellow block peeking out
+ * behind it for depth.
+ */
+export function AboutApproach({ approach }: { approach: AboutContent["approach"] }) {
+  const photo = aboutPhoto(approach.image, 1);
   return (
-    <Section theme="dark" className="py-30">
-      <div className="flex flex-col items-center gap-15 lg:flex-row lg:justify-between">
-        {/* Left: text content */}
-        <Reveal className="flex w-full max-w-[666px] flex-col gap-15" delay={0.15}>
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <span className="text-base font-bold text-yellow">
-                {approach.eyebrow}
-              </span>
-              <h2 className="text-hero-4 font-bold leading-[110%] text-fg">
-                {approach.title}
-              </h2>
-            </div>
-            <p className="text-xl leading-[130%] text-fg text-balance">
-              {approach.body}
-            </p>
+    <Section theme="dark" className="py-24 md:py-32">
+      <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
+        <Reveal className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
+            <Eyebrow>{approach.eyebrow}</Eyebrow>
+            <h2 className="text-hero-3 font-bold text-fg text-balance">{approach.title}</h2>
           </div>
-
+          <p className="text-xl text-fg-muted text-balance">{approach.body}</p>
           <Button size="lg" asChild>
-            <Link href={LEADS_URL} className="flex items-center gap-2">
+            <Link href={LEADS_URL} className="flex w-fit items-center gap-2">
               Get Detailed Proposal
               <ArrowRight size={20} />
             </Link>
           </Button>
         </Reveal>
 
-        {/* Right: decorative graphic */}
-        <Reveal className="relative aspect-[666/600] w-full max-w-[666px] overflow-hidden rounded-card-md bg-space-grey">
-          {approach.image && (
-            <Image
-              src={approach.image.url}
-              alt={approach.image.alt ?? ""}
-              fill
-              className="object-cover"
-            />
-          )}
-        </Reveal>
+        <div className="relative">
+          {/* Yellow block behind, moving the other way */}
+          <Parallax speed={40} className="absolute -right-4 -bottom-6 left-12 top-12 md:-right-8 md:-bottom-10">
+            <div className="size-full bg-yellow" />
+          </Parallax>
+          <Parallax speed={-40} className="relative">
+            <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-6/5" />
+          </Parallax>
+        </div>
       </div>
     </Section>
   );

@@ -3,11 +3,10 @@
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, animate, useMotionTemplate, useMotionValue } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { useSectionTheme } from "@/hooks/useSectionTheme";
 import { HeaderConfigContext } from "@/context/HeaderConfigContext";
-import { Logo } from "../icons/Logo";
 import { FullScreenMenuNav } from "./FullScreenMenuNav";
 import { LEADS_URL } from "@/config/nav";
 
@@ -27,6 +26,13 @@ export function Header() {
   const [scrolledPast, setScrolledPast] = useState(false);
   const [inFooter, setInFooter] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // The menu grows as a circle out of the button that opened it and shrinks
+  // back into it; it stays mounted until the closing circle has finished.
+  const [menuMounted, setMenuMounted] = useState(false);
+  const revealR = useMotionValue(0);
+  const revealX = useMotionValue(0);
+  const revealY = useMotionValue(HEADER_HEIGHT / 2);
+  const revealClip = useMotionTemplate`circle(${revealR}px at ${revealX}px ${revealY}px)`;
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -65,10 +71,21 @@ export function Header() {
 
   function closeAll() {
     setMenuOpen(false);
+    void animate(revealR, 0, { duration: 0.5, ease: [0.65, 0, 0.35, 1] }).then(() => {
+      if (revealR.get() === 0) setMenuMounted(false);
+    });
   }
 
-  function openMenu() {
+  function openMenu(e: React.MouseEvent<HTMLElement>) {
+    const b = e.currentTarget.getBoundingClientRect();
+    const x = b.left + b.width / 2;
+    const y = b.top + b.height / 2;
+    const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    revealX.set(x);
+    revealY.set(y);
+    setMenuMounted(true);
     setMenuOpen(true);
+    void animate(revealR, r, { duration: 0.6, ease: [0.65, 0, 0.35, 1] });
   }
 
   const isDark = sectionTheme === "dark";
@@ -78,10 +95,10 @@ export function Header() {
 
   // Sticky floating menu button: shown once scrolled (and the inline header
   // menu isn't already on screen), hidden over the footer (which lists every
-  // link), and kept on as the close (X) while the menu is open so there's
-  // always a visible way to dismiss it.
+  // link). While the menu is open it's always the close (X) — one black
+  // circle in one place, however the menu was opened.
   const fabShown =
-    scrolledPast && (menuOpen || (!inFooter && (sticky ? !visible : true)));
+    menuOpen || (scrolledPast && !inFooter && (sticky ? !visible : true));
 
   return (
     <>
@@ -146,7 +163,7 @@ export function Header() {
               type="button"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
-              onClick={() => (menuOpen ? closeAll() : openMenu())}
+              onClick={(e) => (menuOpen ? closeAll() : openMenu(e))}
               className={cn(
                 "relative flex flex-col items-start justify-center transition-opacity hover:opacity-70",
                 fabShown && "pointer-events-none opacity-0",
@@ -178,11 +195,15 @@ export function Header() {
         </div>
       </motion.header>
 
-      {/* Sticky floating menu toggle — aligned to the container's right edge.
-          Becomes a close (X) while the menu is open, and sits above the menu
-          overlay (z-60) so it can always dismiss it. */}
-      <div className="pointer-events-none fixed inset-x-0 top-5 z-60 md:top-8">
-        <div className="container-page flex justify-end">
+      {/* Sticky floating menu toggle — centred exactly on the header's menu
+          icon (same row height, same right-edge slot), so the menu icon and
+          the close (X) always sit in one spot. Above the overlay (z-60). */}
+      <div
+        className="pointer-events-none fixed inset-x-0 top-0 z-60 flex items-center"
+        style={{ height: HEADER_HEIGHT }}
+      >
+        <div className="container-page flex w-full justify-end">
+          <div className="flex justify-center" style={{ width: 75 }}>
           <AnimatePresence>
             {fabShown && (
               <motion.button
@@ -190,65 +211,54 @@ export function Header() {
                 type="button"
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={menuOpen}
-                onClick={() => (menuOpen ? closeAll() : openMenu())}
+                onClick={(e) => (menuOpen ? closeAll() : openMenu(e))}
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.6 }}
                 transition={{ duration: 0.25, ease: EASE }}
                 className={cn(
-                  "pointer-events-auto flex size-16 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-20",
+                  "pointer-events-auto flex size-16 shrink-0 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-20",
                   menuOpen ? "bg-black" : "bg-yellow",
                 )}
               >
-                <span className="relative block h-6 w-9">
+                {/* The header's two long bars, scaled down */}
+                <span className="relative block h-4 w-9 md:w-11">
                   <motion.span
                     animate={menuOpen ? { y: 6, rotate: 45 } : { y: 0, rotate: 0 }}
-                    transition={{ duration: 0.3, ease: EASE }}
+                    transition={{ duration: 0.35, ease: EASE }}
                     className={cn(
-                      "absolute left-0 block h-1 w-full rounded-pill",
+                      "absolute inset-x-0 top-0 block h-1 rounded-pill",
                       menuOpen ? "bg-white" : "bg-black",
                     )}
-                    style={{ top: 4 }}
                   />
                   <motion.span
                     animate={menuOpen ? { y: -6, rotate: -45 } : { y: 0, rotate: 0 }}
-                    transition={{ duration: 0.3, ease: EASE }}
+                    transition={{ duration: 0.35, ease: EASE }}
                     className={cn(
-                      "absolute left-0 block h-1 w-full rounded-pill",
+                      "absolute inset-x-0 bottom-0 block h-1 rounded-pill",
                       menuOpen ? "bg-white" : "bg-black",
                     )}
-                    style={{ top: 16 }}
                   />
                 </span>
               </motion.button>
             )}
           </AnimatePresence>
+          </div>
         </div>
       </div>
 
       {/* Full-screen yellow menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            key="fullscreen-menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-yellow"
-          >
-            {/* Logo row */}
-            <div
-              className="flex w-full items-center justify-center"
-              style={{ height: HEADER_HEIGHT }}
-            >
-              <Logo className="size-16 md:size-20" />
-            </div>
-
-            <FullScreenMenuNav onNavigate={closeAll} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {menuMounted && (
+        <motion.div
+          key="fullscreen-menu"
+          className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-yellow"
+          style={{ clipPath: revealClip }}
+          inert={!menuOpen}
+        >
+          {/* First item level with the close button; items spread to 3/4 height. */}
+          <FullScreenMenuNav onNavigate={closeAll} anchorY={HEADER_HEIGHT / 2} />
+        </motion.div>
+      )}
     </>
   );
 }

@@ -30,7 +30,7 @@ export function Editable({
   shared = true,
   enumValues,
   raw,
-  as: Tag = "span",
+  as: As = "span",
   editMode = false,
   children,
   ...rest
@@ -47,6 +47,8 @@ export function Editable({
   editMode?: boolean;
   children?: React.ReactNode;
 } & Record<string, unknown>) {
+  // Typed as one HTML tag so JSX stays resolvable alongside R3F's 3D elements.
+  const Tag = As as "span";
   if (!editMode || !documentId) return <Tag {...rest}>{children}</Tag>;
   return (
     <Tag

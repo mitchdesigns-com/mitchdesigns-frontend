@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { strapiMedia } from "@/lib/cms/media";
+import { listCover } from "./listCovers";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -22,7 +23,7 @@ function ServiceBullet({ label }: { label: string }) {
 // ── sub-components ─────────────────────────────────────────────────────────
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
-  const coverSrc = strapiMedia(cs.cover?.url);
+  const coverSrc = listCover(cs.slug) ?? strapiMedia(cs.cover?.url);
 
   return (
     <Link
@@ -59,8 +60,8 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         </div>
       </div>
 
-      {/* Center — cover image (needs an explicit ratio when the card is stacked) */}
-      <div className="relative aspect-video w-full overflow-hidden lg:aspect-auto lg:w-auto lg:flex-1">
+      {/* Cover image — always 940:580; the info panel stretches to its height */}
+      <div className="relative aspect-case-cover w-full overflow-hidden lg:w-auto lg:flex-1">
         {coverSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

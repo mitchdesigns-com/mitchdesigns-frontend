@@ -73,13 +73,20 @@ const letterRise: Variants = {
 /** Handwritten line is "written" left to right once the letters land. */
 const SIGNATURE_DELAY = 0.75;
 const signatureWrite: Variants = {
+  // Hidden = fully clipped AND transparent: the script's first stroke
+  // overhangs its box, so a clip alone left a yellow sliver showing.
   hidden: {
-    clipPath: "inset(-40% 100% -40% -5%)",
+    clipPath: "inset(-40% 110% -40% -10%)",
+    opacity: 0,
     transition: { duration: 0.25, ease: easeInOutSoft },
   },
   visible: {
-    clipPath: "inset(-40% -5% -40% -5%)",
-    transition: { duration: 1.1, ease: easeInOutSoft, delay: SIGNATURE_DELAY },
+    clipPath: "inset(-40% -10% -40% -10%)",
+    opacity: 1,
+    transition: {
+      clipPath: { duration: 1.1, ease: easeInOutSoft, delay: SIGNATURE_DELAY },
+      opacity: { duration: 0.01, delay: SIGNATURE_DELAY },
+    },
   },
 };
 

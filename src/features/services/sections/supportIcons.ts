@@ -2,10 +2,14 @@ import { CardIcon } from "@/components/icons/CardIcon";
 import { ChatIcon } from "@/components/icons/ChatIcon";
 import { GaugeIcon } from "@/components/icons/GaugeIcon";
 import { HeadsetIcon } from "@/components/icons/HeadsetIcon";
+import { MonitorIcon } from "@/components/icons/MonitorIcon";
+import { PhoneIcon } from "@/components/icons/PhoneIcon";
+import { TabletIcon } from "@/components/icons/TabletIcon";
 import { LifeBuoyIcon } from "@/components/icons/LifeBuoyIcon";
 import { PresentationIcon } from "@/components/icons/PresentationIcon";
 import { PulseIcon } from "@/components/icons/PulseIcon";
 import { ServerIcon } from "@/components/icons/ServerIcon";
+import { TeamIcon } from "@/components/icons/TeamIcon";
 
 type SupportIcon = {
   Icon: typeof HeadsetIcon;
@@ -20,10 +24,15 @@ const RULES: Array<[RegExp, SupportIcon]> = [
   [/communicat|async|chat|update/i, { Icon: ChatIcon, loop: "icon-loop-chat" }],
   [/staging|server|environment|hosting/i, { Icon: ServerIcon, loop: "icon-loop-server" }],
   [/payment|gateway|checkout/i, { Icon: CardIcon, loop: "icon-loop-card" }],
-  [/training|onboard|workshop/i, { Icon: PresentationIcon, loop: "icon-loop-board" }],
-  [/monitor|performance|uptime/i, { Icon: PulseIcon, loop: "icon-loop-pulse" }],
-  [/growth|sprint|scale/i, { Icon: GaugeIcon, loop: "icon-loop-gauge" }],
+  [/training|onboard|workshop/i, { Icon: TeamIcon, loop: "icon-loop-team" }],
+  [/monitor|performance|speed/i, { Icon: GaugeIcon, loop: "icon-loop-gauge" }],
+  [/growth|sprint|scale/i, { Icon: PresentationIcon, loop: "icon-loop-board" }],
+  [/uptime|health|alert/i, { Icon: PulseIcon, loop: "icon-loop-pulse" }],
   [/retainer|support|partner|maintenance/i, { Icon: LifeBuoyIcon, loop: "icon-loop-buoy" }],
+  // Device cards ("Designs That Adapt")
+  [/desktop|monitor|dashboard/i, { Icon: MonitorIcon, loop: "icon-loop-monitor" }],
+  [/tablet/i, { Icon: TabletIcon, loop: "icon-loop-tablet" }],
+  [/mobile|phone/i, { Icon: PhoneIcon, loop: "icon-loop-phone" }],
 ];
 
 const FALLBACK = RULES.map(([, icon]) => icon);

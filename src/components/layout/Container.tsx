@@ -9,6 +9,6 @@ export function Container({
   className,
   ...props
 }: ContainerProps) {
-  const Component = Tag as React.ElementType;
+  const Component = Tag as "div";
   return <Component className={cn("container-page", className)} {...props} />;
 }

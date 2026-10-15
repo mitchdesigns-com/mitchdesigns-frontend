@@ -6,7 +6,7 @@ import { InnovateMarquee } from "@/features/about/InnovateMarquee";
 import { AboutTeam } from "@/features/about/AboutTeam";
 import { AboutStory } from "@/features/about/AboutStory";
 import { CTABanner } from "@/features/cta";
-import { getAboutPage, getTeam } from "@/lib/cms";
+import { getAboutPage } from "@/lib/cms";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const [about, team] = await Promise.all([getAboutPage(), getTeam()]);
+  const about = await getAboutPage();
 
   return (
     <>
@@ -31,7 +31,7 @@ export default async function AboutPage() {
       <AboutMetrics metrics={about.metrics} />
       <AboutApproach approach={about.approach} />
       <InnovateMarquee innovate={about.innovate} />
-      <AboutTeam team={about.team} members={team} />
+      <AboutTeam team={about.team} />
       <AboutStory story={about.story} />
       <CTABanner />
     </>

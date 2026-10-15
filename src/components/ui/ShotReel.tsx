@@ -1,13 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import type { ReelShot } from "@/config/serviceReels";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";
 
 /** How long each shot stays up (ms) — fast, social-reel pacing. */
 const SHOT_MS = 550;
+
+/** An animated item: a component that plays while `active`, for `ms`. */
+export type ReelBeat = {
+  key: string;
+  label: string;
+  backdrop: string;
+  ms: number;
+  Beat: ComponentType<{ active: boolean }>;
+};
+export type ReelItem = ReelShot | ReelBeat;
+const isBeat = (item: ReelItem): item is ReelBeat => "Beat" in item;
 
 /**
  * Each shot is in one of three states. "in" rises into place from a soft
@@ -43,10 +54,11 @@ const shotVariants: Variants = {
 
 /**
  * Rapid project montage: shots push in one after another with the project
- * name. Fills its (relative, sized) parent. Runs only while on screen;
- * reduced motion shows the first shot, still.
+ * name. Fills its (relative, sized) parent; each shot shows whole (contained)
+ * on its own backdrop colour, so no widget is ever cut at the box edge. Runs
+ * only while on screen; reduced motion shows the first shot, still.
  */
-export function ShotReel({ shots, sizes }: { shots: ReelShot[]; sizes: string }) {
+export function ShotReel({ shots, sizes }: { shots: ReelItem[]; sizes: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.3 });
   const reduced = useReducedMotion();
@@ -54,43 +66,48 @@ export function ShotReel({ shots, sizes }: { shots: ReelShot[]; sizes: string })
   const [prev, setPrev] = useState<number | null>(null);
   const playing = inView && !reduced && shots.length > 1;
 
+  // Static shots flash by; animated beats hold for their own length.
+  const current = shots[index];
+  const holdMs = current && isBeat(current) ? current.ms : SHOT_MS;
   useEffect(() => {
     if (!playing) return;
-    const id = window.setInterval(() => {
-      setIndex((i) => {
-        setPrev(i);
-        return (i + 1) % shots.length;
-      });
-    }, SHOT_MS);
-    return () => window.clearInterval(id);
-  }, [playing, shots.length]);
-
-  const current = shots[index];
+    const id = window.setTimeout(() => {
+      setPrev(index);
+      setIndex((index + 1) % shots.length);
+    }, holdMs);
+    return () => window.clearTimeout(id);
+  }, [playing, index, holdMs, shots.length]);
 
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden bg-space-grey">
       {/* Every shot stays mounted (decoded once, no blank frame on repeat). */}
       {shots.map((s, i) => (
         <motion.div
-          key={s.src}
+          key={isBeat(s) ? s.key : s.src}
           className="absolute inset-0"
+          // Whole shot, never cropped; its own backdrop fills the rest.
+          style={{ backgroundColor: s.backdrop }}
           variants={shotVariants}
           initial={i === 0 ? "in" : "idle"}
           animate={i === index ? "in" : i === prev ? "out" : "idle"}
         >
-          <Image
-            src={s.src}
-            alt={i === index ? s.alt : ""}
-            fill
-            sizes={sizes}
-            priority={i === 0}
-            loading={i === 0 ? undefined : "eager"}
-            className="object-cover"
-          />
+          {isBeat(s) ? (
+            <s.Beat active={playing && i === index} />
+          ) : (
+            <Image
+              src={s.src}
+              alt={i === index ? s.alt : ""}
+              fill
+              sizes={sizes}
+              priority={i === 0}
+              loading={i === 0 ? undefined : "eager"}
+              className={s.cover ? "object-cover" : "object-contain"}
+            />
+          )}
         </motion.div>
       ))}
 
-      {current && (
+      {current?.label && (
         <motion.span
           key={current.label + index}
           initial={reduced ? false : { opacity: 0, y: 6 }}

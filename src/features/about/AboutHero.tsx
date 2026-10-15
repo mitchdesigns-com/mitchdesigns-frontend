@@ -1,44 +1,57 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { Fragment } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
-import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
+import { ParallaxImage, Reveal } from "@/components/motion";
+import { easeOutSoft } from "@/lib/motion";
 import type { AboutContent } from "@/lib/cms/types";
 import { LEADS_URL } from "@/config/nav";
+import { aboutPhoto } from "./photos";
+import { Eyebrow } from "./Eyebrow";
 
+/**
+ * About hero: the headline rises in line by line beside the intro and CTA;
+ * below, three equal columns (as in Figma) — the "Clarity Before Creativity"
+ * card, a tall studio photo and a team photo — with sharp corners.
+ */
 export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
+  const reduced = useReducedMotion();
   const titleLines = hero.title.split("\n");
+  const [first, second] = [aboutPhoto(hero.images[0], 0), aboutPhoto(hero.images[1], 1)];
 
   return (
-    <Section className="py-25">
-      {/* Top row: heading left + description right */}
-      <div className="flex items-end justify-between gap-10 mb-25">
-        {/* Left: badge overlapping heading */}
-        <div className="flex flex-col" style={{ gap: 0 }}>
-          <span className="inline-flex w-fit items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black -rotate-3 mb-[-20px] z-10 relative">
+    <Section className="pt-header pb-20 md:pb-32">
+      <div className="grid gap-10 pt-10 md:pt-16 lg:grid-cols-12 lg:items-end">
+        {/* Badge + headline, each line rising out of its own mask */}
+        <div className="flex flex-col lg:col-span-7">
+          <Eyebrow immediate className="relative z-10 -mb-3">
             {hero.badge}
-          </span>
-          <h1 className="text-hero-1 font-black leading-[110%] text-space-grey">
+          </Eyebrow>
+          <h1 className="text-5xl font-black leading-none text-space-grey sm:text-hero-1">
             {titleLines.map((line, i) => (
-              <Fragment key={i}>
-                {i > 0 && <br />}
-                {line}
-              </Fragment>
+              <span key={i} className="block overflow-hidden pb-2">
+                <motion.span
+                  className="block"
+                  initial={reduced ? false : { y: "105%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 0.9, ease: easeOutSoft, delay: 0.2 + i * 0.12 }}
+                >
+                  {line}
+                </motion.span>
+              </span>
             ))}
           </h1>
         </div>
 
-        {/* Right: description + CTA — above the fold, so reveal on mount
-            rather than waiting for the scroll trigger (which never fires
-            for content already in view on first paint). */}
-        <Reveal immediate className="flex max-w-[517px] flex-col gap-7">
-          <p className="text-xl leading-[125%] text-black text-balance">
-            {hero.description}
-          </p>
+        {/* Intro + CTA (above the fold, so it reveals on mount) */}
+        <Reveal immediate delay={0.4} className="flex flex-col gap-7 lg:col-span-5">
+          <p className="text-xl text-black text-balance">{hero.description}</p>
           <Button size="lg" asChild>
-            <Link href={LEADS_URL} className="flex items-center gap-2">
+            <Link href={LEADS_URL} className="flex w-fit items-center gap-2">
               Get Detailed Proposal
               <ArrowRight size={20} />
             </Link>
@@ -46,30 +59,84 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
         </Reveal>
       </div>
 
-      {/* Bottom row: text panel + 2 image panels */}
-      <RevealStagger className="grid grid-cols-3 gap-3 h-[550px]" stagger={0.08}>
-        {/* Left panel: grey with text */}
-        <RevealItem className="flex flex-col justify-between rounded-sm bg-panel p-10">
-          <p className="text-xl font-medium leading-[125%] text-black">
-            {hero.panel.title}
-          </p>
-          <p className="text-base leading-[125%] text-black text-balance">
-            {hero.panel.body}
-          </p>
-        </RevealItem>
-
-        {hero.images.slice(0, 2).map((img, i) => (
-          <RevealItem key={i}>
-            <Image
-              src={img.url}
-              alt={img.alt ?? "About MitchDesigns"}
-              width={600}
-              height={600}
-              className="rounded-sm"
-            />
-          </RevealItem>
-        ))}
-      </RevealStagger>
+      <HeroCollage panel={hero.panel} first={first} second={second} />
     </Section>
+  );
+}
+
+type Photo = { url: string; alt: string };
+
+/** Slides a box from the top of its column to the bottom (or back) as `p`
+ *  runs 0 → 1: top 0% → 100% while lifting by its own height. */
+function useGlide(p: MotionValue<number>, from: 0 | 1) {
+  const range = from === 0 ? ["0%", "100%"] : ["100%", "0%"];
+  const lift = from === 0 ? ["0%", "-100%"] : ["-100%", "0%"];
+  return { top: useTransform(p, [0, 1], range), y: useTransform(p, [0, 1], lift) };
+}
+
+/**
+ * Three equal columns: the text card starts aligned to the top of the tall
+ * centre photo and the third photo to its bottom; scrolling through glides
+ * them past each other until the alignment is reversed (and back again on
+ * the way up). Phones simply stack them.
+ */
+function HeroCollage({ panel, first, second }: { panel: AboutContent["hero"]["panel"]; first: Photo; second: Photo }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const sync = () => setWide(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  // Progress from the very top of the page (so it starts exactly aligned)
+  // until the collage has scrolled up past the middle of the screen.
+  const { scrollY } = useScroll();
+  const [end, setEnd] = useState(1);
+  useEffect(() => {
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      setEnd(Math.max(1, top + el.offsetHeight * 0.6 - window.innerHeight * 0.5));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+  const progress = useTransform(scrollY, (y) => Math.min(1, Math.max(0, y / end)));
+  const down = useGlide(progress, 0);
+  const up = useGlide(progress, 1);
+  const glide = wide && !reduced;
+
+  const card = (
+    <div className="flex aspect-5/4 flex-col justify-between bg-panel p-8 md:p-10">
+      <p className="text-2xl text-black text-balance">{panel.title}</p>
+      <p className="text-base text-black text-balance">{panel.body}</p>
+    </div>
+  );
+  const side = (box: React.ReactNode, style: ReturnType<typeof useGlide>, still: "top" | "bottom") => (
+    <div className="relative">
+      <motion.div
+        className={glide ? "absolute inset-x-0" : still === "top" ? "md:absolute md:inset-x-0 md:top-0" : "md:absolute md:inset-x-0 md:bottom-0"}
+        style={glide ? style : undefined}
+      >
+        {box}
+      </motion.div>
+    </div>
+  );
+
+  return (
+    <div ref={ref} className="mt-16 grid grid-cols-1 gap-3 md:mt-24 md:grid-cols-3">
+      {side(card, down, "top")}
+      <ParallaxImage src={first.url} alt={first.alt} priority className="aspect-17/20" sizes="(max-width: 768px) 100vw, 33vw" />
+      {side(
+        <ParallaxImage src={second.url} alt={second.alt} className="aspect-10/9" sizes="(max-width: 768px) 100vw, 33vw" />,
+        up,
+        "bottom",
+      )}
+    </div>
   );
 }

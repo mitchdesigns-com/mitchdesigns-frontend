@@ -16,12 +16,13 @@ export function DesignsAdapt({ title, description, cards }: DesignsAdaptProps) {
               key={card.title}
               className="flex flex-col gap-5 rounded-card border border-border bg-bg p-6"
             >
-              <div className="relative aspect-video overflow-hidden rounded-card-sm">
+              {/* Whole shot on the dark reel backdrop (transparent exports). */}
+              <div className="relative aspect-video overflow-hidden rounded-card-sm bg-space-grey">
                 <Image
                   src={card.image}
                   alt={card.imageAlt ?? ""}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>

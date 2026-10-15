@@ -8,6 +8,7 @@ import { GlowCard } from "@/components/ui/GlowCard";
 import type { WhyUsSectionProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 import { Logo } from "@/components/icons/Logo";
+import { whyLineIconFor } from "./whyLineIcons";
 
 export function WhyUsSection({
   title,
@@ -15,33 +16,29 @@ export function WhyUsSection({
   cards,
   variant = "grid",
 }: WhyUsSectionProps) {
-  // Each 3D illustration gets its own endless motion, staggered so the
-  // grid never moves in step.
-  const LOOPS = ["animate-illo-float", "animate-illo-sway", "animate-illo-breathe", "animate-illo-wander"];
-  const cardEls = cards.map((card, i) => (
-    <RevealItem key={card.title} className="h-full transform-3d">
-      <GlowCard className="gap-6 p-5">
-        {/* Transparent 3D icon, left-aligned with the title; the frame
-            doesn't clip so the looping motion is never cut off. */}
-        <div className="relative aspect-video">
-          <div className="absolute inset-x-0 inset-y-2">
-            <Image
-              src={card.image}
-              alt={card.imageAlt ?? ""}
-              fill
-              className={`origin-left object-contain object-left ${LOOPS[i % LOOPS.length]}`}
-              style={{ animationDelay: `${-(i * 0.7).toFixed(1)}s` }}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+  const cardEls = cards.map((card, i) => {
+    // Flat outline icon picked from the title, with its own looping motion
+    // (the CMS image isn't shown).
+    const { Icon, loop } = whyLineIconFor(card.title, i);
+    return (
+      <RevealItem key={card.title} className="h-full transform-3d">
+        <GlowCard className="gap-6 p-5">
+          <span className="flex size-20 items-center justify-center rounded-card-sm bg-yellow/10 text-yellow ring-1 ring-yellow/25">
+            <Icon size={44} className={loop} />
+          </span>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-normal text-balance text-white">
+              {card.title}
+            </h3>
+            <RichText
+              content={card.description}
+              className="text-base font-medium text-grey-500"
             />
           </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-xl font-normal text-balance text-white">{card.title}</h3>
-          <RichText content={card.description} className="text-base font-medium text-grey-500" />
-        </div>
-      </GlowCard>
-    </RevealItem>
-  ));
+        </GlowCard>
+      </RevealItem>
+    );
+  });
 
   return (
     <Section theme="dark" className="py-20 md:py-28">
@@ -69,12 +66,17 @@ export function WhyUsSection({
                   />
                 </div>
                 <h3 className="text-lg font-semibold text-fg">{card.title}</h3>
-                <RichText content={card.description} className="text-base text-fg-muted" />
+                <RichText
+                  content={card.description}
+                  className="text-base text-fg-muted"
+                />
               </div>
             ))}
           </CardSlider>
         ) : (
-          <TiltGrid className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <TiltGrid
+            className={`grid grid-cols-1 gap-6 sm:grid-cols-2 ${cards.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}
+          >
             {cardEls}
           </TiltGrid>
         )}

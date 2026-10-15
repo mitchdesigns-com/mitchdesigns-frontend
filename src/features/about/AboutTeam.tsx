@@ -1,83 +1,36 @@
-import Image from "next/image";
 import { Section } from "@/components/layout/Section";
-import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
-import { strapiMedia } from "@/lib/cms/media";
-import type { AboutContent, TeamMember } from "@/lib/cms/types";
+import { Reveal } from "@/components/motion";
+import type { AboutContent } from "@/lib/cms/types";
+import { AboutVideo } from "./AboutVideo";
+import { Eyebrow } from "./Eyebrow";
 
-function MemberCard({ member }: { member: TeamMember }) {
-  const photo = member.photo?.url
-    ? strapiMedia(member.photo.url) ?? member.photo.url
-    : null;
+/** The short company film. Until it's ready, the 2026 showreel plays here —
+ *  drop the film in public/videos/ and point this at it. */
+const ABOUT_FILM = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 
+/** Short line under the film (front-end only). */
+const FILM_CAPTION =
+  "Step inside our studio — meet the designers, developers and strategists who turn bold ideas into digital products people love to use, and see how we work, day in and day out.";
+
+/**
+ * Team: the belief statement centred over the company film, shown frozen
+ * with a yellow play circle; click to play it in place.
+ */
+export function AboutTeam({ team }: { team: AboutContent["team"] }) {
   return (
-    <div className="relative flex h-[242px] w-[324px] flex-col justify-end overflow-hidden rounded-card-sm bg-space-grey p-5">
-      {photo && (
-        <>
-          <Image
-            src={photo}
-            alt={member.name}
-            fill
-            className="object-cover object-top"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        </>
-      )}
-      <div className="relative">
-        <p className="text-base font-medium text-fg">{member.name}</p>
-        <p className="text-sm text-fg-muted">{member.role}</p>
+    <Section theme="dark" className="py-24 md:py-32">
+      <Reveal className="mx-auto flex max-w-4xl flex-col items-center text-center">
+        <Eyebrow className="mb-4">{team.badge}</Eyebrow>
+        <h2 className="text-hero-3 font-bold text-fg text-balance">{team.heading}</h2>
+      </Reveal>
+
+      {/* The company film (front-end only), frozen until played. */}
+      <div className="mt-14 md:mt-20">
+        <AboutVideo src={ABOUT_FILM} title="the MitchDesigns company film" />
       </div>
-    </div>
-  );
-}
-
-export function AboutTeam({
-  team,
-  members,
-}: {
-  team: AboutContent["team"];
-  members: TeamMember[];
-}) {
-  const groupPhoto = team.groupPhoto?.url
-    ? strapiMedia(team.groupPhoto.url) ?? team.groupPhoto.url
-    : null;
-
-  return (
-    <Section theme="dark" className="py-30">
-      <div className="flex items-center gap-10">
-        {/* Left: text + team cards */}
-        <Reveal className="flex w-[672px] shrink-0 flex-col justify-between gap-10">
-          {/* Heading block */}
-          <div className="flex flex-col" style={{ gap: 0 }}>
-            <span className="inline-flex w-fit items-center rounded-full bg-yellow px-3 py-1 text-base font-bold text-black -rotate-3 -mb-2.25 z-10 relative">
-              {team.badge}
-            </span>
-            <h2 className="text-hero-4 font-bold leading-[130%] text-fg">
-              {team.heading}
-            </h2>
-          </div>
-
-          {/* Team member cards */}
-          <RevealStagger className="flex gap-6" stagger={0.1}>
-            {members.map((member, i) => (
-              <RevealItem key={i}>
-                <MemberCard member={member} />
-              </RevealItem>
-            ))}
-          </RevealStagger>
-        </Reveal>
-
-        {/* Right: large team photo */}
-        <Reveal className="relative h-[800px] flex-1 overflow-hidden rounded-card-sm bg-space-grey">
-          {groupPhoto && (
-            <Image
-              src={groupPhoto}
-              alt={team.groupPhoto?.alt ?? "The MitchDesigns team"}
-              fill
-              className="object-cover"
-            />
-          )}
-        </Reveal>
-      </div>
+      <Reveal className="mx-auto mt-10 max-w-2xl text-center md:mt-14">
+        <p className="text-xl text-fg-muted text-balance">{FILM_CAPTION}</p>
+      </Reveal>
     </Section>
   );
 }

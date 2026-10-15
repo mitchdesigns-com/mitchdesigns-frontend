@@ -16,15 +16,17 @@ export function AccordionSection({
   return (
     <Section className="py-20 md:py-28">
       <div className="flex flex-col gap-12 md:flex-row md:items-start md:gap-20">
-        <Reveal className="relative min-h-72 overflow-hidden rounded-card md:sticky md:top-24 md:min-h-[32rem] md:w-96 md:shrink-0">
-          <Image
-            src={image}
-            alt={imageAlt ?? ""}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 384px"
-          />
-        </Reveal>
+        {image ? (
+          <Reveal className="relative min-h-72 overflow-hidden rounded-card md:sticky md:top-24 md:min-h-[32rem] md:w-96 md:shrink-0">
+            <Image
+              src={image}
+              alt={imageAlt ?? ""}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 384px"
+            />
+          </Reveal>
+        ) : null}
         <RevealStagger className="flex flex-1 flex-col gap-8" stagger={0.08} delay={0.15}>
           <RevealItem>
             <SectionHeader title={title} description={description} />

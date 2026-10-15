@@ -16,7 +16,7 @@ export function Section({
   children,
   ...props
 }: SectionProps) {
-  const Component = Tag as React.ElementType;
+  const Component = Tag as "section";
   return (
     <Component
       data-theme={theme === "light" ? undefined : theme}

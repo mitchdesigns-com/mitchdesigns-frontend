@@ -50,6 +50,8 @@ interface CountUpProps {
   style?: React.CSSProperties;
   duration?: number; // seconds, default 1.5
   delay?: number;    // seconds, default 0
+  /** Start signal from the parent; when given, replaces the built-in in-view trigger. */
+  start?: boolean;
 }
 
 export function CountUp({
@@ -58,9 +60,11 @@ export function CountUp({
   style,
   duration = 1.5,
   delay = 0,
+  start,
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const seen = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const isInView = start ?? seen;
   const { prefix, suffix, target, decimals, commas } = parse(value);
 
   useEffect(() => {
