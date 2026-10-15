@@ -5,25 +5,10 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { ArrowRight } from "@/components/icons/ArrowRight";
+import { SlideLabel } from "@/components/ui/SlideLabel";
 import { NAV_LINKS, SERVICES, serviceHref, LEADS_URL } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-
-function SlideLabel({ label }: { label: string }) {
-  return (
-    <span
-      className="relative inline-block overflow-hidden leading-none"
-      style={{ height: "1em" }}
-    >
-      <span className="flex flex-col transition-transform duration-350 ease-out-soft group-hover:-translate-y-1/2">
-        <span className="block">{label}</span>
-        <span className="block" aria-hidden>
-          {label}
-        </span>
-      </span>
-    </span>
-  );
-}
 
 /**
  * The full-screen yellow menu body — primary nav on the left, with the

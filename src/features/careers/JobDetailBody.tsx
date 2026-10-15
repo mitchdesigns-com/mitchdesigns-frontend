@@ -35,7 +35,7 @@ function JobSummaryCard({
   applyHref: string;
 }) {
   return (
-    <div className="flex flex-col gap-10 rounded-card bg-space-grey p-8 lg:sticky lg:top-28">
+    <div className="flex flex-col gap-10 rounded-card bg-space-grey p-8">
       <div className="flex flex-col gap-2">
         <span className="text-lg font-medium text-fg-muted">Job Details</span>
         <h2 className="text-hero-4 font-bold text-fg">{role.title}</h2>
@@ -71,11 +71,13 @@ export function JobDetailBody({
   role: Career;
   applyHref: string;
 }) {
+  // First on the page (as in Figma): dark from the top, so the header goes dark too.
   return (
-    <Section theme="dark" className="py-20">
+    <Section theme="dark" className="pb-20 pt-36 md:pt-40">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,557fr)_minmax(0,795fr)]">
         {/* Sticky summary */}
-        <Reveal className="lg:self-start">
+        {/* Sticky on the grid item itself (the card inside has no room to stick). */}
+        <Reveal className="lg:sticky lg:top-28 lg:self-start">
           <JobSummaryCard role={role} applyHref={applyHref} />
         </Reveal>
 

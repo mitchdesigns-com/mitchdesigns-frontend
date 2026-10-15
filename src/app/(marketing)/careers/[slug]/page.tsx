@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { JobDetailHero } from "@/features/careers/JobDetailHero";
 import { JobDetailBody } from "@/features/careers/JobDetailBody";
 import { CareerExperience } from "@/features/careers/CareerExperience";
-import { strapiMedia } from "@/lib/cms/media";
 import { getCareers, getCareer, getCareersPage } from "@/lib/cms";
 
 const APPLY_EMAIL = "careers@mitchdesigns.com";
@@ -56,13 +54,8 @@ export default async function SingleCareerPage({
     `Application — ${role.title}`,
   )}`;
 
-  const heroImage = role.image?.url
-    ? { url: strapiMedia(role.image.url) ?? role.image.url, alt: role.image.alternativeText ?? role.title }
-    : null;
-
   return (
     <main>
-      <JobDetailHero title={role.title} excerpt={role.excerpt} image={heroImage} />
       <JobDetailBody role={role} applyHref={applyHref} />
       <CareerExperience
         heading={careersPage?.experienceHeading}
