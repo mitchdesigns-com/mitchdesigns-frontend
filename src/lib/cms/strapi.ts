@@ -49,19 +49,50 @@ function buildQuery(query: FetchOpts["query"]): string {
   return qs ? `?${qs}` : "";
 }
 
-async function strapiFetch<T>(path: string, opts: FetchOpts = {}): Promise<T> {
-  const url = `${STRAPI_URL}/api${path}${buildQuery(opts.query)}`;
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}),
-    },
-    next: { revalidate: opts.revalidate ?? 60 },
-  });
-  if (!res.ok) {
-    throw new Error(`Strapi ${res.status} ${res.statusText} — ${url}`);
+/** The field Strapi rejected in a populate, from its 400 "Invalid key" error. */
+async function invalidPopulateKey(res: Response): Promise<string | null> {
+  if (res.status !== 400) return null;
+  try {
+    const body = await res.clone().json();
+    const d = body?.error?.details;
+    return d?.param === "populate" && typeof d.key === "string" ? d.key : null;
+  } catch {
+    return null;
   }
-  return res.json() as Promise<T>;
+}
+
+/** Retries allowed after dropping fields the CMS doesn't know (yet). */
+const MAX_UNKNOWN_FIELDS = 5;
+
+async function strapiFetch<T>(path: string, opts: FetchOpts = {}): Promise<T> {
+  let query = opts.query;
+  for (let attempt = 0; ; attempt++) {
+    const url = `${STRAPI_URL}/api${path}${buildQuery(query)}`;
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}),
+      },
+      next: { revalidate: opts.revalidate ?? 60 },
+    });
+    if (res.ok) return res.json() as Promise<T>;
+
+    // A field the frontend asks for but the deployed CMS doesn't have yet
+    // (schema shipped ahead of the backend deploy): drop it and keep the
+    // rest of the content instead of failing the whole request.
+    const key = attempt < MAX_UNKNOWN_FIELDS ? await invalidPopulateKey(res) : null;
+    const next = key && query
+      ? Object.fromEntries(
+          Object.entries(query).filter(
+            ([k]) => !(k.startsWith("populate") && k.includes(`[${key}]`)),
+          ),
+        )
+      : null;
+    if (!next || Object.keys(next).length === Object.keys(query ?? {}).length) {
+      throw new Error(`Strapi ${res.status} ${res.statusText} — ${url}`);
+    }
+    query = next;
+  }
 }
 
 /**
