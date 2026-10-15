@@ -139,15 +139,18 @@ export function ClientLogos({
   leadLogos = NO_LOGOS,
 }: {
   logos?: LogoEntry[];
-  /** Shown first (case-study white logos); the client logos fill the rest. */
+  /** The case studies' white logos. When there are any, the grid shows only
+   *  these; the client logos are the fallback. */
   leadLogos?: LogoEntry[];
 } = {}) {
+  const hasCaseStudyLogos = leadLogos.length > 0;
   const hasCmsLogos = !!logosProp?.length;
   const [logos, setLogos] = useState<LogoEntry[] | null>(
     hasCmsLogos ? logosProp! : null,
   );
 
   useEffect(() => {
+    if (hasCaseStudyLogos) return;
     // Logos explicitly picked on the Home Page relation — use them, skip fetch.
     if (hasCmsLogos) {
       setLogos(logosProp!);
@@ -157,17 +160,18 @@ export function ClientLogos({
       .then((r) => r.json())
       .then((data: LogoEntry[]) => setLogos(data.length >= GRID_SIZE ? data : fallbackLogos))
       .catch(() => setLogos(fallbackLogos));
-  }, [hasCmsLogos, logosProp]);
+  }, [hasCaseStudyLogos, hasCmsLogos, logosProp]);
 
   const pool = useMemo(() => {
     const seen = new Set<string>();
-    return [...leadLogos, ...(logos ?? fallbackLogos)].filter((l) => {
+    const source = hasCaseStudyLogos ? leadLogos : (logos ?? fallbackLogos);
+    return source.filter((l) => {
       const key = l.alt.trim().toLowerCase();
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
-  }, [leadLogos, logos]);
+  }, [hasCaseStudyLogos, leadLogos, logos]);
   const initials = useMemo(() => buildInitial(pool), [pool]);
 
   return (
@@ -179,7 +183,7 @@ export function ClientLogos({
           </h2>
         </Reveal>
 
-        {logos === null ? (
+        {logos === null && !hasCaseStudyLogos ? (
           <LogoGridSkeleton />
         ) : (
           <RevealStagger

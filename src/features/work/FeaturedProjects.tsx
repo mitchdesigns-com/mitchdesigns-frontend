@@ -12,7 +12,7 @@ import { LiquidCursor } from "@/components/ui/LiquidCursor";
 
 const DRAG_THRESHOLD = 50;
 /** Autoplay: time each project stays centred while the stage is on screen. */
-const AUTOPLAY_MS = 3500;
+const AUTOPLAY_MS = 2500;
 
 // ── Layout constants (px, based on design at ~1512px) ──────────────────────
 const CENTER_W = 928; // 58rem
