@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useInView, useMotionValue, useReducedMotion } from "framer-motion";
 import { Media } from "@/components/ui/Media";
+import { featuredCover } from "./listCovers";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/motion";
@@ -10,13 +11,15 @@ import type { CaseStudy } from "@/lib/cms/types";
 import { LiquidCursor } from "@/components/ui/LiquidCursor";
 
 const DRAG_THRESHOLD = 50;
+/** Autoplay: time each project stays centred while the stage is on screen. */
+const AUTOPLAY_MS = 3500;
 
 // ── Layout constants (px, based on design at ~1512px) ──────────────────────
 const CENTER_W = 928; // 58rem
 const SIDE_W = 560; // 35rem
 const GAP = 120; // layout gap; the 3D turn pulls side cards ~60px inwards, leaving ~60px visible
-const CARD_AR = 911 / 800; // image width / height
-const META_H = 120; // title + year row below the image (room so "Since {year}" isn't clipped)
+const CARD_AR = 940 / 580; // image width / height — the mockup covers' shape
+const META_H = 120; // first-paint estimate for the title + year rows; the real height is measured
 
 type Slot = "left" | "center" | "right" | "hiddenLeft" | "hiddenRight";
 
@@ -117,6 +120,7 @@ function Card({
 }: CardProps) {
   const s = geom;
   const isCenter = slot === "center";
+  const mockup = featuredCover(project.slug);
   const isLeft = slot === "left";
   const isRight = slot === "right";
   const titleColor = isCenter
@@ -160,18 +164,20 @@ function Card({
       <div
         className="relative w-full overflow-hidden rounded-sm"
         style={{
-          aspectRatio: "911 / 800",
+          aspectRatio: "940 / 580",
           backgroundColor:
             project.bgColor ??
             (theme === "dark" ? "var(--color-card)" : "var(--color-img-placeholder)"),
         }}
       >
+        {/* Our 940×580 mockup cover fills the card (same shape); projects
+            without one show their CMS screenshot, framed. */}
         <Media
-          src={(project.featuredThumbnail ?? project.cover).url}
-          mime={(project.featuredThumbnail ?? project.cover).mime}
+          src={mockup ?? (project.featuredThumbnail ?? project.cover).url}
+          mime={mockup ? null : (project.featuredThumbnail ?? project.cover).mime}
           alt={project.title}
           sizes={isCenter ? "(min-width: 1024px) 928px, 82vw" : "560px"}
-          className="object-contain p-6 md:p-8"
+          className={mockup ? "object-cover" : "object-contain p-6 md:p-8"}
         />
 
         {/* Depth wash — side cards recede into the dark */}
@@ -201,11 +207,11 @@ function Card({
 
       {/* Meta */}
       <div className="mt-4 flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href={`/case-studies/${project.slug}`}
             onClick={(e) => e.stopPropagation()}
-            className={`font-bold leading-snug hover:underline ${isCenter ? "text-2xl" : "text-lg font-medium"
+            className={`line-clamp-2 text-balance font-bold leading-snug hover:underline ${isCenter ? "text-2xl" : "text-lg font-medium"
               } ${titleColor}`}
           >
             {project.title}{`’s Website`}
@@ -295,6 +301,34 @@ export function FeaturedProjects({
   const goNext = useCallback(() => setActiveIndex((i) => (i + 1) % n), [n]);
   const goPrev = useCallback(() => setActiveIndex((i) => (i - 1 + n) % n), [n]);
 
+  // The stage is as tall as its tallest card — the centre one, whose title
+  // can wrap to two lines on phones — so nothing below the image is clipped.
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const [cardH, setCardH] = useState<number | null>(null);
+  useEffect(() => {
+    const box = cardsRef.current;
+    if (!box) return;
+    const cards = [...box.children] as HTMLElement[];
+    // Only ever grows at a given width, so the page below doesn't jump as
+    // projects with one- and two-line titles rotate through.
+    setCardH(null);
+    const ro = new ResizeObserver(() =>
+      setCardH((h) => Math.max(h ?? 0, ...cards.map((c) => c.offsetHeight))),
+    );
+    cards.forEach((c) => ro.observe(c));
+    return () => ro.disconnect();
+  }, [n, vw]);
+
+  // Autoplay while the stage is on screen; pauses under the pointer, and the
+  // timer restarts after every move (manual ones included).
+  const inView = useInView(stageRef, { amount: 0.4 });
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (!inView || isHovering || reduced || n < 2) return;
+    const t = setTimeout(goNext, AUTOPLAY_MS);
+    return () => clearTimeout(t);
+  }, [inView, isHovering, reduced, n, activeIndex, goNext]);
+
   // Trackpad horizontal swipe — needs passive:false to preventDefault
   useEffect(() => {
     const el = stageRef.current;
@@ -358,7 +392,7 @@ export function FeaturedProjects({
         <div
           ref={stageRef}
           className="relative select-none"
-          style={{ height: `${dims.height}px`, cursor: "none" }}
+          style={{ height: `${cardH ?? dims.height}px`, cursor: "none" }}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => {
             setIsHovering(false);
@@ -371,7 +405,7 @@ export function FeaturedProjects({
         >
           {/* Cards — clipped separately. One shared perspective for the whole
               stage (vanishing point at its centre) gives the coverflow depth. */}
-          <div className="absolute inset-0 overflow-hidden perspective-distant">
+          <div ref={cardsRef} className="absolute inset-0 overflow-hidden perspective-distant">
             {caseStudies.map((project, i) => {
               const slot = getSlot(i, activeIndex, n);
               return (

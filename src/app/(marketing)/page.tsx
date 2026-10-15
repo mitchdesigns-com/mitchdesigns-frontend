@@ -34,6 +34,7 @@ import {
   fixtureTestimonials,
 } from "@/lib/cms/fixtures";
 import { blocksToText } from "@/lib/cms/blocks";
+import { pickFeatured } from "@/features/work/listCovers";
 
 async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
   try {
@@ -48,7 +49,7 @@ export default async function HomePage() {
   const [services, caseStudies, testimonials, faqs, talks, home, ctaBanner, caseStudyLogos] =
     await Promise.all([
       safe(getServices(), fixtureServices),
-      safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
+      safe(getCaseStudies(), fixtureCaseStudies),
       safe(getTestimonials(), fixtureTestimonials),
       safe(getFAQs(), fixtureFAQs),
       safe(getTalks(), fixtureTalks),
@@ -148,7 +149,8 @@ export default async function HomePage() {
 
         <ClientLogos logos={home.clientLogos} leadLogos={caseStudyLogos} />
 
-        <FeaturedProjects caseStudies={caseStudies} theme="dark" />
+        {/* Seven projects: featured first, then others with a mockup cover. */}
+        <FeaturedProjects caseStudies={pickFeatured(caseStudies, 7)} theme="dark" />
 
         <OurServices services={services} />
 
