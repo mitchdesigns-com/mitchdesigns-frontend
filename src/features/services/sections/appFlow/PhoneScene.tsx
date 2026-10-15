@@ -101,8 +101,7 @@ function Phone({
   const shown = useRef(-1);
   const { camera } = useThree();
 
-  // Our app designs, one per step, then the closing flow screen. Each is
-  // set on white (some exports are transparent) and cover-fitted to the display.
+  // Our app designs, one per step, then the closing screen.
   const textures = useMemo(() => {
     const make = () => {
       const c = document.createElement("canvas");
@@ -113,7 +112,9 @@ function Phone({
       t.anisotropy = 8;
       return { c, t };
     };
-    const shots = steps.map((_, i) => {
+    // One of our app designs per step, set on white (some exports are
+    // transparent) and cover-fitted to the display.
+    const shot = (src: string) => {
       const { c, t } = make();
       const img = new Image();
       img.onload = () => {
@@ -126,9 +127,13 @@ function Phone({
         g.drawImage(img, sx, sy, sw, sh, (SCREEN_W - w) / 2, (SCREEN_H - h) / 2, w, h);
         t.needsUpdate = true;
       };
-      img.src = screens[i % screens.length];
+      img.src = src;
       return t;
-    });
+    };
+    const shots = steps.map((_, i) => shot(screens[i % screens.length]));
+    // Closing screen (lying on its back): the design after the steps' ones
+    // if there is one, else the whole flow drawn as a list.
+    if (screens.length > steps.length) return [...shots, shot(screens[steps.length])];
     const { c, t } = make();
     drawFlowScreen(c, steps, font);
     t.needsUpdate = true;

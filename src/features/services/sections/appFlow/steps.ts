@@ -4,7 +4,7 @@ import type { FlowStep } from "./screens";
 
 /** Our app designs shown on the phone, one per step (they cycle if there are
  *  more steps). Figma exports at 428×926; padded exports are trimmed on load. */
-export const APP_SCREENS = [1, 2, 3, 4, 5, 6, 7, 8].map((n) =>
+export const APP_SCREENS = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) =>
   encodeURI(`/images/mobile-app/3d-mockup-screens/mobile mockup ${n}.webp`),
 );
 

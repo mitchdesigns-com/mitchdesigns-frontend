@@ -23,7 +23,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * makes a full turn for each step, its screen swapping — while its back
  * faces you — to another of our real app designs. The step title sits behind it on the
  * left, the description on the right. At the end it lies on its back, screen
- * glowing, with the whole flow written on it. Reduced motion: a plain list.
+ * glowing, showing one last design (or the whole flow, if there is no extra
+ * screen). Reduced motion: a plain list.
  */
 export function AppFlowSection({ steps, eyebrow = "How we build your app" }: { steps: FlowStep[]; eyebrow?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -88,7 +89,7 @@ export function AppFlowSection({ steps, eyebrow = "How we build your app" }: { s
                 transition={{ duration: 0.45, ease: easeOutSoft }}
               >
                 {done
-                  ? "Every stage, one accountable partner — and the whole flow, right on the screen."
+                  ? "Every stage, one accountable partner — from the first idea to an app in your customers' hands."
                   : step.description}
               </motion.p>
             </AnimatePresence>
