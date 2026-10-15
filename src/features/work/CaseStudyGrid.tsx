@@ -6,6 +6,7 @@ import type { CaseStudy } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { strapiMedia } from "@/lib/cms/media";
 import { listCover } from "./listCovers";
+import { Media, isVideo } from "@/components/ui/Media";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -23,10 +24,12 @@ function ServiceBullet({ label }: { label: string }) {
 // ── sub-components ─────────────────────────────────────────────────────────
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
-  const coverSrc = strapiMedia(cs.listCover?.url) ?? listCover(cs.slug) ?? strapiMedia(cs.cover?.url);
-  // The colored logo sits on the white panel; older entries only have `logo`.
-  const logo = cs.logoColored?.url ? cs.logoColored : cs.logo;
-  const logoSrc = strapiMedia(logo?.url);
+  const listSrc = strapiMedia(cs.listCover?.url);
+  const bundledSrc = listSrc ? undefined : listCover(cs.slug);
+  const coverSrc = listSrc ?? bundledSrc ?? strapiMedia(cs.cover?.url);
+  // Either CMS field may hold a video; the bundled covers are always images.
+  const coverMime = listSrc ? cs.listCover?.mime : bundledSrc ? null : cs.cover?.mime;
+  const logoSrc = strapiMedia(cs.logo?.url);
 
   return (
     <Link
@@ -41,7 +44,7 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={logoSrc}
-              alt={logo?.alternativeText ?? cs.client}
+              alt={cs.logo?.alternativeText ?? cs.client}
               className="h-full max-w-[120px] object-contain object-left"
             />
           ) : (
@@ -65,11 +68,13 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
 
       {/* Cover image — always 940:580; the info panel stretches to its height */}
       <div className="relative aspect-case-cover w-full overflow-hidden lg:w-auto lg:flex-1">
-        {coverSrc ? (
+        {coverSrc && isVideo(coverSrc, coverMime) ? (
+          <Media src={coverSrc} mime={coverMime} alt={cs.title} className="object-cover" />
+        ) : coverSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={coverSrc}
-            alt={cs.cover.alternativeText ?? cs.title}
+            alt={cs.cover?.alternativeText ?? cs.title}
             className="absolute inset-0 size-full object-cover"
           />
         ) : (

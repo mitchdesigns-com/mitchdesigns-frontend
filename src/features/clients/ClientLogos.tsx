@@ -139,7 +139,7 @@ export function ClientLogos({
   leadLogos = NO_LOGOS,
 }: {
   logos?: LogoEntry[];
-  /** Shown first (case-study greyscale logos); the client logos fill the rest. */
+  /** Shown first (case-study white logos); the client logos fill the rest. */
   leadLogos?: LogoEntry[];
 } = {}) {
   const hasCmsLogos = !!logosProp?.length;

@@ -75,12 +75,10 @@ export type CaseStudy = {
   publishedAt: string;
   /** Filter category — e.g. "Corporate", "eCommerce", "Mobile App", "Booking Website" */
   category?: string;
-  /** Client logo displayed in the info panel */
+  /** Full-colour client logo for the white info panel on /case-studies. */
   logo?: StrapiImage;
-  /** Full-colour logo for the /case-studies info panel; falls back to `logo`. */
-  logoColored?: StrapiImage;
-  /** White/greyscale logo for the homepage logos grid. */
-  logoGreyscale?: StrapiImage;
+  /** White logo for the homepage logos grid. */
+  logoWhite?: StrapiImage;
   /** Grid card testimonial — populated separately from the detail-page content zone */
   testimonial?: CaseStudyTestimonial;
   websiteUrl?: string;

@@ -9,6 +9,8 @@ type Props = {
   mime?: string | null;
   /** Still frame shown before a video loads. */
   poster?: string | null;
+  /** Images only: load eagerly (above-the-fold hero). */
+  priority?: boolean;
 };
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)(\?|#|$)/i;
@@ -17,7 +19,7 @@ export function isVideo(src: string, mime?: string | null) {
   return mime ? mime.startsWith("video/") : VIDEO_EXT.test(src);
 }
 
-export function Media({ src, alt = "", sizes, className, mime, poster }: Props) {
+export function Media({ src, alt = "", sizes, className, mime, poster, priority }: Props) {
   if (isVideo(src, mime)) {
     return (
       <video
@@ -41,6 +43,7 @@ export function Media({ src, alt = "", sizes, className, mime, poster }: Props) 
       fill
       className={className}
       sizes={sizes}
+      priority={priority}
     />
   );
 }

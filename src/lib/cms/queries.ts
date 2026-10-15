@@ -68,7 +68,6 @@ export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number
         "populate[featuredThumbnail]": "true",
         "populate[listCover]": "true",
         "populate[logo]": "true",
-        "populate[logoColored]": "true",
         "populate[testimonial][populate]": "*",
         "populate[services]": "true",
         sort: "publishedAt:desc",
@@ -97,7 +96,6 @@ export const getCaseStudy = async (
       "populate[thumbnail]": "true",
       "populate[featuredThumbnail]": "true",
       "populate[logo]": "true",
-      "populate[logoColored]": "true",
       "populate[testimonial][populate]": "*",
       "populate[services]": "true",
       "populate[content][populate]": "*",
@@ -926,23 +924,23 @@ export async function getClientLogos(): Promise<
   }
 }
 
-/** Greyscale case-study logos for the homepage logos grid (case studies
+/** White case-study logos for the homepage logos grid (case studies
  *  without one are skipped). */
 export async function getCaseStudyLogos(): Promise<Array<{ src: string; alt: string }>> {
   try {
-    const items = await getCollectionAll<Pick<CaseStudy, "client" | "logoGreyscale">>("/case-studies", {
+    const items = await getCollectionAll<Pick<CaseStudy, "client" | "logoWhite">>("/case-studies", {
       revalidate: 300,
       query: {
         "fields[0]": "client",
-        "populate[logoGreyscale]": "true",
+        "populate[logoWhite]": "true",
         sort: "publishedAt:desc",
       },
     });
     return items
-      .filter((c) => c.logoGreyscale?.url)
+      .filter((c) => c.logoWhite?.url)
       .map((c) => ({
-        src: strapiMedia(c.logoGreyscale!.url) ?? c.logoGreyscale!.url,
-        alt: c.logoGreyscale!.alternativeText ?? c.client,
+        src: strapiMedia(c.logoWhite!.url) ?? c.logoWhite!.url,
+        alt: c.logoWhite!.alternativeText ?? c.client,
       }));
   } catch {
     return [];

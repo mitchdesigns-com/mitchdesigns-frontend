@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { Media } from "@/components/ui/Media";
 import Link from "next/link";
 import { strapiMedia } from "@/lib/cms/media";
 import { staggerChildren, itemFadeUp } from "@/components/motion/variants";
@@ -24,10 +24,10 @@ function RelatedCard({ study }: { study: Study }) {
     >
       <div className="relative w-full aspect-case-photo overflow-hidden rounded-2xs">
         {coverSrc ? (
-          <Image
+          <Media
             src={coverSrc}
+            mime={study.cover?.mime}
             alt={study.cover?.alternativeText ?? study.title}
-            fill
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, 50vw"
           />

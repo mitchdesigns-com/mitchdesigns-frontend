@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
-import Image from "next/image";
+import { Media } from "@/components/ui/Media";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/motion";
@@ -166,10 +166,10 @@ function Card({
             (theme === "dark" ? "var(--color-card)" : "var(--color-img-placeholder)"),
         }}
       >
-        <Image
+        <Media
           src={(project.featuredThumbnail ?? project.cover).url}
+          mime={(project.featuredThumbnail ?? project.cover).mime}
           alt={project.title}
-          fill
           sizes={isCenter ? "(min-width: 1024px) 928px, 82vw" : "560px"}
           className="object-contain p-6 md:p-8"
         />

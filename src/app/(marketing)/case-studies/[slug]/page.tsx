@@ -53,7 +53,8 @@ export async function generateMetadata({
         study.tagline ||
         `How MitchDesigns designed and built ${study.title} for ${study.client}.`,
       canonical: `/case-studies/${slug}`,
-      image: study.cover?.url,
+      // A video cover can't be a share image.
+      image: study.cover?.mime?.startsWith("video/") ? undefined : study.cover?.url,
     },
     study.seo,
   );

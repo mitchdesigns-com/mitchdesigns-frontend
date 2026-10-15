@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Media } from "@/components/ui/Media";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { strapiMedia } from "@/lib/cms/media";
@@ -84,10 +84,10 @@ export function CaseStudyHero({ study }: Props) {
             variants={scaleIn}
             transition={{ duration: 1.2 }}
           >
-            <Image
+            <Media
               src={strapiMedia(study.cover.url)!}
+              mime={study.cover.mime}
               alt={study.cover.alternativeText ?? study.title}
-              fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 1392px"
               priority
