@@ -158,10 +158,21 @@ function ReelExpandHero(p: Props) {
       const dy = touchY - e.touches[0].clientY;
       if (Math.abs(dy) > 20) step(dy > 0, e);
     };
+    // Once the next section has covered the hero, fold the reel back into its
+    // card out of sight — scrolling back up then lands on the headline in one
+    // step instead of on the full-screen reel.
+    const onScroll = () => {
+      if (expandedRef.current && window.scrollY >= window.innerHeight * 0.9) {
+        setSound(false);
+        setExpanded(false);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("wheel", onWheel, { passive: false, capture: true });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
     return () => {
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("wheel", onWheel, { capture: true });
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove, { capture: true });
