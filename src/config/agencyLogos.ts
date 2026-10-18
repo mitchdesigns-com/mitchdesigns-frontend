@@ -1,0 +1,37 @@
+import type { LogoEntry } from "@/features/clients/ClientLogos";
+
+/** White client logos for the "Our Agency Experience" grid
+ *  (public/images/client-logos/white). */
+export const agencyLogos: LogoEntry[] = [
+  { src: "/images/client-logos/white/Abu Auf.webp", alt: "Abu Auf" },
+  { src: "/images/client-logos/white/Axtion Robotics.webp", alt: "Axtion Robotics" },
+  { src: "/images/client-logos/white/CIFC.webp", alt: "CIFC" },
+  { src: "/images/client-logos/white/Ecral.webp", alt: "Ecral" },
+  { src: "/images/client-logos/white/El Gouna.webp", alt: "El Gouna" },
+  { src: "/images/client-logos/white/El-Alsson.webp", alt: "El-Alsson" },
+  { src: "/images/client-logos/white/Exception Pâtissier.webp", alt: "Exception Pâtissier" },
+  { src: "/images/client-logos/white/Fam Beef.webp", alt: "Fam Beef" },
+  { src: "/images/client-logos/white/Fort Arabesque.webp", alt: "Fort Arabesque" },
+  { src: "/images/client-logos/white/Fouad Abdel Rahim.webp", alt: "Fouad Abdel Rahim" },
+  { src: "/images/client-logos/white/Fregy's.webp", alt: "Fregy's" },
+  { src: "/images/client-logos/white/G Developments.webp", alt: "G Developments" },
+  { src: "/images/client-logos/white/Geely.webp", alt: "Geely" },
+  { src: "/images/client-logos/white/GhabourAuto.webp", alt: "GhabourAuto" },
+  { src: "/images/client-logos/white/IM Motors.webp", alt: "IM Motors" },
+  { src: "/images/client-logos/white/Kemetland.webp", alt: "Kemetland" },
+  { src: "/images/client-logos/white/La Poire Group.webp", alt: "La Poire Group" },
+  { src: "/images/client-logos/white/Laverde.webp", alt: "Laverde" },
+  { src: "/images/client-logos/white/MG.webp", alt: "MG" },
+  { src: "/images/client-logos/white/Mountain View.webp", alt: "Mountain View" },
+  { src: "/images/client-logos/white/N Dev..webp", alt: "N Dev" },
+  { src: "/images/client-logos/white/New Town Group.webp", alt: "New Town Group" },
+  { src: "/images/client-logos/white/People & Places.webp", alt: "People & Places" },
+  { src: "/images/client-logos/white/Rihlati.webp", alt: "Rihlati" },
+  { src: "/images/client-logos/white/Sage Healthcare Concierge.webp", alt: "Sage Healthcare Concierge" },
+  { src: "/images/client-logos/white/Sale Sucré Pâtisserie.webp", alt: "Sale Sucré Pâtisserie" },
+  { src: "/images/client-logos/white/Sally Helmy.webp", alt: "Sally Helmy" },
+  { src: "/images/client-logos/white/Siemens Energy.webp", alt: "Siemens Energy" },
+  { src: "/images/client-logos/white/Smart Light.webp", alt: "Smart Light" },
+  { src: "/images/client-logos/white/Soueast.webp", alt: "Soueast" },
+  { src: "/images/client-logos/white/Tank.webp", alt: "Tank" },
+];

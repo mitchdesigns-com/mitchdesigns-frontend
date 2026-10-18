@@ -142,7 +142,7 @@ export function Header() {
               alt="MitchDesigns"
               width={180}
               height={40}
-              className="h-10 w-auto"
+              className="h-14 w-auto"
               priority
             />
           </Link>
@@ -218,14 +218,14 @@ export function Header() {
                 exit={{ opacity: 0, scale: 0.6 }}
                 transition={{ duration: 0.25, ease: EASE }}
                 className={cn(
-                  "pointer-events-auto flex size-16 shrink-0 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-20",
+                  "pointer-events-auto flex size-14 shrink-0 items-center justify-center rounded-full shadow-lg transition-colors hover:scale-105 md:size-18",
                   menuOpen ? "bg-black" : "bg-yellow",
                 )}
               >
                 {/* The header's two long bars, scaled down */}
-                <span className="relative block h-4 w-9 md:w-11">
+                <span className="relative block h-3.5 w-8 md:w-9">
                   <motion.span
-                    animate={menuOpen ? { y: 6, rotate: 45 } : { y: 0, rotate: 0 }}
+                    animate={menuOpen ? { y: 5, rotate: 45 } : { y: 0, rotate: 0 }}
                     transition={{ duration: 0.35, ease: EASE }}
                     className={cn(
                       "absolute inset-x-0 top-0 block h-1 rounded-pill",
@@ -233,7 +233,7 @@ export function Header() {
                     )}
                   />
                   <motion.span
-                    animate={menuOpen ? { y: -6, rotate: -45 } : { y: 0, rotate: 0 }}
+                    animate={menuOpen ? { y: -5, rotate: -45 } : { y: 0, rotate: 0 }}
                     transition={{ duration: 0.35, ease: EASE }}
                     className={cn(
                       "absolute inset-x-0 bottom-0 block h-1 rounded-pill",

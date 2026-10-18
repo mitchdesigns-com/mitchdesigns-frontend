@@ -4,3 +4,4 @@ export { HeroSectionWrapper } from "./HeroSectionWrapper";
 export { CreativeHero } from "./CreativeHero";
 export { VideoHero } from "./VideoHero";
 export { HeroReveal } from "./HeroReveal";
+export { HomeHero } from "./HomeHero";

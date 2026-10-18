@@ -16,6 +16,7 @@ import { Instagram } from "@/components/icons/Instagram";
 import { LinkedIn } from "@/components/icons/LinkedIn";
 import { YouTube } from "@/components/icons/YouTube";
 import { WhatsApp } from "@/components/icons/WhatsApp";
+import { ArrowUp } from "@/components/icons/ArrowUp";
 import { COMPANY_LINKS, SERVICES, serviceHref } from "@/config/nav";
 import type { SiteSettings, SocialPlatform } from "@/lib/cms/types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
@@ -269,16 +270,26 @@ export function Footer({
           variants={riseIn}
           className={`border-t border-space-grey pt-3 ${hideTop ? "" : "mt-12 lg:mt-footer-y"}`}
         >
-          <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-            <a href={urlFor("linkedin", "https://linkedin.com/company/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
-            <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
-            <a href={urlFor("instagram", "https://instagram.com/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Instagram</a>
-            {settings.legalLinks.map((l) => (
-              <Fragment key={l.href}>
-                <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
-                <Link href={l.href} className="text-lg text-fg-muted transition-opacity hover:opacity-80">{l.label}</Link>
-              </Fragment>
-            ))}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-1 flex-wrap items-center justify-center gap-2 lg:justify-start">
+              <a href={urlFor("linkedin", "https://linkedin.com/company/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">LinkedIn</a>
+              <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
+              <a href={urlFor("instagram", "https://instagram.com/mitchdesigns")} target="_blank" rel="noopener noreferrer" className="text-lg text-fg-muted transition-opacity hover:opacity-80">Instagram</a>
+              {settings.legalLinks.map((l) => (
+                <Fragment key={l.href}>
+                  <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
+                  <Link href={l.href} className="text-lg text-fg-muted transition-opacity hover:opacity-80">{l.label}</Link>
+                </Fragment>
+              ))}
+            </div>
+            <button
+              type="button"
+              aria-label="Back to top"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="group flex size-12 shrink-0 items-center justify-center rounded-full bg-space-grey text-yellow transition-colors hover:bg-grey-700 lg:size-14"
+            >
+              <ArrowUp size={22} className="transition-transform duration-300 ease-out-soft group-hover:-translate-y-1" />
+            </button>
           </div>
         </motion.div>
         </motion.div>

@@ -12,7 +12,9 @@ import { LiquidCursor } from "@/components/ui/LiquidCursor";
 
 const DRAG_THRESHOLD = 50;
 /** Autoplay: time each project stays centred while the stage is on screen. */
-const AUTOPLAY_MS = 2500;
+const AUTOPLAY_MS = 2000;
+/** The first slide after the stage scrolls into view comes sooner. */
+const FIRST_SLIDE_MS = 700;
 
 // ── Layout constants (px, based on design at ~1512px) ──────────────────────
 const CENTER_W = 928; // 58rem
@@ -323,9 +325,14 @@ export function FeaturedProjects({
   // timer restarts after every move (manual ones included).
   const inView = useInView(stageRef, { amount: 0.4 });
   const reduced = useReducedMotion();
+  const hasSlid = useRef(false);
   useEffect(() => {
+    if (!inView) hasSlid.current = false;
     if (!inView || isHovering || reduced || n < 2) return;
-    const t = setTimeout(goNext, AUTOPLAY_MS);
+    const t = setTimeout(() => {
+      hasSlid.current = true;
+      goNext();
+    }, hasSlid.current ? AUTOPLAY_MS : FIRST_SLIDE_MS);
     return () => clearTimeout(t);
   }, [inView, isHovering, reduced, n, activeIndex, goNext]);
 

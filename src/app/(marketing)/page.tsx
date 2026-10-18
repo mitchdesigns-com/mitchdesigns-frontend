@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HeaderConfig } from "@/context/HeaderConfigContext";
-import { HeroReveal, VideoHero } from "@/features/hero";
+import { HeroReveal, HomeHero } from "@/features/hero";
 import { AboutSection } from "@/features/about";
 import { ClientLogos } from "@/features/clients";
 import { ClientsTrustFetcher } from "@/features/ClientsTrust";
@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 };
 import {
   getCaseStudies,
-  getCaseStudyLogos,
   getCtaBanner,
   getFAQs,
   getHomePage,
@@ -46,7 +45,7 @@ async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
 }
 
 export default async function HomePage() {
-  const [services, caseStudies, testimonials, faqs, talks, home, ctaBanner, caseStudyLogos] =
+  const [services, caseStudies, testimonials, faqs, talks, home, ctaBanner] =
     await Promise.all([
       safe(getServices(), fixtureServices),
       safe(getCaseStudies(), fixtureCaseStudies),
@@ -55,7 +54,6 @@ export default async function HomePage() {
       safe(getTalks(), fixtureTalks),
       getHomePage(),
       getCtaBanner(),
-      getCaseStudyLogos(),
     ]);
 
   // Only real Google reviews back the AggregateRating — never claim a rating
@@ -144,10 +142,10 @@ export default async function HomePage() {
     <>
       <JsonLd data={homeGraph} />
       <HeaderConfig sticky={false} />
-      <HeroReveal hero={<VideoHero {...home.hero} />}>
+      <HeroReveal hero={<HomeHero {...home.hero} />}>
         <AboutSection {...home.about} />
 
-        <ClientLogos logos={home.clientLogos} leadLogos={caseStudyLogos} />
+        <ClientLogos />
 
         {/* Seven projects: featured first, then others with a mockup cover. */}
         <FeaturedProjects caseStudies={pickFeatured(caseStudies, 7)} theme="dark" />
