@@ -23,6 +23,16 @@ export function Header() {
   const { primaryCta } = useSiteSettings();
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
+  // Distance each bar travels to meet in the middle as an X (bars sit
+  // 15px apart on phones, 22px from lg up).
+  const [barShift, setBarShift] = useState(11);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setBarShift(mq.matches ? 11 : 7.5);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
   const [atTop, setAtTop] = useState(true);
   const [scrolledPast, setScrolledPast] = useState(false);
   const [inFooter, setInFooter] = useState(false);
@@ -165,31 +175,29 @@ export function Header() {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               onClick={(e) => (menuOpen ? closeAll() : openMenu(e))}
+              // Phones: a smaller 48×28 icon; lg+: the full 75×40.
               className={cn(
-                "relative flex flex-col items-start justify-center transition-opacity hover:opacity-70",
+                "relative flex h-7 w-12 flex-col items-start justify-center transition-opacity hover:opacity-70 lg:h-10 lg:w-18.75",
                 fabShown && "pointer-events-none opacity-0",
               )}
-              style={{ width: 75, height: 40 }}
             >
               <motion.span
-                animate={menuOpen ? { y: 11, rotate: 45 } : { y: 0, rotate: 0 }}
+                animate={menuOpen ? { y: barShift, rotate: 45 } : { y: 0, rotate: 0 }}
                 transition={{ duration: 0.35, ease: EASE }}
                 className={cn(
-                  "absolute block w-full rounded-pill transform",
+                  "absolute top-1.25 block h-0.75 w-full rounded-pill transform lg:top-1.75 lg:h-1",
                   menuOpen ? "bg-black" : isDark ? "bg-white" : "bg-black",
                 )}
-                style={{ height: 4, top: 7 }}
               />
               <motion.span
                 animate={
-                  menuOpen ? { y: -11, rotate: -45 } : { y: 0, rotate: 0 }
+                  menuOpen ? { y: -barShift, rotate: -45 } : { y: 0, rotate: 0 }
                 }
                 transition={{ duration: 0.35, ease: EASE }}
                 className={cn(
-                  "absolute block w-full rounded-pill transform",
+                  "absolute top-5 block h-0.75 w-full rounded-pill transform lg:top-7.25 lg:h-1",
                   menuOpen ? "bg-black" : isDark ? "bg-white" : "bg-black",
                 )}
-                style={{ height: 4, top: 29 }}
               />
             </button>
           </div>
@@ -204,7 +212,7 @@ export function Header() {
         style={{ height: HEADER_HEIGHT }}
       >
         <div className="container-page flex w-full justify-end">
-          <div className="flex justify-center" style={{ width: 75 }}>
+          <div className="flex w-12 justify-center lg:w-18.75">
           <AnimatePresence>
             {fabShown && (
               <motion.button

@@ -370,8 +370,9 @@ export function VideoHero({
     <section
       ref={sectionRef}
       data-theme="dark"
-      // Below lg: copy under the header, the reel filling the rest.
-      className="relative isolate flex h-svh flex-col justify-end overflow-hidden bg-black pb-hero-end pt-header lg:block lg:p-0"
+      // Below lg: copy under the header, the reel filling the rest down to the
+      // bottom edge (cropped to fill, so no black band on any phone height).
+      className="relative isolate flex h-svh flex-col justify-end overflow-hidden bg-black pt-header lg:block lg:p-0"
       onPointerEnter={onPointerEnter}
       onPointerMove={onPointerMove}
       onPointerLeave={() => setPointerInside(false)}
@@ -379,7 +380,7 @@ export function VideoHero({
       {/* Mobile: 16:9 frame holding the reel's place; lg+: the whole hero. */}
       <div
         ref={frameRef}
-        className="relative order-2 max-h-reel-max min-h-reel-min w-full flex-1 lg:absolute lg:inset-0 lg:max-h-none lg:min-h-0"
+        className="relative order-2 min-h-reel-min w-full flex-1 lg:absolute lg:inset-0 lg:min-h-0"
       >
         <div
           className={cn(
