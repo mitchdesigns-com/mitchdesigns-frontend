@@ -29,7 +29,6 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["framer-motion"],
-    viewTransition: true,
   },
   // RFC 8288 Link headers — advertise real, agent-useful resources from the
   // homepage. All three use IANA-registered relation types and point to

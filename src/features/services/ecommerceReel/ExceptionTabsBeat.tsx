@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { easeInOutSoft } from "@/lib/motion";
-import { BeatCursor, BeatFrame, WIDE, pct, useBeatSteps } from "./BeatFrame";
+import { BeatCursor, BeatFrame, WIDE, useBeatSteps } from "./BeatFrame";
 
 const BASE = "/images/services/ecommerce-beats/exception-tabs-base.webp";
 /** Exception's own pill colour and its three real tabs (piece %). */
