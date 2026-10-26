@@ -11,6 +11,8 @@ type Props = {
   poster?: string | null;
   /** Images only: load eagerly (above-the-fold hero). */
   priority?: boolean;
+  /** Reports the file's intrinsic size once known (client components only). */
+  onSize?: (width: number, height: number) => void;
 };
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)(\?|#|$)/i;
@@ -19,7 +21,7 @@ export function isVideo(src: string, mime?: string | null) {
   return mime ? mime.startsWith("video/") : VIDEO_EXT.test(src);
 }
 
-export function Media({ src, alt = "", sizes, className, mime, poster, priority }: Props) {
+export function Media({ src, alt = "", sizes, className, mime, poster, priority, onSize }: Props) {
   if (isVideo(src, mime)) {
     return (
       <video
@@ -30,6 +32,7 @@ export function Media({ src, alt = "", sizes, className, mime, poster, priority 
         loop
         playsInline
         preload="metadata"
+        onLoadedMetadata={onSize ? (e) => onSize(e.currentTarget.videoWidth, e.currentTarget.videoHeight) : undefined}
         aria-label={alt || undefined}
         className={`absolute inset-0 w-full h-full ${className ?? ""}`}
       />
@@ -44,6 +47,7 @@ export function Media({ src, alt = "", sizes, className, mime, poster, priority 
       className={className}
       sizes={sizes}
       priority={priority}
+      onLoad={onSize ? (e) => onSize(e.currentTarget.naturalWidth, e.currentTarget.naturalHeight) : undefined}
     />
   );
 }

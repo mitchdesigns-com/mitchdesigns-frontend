@@ -6,6 +6,7 @@ import { strapiMedia } from "@/lib/cms/media";
 import type { StrapiImage } from "@/lib/cms/types";
 import { EASE_LUXE } from "@/components/motion/variants";
 import { useReveal } from "@/components/motion/useReveal";
+import { useMediaAspect } from "./useMediaAspect";
 
 type Props = {
   left: StrapiImage;
@@ -15,6 +16,11 @@ type Props = {
 export function TwoImagesInRow({ left, right }: Props) {
   const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
+  // Both halves share one shape (as in Figma): the side whose size Strapi
+  // knows (an image), else the left side measured on load.
+  const hasSize = (m: StrapiImage) => Boolean(m.width && m.height);
+  const sizeFromRight = !hasSize(left) && hasSize(right);
+  const { aspect, onSize } = useMediaAspect(sizeFromRight ? right : left);
 
   const leftSrc = strapiMedia(left.url);
   const rightSrc = strapiMedia(right.url);
@@ -24,7 +30,8 @@ export function TwoImagesInRow({ left, right }: Props) {
       {leftSrc && (
         <div className="w-full flex-1 overflow-hidden">
           <motion.div
-            className="relative aspect-case-photo"
+            className="relative"
+            style={{ aspectRatio: aspect }}
             initial={reduced ? false : { opacity: 0, x: -40, scale: 1.05 }}
             animate={inView || reduced ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: -40, scale: 1.05 }}
             transition={{ duration: 0.9, ease: EASE_LUXE }}
@@ -34,6 +41,7 @@ export function TwoImagesInRow({ left, right }: Props) {
               src={leftSrc}
               alt={left.alternativeText ?? ""}
               mime={left.mime}
+              onSize={sizeFromRight ? undefined : onSize}
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
@@ -43,7 +51,8 @@ export function TwoImagesInRow({ left, right }: Props) {
       {rightSrc && (
         <div className="w-full flex-1 overflow-hidden">
           <motion.div
-            className="relative aspect-case-photo"
+            className="relative"
+            style={{ aspectRatio: aspect }}
             initial={reduced ? false : { opacity: 0, x: 40, scale: 1.05 }}
             animate={inView || reduced ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 40, scale: 1.05 }}
             transition={{ duration: 0.9, ease: EASE_LUXE, delay: 0.1 }}
@@ -53,6 +62,7 @@ export function TwoImagesInRow({ left, right }: Props) {
               src={rightSrc}
               alt={right.alternativeText ?? ""}
               mime={right.mime}
+              onSize={sizeFromRight ? onSize : undefined}
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
