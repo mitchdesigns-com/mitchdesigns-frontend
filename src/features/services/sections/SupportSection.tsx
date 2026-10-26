@@ -26,8 +26,10 @@ export function SupportSection({ title, description, cards }: SupportSectionProp
                 key={card.title}
                 className="flex flex-col gap-5 rounded-card-sm bg-bg p-6"
               >
-                <span className="flex size-16 items-center justify-center rounded-card-sm bg-yellow text-black">
-                  <Icon size={32} className={loop} />
+                {/* Same tile and icon size as the Why Us cards; solid yellow
+                    with a black icon on the light background. */}
+                <span className="flex size-20 items-center justify-center rounded-card-sm bg-yellow text-black">
+                  <Icon size={44} className={loop} />
                 </span>
                 <h3 className="text-lg font-semibold text-balance text-fg">{card.title}</h3>
                 <RichText content={card.description} className="max-w-support-copy text-base text-fg-muted" />

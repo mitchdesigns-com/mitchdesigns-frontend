@@ -489,7 +489,7 @@ export function VideoHero({
         <div className="container-page w-full lg:pb-15">
           <div className="flex flex-col gap-4 text-white lg:gap-6">
             {eyebrow ? (
-              <p className="text-sm uppercase tracking-1 text-balance">{eyebrow}</p>
+              <p className="text-base font-medium uppercase tracking-1 text-balance md:text-lg">{eyebrow}</p>
             ) : null}
             <h1 ref={headlineRef} className="text-hero-mobile text-balance lg:text-hero-video">
               {lead ? (

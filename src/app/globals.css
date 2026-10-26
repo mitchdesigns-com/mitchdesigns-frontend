@@ -94,7 +94,7 @@
      the text width ÷ 12.2 (100vw − both side gutters), capped at 110px.
      The ≥1024 / ≥1536 gutters are swapped in under @layer base. */
   --text-hero-video: clamp(1.5rem, calc((100vw - 3rem) / 12.2), 6.875rem);
-  --text-hero-video--line-height: 0.95;
+  --text-hero-video--line-height: 1.05;
   --text-hero-video--font-weight: 900;
   --text-hero-video--letter-spacing: -0.03em;
 

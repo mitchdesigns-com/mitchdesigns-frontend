@@ -12,6 +12,10 @@ import { VideoHero } from "./VideoHero";
 
 const HERO_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 const ease = [0.65, 0, 0.35, 1] as const;
+/** The reel opens/closes over 1s; scrolling is held for most of that, and a
+ *  still-running swipe is let through soon after. */
+const LOCK_MS = 700;
+const RELEASE_MS = 1000;
 
 type Props = {
   eyebrow?: string;
@@ -51,7 +55,7 @@ function Reel({ src, poster, sound, className }: { src: string; poster?: string;
 function Headline({ eyebrow, headline, rotatingWords }: Props) {
   return (
     <div className="flex flex-col gap-6 text-white">
-      {eyebrow ? <p className="text-sm uppercase tracking-1 text-balance">{eyebrow}</p> : null}
+      {eyebrow ? <p className="text-base font-medium uppercase tracking-1 text-balance md:text-lg">{eyebrow}</p> : null}
       <h1 className="text-hero-video text-balance">
         {headline}{" "}
         <RotatingWord compact interval={1700} words={rotatingWords && rotatingWords.length ? rotatingWords : undefined} />
@@ -117,10 +121,13 @@ function ReelExpandHero(p: Props) {
   useEffect(() => {
     let consumed = false;
     let lastWheel = 0;
+    let lastDelta = 0;
+    let lockedAt = 0;
     const lock = () => {
       busy.current = true;
       consumed = true;
-      window.setTimeout(() => (busy.current = false), 1000);
+      lockedAt = performance.now();
+      window.setTimeout(() => (busy.current = false), LOCK_MS);
     };
     const block = (e: Event) => {
       e.preventDefault();
@@ -144,9 +151,17 @@ function ReelExpandHero(p: Props) {
     };
     const onWheel = (e: WheelEvent) => {
       const now = performance.now();
-      // A pause between wheel events means a new gesture has started.
-      if (now - lastWheel > 200) consumed = false;
+      const d = Math.abs(e.deltaY);
+      // A new gesture has started after a pause, or when the deltas grow
+      // again (momentum only ever fades). And never hold the page longer
+      // than the reel's own animation — continuous scrolling has no pause.
+      if (
+        now - lastWheel > 200 ||
+        d > lastDelta * 1.5 + 4 ||
+        now - lockedAt > RELEASE_MS
+      ) consumed = false;
       lastWheel = now;
+      lastDelta = d;
       step(e.deltaY > 0, e);
     };
     let touchY = 0;

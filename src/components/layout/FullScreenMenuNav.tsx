@@ -169,7 +169,7 @@ export function FullScreenMenuNav({
                       aria-hidden
                       className="absolute right-full mr-5 hidden h-0.5 w-11 origin-right scale-x-0 bg-black transition-transform duration-300 ease-out-soft group-hover:scale-x-100 md:block"
                     />
-                    <span className="text-menu font-black leading-tight text-black">
+                    <span className="text-menu font-semibold leading-tight text-black">
                       {s.title}
                     </span>
                   </Link>

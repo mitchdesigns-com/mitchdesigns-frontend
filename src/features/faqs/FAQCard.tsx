@@ -36,7 +36,7 @@ export function FAQCard({ faq, isOpen, onToggle, variant = "arrow" }: FAQCardPro
           {variant === "plus" ? <span className="text-base">&#43;</span> : <ChevronRight />}
         </span>
 
-        <span className="text-base font-medium text-white">{faq.question}</span>
+        <span className="text-base font-medium text-white text-balance md:text-lg">{faq.question}</span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -50,7 +50,7 @@ export function FAQCard({ faq, isOpen, onToggle, variant = "arrow" }: FAQCardPro
             className="overflow-hidden"
           >
             <div className="px-6 pb-6 pl-14">
-              <RichText content={faq.answer} className="text-sm leading-relaxed text-fg-muted" />
+              <RichText content={faq.answer} className="text-base leading-relaxed text-fg-muted" />
             </div>
           </motion.div>
         )}
