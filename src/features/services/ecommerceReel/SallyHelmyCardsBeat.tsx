@@ -12,7 +12,8 @@ const CARDS = [
   { src: `${SRC}/sally-card-1.webp`, left: 0, width: 48.51, stack: { x: "53%", rotate: -4 } },
   { src: `${SRC}/sally-card-2.webp`, left: 51.22, width: 48.78, stack: { x: "-52.5%", rotate: 4 } },
 ];
-const HEART = { x: 95.63, y: 6.0 }; // the outline heart on the second card
+// The outline heart on the second card: centre and outer width (frame %).
+const HEART = { x: 95.6, y: 6.1, w: 2.96 };
 // 0 stacked · 1 side by side · 2 camera + cursor to the heart · 3 tap: heart fills · 4 zoom out
 const AT = [0, 500, 1700, 2700, 3900];
 
@@ -39,8 +40,9 @@ export function SallyHelmyCardsBeat({ active }: { active: boolean }) {
         </motion.div>
       ))}
       <motion.div
-        className="absolute z-10 -translate-x-1/2 -translate-y-1/2 text-grey-700"
-        style={{ left: pct(HEART.x), top: pct(HEART.y), width: pct(3.6) }}
+        className="absolute z-10 -translate-x-1/2 -translate-y-1/2 text-black"
+        // Exactly the outline heart's box (its outer edge), so it fills it.
+        style={{ left: pct(HEART.x), top: pct(HEART.y), width: pct(HEART.w) }}
         initial={false}
         animate={step === 3 ? { scale: [0, 1.4, 1], opacity: 1 } : step === 4 ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
         transition={{ duration: 0.45, ease: easeOutSoft }}
