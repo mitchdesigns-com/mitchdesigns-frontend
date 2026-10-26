@@ -158,7 +158,7 @@ export function ServicePageRenderer({
     case "ecommerce":
       return (
         <>
-          <ServiceHero {...hero} scene={<EcommerceReel />} />
+          <ServiceHero {...hero} scene={<EcommerceReel />} bleedScene />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}

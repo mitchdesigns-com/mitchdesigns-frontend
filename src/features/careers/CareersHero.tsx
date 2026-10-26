@@ -1,4 +1,5 @@
 import { Section } from "@/components/layout/Section";
+import { Eyebrow } from "@/features/about/Eyebrow";
 import type { CareersPageData } from "@/lib/cms/types";
 
 type Props = NonNullable<CareersPageData["hero"]>;
@@ -9,10 +10,11 @@ export function CareersHero({
   description = "Join our team of passionate individuals dedicated to innovative web design. We embrace open communication, flat hierarchies, and empower you with full ownership of your work.",
 }: Partial<Props> = {}) {
   return (
-    <Section theme="dark" className="pt-25 pb-25">
+    // Starts well below the fixed header so the eyebrow never sits on the logo.
+    <Section theme="dark" className="pb-25 pt-36 md:pt-44">
       <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
         {eyebrow && (
-          <span className="text-lg font-medium text-yellow">{eyebrow}</span>
+          <Eyebrow immediate>{eyebrow}</Eyebrow>
         )}
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
           <h1 className="text-hero-3 font-black text-fg leading-[1.1] max-w-full md:text-hero-1 md:max-w-[44%]">

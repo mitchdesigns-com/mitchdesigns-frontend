@@ -27,8 +27,8 @@ export function FullScreenMenuNav({
    *  screen height instead of stacking tightly. */
   anchorY?: number;
 }) {
-  // One nav row = the label (1em of text-menu) + its py-1.5 padding.
-  const rowHalf = "(var(--text-menu) + 0.75rem) / 2";
+  // One nav row = the label (1em of text-menu) + its py-3 padding.
+  const rowHalf = "(var(--text-menu) + 1.5rem) / 2";
   const [showServices, setShowServices] = useState(false);
   const { primaryCta } = useSiteSettings();
   // The proposal item follows the CMS primary CTA.
@@ -98,7 +98,7 @@ export function FullScreenMenuNav({
                         showServices ? "inset-x-0" : "bleed-x",
                       )}
                     />
-                    <div className="relative flex items-center py-1.5">
+                    <div className="relative flex items-center py-3">
                       <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>
@@ -119,7 +119,7 @@ export function FullScreenMenuNav({
                         dimmed ? "bg-transparent!" : "",
                       )}
                     />
-                    <div className="relative flex items-center gap-4 py-1.5">
+                    <div className="relative flex items-center gap-4 py-3">
                       <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CardSlider } from "@/components/ui/CardSlider";
@@ -51,27 +50,27 @@ export function WhyUsSection({
         />
         {variant === "slider" ? (
           <CardSlider scrollStep={288 + 16}>
-            {cards.map((card) => (
-              <div
-                key={card.title}
-                className="flex h-full w-72 flex-col gap-4 rounded-card bg-space-grey p-6"
-              >
-                <div className="relative aspect-video overflow-hidden rounded-card-sm">
-                  <Image
-                    src={card.image}
-                    alt={card.imageAlt ?? ""}
-                    fill
-                    className="object-cover"
-                    sizes="288px"
-                  />
+            {cards.map((card, i) => {
+              // Same line-icon kit as the grid (the CMS image isn't shown).
+              const { Icon, loop } = whyLineIconFor(card.title, i, card.icon);
+              return (
+                <div
+                  key={card.title}
+                  className="flex h-full w-72 flex-col gap-6 rounded-card bg-space-grey p-6"
+                >
+                  <span className="flex size-20 items-center justify-center rounded-card-sm bg-yellow/10 text-yellow ring-1 ring-yellow/25">
+                    <Icon size={44} className={loop} />
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-xl font-normal text-balance text-white">{card.title}</h3>
+                    <RichText
+                      content={card.description}
+                      className="text-base font-medium text-grey-500"
+                    />
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-fg">{card.title}</h3>
-                <RichText
-                  content={card.description}
-                  className="text-base text-fg-muted"
-                />
-              </div>
-            ))}
+              );
+            })}
           </CardSlider>
         ) : (
           <TiltGrid

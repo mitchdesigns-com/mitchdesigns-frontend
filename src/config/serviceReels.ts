@@ -32,7 +32,10 @@ const storeShot = reelShot("ecommerce-reel", "online store layout");
  *  projects — no cover mockups. Each design is cut out of its case-study
  *  export and set on a clean backdrop picked by a contrast check (≥1.6:1
  *  against the design's edge); pale-on-pale shots and Geely's dark purple
- *  were left out. Interleaved so neighbouring shots differ. */
+ *  were left out. Only projects the CMS files under "Corporate" — booking
+ *  (Ecral, Rihlati, Fort Arabesque) and eCommerce (Smart Light, Axton
+ *  Robotics) work plays in their own services' reels. Interleaved so
+ *  neighbouring shots differ. */
 export const CORPORATE_REEL: ReelShot[] = [
   shot("01-g-developments-pair1", "G Developments", DARK),
   shot("02-soueast-pair1", "Soueast", DARK),
@@ -43,16 +46,11 @@ export const CORPORATE_REEL: ReelShot[] = [
   shot("07-geely-pair1", "Geely", "#a2aff6"),
   shot("08-people-and-places-pair1", "People & Places", DARK),
   shot("09-g-developments-pair2", "G Developments", "#eaeaea"),
-  shot("10-ecral-pair1", "Ecral", DARK),
-  shot("11-smart-light-pair2", "Smart Light", "#f3f3f5"),
   shot("12-n-development-pair1", "N Development", "#eeebc5"),
-  shot("13-axton-robotics-pair2", "Axton Robotics", DARK),
   shot("14-cifc-pair1", "CIFC", "#eaeaea"),
   shot("15-soueast-pair2", "Soueast", DARK),
   shot("16-el-gouna-pair1", "El Gouna", "#9eabb0"),
   shot("17-laverde-pair2", "Laverde", "#a3aeaf"),
-  shot("18-rihlati-pair1", "Rihlati", DARK),
-  shot("19-fort-arabesque-pair2", "Fort Arabesque", "#f6f6f6"),
   shot("20-ntg-pair1", "NTG", "#eaeaea"),
 ];
 

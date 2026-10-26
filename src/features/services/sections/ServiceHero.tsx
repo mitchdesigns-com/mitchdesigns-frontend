@@ -44,24 +44,33 @@ export function ServiceHero({
   reverseLayout = false,
   reel,
   scene,
+  bleedScene = false,
 }: ServiceHeroProps & {
   /** Fast project montage shown instead of the CMS image (front-end only). */
   reel?: ReelShot[];
   /** Coded animated scene shown instead of the CMS image (front-end only). */
   scene?: ReactNode;
+  /** Give `scene` the reel's full-bleed treatment (it's a looping reel too). */
+  bleedScene?: boolean;
 }) {
   // Swap to a local fallback image if the CMS image fails to load.
   const [imgSrc, setImgSrc] = useState(image);
   const ctaRef = useHeaderCtaInView<HTMLDivElement>(isLeadsHref(cta?.href));
+  // Looping reels run the hero's full height, out to the page edge, square;
+  // the coded scenes and CMS images stay a rounded card beside the copy.
+  const bleed = !!reel?.length || (!!scene && bleedScene);
   return (
-    <Section className="pt-32 pb-16 md:pb-24" theme="dark">
+    <Section
+      className={bleed ? "pt-32 pb-16 md:flex md:min-h-svh md:items-center md:py-32" : "pt-32 pb-16 md:pb-24"}
+      theme="dark"
+    >
       <motion.div
         variants={stagger(0.1)}
         initial="hidden"
         animate="visible"
         className={`flex flex-col gap-12 md:flex-row md:items-center ${reverseLayout ? "md:flex-row-reverse" : ""}`}
       >
-        <div className="flex-1 space-y-6">
+        <div className={bleed ? "space-y-6 md:w-1/2 md:pr-12" : "flex-1 space-y-6"}>
           {subTitle && (
             <motion.p
               variants={fadeUp}
@@ -89,7 +98,11 @@ export function ServiceHero({
         </div>
         <motion.div
           variants={fadeUp}
-          className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-112"
+          className={
+            bleed
+              ? `relative -mx-4 aspect-video overflow-hidden md:absolute md:inset-y-0 md:mx-0 md:aspect-auto md:w-1/2 ${reverseLayout ? "md:left-0" : "md:right-0"}`
+              : "relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-112"
+          }
         >
           {scene ? (
             scene

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import { SlideLabel } from "@/components/ui/SlideLabel";
+import { Eyebrow } from "@/features/about/Eyebrow";
 import { MapPin } from "@/components/icons/MapPin";
 import { Briefcase } from "@/components/icons/Briefcase";
 import type { Career } from "@/lib/cms/types";
@@ -71,9 +72,7 @@ export function OpenPositions({
   return (
     <Section theme="dark" className="overflow-x-clip pb-25">
       <div className="flex flex-col">
-        <span className="text-lg font-medium text-yellow mb-6">
-          {heading}
-        </span>
+        <Eyebrow className="mb-8">{heading}</Eyebrow>
         {jobs.map((job) => (
           <JobRow key={job.slug} job={job} applyLabel={applyLabel} />
         ))}
