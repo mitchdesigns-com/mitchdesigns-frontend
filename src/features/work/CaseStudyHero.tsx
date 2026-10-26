@@ -8,7 +8,7 @@ import type { CaseStudy } from "@/lib/cms/types";
 import { staggerChildren, itemFadeUp, scaleIn } from "@/components/motion/variants";
 
 type Props = {
-  study: Pick<CaseStudy, "title" | "services" | "tagline" | "excerpt" | "websiteUrl" | "cover">;
+  study: Pick<CaseStudy, "title" | "services" | "tagline" | "excerpt" | "websiteUrl" | "heroMedia">;
 };
 
 export function CaseStudyHero({ study }: Props) {
@@ -77,7 +77,8 @@ export function CaseStudyHero({ study }: Props) {
         )}
       </motion.div>
 
-      {strapiMedia(study.cover?.url) && (
+      {/* Only the dedicated hero field — the card cover never shows here. */}
+      {study.heroMedia && strapiMedia(study.heroMedia.url) && (
         <motion.div variants={itemFadeUp} className="relative w-full aspect-video overflow-hidden rounded-card">
           <motion.div
             className="absolute inset-0"
@@ -85,9 +86,9 @@ export function CaseStudyHero({ study }: Props) {
             transition={{ duration: 1.2 }}
           >
             <Media
-              src={strapiMedia(study.cover.url)!}
-              mime={study.cover.mime}
-              alt={study.cover.alternativeText ?? study.title}
+              src={strapiMedia(study.heroMedia.url)!}
+              mime={study.heroMedia.mime}
+              alt={study.heroMedia.alternativeText ?? study.title}
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 1392px"
               priority

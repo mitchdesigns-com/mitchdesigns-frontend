@@ -65,6 +65,9 @@ export type CaseStudy = {
   services: string[]; // e.g. ["Digital roadmap & strategy", "Website design & development", "SEO"]
   year: number;
   cover: StrapiImage;
+  /** Image or video at the top of the case-study page (Strapi `heroMedia`).
+   *  The page hero shows only this — never `cover`. */
+  heroMedia?: StrapiImage;
   thumbnail?: StrapiImage;
   /** 940:580 card image for the /case-studies grid; falls back to the bundled cover, then `cover`. */
   listCover?: StrapiImage;

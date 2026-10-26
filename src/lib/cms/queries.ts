@@ -93,6 +93,7 @@ export const getCaseStudy = async (
     query: {
       "filters[slug][$eq]": slug,
       "populate[cover]": "true",
+      "populate[heroMedia]": "true",
       "populate[thumbnail]": "true",
       "populate[featuredThumbnail]": "true",
       "populate[logo]": "true",
