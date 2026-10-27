@@ -62,7 +62,7 @@ export function CaseStudyHero({ study }: Props) {
         )}
       </motion.div>
 
-      <motion.hr variants={itemFadeUp} className="border-t border-white" />
+      <motion.hr variants={itemFadeUp} className="border-t border-grey-700" />
 
       <motion.div variants={itemFadeUp} className="flex flex-col gap-3">
         {study.tagline && (
@@ -80,7 +80,7 @@ export function CaseStudyHero({ study }: Props) {
       {/* Only the dedicated hero field — the card cover never shows here.
           mt-7 + the gap-8 above = Figma's 60px under the intro. */}
       {study.heroMedia && strapiMedia(study.heroMedia.url) && (
-        <motion.div variants={itemFadeUp} className="relative mt-7 w-full aspect-case-hero max-h-media-fit overflow-hidden rounded-xs">
+        <motion.div variants={itemFadeUp} className="relative mt-7 w-full aspect-case-hero max-h-hero-media-max overflow-hidden rounded-xs">
           <motion.div
             className="absolute inset-0"
             variants={scaleIn}
@@ -92,6 +92,7 @@ export function CaseStudyHero({ study }: Props) {
               alt={study.heroMedia.alternativeText ?? study.title}
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 1392px"
+              quality={90}
               priority
             />
           </motion.div>

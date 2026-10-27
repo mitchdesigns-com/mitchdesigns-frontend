@@ -43,6 +43,7 @@ export function TwoImagesInRow({ left, right }: Props) {
               mime={left.mime}
               onSize={sizeFromRight ? undefined : onSize}
               sizes="(max-width: 768px) 100vw, 50vw"
+              quality={90}
               className="object-cover"
             />
           </motion.div>
@@ -64,6 +65,7 @@ export function TwoImagesInRow({ left, right }: Props) {
               mime={right.mime}
               onSize={sizeFromRight ? onSize : undefined}
               sizes="(max-width: 768px) 100vw, 50vw"
+              quality={90}
               className="object-cover"
             />
           </motion.div>

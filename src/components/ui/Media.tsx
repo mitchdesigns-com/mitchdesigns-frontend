@@ -11,6 +11,8 @@ type Props = {
   poster?: string | null;
   /** Images only: load eagerly (above-the-fold hero). */
   priority?: boolean;
+  /** Images only: optimizer quality; must be listed in next.config `images.qualities`. */
+  quality?: number;
   /** Reports the file's intrinsic size once known (client components only). */
   onSize?: (width: number, height: number) => void;
 };
@@ -21,7 +23,7 @@ export function isVideo(src: string, mime?: string | null) {
   return mime ? mime.startsWith("video/") : VIDEO_EXT.test(src);
 }
 
-export function Media({ src, alt = "", sizes, className, mime, poster, priority, onSize }: Props) {
+export function Media({ src, alt = "", sizes, className, mime, poster, priority, quality, onSize }: Props) {
   if (isVideo(src, mime)) {
     return (
       <video
@@ -47,6 +49,7 @@ export function Media({ src, alt = "", sizes, className, mime, poster, priority,
       className={className}
       sizes={sizes}
       priority={priority}
+      quality={quality}
       onLoad={onSize ? (e) => onSize(e.currentTarget.naturalWidth, e.currentTarget.naturalHeight) : undefined}
     />
   );

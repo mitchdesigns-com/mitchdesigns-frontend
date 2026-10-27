@@ -24,7 +24,7 @@ export function SingleImageInRow({ image, poster }: Props) {
   return (
     <div ref={ref} className="w-full overflow-hidden">
       <motion.div
-        className="relative w-full max-h-media-fit"
+        className="relative w-full max-h-media-max"
         style={{ aspectRatio: aspect }}
         initial={reduced ? false : { opacity: 0, scale: 1.04 }}
         animate={inView || reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
@@ -38,6 +38,7 @@ export function SingleImageInRow({ image, poster }: Props) {
           poster={strapiMedia(poster?.url)}
           onSize={onSize}
           sizes="(max-width: 768px) 100vw, 1392px"
+          quality={90}
           className="object-cover"
         />
       </motion.div>
