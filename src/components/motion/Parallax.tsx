@@ -59,6 +59,7 @@ export function ParallaxImage({
   drift = 12,
   zoom = 0.12,
   priority,
+  imageClassName,
 }: {
   src: string;
   alt: string;
@@ -69,6 +70,8 @@ export function ParallaxImage({
   /** Extra scale at the start, easing back to 1 as it scrolls through. */
   zoom?: number;
   priority?: boolean;
+  /** Extra classes on the image, e.g. `object-top` to keep faces in frame. */
+  imageClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -78,7 +81,7 @@ export function ParallaxImage({
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
       <motion.div className="absolute inset-0" style={{ y, scale }}>
-        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" priority={priority} />
+        <Image src={src} alt={alt} fill sizes={sizes} className={cn("object-cover", imageClassName)} priority={priority} />
       </motion.div>
     </div>
   );

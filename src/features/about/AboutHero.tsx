@@ -1,27 +1,23 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { Section } from "@/components/layout/Section";
-import { Button } from "@/components/ui/Button";
-import { ArrowRight } from "@/components/icons/ArrowRight";
 import { ParallaxImage, Reveal } from "@/components/motion";
 import { easeOutSoft } from "@/lib/motion";
 import type { AboutContent } from "@/lib/cms/types";
-import { LEADS_URL } from "@/config/nav";
 import { aboutPhoto } from "./photos";
 import { Eyebrow } from "./Eyebrow";
 
 /**
- * About hero: the headline rises in line by line beside the intro and CTA;
- * below, three equal columns (as in Figma) — the "Clarity Before Creativity"
- * card, a tall studio photo and a team photo — with sharp corners.
+ * About hero: the headline rises in line by line beside the intro (the CTA
+ * lives in the header); below, three equal columns of photos with sharp corners.
  */
 export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
   const reduced = useReducedMotion();
   const titleLines = hero.title.split("\n");
   const [first, second] = [aboutPhoto(hero.images[0], 0), aboutPhoto(hero.images[1], 1)];
+  const third = hero.images[2]?.url ? aboutPhoto(hero.images[2], 2) : BOARD_PHOTO;
 
   return (
     <Section className="pt-header pb-20 md:pb-32">
@@ -33,7 +29,7 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
           </Eyebrow>
           <h1 className="text-5xl font-black leading-none text-space-grey sm:text-hero-1">
             {titleLines.map((line, i) => (
-              <span key={i} className="block overflow-hidden pb-2">
+              <span key={i} className="-mb-2 block overflow-hidden pb-4">
                 <motion.span
                   className="block"
                   initial={reduced ? false : { y: "105%" }}
@@ -47,24 +43,23 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
           </h1>
         </div>
 
-        {/* Intro + CTA (above the fold, so it reveals on mount) */}
-        <Reveal immediate delay={0.4} className="flex flex-col gap-7 lg:col-span-5">
-          <p className="text-xl text-black text-balance">{hero.description}</p>
-          <Button size="lg" asChild>
-            <Link href={hero.cta?.href ?? LEADS_URL} className="flex w-fit items-center gap-2">
-              {hero.cta?.label ?? "Get Detailed Proposal"}
-              <ArrowRight size={20} />
-            </Link>
-          </Button>
-        </Reveal>
+        {/* Intro (above the fold, so it reveals on mount) */}
+        {hero.description && (
+          <Reveal immediate delay={0.4} className="lg:col-span-5">
+            <p className="text-xl text-black text-balance">{hero.description}</p>
+          </Reveal>
+        )}
       </div>
 
-      <HeroCollage panel={hero.panel} first={first} second={second} />
+      <HeroCollage lead={third} first={first} second={second} />
     </Section>
   );
 }
 
 type Photo = { url: string; alt: string };
+
+/** First column's photo until the CMS sets a third hero image. */
+const BOARD_PHOTO: Photo = { url: "/images/careers/drive-4.webp", alt: "The MitchDesigns team planning on a sticky-note board" };
 
 /** Slides a box from the top of its column to the bottom (or back) as `p`
  *  runs 0 → 1: top 0% → 100% while lifting by its own height. */
@@ -75,12 +70,12 @@ function useGlide(p: MotionValue<number>, from: 0 | 1) {
 }
 
 /**
- * Three equal columns: the text card starts aligned to the top of the tall
+ * Three equal columns: the first photo starts aligned to the top of the tall
  * centre photo and the third photo to its bottom; scrolling through glides
  * them past each other until the alignment is reversed (and back again on
  * the way up). Phones simply stack them.
  */
-function HeroCollage({ panel, first, second }: { panel: AboutContent["hero"]["panel"]; first: Photo; second: Photo }) {
+function HeroCollage({ lead, first, second }: { lead: Photo; first: Photo; second: Photo }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const [wide, setWide] = useState(false);
@@ -111,12 +106,6 @@ function HeroCollage({ panel, first, second }: { panel: AboutContent["hero"]["pa
   const up = useGlide(progress, 1);
   const glide = wide && !reduced;
 
-  const card = (
-    <div className="flex aspect-5/4 flex-col justify-between bg-panel p-8 md:p-10">
-      <p className="text-2xl text-black text-balance">{panel.title}</p>
-      <p className="text-base text-black text-balance">{panel.body}</p>
-    </div>
-  );
   const side = (box: React.ReactNode, style: ReturnType<typeof useGlide>, still: "top" | "bottom") => (
     <div className="relative">
       <motion.div
@@ -130,7 +119,11 @@ function HeroCollage({ panel, first, second }: { panel: AboutContent["hero"]["pa
 
   return (
     <div ref={ref} className="mt-16 grid grid-cols-1 gap-3 md:mt-24 md:grid-cols-3">
-      {side(card, down, "top")}
+      {side(
+        <ParallaxImage src={lead.url} alt={lead.alt} priority className="aspect-5/4" imageClassName="object-top" sizes="(max-width: 768px) 100vw, 33vw" />,
+        down,
+        "top",
+      )}
       <ParallaxImage src={first.url} alt={first.alt} priority className="aspect-17/20" sizes="(max-width: 768px) 100vw, 33vw" />
       {side(
         <ParallaxImage src={second.url} alt={second.alt} className="aspect-10/9" sizes="(max-width: 768px) 100vw, 33vw" />,
