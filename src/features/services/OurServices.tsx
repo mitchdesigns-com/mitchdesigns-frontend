@@ -16,6 +16,7 @@ import { Close } from "@/components/icons/Close";
 import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
 import { LEADS_URL } from "@/config/nav";
+import { noOrphan } from "@/lib/noOrphan";
 
 interface ServiceItem {
   num: string;
@@ -164,7 +165,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             transition={{ duration: 0.2 }}
             className="text-balance max-w-56 text-lg text-black"
           >
-            {description}
+            {noOrphan(description)}
           </motion.p>
         )}
 

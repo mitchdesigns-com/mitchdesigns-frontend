@@ -2,6 +2,7 @@
 
 import { GlowCard } from "@/components/ui/GlowCard";
 import { trustIconFor } from "./trustIcons";
+import { noOrphan } from "@/lib/noOrphan";
 
 type ClientsTrustCardProps = {
   /** Still supplied by the CMS; the icon cards don't display it. */
@@ -31,8 +32,8 @@ export function ClientsTrustCard({ title, body, icon, index = 1 }: ClientsTrustC
       </div>
 
       <div className="relative mt-auto flex flex-col gap-3">
-        <h3 className="text-hero-5 text-fg">{title}</h3>
-        <p className="text-base text-fg-muted text-balance">{body}</p>
+        <h3 className="text-hero-5 text-fg">{noOrphan(title)}</h3>
+        <p className="text-base text-fg-muted text-balance">{noOrphan(body)}</p>
       </div>
     </GlowCard>
   );

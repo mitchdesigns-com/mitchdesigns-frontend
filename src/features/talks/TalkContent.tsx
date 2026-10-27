@@ -5,6 +5,7 @@ import { ArrowRight } from "@/components/icons/ArrowRight";
 import { TocSidebar } from "./TocSidebar";
 import { BlockImage } from "./BlockImage";
 import { normalizeRichTextHref } from "@/lib/richTextHref";
+import { noOrphanInline } from "@/lib/noOrphan";
 
 // ── Strapi Blocks types ────────────────────────────────────────────────────
 
@@ -149,10 +150,13 @@ function Inline({ nodes }: { nodes: InlineNode[] }) {
 
 // ── Block renderers ────────────────────────────────────────────────────────
 
+/** Body text is small enough to glue longer last-word pairs than headings. */
+const BODY_PAIR = 32;
+
 function BlockParagraph({ block }: { block: ParagraphBlock }) {
   return (
     <p className="text-pretty text-blog-body text-black">
-      <Inline nodes={block.children} />
+      <Inline nodes={noOrphanInline(block.children, BODY_PAIR)} />
     </p>
   );
 }
@@ -164,12 +168,12 @@ function BlockHeading({ block }: { block: HeadingBlock }) {
   const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   const className =
     block.level <= 2
-      ? "text-hero-4 text-black mt-10 text-pretty"
+      ? "text-hero-4 text-black mt-10 text-balance"
       : "text-blog-h3 text-black border-l-[3px] border-yellow pl-3";
 
   return (
     <Tag id={id} className={className}>
-      <Inline nodes={block.children} />
+      <Inline nodes={noOrphanInline(block.children)} />
     </Tag>
   );
 }
@@ -178,7 +182,7 @@ function BlockQuote({ block }: { block: QuoteBlock }) {
   return (
     <blockquote className="inline-flex items-center border-l-[3px] border-yellow px-3 py-1">
       <span className="text-blog-quote text-black">
-        <Inline nodes={block.children} />
+        <Inline nodes={noOrphanInline(block.children)} />
       </span>
     </blockquote>
   );
@@ -194,7 +198,7 @@ function BlockList({ block }: { block: ListBlock }) {
     >
       {block.children.map((item, i) => (
         <li key={i}>
-          <Inline nodes={item.children} />
+          <Inline nodes={noOrphanInline(item.children, BODY_PAIR)} />
         </li>
       ))}
     </Tag>

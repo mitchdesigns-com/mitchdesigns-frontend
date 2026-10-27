@@ -1,4 +1,5 @@
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
+import { noOrphan } from "@/lib/noOrphan";
 
 type Props = {
   items: Array<{ title: string; body: string }>;
@@ -18,7 +19,7 @@ export function Challenges({ items }: Props) {
           {items.map((item) => (
             <RevealItem key={item.title} className="flex flex-col gap-2">
               <p className="text-lg font-medium text-fg">{item.title}</p>
-              <p className="text-lg text-grey-200 text-balance">{item.body}</p>
+              <p className="text-lg text-grey-200 text-balance">{noOrphan(item.body)}</p>
             </RevealItem>
           ))}
         </RevealStagger>

@@ -7,6 +7,7 @@ import type { AboutContent } from "@/lib/cms/types";
 import { LEADS_URL } from "@/config/nav";
 import { aboutPhoto } from "./photos";
 import { Eyebrow } from "./Eyebrow";
+import { noOrphan } from "@/lib/noOrphan";
 
 /**
  * "How We Work": the approach copy beside a photo that rides at its own
@@ -21,9 +22,9 @@ export function AboutApproach({ approach }: { approach: AboutContent["approach"]
         <Reveal className="flex flex-col gap-8">
           <div className="flex flex-col gap-4">
             <Eyebrow>{approach.eyebrow}</Eyebrow>
-            <h2 className="text-hero-3 font-bold text-fg text-balance">{approach.title}</h2>
+            <h2 className="text-hero-3 font-bold text-fg text-balance">{noOrphan(approach.title)}</h2>
           </div>
-          <p className="text-xl text-fg-muted text-balance">{approach.body}</p>
+          <p className="text-xl text-fg-muted text-balance">{noOrphan(approach.body)}</p>
           <Button size="lg" asChild>
             <Link href={approach.cta?.href ?? LEADS_URL} className="flex w-fit items-center gap-2">
               {approach.cta?.label ?? "Get Detailed Proposal"}

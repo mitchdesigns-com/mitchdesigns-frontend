@@ -1,6 +1,7 @@
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/features/about/Eyebrow";
 import type { CareersPageData } from "@/lib/cms/types";
+import { noOrphan } from "@/lib/noOrphan";
 
 type Props = NonNullable<CareersPageData["hero"]>;
 
@@ -17,12 +18,12 @@ export function CareersHero({
           <Eyebrow immediate>{eyebrow}</Eyebrow>
         )}
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
-          <h1 className="text-hero-3 font-black text-fg leading-[1.1] max-w-full md:text-hero-1 md:max-w-[44%]">
-            {title}
+          <h1 className="text-hero-3 font-black text-fg leading-[1.1] max-w-full md:text-hero-1 md:max-w-[44%] text-balance">
+            {noOrphan(title)}
           </h1>
           {description && (
             <p className="text-xl text-fg max-w-full text-balance md:max-w-[39%]">
-              {description}
+              {noOrphan(description)}
             </p>
           )}
         </div>

@@ -8,6 +8,7 @@ import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal, RevealItem, RevealStagger, useTilt } from "@/components/motion";
 import { ClientsTrustCard } from "./ClientsTrustCard";
 import { LEADS_URL } from "@/config/nav";
+import { noOrphan } from "@/lib/noOrphan";
 
 export type TrustReasonCard = {
   image?: string | null;
@@ -73,14 +74,10 @@ export function ClientsTrust({
 
       {/* Header */}
       <Reveal className="relative mb-10 flex flex-col gap-5 lg:mb-15 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
-        <h2 className="text-hero-3 font-bold text-fg">
-          {heading ?? (
-            <>
-              {reasons.length} Reasons Clients
-              <br />
-              Trust MitchDesigns
-            </>
-          )}
+        <h2 className="text-hero-3 font-bold text-fg text-balance">
+          {typeof heading === "string"
+            ? noOrphan(heading)
+            : (heading ?? noOrphan(`${reasons.length} Reasons Clients Trust MitchDesigns`))}
         </h2>
         {intro && (
           <p className="max-w-[506px] text-xl text-fg-muted text-balance max-md:text-center">

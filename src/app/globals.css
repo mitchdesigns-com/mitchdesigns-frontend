@@ -354,6 +354,15 @@
       --text-hero-video: clamp(1.5rem, calc((100vw - 12.5rem) / 12.2), 6.875rem);
     }
   }
+  /* No orphans, site-wide (CMS rich text included): headings and short
+     labels balance their lines; running text keeps ≥2 words on its last
+     line. Utilities like text-balance still win where set. */
+  h1, h2, h3, h4, h5, h6, blockquote, figcaption, dt, legend, label, button {
+    text-wrap: balance;
+  }
+  p, li, dd, td, th {
+    text-wrap: pretty;
+  }
   ::selection {
     background: var(--color-accent);
     color: var(--color-accent-fg);

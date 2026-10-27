@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { TocItem } from "./TalkContent";
+import { noOrphan } from "@/lib/noOrphan";
 
 export function TocSidebar({ items }: { items: TocItem[] }) {
   const [activeId, setActiveId] = useState<string>("");
@@ -61,7 +62,7 @@ export function TocSidebar({ items }: { items: TocItem[] }) {
                     : "text-[14px] leading-[1.3] text-[#575757] transition-colors hover:text-black"
                 }
               >
-                {item.label}
+                {noOrphan(item.label, 32)}
               </a>
             </li>
           );

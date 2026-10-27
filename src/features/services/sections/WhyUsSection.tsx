@@ -8,6 +8,7 @@ import type { WhyUsSectionProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 import { Logo } from "@/components/icons/Logo";
 import { whyLineIconFor } from "./whyLineIcons";
+import { noOrphan } from "@/lib/noOrphan";
 
 export function WhyUsSection({
   title,
@@ -27,7 +28,7 @@ export function WhyUsSection({
           </span>
           <div className="flex flex-col gap-2">
             <h3 className="text-xl font-normal text-balance text-white">
-              {card.title}
+              {noOrphan(card.title)}
             </h3>
             <RichText
               content={card.description}
@@ -62,7 +63,7 @@ export function WhyUsSection({
                     <Icon size={44} className={loop} />
                   </span>
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-xl font-normal text-balance text-white">{card.title}</h3>
+                    <h3 className="text-xl font-normal text-balance text-white">{noOrphan(card.title)}</h3>
                     <RichText
                       content={card.description}
                       className="text-base font-medium text-grey-500"

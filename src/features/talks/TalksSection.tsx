@@ -5,6 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { Reveal, RevealItem, RevealStagger } from "@/components/motion";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { PixelArrowIcon } from "@/components/icons/PixelArrowIcon";
+import { noOrphan } from "@/lib/noOrphan";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -124,7 +125,7 @@ function TalkCard({ talk, readMoreLabel }: { talk: Talk; readMoreLabel: string }
           {/* Title always takes 2 lines and excerpt exactly 2, so every card
               in the row lines up whatever the copy length. */}
           <h3 className="relative line-clamp-2 min-h-lines-2 text-xl font-bold text-balance text-white transition-colors duration-500 ease-out-soft group-hover:text-black">
-            {talk.title}
+            {noOrphan(talk.title)}
           </h3>
           <p className="relative line-clamp-2 min-h-lines-2 text-base text-white/80 text-balance transition-colors duration-500 ease-out-soft group-hover:text-grey-600">
             {talk.excerpt}

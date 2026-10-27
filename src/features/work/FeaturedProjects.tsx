@@ -9,6 +9,7 @@ import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/motion";
 import type { CaseStudy } from "@/lib/cms/types";
 import { LiquidCursor } from "@/components/ui/LiquidCursor";
+import { noOrphan } from "@/lib/noOrphan";
 
 const DRAG_THRESHOLD = 50;
 /** Autoplay: time each project stays centred while the stage is on screen. */
@@ -91,7 +92,7 @@ function CategoryPill({
       className={`inline-flex shrink-0 items-center rounded-full px-2 py-1.5 text-sm ${theme === "dark" ? "bg-card-border text-white" : "bg-border text-black"
         }`}
     >
-      {label}
+      {noOrphan(label)}
     </span>
   );
 }
@@ -216,7 +217,7 @@ function Card({
             className={`line-clamp-2 text-balance font-bold leading-snug hover:underline ${isCenter ? "text-2xl" : "text-lg font-medium"
               } ${titleColor}`}
           >
-            {project.title}{`’s Website`}
+            {noOrphan(`${project.title}’s Website`)}
           </Link>
           {project.services.length > 0 && (
             <CategoryPill label={project.services[0]} theme={theme} />

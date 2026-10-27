@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useRef, useEffect } from "react";
 import type { Talk } from "@/lib/cms/types";
 import { navigateWithTransition } from "@/lib/view-transition";
+import { noOrphan } from "@/lib/noOrphan";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -114,7 +115,7 @@ export function TalkCard({
               ref={titleRef}
               className="text-lg font-medium tracking-1 text-black transition-opacity duration-200 group-hover:opacity-70"
             >
-              {talk.title}
+              {noOrphan(talk.title)}
             </h3>
             <p className="text-base leading-6 tracking-1 text-grey-600 text-balance">
               {talk.excerpt}

@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { staggerChildren, itemFadeUp } from "@/components/motion/variants";
 import { useReveal } from "@/components/motion/useReveal";
+import { noOrphan } from "@/lib/noOrphan";
 
 type Props = {
   heading: string;
@@ -31,7 +32,7 @@ export function TextInRow({ heading, items }: Props) {
         {items.map((item) => (
           <motion.div key={item.title} variants={itemFadeUp} className="flex flex-col gap-2">
             <p className="text-lg font-medium text-fg">{item.title}</p>
-            <p className="text-lg text-grey-200 text-balance">{item.body}</p>
+            <p className="text-lg text-grey-200 text-balance">{noOrphan(item.body)}</p>
           </motion.div>
         ))}
       </div>

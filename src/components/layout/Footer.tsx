@@ -21,6 +21,7 @@ import { COMPANY_LINKS, SERVICES, serviceHref } from "@/config/nav";
 import type { SiteSettings, SocialPlatform } from "@/lib/cms/types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";
+import { noOrphan } from "@/lib/noOrphan";
 
 const SERVICE_LINKS = SERVICES.map((s) => ({
   label: s.footerLabel,
@@ -125,7 +126,7 @@ function NavCol({ title, links }: { title: string; links: { label: string; href:
               href={link.href}
               className={`text-base transition-opacity hover:opacity-80 lg:text-lg lg:short:text-base ${link.yellow ? "text-yellow" : "text-fg-muted"}`}
             >
-              {link.label}
+              {noOrphan(link.label)}
             </Link>
           </motion.li>
         ))}
@@ -278,7 +279,7 @@ export function Footer({
               {settings.legalLinks.map((l) => (
                 <Fragment key={l.href}>
                   <span className="h-1 w-1 rounded-full bg-fg-muted" aria-hidden />
-                  <Link href={l.href} className="text-lg text-fg-muted transition-opacity hover:opacity-80">{l.label}</Link>
+                  <Link href={l.href} className="text-lg text-fg-muted transition-opacity hover:opacity-80">{noOrphan(l.label)}</Link>
                 </Fragment>
               ))}
             </div>

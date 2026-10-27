@@ -8,6 +8,7 @@ import { easeOutSoft } from "@/lib/motion";
 import { flowPosition } from "./flowPosition";
 import type { FlowStep } from "./screens";
 import { APP_SCREENS } from "./steps";
+import { noOrphan } from "@/lib/noOrphan";
 
 // three.js only loads (client-side) for this section.
 const PhoneScene = dynamic(() => import("./PhoneScene"), { ssr: false });
@@ -86,7 +87,7 @@ export function AppFlowSection({
                 exit={{ opacity: 0, x: 40 }}
                 transition={{ duration: 0.45, ease: easeOutSoft }}
               >
-                {done ? closingTitle : step.title}
+                {noOrphan(done ? closingTitle : step.title)}
               </motion.h2>
             </AnimatePresence>
           </div>

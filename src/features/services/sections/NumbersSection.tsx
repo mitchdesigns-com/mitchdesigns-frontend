@@ -6,6 +6,7 @@ import { Section } from "@/components/layout/Section";
 import { CountUp } from "@/components/ui/CountUp";
 import type { NumbersSectionProps } from "@/lib/cms/types";
 import { easeOutSoft } from "@/lib/motion";
+import { noOrphan } from "@/lib/noOrphan";
 
 /** Seconds after the section shows before the first figure rises (lets the hero land). */
 const START_DELAY = 0.6;
@@ -47,9 +48,9 @@ export function NumbersSection({ numbers }: NumbersSectionProps) {
                   <span className="text-xl font-semibold md:text-2xl">{unit}</span>
                 )}
               </span>
-              <span className="text-lg font-semibold text-fg-muted">{item.title}</span>
+              <span className="text-lg font-semibold text-fg-muted">{noOrphan(item.title)}</span>
               {item.description && (
-                <p className="text-sm text-fg-muted text-balance">{item.description}</p>
+                <p className="text-sm text-fg-muted text-balance">{noOrphan(item.description)}</p>
               )}
             </motion.div>
           );

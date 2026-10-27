@@ -13,11 +13,14 @@ import type { ServiceHeroProps } from "@/lib/cms/types";
 import { RichText } from "@/components/ui/RichText";
 import { ShotReel } from "@/components/ui/ShotReel";
 import type { ReelShot } from "@/config/serviceReels";
+import { noOrphan } from "@/lib/noOrphan";
 
 function renderTitle(title: string, titleHighlights: string[] = []) {
   if (!titleHighlights.length) {
-    return title;
+    return noOrphan(title);
   }
+  // Same no-orphan rule as plain titles: glue the last two words when it fits.
+  const glue = noOrphan(title).includes("\u00a0");
   const words = title.split(/\s+/);
   return words.map((word, i) => {
     const bare = word.replace(/[.,!?;:]+$/, "");
@@ -27,7 +30,7 @@ function renderTitle(title: string, titleHighlights: string[] = []) {
       <Fragment key={i}>
         {highlighted ? <span className="text-accent">{bare}</span> : bare}
         {trail}
-        {i < words.length - 1 ? " " : ""}
+        {i < words.length - 1 ? (glue && i === words.length - 2 ? "\u00a0" : " ") : ""}
       </Fragment>
     );
   });
@@ -81,7 +84,7 @@ export function ServiceHero({
           )}
           <motion.h1
             variants={fadeUp}
-            className="text-hero-3 font-bold md:text-hero-2"
+            className="text-hero-3 font-bold text-balance md:text-hero-2"
           >
             {renderTitle(title, titleHighlights)}
           </motion.h1>

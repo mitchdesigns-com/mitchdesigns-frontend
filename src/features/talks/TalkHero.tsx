@@ -11,6 +11,7 @@ import type { Talk, BlogSection } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { resolveViewTransition, navigateWithTransition } from "@/lib/view-transition";
+import { noOrphan } from "@/lib/noOrphan";
 
 function TagPill({ label }: { label: string }) {
   return (
@@ -93,7 +94,7 @@ export function TalkHero({ talk }: { talk: Talk }) {
               ref={titleRef}
               className="text-hero-3 font-bold text-balance text-white md:text-hero-2"
             >
-              {talk.title}
+              {noOrphan(talk.title)}
             </h1>
           </div>
 

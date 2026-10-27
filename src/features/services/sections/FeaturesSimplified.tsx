@@ -9,6 +9,7 @@ import { RichText } from "@/components/ui/RichText";
 import type { FeaturesSimplifiedProps } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
 import { armTickFeedback, buzz, tick } from "@/lib/tickFeedback";
+import { noOrphan } from "@/lib/noOrphan";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -150,7 +151,7 @@ export function FeaturesSimplified({
           {/* Heading, rolling counter and progress */}
           <div className="flex flex-col gap-8 md:w-2/5 md:shrink-0">
             <div className="flex flex-col gap-4">
-              <h2 className="text-hero-4 font-bold text-balance md:text-hero-3">{title}</h2>
+              <h2 className="text-hero-4 font-bold text-balance md:text-hero-3">{noOrphan(title)}</h2>
               {description ? (
                 <RichText content={description} className="text-lg text-fg-muted" />
               ) : null}

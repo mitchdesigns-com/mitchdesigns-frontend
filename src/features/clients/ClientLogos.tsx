@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { agencyLogos } from "@/config/agencyLogos";
+import { noOrphan } from "@/lib/noOrphan";
 
 export interface LogoEntry {
   src: string;
@@ -157,7 +158,7 @@ export function ClientLogos({ logos = agencyLogos }: { logos?: LogoEntry[] } = {
     <Section theme="dark">
       <div className="flex flex-col gap-15 py-20">
         <Reveal>
-          <h2 className="text-hero-2 font-bold tracking-1 text-white">Our Agency Experience</h2>
+          <h2 className="text-hero-2 font-bold tracking-1 text-white">{noOrphan("Our Agency Experience")}</h2>
         </Reveal>
 
         <div ref={gridRef}>

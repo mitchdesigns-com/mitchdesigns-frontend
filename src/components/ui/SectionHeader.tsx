@@ -1,6 +1,7 @@
 import { cn } from "@/lib/cn";
 import type { RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "./RichText";
+import { noOrphan } from "@/lib/noOrphan";
 
 type SectionHeaderProps = {
   eyebrow?: string;
@@ -40,7 +41,7 @@ export function SectionHeader({
         </p>
       ) : null}
       <h2 className={cn("text-hero-4 font-bold md:text-hero-3", !icon && "mt-4")}>
-        {title}
+        {typeof title === "string" ? noOrphan(title) : title}
       </h2>
       {description ? (
         <RichTextRenderer content={description} className="mt-4 text-lg text-fg-muted" />

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { RichText as RichTextContent } from "@/lib/cms/types";
 import { normalizeRichTextHref } from "@/lib/richTextHref";
+import { noOrphanInline } from "@/lib/noOrphan";
 
 type TextNode = {
   type: "text";
@@ -66,14 +67,14 @@ function renderBlock(block: BlockNode, key: number) {
     case "paragraph":
       return (
         <p key={key} className="text-balance">
-          {block.children.map((c, i) => renderInline(c, i))}
+          {noOrphanInline(block.children).map((c, i) => renderInline(c, i))}
         </p>
       );
     case "heading": {
       const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
       return (
         <Tag key={key} className={HEADING[block.level]}>
-          {block.children.map((c, i) => renderInline(c, i))}
+          {noOrphanInline(block.children).map((c, i) => renderInline(c, i))}
         </Tag>
       );
     }
@@ -84,7 +85,7 @@ function renderBlock(block: BlockNode, key: number) {
         <Tag key={key} className={`${listClass} pl-5`}>
           {block.children.map((item, i) => (
             <li key={i}>
-              {item.children.map((c, j) => renderInline(c, j))}
+              {noOrphanInline(item.children).map((c, j) => renderInline(c, j))}
             </li>
           ))}
         </Tag>
@@ -93,7 +94,7 @@ function renderBlock(block: BlockNode, key: number) {
     case "quote":
       return (
         <blockquote key={key} className="border-l-4 border-yellow pl-4 italic text-fg-muted">
-          {block.children.map((c, i) => renderInline(c, i))}
+          {noOrphanInline(block.children).map((c, i) => renderInline(c, i))}
         </blockquote>
       );
     case "code":
