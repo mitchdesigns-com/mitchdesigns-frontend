@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Media, isVideo } from "@/components/ui/Media";
-import { listCover } from "./listCovers";
+import { Media } from "@/components/ui/Media";
+import { cardImage } from "./listCovers";
 import Link from "next/link";
-import { strapiMedia } from "@/lib/cms/media";
 import { staggerChildren, itemFadeUp } from "@/components/motion/variants";
 import { useReveal } from "@/components/motion/useReveal";
 import type { CaseStudy } from "@/lib/cms/types";
@@ -19,11 +18,7 @@ type Props = {
 };
 
 function RelatedCard({ study }: { study: Study }) {
-  // Card image, never the hero: `cover` may be the case study's hero video.
-  const card =
-    [study.listCover, study.featuredThumbnail].find((m) => m?.url) ??
-    (study.cover && !isVideo(study.cover.url, study.cover.mime) ? study.cover : null);
-  const coverSrc = strapiMedia(card?.url) ?? listCover(study.slug) ?? null;
+  const card = cardImage(study);
 
   return (
     <Link
@@ -31,11 +26,11 @@ function RelatedCard({ study }: { study: Study }) {
       className="group flex flex-col gap-10 w-full"
     >
       <div className="relative w-full aspect-case-photo overflow-hidden rounded-2xs">
-        {coverSrc ? (
+        {card ? (
           <Media
-            src={coverSrc}
-            mime={card?.mime}
-            alt={card?.alternativeText ?? study.title}
+            src={card.src}
+            mime={card.mime}
+            alt={card.alt}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, 50vw"
           />

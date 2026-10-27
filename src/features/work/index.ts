@@ -7,3 +7,4 @@ export { SingleImageInRow } from "./SingleImageInRow";
 export { ColorPalette } from "./ColorPalette";
 export { CenteredQuote } from "./CenteredQuote";
 export { RelatedProjects } from "./RelatedProjects";
+export { ProjectSwitcher } from "./ProjectSwitcher";

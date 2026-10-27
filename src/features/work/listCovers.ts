@@ -1,3 +1,7 @@
+import { isVideo } from "@/components/ui/Media";
+import { strapiMedia } from "@/lib/cms/media";
+import type { CaseStudy } from "@/lib/cms/types";
+
 /**
  * Project covers: the 940×580 mockups in public/images/case-studies
  * (front-end only), used by the case-studies list and the homepage carousel. A CMS `listCover`
@@ -29,4 +33,16 @@ export function pickFeatured<T extends { slug: string; featured?: boolean }>(all
   const featured = all.filter((c) => c.featured);
   const withCover = all.filter((c) => !c.featured && SLUGS.has(c.slug));
   return [...featured, ...withCover].slice(0, count);
+}
+
+/** A project's card image — the CMS list/featured image, else a still `cover`,
+ *  else the bundled mockup. Never the hero: `cover` may be the hero video. */
+export function cardImage(
+  study: Pick<CaseStudy, "slug" | "title" | "cover" | "listCover" | "featuredThumbnail">,
+): { src: string; mime?: string | null; alt: string } | null {
+  const card =
+    [study.listCover, study.featuredThumbnail].find((m) => m?.url) ??
+    (study.cover && !isVideo(study.cover.url, study.cover.mime) ? study.cover : null);
+  const src = strapiMedia(card?.url) ?? listCover(study.slug);
+  return src ? { src, mime: card?.mime, alt: card?.alternativeText ?? study.title } : null;
 }

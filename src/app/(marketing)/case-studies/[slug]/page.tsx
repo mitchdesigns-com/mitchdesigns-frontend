@@ -10,7 +10,9 @@ import {
   ColorPalette,
   CenteredQuote,
   RelatedProjects,
+  ProjectSwitcher,
 } from "@/features/work";
+import { cardImage } from "@/features/work/listCovers";
 import { RichText } from "@/components/ui/RichText";
 import { getCaseStudies, getCaseStudy } from "@/lib/cms";
 import { buildPageMetadata } from "@/lib/seo";
@@ -71,6 +73,14 @@ export default async function SingleCaseStudyPage({
     getCaseStudies().catch(() => fixtureCaseStudies.map((s, i) => ({ ...s, id: i + 1 }))),
   ]);
   if (!study) notFound();
+
+  // Prev / next in list order, wrapping around at either end.
+  const at = allStudies.findIndex((s) => s.slug === slug);
+  const neighbour = (step: number) => {
+    const s = allStudies[(at + step + allStudies.length) % allStudies.length];
+    return { slug: s.slug, title: s.title, image: cardImage(s) };
+  };
+  const switcher = at >= 0 && allStudies.length > 1 ? { prev: neighbour(-1), next: neighbour(1) } : null;
 
   const relatedStudies = allStudies
     .filter((s) => s.slug !== slug)
@@ -158,6 +168,8 @@ export default async function SingleCaseStudyPage({
       })}
 
       <RelatedProjects studies={relatedStudies} />
+
+      {switcher && <ProjectSwitcher prev={switcher.prev} next={switcher.next} />}
     </>
   );
 }
