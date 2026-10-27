@@ -40,7 +40,7 @@ function RelatedCard({ study }: { study: Study }) {
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-hero-3 font-bold text-black leading-tight">{study.title}</p>
+        <p className="text-hero-3 font-bold text-black leading-tight text-left! text-balance">{study.title}</p>
         {study.tagline && (
           <p className="text-xl font-medium text-black text-balance">{study.tagline}</p>
         )}
