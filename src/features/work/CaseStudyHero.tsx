@@ -40,7 +40,7 @@ export function CaseStudyHero({ study }: Props) {
                       aria-hidden
                     />
                   )}
-                  <span className="text-base text-fg-muted font-medium leading-5">
+                  <span className="text-base text-fg-muted font-medium leading-5 uppercase tracking-1">
                     {service}
                   </span>
                 </span>
@@ -66,7 +66,7 @@ export function CaseStudyHero({ study }: Props) {
 
       <motion.div variants={itemFadeUp} className="flex flex-col gap-3">
         {study.tagline && (
-          <p className="text-xl font-medium text-fg text-balance">
+          <p className="text-xl text-fg text-balance">
             {study.tagline}
           </p>
         )}
@@ -77,9 +77,10 @@ export function CaseStudyHero({ study }: Props) {
         )}
       </motion.div>
 
-      {/* Only the dedicated hero field — the card cover never shows here. */}
+      {/* Only the dedicated hero field — the card cover never shows here.
+          mt-7 + the gap-8 above = Figma's 60px under the intro. */}
       {study.heroMedia && strapiMedia(study.heroMedia.url) && (
-        <motion.div variants={itemFadeUp} className="relative w-full aspect-video overflow-hidden rounded-card">
+        <motion.div variants={itemFadeUp} className="relative mt-7 w-full aspect-case-hero overflow-hidden rounded-xs">
           <motion.div
             className="absolute inset-0"
             variants={scaleIn}
