@@ -6,6 +6,7 @@ import { strapiMedia } from "@/lib/cms/media";
 import type { StrapiImage } from "@/lib/cms/types";
 import { EASE_LUXE } from "@/components/motion/variants";
 import { useReveal } from "@/components/motion/useReveal";
+import { useMediaAspect } from "./useMediaAspect";
 
 type Props = {
   image: StrapiImage;
@@ -15,6 +16,7 @@ type Props = {
 export function SingleImageInRow({ image, poster }: Props) {
   const { ref, inView } = useReveal();
   const reduced = useReducedMotion();
+  const { aspect, onSize } = useMediaAspect(image, poster);
 
   const src = strapiMedia(image.url);
   if (!src) return null;
@@ -22,7 +24,8 @@ export function SingleImageInRow({ image, poster }: Props) {
   return (
     <div ref={ref} className="w-full overflow-hidden">
       <motion.div
-        className="relative w-full aspect-case-photo"
+        className="relative w-full"
+        style={{ aspectRatio: aspect }}
         initial={reduced ? false : { opacity: 0, scale: 1.04 }}
         animate={inView || reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
         transition={{ duration: 0.9, ease: EASE_LUXE }}
@@ -33,6 +36,7 @@ export function SingleImageInRow({ image, poster }: Props) {
           alt={image.alternativeText ?? ""}
           mime={image.mime}
           poster={strapiMedia(poster?.url)}
+          onSize={onSize}
           sizes="(max-width: 768px) 100vw, 1392px"
           className="object-cover"
         />
