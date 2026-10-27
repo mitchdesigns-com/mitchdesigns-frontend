@@ -236,6 +236,7 @@
      half-overlapping play button), bottom breathing room, and the reel frame's
      height range — from a slight top/bottom crop up to a square side crop. */
   --spacing-header: 6.75rem; /* 108px, matches the header bar */
+  --spacing-media-fit: calc(100svh - var(--spacing-header) - 3rem); /* full-width case-study media: one screen tall at most */
   --spacing-scene-laptop: 260svh; /* media-buying MacBook: pinned scroll length */
   --spacing-laptop-frame: 75vw; /* …on phones: no pin, just the laptop's own height */
   --spacing-hero-gap: clamp(2.5rem, 6svh, 3.5rem);

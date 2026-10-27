@@ -80,7 +80,7 @@ export function CaseStudyHero({ study }: Props) {
       {/* Only the dedicated hero field — the card cover never shows here.
           mt-7 + the gap-8 above = Figma's 60px under the intro. */}
       {study.heroMedia && strapiMedia(study.heroMedia.url) && (
-        <motion.div variants={itemFadeUp} className="relative mt-7 w-full aspect-case-hero overflow-hidden rounded-xs">
+        <motion.div variants={itemFadeUp} className="relative mt-7 w-full aspect-case-hero max-h-media-fit overflow-hidden rounded-xs">
           <motion.div
             className="absolute inset-0"
             variants={scaleIn}

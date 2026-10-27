@@ -24,7 +24,7 @@ export function SingleImageInRow({ image, poster }: Props) {
   return (
     <div ref={ref} className="w-full overflow-hidden">
       <motion.div
-        className="relative w-full"
+        className="relative w-full max-h-media-fit"
         style={{ aspectRatio: aspect }}
         initial={reduced ? false : { opacity: 0, scale: 1.04 }}
         animate={inView || reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
