@@ -65,7 +65,7 @@ export function RelatedProjects({ studies }: Props) {
   if (!studies.length) return null;
 
   return (
-    <section ref={ref} className="bg-yellow py-24 lg:py-32">
+    <section ref={ref} data-switcher-stop className="bg-yellow py-24 lg:py-32">
       <motion.div
         className="container-page flex flex-col gap-16"
         variants={staggerChildren(0.12)}
