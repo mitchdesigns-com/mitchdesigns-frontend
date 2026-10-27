@@ -237,7 +237,6 @@
      height range — from a slight top/bottom crop up to a square side crop. */
   --spacing-header: 6.75rem; /* 108px, matches the header bar */
   --spacing-media-max: 45rem; /* 720px — full-width case-study media never taller */
-  --spacing-hero-media-max: 46.875rem; /* 750px — case-study hero media, as in Figma */
   --spacing-scene-laptop: 260svh; /* media-buying MacBook: pinned scroll length */
   --spacing-laptop-frame: 75vw; /* …on phones: no pin, just the laptop's own height */
   --spacing-hero-gap: clamp(2.5rem, 6svh, 3.5rem);
