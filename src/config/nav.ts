@@ -109,9 +109,9 @@ export const SERVICES: {
   },
   {
     slug: "seo",
-    title: "Rank With SEO",
-    subtitle: null,
-    footerLabel: "Rank With SEO",
+    title: "Get Found on Google & AI",
+    subtitle: "SEO / AEO",
+    footerLabel: "SEO & AEO",
   },
 ];
 

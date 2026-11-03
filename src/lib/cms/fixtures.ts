@@ -204,8 +204,8 @@ export const fixtureServices: Array<WithId<Service>> = [
     id: 7,
     order: 7,
     slug: "seo",
-    title: "Rank with SEO",
-    tagline: "Organic growth through technical and content excellence.",
+    title: "Get Found on Google & AI",
+    tagline: "SEO and AEO so customers find you on Google and in AI answers.",
     description:
       "We combine technical SEO, content strategy, and link building into a single growth engine. Audits, on-page fixes, and a publishing roadmap that compounds — so you rank for the searches that bring buyers, not just traffic.",
   },

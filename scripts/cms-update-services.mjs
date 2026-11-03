@@ -16,7 +16,7 @@ const SERVICES = [
   { slug: "custom", order: 4, title: "Build the Software", tagline: "ERPs, booking, car rental, limousine, travel and payment platforms." },
   { slug: "media-buying", order: 5, title: "Scale with Media Buying", tagline: "Meta, TikTok and Google Ads, built as full funnels with performance creative." },
   // google-ads is merged into media-buying (MERGED_SERVICES) and hidden from lists.
-  { slug: "seo", order: 6 },
+  { slug: "seo", order: 6, title: "Get Found on Google & AI", tagline: "SEO and AEO so customers find you on Google and in AI answers." },
 ];
 
 const headers = { Authorization: `Bearer ${TOKEN}` };
