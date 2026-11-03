@@ -10,13 +10,10 @@ import { Eyebrow } from "./Eyebrow";
 type InlineNode = { type: "text"; text: string; bold?: boolean; italic?: boolean; underline?: boolean };
 type Word = { text: string; bold?: boolean; italic?: boolean; underline?: boolean };
 
-// Used only when the CMS title has no bold words: where and since when.
-const DEFAULT_EMPHASIS = new Set(["2005", "egypt", "mena"]);
-
 /**
  * The story title (plain text or Strapi blocks) as a flat list of words.
- * Sentence case, regular weight: only bold words from the CMS (or the two
- * default ones) stand out. CMS italics are ignored.
+ * Sentence case, regular weight: only the words marked bold in the CMS stand
+ * out. CMS italics are ignored.
  */
 function titleWords(content: RichText): Word[] {
   if (!content) return [];
@@ -29,8 +26,6 @@ function titleWords(content: RichText): Word[] {
         n.text.split(/\s+/).filter(Boolean).map((text) => ({ text, bold: n.bold, underline: n.underline })),
       ),
     );
-  if (!words.some((w) => w.bold))
-    words = words.map((w) => ({ ...w, bold: DEFAULT_EMPHASIS.has(w.text.toLowerCase().replace(/[^a-z0-9]/g, "")) }));
   // Only the first word is forced to a capital; the rest keeps the CMS casing
   // (so "Egypt" and "MENA" stay as written).
   return words.map((w, i) => (i === 0 ? { ...w, text: w.text.charAt(0).toUpperCase() + w.text.slice(1) } : w));
