@@ -10,8 +10,8 @@ import { Eyebrow } from "./Eyebrow";
 type InlineNode = { type: "text"; text: string; bold?: boolean; italic?: boolean; underline?: boolean };
 type Word = { text: string; bold?: boolean; italic?: boolean; underline?: boolean };
 
-// Used only when the CMS title has no bold words: the two that carry the claim.
-const DEFAULT_EMPHASIS = new Set(["200", "clients"]);
+// Used only when the CMS title has no bold words: where and since when.
+const DEFAULT_EMPHASIS = new Set(["2005", "egypt", "mena"]);
 
 /**
  * The story title (plain text or Strapi blocks) as a flat list of words.
