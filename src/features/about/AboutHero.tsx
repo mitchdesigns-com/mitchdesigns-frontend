@@ -15,8 +15,11 @@ import { Eyebrow } from "./Eyebrow";
 export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
   const reduced = useReducedMotion();
   const titleLines = hero.title.split("\n");
-  // Our new studio shoot replaces the older CMS photos here (front-end only).
-  const [first, second, third] = HERO_PHOTOS;
+  // CMS hero images, each falling back to our studio shoot.
+  const [first, second, third] = HERO_PHOTOS.map((fallback, i) => {
+    const img = hero.images[i];
+    return img?.url ? { url: img.url, alt: img.alt ?? fallback.alt } : fallback;
+  });
 
   return (
     <Section className="pt-header pb-20 md:pb-32">
@@ -59,7 +62,7 @@ type Photo = { url: string; alt: string };
 
 const HERO_PHOTOS: [Photo, Photo, Photo] = [
   { url: "/images/studio/about/hero-tablet.webp", alt: "A MitchDesigns designer working across laptop, tablet and screens" },
-  { url: "/images/studio/about/hero-presenting.webp", alt: "A MitchDesigns strategist presenting campaign results to the team" },
+  { url: "/images/studio/about/hero-logo-wall.webp", alt: "Two MitchDesigns team members talking by the logo wall" },
   { url: "/images/studio/screens-review.webp", alt: "MitchDesigns team reviewing a website build across screens" },
 ];
 

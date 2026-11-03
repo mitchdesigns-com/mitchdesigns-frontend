@@ -14,11 +14,10 @@ const TALL = 420;
 const SHORT = 294;
 const CARD_GAP = 20; // px between cards
 
-// The strip shows our new studio shoot (front-end only; replaces the older
-// CMS photos).
+// Our studio shoot, used until CMS photos are set.
 const STRIP_PHOTOS: AboutImage[] = [
   { url: "/images/studio/about/strip-keyboard.webp", alt: "" },
-  { url: "/images/studio/about/strip-logo-wall.webp", alt: "" },
+  { url: "/images/studio/about/strip-presenting.webp", alt: "" },
   { url: "/images/studio/about/strip-phone.webp", alt: "" },
   { url: "/images/studio/about/strip-chart.webp", alt: "" },
   { url: "/images/studio/about/strip-dashboard.webp", alt: "" },
@@ -45,10 +44,9 @@ export function InnovateMarquee({
   const { scrollYProgress } = useScroll({ target: stripRef, offset: ["start end", "end start"] });
   // Ease in/out of the swap, holding a beat at each end.
   const swap = useTransform(scrollYProgress, [0.15, 0.85], reduced ? [0, 0] : [0, 1], { clamp: true });
-  const slots: AboutImage[] = Array.from(
-    { length: FALLBACK_COUNT },
-    (_, i) => STRIP_PHOTOS[i % STRIP_PHOTOS.length],
-  );
+  const slots: AboutImage[] = innovate.photos.length
+    ? innovate.photos
+    : Array.from({ length: FALLBACK_COUNT }, (_, i) => STRIP_PHOTOS[i % STRIP_PHOTOS.length]);
   // An even count keeps tall / short alternating across the marquee's seam.
   const strip = slots.length % 2 ? [...slots, ...slots] : slots;
 

@@ -21,8 +21,8 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       label: "Full-Service Delivery",
       description:
         "From discovery workshops and UX strategy to pixel-perfect build and post-launch support — we own every phase so you don't have to manage multiple vendors.",
-      image: "/images/services/corporate/we-got-you.webp",
-      imageAlt: "Team collaboration on a corporate website project",
+      image: "/images/studio/corporate-review.webp",
+      imageAlt: "MitchDesigns team building a corporate website",
       cta: { label: "See How We Work", href: "/about" },
       imagePosition: "right",
     },
@@ -561,8 +561,8 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       label: "End-to-End Ownership",
       description:
         "From database schema to pixel-perfect UI — we own the full stack so you get a cohesive product, not stitched-together modules from different vendors.",
-      image: "/images/services/custom/we-got-you.webp",
-      imageAlt: "Full-stack development team",
+      image: "/images/studio/screens-review.webp",
+      imageAlt: "MitchDesigns team reviewing a platform build across screens",
       cta: { label: "Get a Proposal", href: LEADS_URL },
       imagePosition: "right",
       theme: "beige",
@@ -892,8 +892,8 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       label: "Full Lifecycle Delivery",
       description:
         "We handle design, development, testing, App Store submission, and post-launch analytics — so you have one accountable partner from the first wireframe to the first 10,000 downloads.",
-      image: "/images/services/mobile-app/we-got-you.webp",
-      imageAlt: "Mobile app development lifecycle diagram",
+      image: "/images/studio/mobile-app.webp",
+      imageAlt: "MitchDesigns team testing a mobile app on a phone",
       cta: { label: "See Our Apps", href: "/case-studies" },
       imagePosition: "right",
       theme: "beige",

@@ -34,12 +34,13 @@ function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; fr
 
 const STORY_PHOTOS = [
   { url: "/images/studio/about/story-office.webp", alt: "The MitchDesigns studio" },
-  { url: "/images/studio/about/story-meeting.webp", alt: "Two MitchDesigns team members in a project meeting" },
+  { url: "/images/studio/about/story-desk.webp", alt: "A MitchDesigns developer focused at his desk" },
 ];
 
 function StoryCard({ card, index }: { card: AboutContent["story"]["cards"][number]; index: number }) {
-  // Studio shoot photos in place of the older CMS images (front-end only).
-  const photo = STORY_PHOTOS[index % STORY_PHOTOS.length];
+  // The CMS image, or our studio shoot until one is set.
+  const fallback = STORY_PHOTOS[index % STORY_PHOTOS.length];
+  const photo = card.image?.url ? { url: card.image.url, alt: card.image.alt ?? fallback.alt } : fallback;
   return (
     <div className="flex w-full max-w-60 flex-col gap-4">
       <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-4/3" sizes="240px" drift={10} zoom={0.08} />

@@ -13,11 +13,13 @@ import { noOrphan } from "@/lib/noOrphan";
  * scroll speed and drifts inside its frame, with a yellow block peeking out
  * behind it for depth.
  */
-const APPROACH_PHOTO = { url: "/images/studio/team-review.webp", alt: "Two MitchDesigns team members reviewing analytics on screen" };
+const APPROACH_PHOTO = { url: "/images/studio/about/approach-meeting.webp", alt: "Two MitchDesigns team members working through a project" };
 
 export function AboutApproach({ approach }: { approach: AboutContent["approach"] }) {
-  // Studio shoot photo in place of the CMS image (front-end only).
-  const photo = APPROACH_PHOTO;
+  // The CMS image, or our studio shoot until one is set.
+  const photo = approach.image?.url
+    ? { url: approach.image.url, alt: approach.image.alt ?? APPROACH_PHOTO.alt }
+    : APPROACH_PHOTO;
   return (
     <Section theme="dark" className="py-24 md:py-32">
       <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
