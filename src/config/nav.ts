@@ -104,14 +104,8 @@ export const SERVICES: {
   {
     slug: "media-buying",
     title: "Media Buying",
-    subtitle: "Meta / TikTok",
+    subtitle: "Meta / TikTok / Google",
     footerLabel: "Media Buying",
-  },
-  {
-    slug: "google-ads",
-    title: "Google Ads",
-    subtitle: null,
-    footerLabel: "Google Ads",
   },
   {
     slug: "seo",
@@ -134,6 +128,14 @@ export const SERVICE_FAQ_CATEGORY: Record<ServiceSlug, string> = {
   "media-buying": "Media Buying",
   "google-ads": "Google Ads",
   seo: "SEO / AGO",
+};
+
+/**
+ * Services folded into another one: no row, menu item or page of their own.
+ * Their URL redirects to the target (see `redirects()` in next.config.ts).
+ */
+export const MERGED_SERVICES: Partial<Record<ServiceSlug, ServiceSlug>> = {
+  "google-ads": "media-buying",
 };
 
 export function serviceHref(slug: ServiceSlug) {

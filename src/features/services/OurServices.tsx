@@ -169,10 +169,10 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
           <motion.div
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.2 }}
-            className="flex max-w-64 flex-col items-start gap-3"
+            className="flex max-w-72 flex-col items-start gap-3"
           >
             {hoverLogo && (
-              <Image src={hoverLogo.src} alt={hoverLogo.alt} width={160} height={40} className="h-8 w-auto" />
+              <Image src={hoverLogo.src} alt={hoverLogo.alt} width={155} height={27} unoptimized className="h-7 w-auto" />
             )}
             <p className="text-balance text-lg text-black">{noOrphan(description)}</p>
           </motion.div>

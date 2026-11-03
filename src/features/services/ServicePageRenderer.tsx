@@ -229,6 +229,8 @@ export function ServicePageRenderer({
           )}
           {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
           <MacbookVideoSection video={deviceVideo} />
+          {/* Google Ads is part of media buying now: its tablet recording follows. */}
+          <TabletVideoSection />
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}

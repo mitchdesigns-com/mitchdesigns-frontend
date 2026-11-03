@@ -160,8 +160,8 @@ export const fixtureServices: Array<WithId<Service>> = [
     order: 2,
     slug: "ecommerce",
     title: "Build an eCommerce Platform",
-    tagline: "Custom stores on Orderbase, our own commerce engine, built to sell from day one.",
-    hoverLogo: { url: "/images/orderbase/logo.webp", alternativeText: "Orderbase" },
+    tagline: "Web store and mobile app. You own the engine, data, transactions, payments and customers.",
+    hoverLogo: { url: "/images/orderbase/logo.svg", alternativeText: "Orderbase" },
     description:
       "We build eCommerce platforms that turn browsers into buyers. Custom storefronts, seamless checkout flows, and performance-optimised pages designed to reduce drop-off at every step. Integrated with your payment gateway, inventory, and logistics — built to scale.",
   },
@@ -170,7 +170,7 @@ export const fixtureServices: Array<WithId<Service>> = [
     order: 3,
     slug: "mobile-app",
     title: "Build a Mobile App",
-    tagline: "iOS and Android apps your customers keep opening.",
+    tagline: "A mobile app built for your customers.",
     description:
       "Every mobile app we build is tailored to your business goals — no templates, no shortcuts. We design native-feel experiences on iOS and Android using React Native, with animations that delight and flows that convert. Each app is built for performance, App Store approval, and post-launch growth.",
   },
@@ -188,7 +188,7 @@ export const fixtureServices: Array<WithId<Service>> = [
     order: 5,
     slug: "media-buying",
     title: "Scale with Media Buying",
-    tagline: "Meta and TikTok campaigns, full-funnel strategy and performance creative.",
+    tagline: "Meta, TikTok and Google Ads, built as full funnels with performance creative.",
     description:
       "We run paid social and display campaigns that don't burn budget. Data-driven targeting, creative testing, and funnel optimisation across Meta, TikTok, and Snapchat — built around your cost-per-acquisition, not just impressions.",
   },

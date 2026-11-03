@@ -3,7 +3,7 @@ import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
 import { blocksToText } from "./blocks";
-import { LEADS_URL } from "@/config/nav";
+import { LEADS_URL, MERGED_SERVICES } from "@/config/nav";
 import { SITE_SETTINGS_FALLBACK } from "./siteDefaults";
 import type {
   AboutContent,
@@ -236,14 +236,17 @@ export const getFAQs = async (
  * Services
  * ------------------------------------------------------------------ */
 export const getServices = async (): Promise<Array<Service & { id: number }>> => {
+  // Merged services (e.g. Google Ads → Media Buying) are left out of every list.
+  const listed = (s: Service) => !(s.slug in MERGED_SERVICES);
   try {
-    return await getCollection<Service>("/our-services", {
+    const services = await getCollection<Service>("/our-services", {
       revalidate: 300,
       query: { "populate[0]": "icon", "populate[1]": "hoverLogo", sort: "order:asc" },
     });
+    return services.filter(listed);
   } catch {
     const { fixtureServices } = await import("./fixtures");
-    return fixtureServices as Array<Service & { id: number }>;
+    return (fixtureServices as Array<Service & { id: number }>).filter(listed);
   }
 };
 

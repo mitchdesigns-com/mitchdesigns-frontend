@@ -13,12 +13,12 @@ if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API to
 
 const SERVICES = [
   { slug: "corporate", order: 1, title: "Launch a Corporate Website", tagline: "A fast, credible website that turns visitors into enquiries." },
-  { slug: "ecommerce", order: 2, title: "Build an eCommerce Platform", tagline: "Custom stores on Orderbase, our own commerce engine, built to sell from day one.", logo: "public/images/orderbase/logo.webp" },
-  { slug: "mobile-app", order: 3, title: "Build a Mobile App", tagline: "iOS and Android apps your customers keep opening." },
+  { slug: "ecommerce", order: 2, title: "Build an eCommerce Platform", tagline: "Web store and mobile app. You own the engine, data, transactions, payments and customers.", logo: "public/images/orderbase/logo.svg" },
+  { slug: "mobile-app", order: 3, title: "Build a Mobile App", tagline: "A mobile app built for your customers." },
   { slug: "custom", order: 4, title: "Build the Software", tagline: "ERPs, booking, car rental, limousine, travel and payment platforms." },
-  { slug: "media-buying", order: 5, title: "Scale with Media Buying", tagline: "Meta and TikTok campaigns, full-funnel strategy and performance creative." },
-  { slug: "google-ads", order: 6 },
-  { slug: "seo", order: 7 },
+  { slug: "media-buying", order: 5, title: "Scale with Media Buying", tagline: "Meta, TikTok and Google Ads, built as full funnels with performance creative." },
+  // google-ads is merged into media-buying (MERGED_SERVICES) and hidden from lists.
+  { slug: "seo", order: 6 },
 ];
 
 const headers = { Authorization: `Bearer ${TOKEN}` };
@@ -32,7 +32,7 @@ async function api(path, init = {}) {
 
 async function uploadLogo(file) {
   const form = new FormData();
-  form.append("files", new Blob([await readFile(file)], { type: "image/webp" }), "orderbase-logo.webp");
+  form.append("files", new Blob([await readFile(file)], { type: "image/svg+xml" }), "orderbase-logo.svg");
   form.append("fileInfo", JSON.stringify({ alternativeText: "Orderbase" }));
   const [uploaded] = await api("/api/upload", { method: "POST", body: form });
   return uploaded.id;
