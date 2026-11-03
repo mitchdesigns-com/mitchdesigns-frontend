@@ -15,7 +15,7 @@ import {
   type Variants,
 } from "framer-motion";
 import { Section } from "@/components/layout/Section";
-import { ParallaxImage, PixelReveal } from "@/components/motion";
+import { ParallaxImage } from "@/components/motion";
 import { UxUiLineIcon } from "@/components/icons/UxUiLineIcon";
 import { SolvingLineIcon } from "@/components/icons/SolvingLineIcon";
 import { RotatingBadge } from "@/components/ui/RotatingBadge";
@@ -258,7 +258,6 @@ export function AboutSection({
 
   // The collage pixels in as one group once it's on screen.
   const collageRef = useRef<HTMLDivElement>(null);
-  const collageInView = useInView(collageRef, { once: true, amount: 0.3 });
   // While it scrolls through: the studio shot opens to full height, the
   // portrait sinks below its bottom line and the square grows.
   const { scrollYProgress: collageProgress } = useScroll({
@@ -420,28 +419,28 @@ export function AboutSection({
           where they meet. Each one glitches in from black through yellow. */}
       <div ref={collageRef} className="container-page grid gap-4 pb-20 md:grid-cols-12 md:gap-6 lg:pb-28">
         <motion.div className="aspect-4/3 md:col-span-7" style={{ clipPath: mainClip }}>
-          <PixelReveal play={collageInView} cols={32} className="size-full">
+          <div className="relative size-full">
             <ParallaxImage
               src={STUDIO.main.src}
               alt={STUDIO.main.alt}
               sizes="(max-width: 768px) 100vw, 58vw"
               className="absolute inset-0"
             />
-          </PixelReveal>
+          </div>
         </motion.div>
         <div className="relative aspect-square md:col-span-5 md:aspect-auto">
           <motion.div className="absolute right-0 top-0 aspect-square" style={{ width: squareWidth }}>
-            <PixelReveal play={collageInView} delay={0.25} cols={16} className="size-full">
+            <div className="relative size-full">
               <ParallaxImage
                 src={STUDIO.side.src}
                 alt={STUDIO.side.alt}
                 sizes="(max-width: 768px) 50vw, 24vw"
                 className="absolute inset-0"
               />
-            </PixelReveal>
+            </div>
           </motion.div>
           <motion.div className="absolute bottom-0 left-0 aspect-4/5 w-1/2" style={{ y: portraitY }}>
-            <PixelReveal play={collageInView} delay={0.45} cols={16} className="size-full">
+            <div className="relative size-full">
               <ParallaxImage
                 src={STUDIO.portrait.src}
                 alt={STUDIO.portrait.alt}
@@ -449,7 +448,7 @@ export function AboutSection({
                 imageClassName="object-top"
                 className="absolute inset-0"
               />
-            </PixelReveal>
+            </div>
           </motion.div>
           {/* Each gap holds an animated line mark for what we do, centred in it. */}
           <div className="absolute left-0 top-0 flex h-2/5 w-1/2 flex-col items-center justify-center gap-2 text-center md:gap-3">
