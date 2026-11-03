@@ -138,7 +138,7 @@ export function Header() {
         )}
         style={{ height: HEADER_HEIGHT }}
       >
-        <div className="container-page flex h-full items-center justify-between">
+        <div className={cn("container-page flex h-full items-center justify-between", menuOpen && "pointer-events-none")}>
           <Link
             href="/"
             aria-label="MitchDesigns home"
@@ -178,6 +178,7 @@ export function Header() {
               // Phones: a smaller 48×28 icon; lg+: the full 75×40.
               className={cn(
                 "relative flex h-7 w-12 flex-col items-start justify-center transition-opacity hover:opacity-70 lg:h-10 lg:w-18.75",
+                menuOpen && "pointer-events-auto",
                 fabShown && "pointer-events-none opacity-0",
               )}
             >
