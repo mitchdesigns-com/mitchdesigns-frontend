@@ -10,16 +10,30 @@ import { Eyebrow } from "./Eyebrow";
 type InlineNode = { type: "text"; text: string; bold?: boolean; italic?: boolean; underline?: boolean };
 type Word = { text: string; bold?: boolean; italic?: boolean; underline?: boolean };
 
-/** The story title (plain text or Strapi blocks) as a flat list of styled words. */
+// Used only when the CMS title has no bold words: the two that carry the claim.
+const DEFAULT_EMPHASIS = new Set(["200", "clients"]);
+
+/**
+ * The story title (plain text or Strapi blocks) as a flat list of words.
+ * Sentence case, regular weight: only bold words from the CMS (or the two
+ * default ones) stand out. CMS italics are ignored.
+ */
 function titleWords(content: RichText): Word[] {
   if (!content) return [];
-  if (typeof content === "string") return content.split(/\s+/).filter(Boolean).map((text) => ({ text }));
-  if (!Array.isArray(content)) return [];
-  return (content as Array<{ children?: InlineNode[] }>).flatMap((block) =>
-    (block.children ?? []).flatMap((n) =>
-      n.text.split(/\s+/).filter(Boolean).map((text) => ({ text, bold: n.bold, italic: n.italic, underline: n.underline })),
-    ),
-  );
+  let words: Word[];
+  if (typeof content === "string") words = content.split(/\s+/).filter(Boolean).map((text) => ({ text }));
+  else if (!Array.isArray(content)) return [];
+  else
+    words = (content as Array<{ children?: InlineNode[] }>).flatMap((block) =>
+      (block.children ?? []).flatMap((n) =>
+        n.text.split(/\s+/).filter(Boolean).map((text) => ({ text, bold: n.bold, underline: n.underline })),
+      ),
+    );
+  if (!words.some((w) => w.bold))
+    words = words.map((w) => ({ ...w, bold: DEFAULT_EMPHASIS.has(w.text.toLowerCase().replace(/[^a-z0-9]/g, "")) }));
+  // Only the first word is forced to a capital; the rest keeps the CMS casing
+  // (so "Egypt" and "MENA" stay as written).
+  return words.map((w, i) => (i === 0 ? { ...w, text: w.text.charAt(0).toUpperCase() + w.text.slice(1) } : w));
 }
 
 /** One word of the statement, inked in as the scroll reaches it. */
@@ -27,7 +41,6 @@ function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; fr
   const opacity = useTransform(p, [from, to], [0.18, 1]);
   let el: React.ReactNode = word.text;
   if (word.bold) el = <strong className="font-black">{el}</strong>;
-  if (word.italic) el = <em className="font-light">{el}</em>;
   if (word.underline) el = <u>{el}</u>;
   return <motion.span style={{ opacity }}>{el} </motion.span>;
 }
@@ -72,7 +85,7 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
 
         <Reveal className="relative z-10 flex flex-col items-center gap-4 text-center">
           <Eyebrow tone="dark">{story.eyebrow}</Eyebrow>
-          <h2 className="max-w-3xl text-hero-3 capitalize text-black lg:text-story">
+          <h2 className="max-w-3xl text-hero-3 text-black lg:text-story">
             {reduced
               ? words.map((w, i) => <Fragment key={i}>{w.text} </Fragment>)
               : words.map((w, i) => (
