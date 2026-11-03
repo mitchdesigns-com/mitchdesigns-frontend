@@ -124,6 +124,7 @@ export function Header() {
         inert={immersive}
         className={cn(
           "inset-x-0 top-0 z-60 transition-colors duration-300 ease-out-soft",
+          menuOpen && "pointer-events-none",
           sticky ? "fixed" : "absolute",
           // The blurred/opaque background only makes sense for a sticky header
           // that stays fixed on screen. Non-sticky headers (e.g. /orderbase)
