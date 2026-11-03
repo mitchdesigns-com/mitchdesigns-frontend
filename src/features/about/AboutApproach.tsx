@@ -5,7 +5,6 @@ import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Parallax, ParallaxImage, Reveal } from "@/components/motion";
 import type { AboutContent } from "@/lib/cms/types";
 import { LEADS_URL } from "@/config/nav";
-import { aboutPhoto } from "./photos";
 import { Eyebrow } from "./Eyebrow";
 import { noOrphan } from "@/lib/noOrphan";
 
@@ -14,8 +13,11 @@ import { noOrphan } from "@/lib/noOrphan";
  * scroll speed and drifts inside its frame, with a yellow block peeking out
  * behind it for depth.
  */
+const APPROACH_PHOTO = { url: "/images/studio/team-review.webp", alt: "Two MitchDesigns team members reviewing analytics on screen" };
+
 export function AboutApproach({ approach }: { approach: AboutContent["approach"] }) {
-  const photo = aboutPhoto(approach.image, 1);
+  // Studio shoot photo in place of the CMS image (front-end only).
+  const photo = APPROACH_PHOTO;
   return (
     <Section theme="dark" className="py-24 md:py-32">
       <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">

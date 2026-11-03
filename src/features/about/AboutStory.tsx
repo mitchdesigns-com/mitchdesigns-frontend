@@ -5,7 +5,6 @@ import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } f
 import { Section } from "@/components/layout/Section";
 import { Parallax, ParallaxImage, Reveal } from "@/components/motion";
 import type { AboutContent, RichText } from "@/lib/cms/types";
-import { aboutPhoto } from "./photos";
 import { Eyebrow } from "./Eyebrow";
 
 type InlineNode = { type: "text"; text: string; bold?: boolean; italic?: boolean; underline?: boolean };
@@ -33,8 +32,14 @@ function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; fr
   return <motion.span style={{ opacity }}>{el} </motion.span>;
 }
 
+const STORY_PHOTOS = [
+  { url: "/images/studio/about/story-office.webp", alt: "The MitchDesigns studio" },
+  { url: "/images/studio/about/story-meeting.webp", alt: "Two MitchDesigns team members in a project meeting" },
+];
+
 function StoryCard({ card, index }: { card: AboutContent["story"]["cards"][number]; index: number }) {
-  const photo = aboutPhoto(card.image, index + 1);
+  // Studio shoot photos in place of the older CMS images (front-end only).
+  const photo = STORY_PHOTOS[index % STORY_PHOTOS.length];
   return (
     <div className="flex w-full max-w-60 flex-col gap-4">
       <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-4/3" sizes="240px" drift={10} zoom={0.08} />

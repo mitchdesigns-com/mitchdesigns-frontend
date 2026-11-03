@@ -15,6 +15,10 @@ import {
   type Variants,
 } from "framer-motion";
 import { Section } from "@/components/layout/Section";
+import { ParallaxImage, PixelReveal } from "@/components/motion";
+import { UxUiLineIcon } from "@/components/icons/UxUiLineIcon";
+import { SolvingLineIcon } from "@/components/icons/SolvingLineIcon";
+import { RotatingBadge } from "@/components/ui/RotatingBadge";
 import { useHeroRevealOpened } from "@/context/HeroRevealContext";
 import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
@@ -32,6 +36,14 @@ const DEFAULT_BODY =
   "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns into results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don’t chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it’s always about the user, the customer, and their experience. That’s why Mitch Designs has become the partner businesses trust when growth can’t wait.";
 
 const DEFAULT_SIGNATURE = "Mitch";
+
+// The place and the people behind the letter, shown under it (front-end only).
+const STUDIO = {
+  main: { src: "/images/studio/office-wide.webp", alt: "The MitchDesigns team at work in the Cairo studio" },
+  side: { src: "/images/studio/meeting-square.webp", alt: "A MitchDesigns team member talking through a project" },
+  portrait: { src: "/images/studio/desk-portrait.webp", alt: "A MitchDesigns developer focused at his desk" },
+};
+const BADGE_TEXT = "Since 2005 • Built in Egypt • ";
 
 // Phrases that get a hand-drawn yellow mark as the white sweep passes them.
 // Matched against the (CMS-editable) body; a phrase that isn't there is skipped.
@@ -244,6 +256,24 @@ export function AboutSection({
 
   const shown = introStarted || Boolean(reduced);
 
+  // The collage pixels in as one group once it's on screen.
+  const collageRef = useRef<HTMLDivElement>(null);
+  const collageInView = useInView(collageRef, { once: true, amount: 0.3 });
+  // While it scrolls through: the studio shot opens to full height, the
+  // portrait sinks below its bottom line and the square grows.
+  const { scrollYProgress: collageProgress } = useScroll({
+    target: collageRef,
+    offset: ["start 0.9", "end 0.4"],
+  });
+  const still = Boolean(reduced);
+  const mainClip = useTransform(collageProgress, [0, 1], [
+    still ? "inset(0% 0 0% 0)" : "inset(6% 0 10% 0)",
+    "inset(0% 0 0% 0)",
+  ]);
+  const portraitY = useTransform(collageProgress, [0, 1], ["0%", still ? "0%" : "14%"]);
+  const badgeY = useTransform(collageProgress, [0, 1], ["0%", still ? "0%" : "40%"]);
+  const squareWidth = useTransform(collageProgress, [0, 1], still ? ["42%", "42%"] : ["36%", "48%"]);
+
   return (
     <Section theme="dark" bleed>
       <div
@@ -382,6 +412,60 @@ export function AboutSection({
               </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Studio collage — the studio large; beside it a small square up top
+          and a portrait on the bottom line, the badge pinned over the corner
+          where they meet. Each one glitches in from black through yellow. */}
+      <div ref={collageRef} className="container-page grid gap-4 pb-20 md:grid-cols-12 md:gap-6 lg:pb-28">
+        <motion.div className="aspect-4/3 md:col-span-7" style={{ clipPath: mainClip }}>
+          <PixelReveal play={collageInView} cols={32} className="size-full">
+            <ParallaxImage
+              src={STUDIO.main.src}
+              alt={STUDIO.main.alt}
+              sizes="(max-width: 768px) 100vw, 58vw"
+              className="absolute inset-0"
+            />
+          </PixelReveal>
+        </motion.div>
+        <div className="relative aspect-square md:col-span-5 md:aspect-auto">
+          <motion.div className="absolute right-0 top-0 aspect-square" style={{ width: squareWidth }}>
+            <PixelReveal play={collageInView} delay={0.25} cols={16} className="size-full">
+              <ParallaxImage
+                src={STUDIO.side.src}
+                alt={STUDIO.side.alt}
+                sizes="(max-width: 768px) 50vw, 24vw"
+                className="absolute inset-0"
+              />
+            </PixelReveal>
+          </motion.div>
+          <motion.div className="absolute bottom-0 left-0 aspect-4/5 w-1/2" style={{ y: portraitY }}>
+            <PixelReveal play={collageInView} delay={0.45} cols={16} className="size-full">
+              <ParallaxImage
+                src={STUDIO.portrait.src}
+                alt={STUDIO.portrait.alt}
+                sizes="(max-width: 768px) 50vw, 21vw"
+                imageClassName="object-top"
+                className="absolute inset-0"
+              />
+            </PixelReveal>
+          </motion.div>
+          {/* Each gap holds an animated line mark for what we do, centred in it. */}
+          <div className="absolute left-0 top-0 flex h-2/5 w-1/2 flex-col items-center justify-center gap-2 text-center md:gap-3">
+            <UxUiLineIcon className="size-20 text-white md:size-28 lg:size-36" />
+            <span className="text-xs font-medium text-white text-balance md:text-sm">UX & UI</span>
+          </div>
+          <div className="absolute bottom-0 right-0 flex h-1/2 w-1/2 flex-col items-center justify-center gap-2 text-center md:gap-3">
+            <SolvingLineIcon className="size-20 text-white md:size-28 lg:size-36" />
+            <span className="text-xs font-medium text-white text-balance md:text-sm">Solving Solutions</span>
+          </div>
+          <motion.div
+            className="absolute left-1/2 top-2/5 z-10 w-1/4 max-w-40 -translate-x-1/2 -translate-y-1/2"
+            style={{ y: badgeY }}
+          >
+            <RotatingBadge text={BADGE_TEXT} className="w-full ring-8 ring-black" />
+          </motion.div>
         </div>
       </div>
     </Section>

@@ -253,6 +253,7 @@
   /* ---------------- Animations ---------------- */
   --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
   --animate-drift: drift 24s linear infinite; /* ambient section particles */
+  --animate-spin-slow: spin 16s linear infinite; /* rotating text badges */
   /* 3D card illustrations — gentle, endless; scale(1.06) keeps the image
      edges hidden while it moves inside its frame */
   --animate-illo-float: illo-float 4.6s var(--ease-in-out-soft) infinite;

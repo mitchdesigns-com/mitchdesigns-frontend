@@ -421,42 +421,42 @@ export const fixtureTrustReasons: Array<WithId<TrustReason>> = [
     id: 1,
     title: "Expertise Led By The Founder",
     body: "Every project is guided by direct founder insight — blending business strategy, UX design, and conversion logic to ensure every outcome feels intentional and high-performing.",
-    image: { url: "/images/trust-reasons/expertise.png", alternativeText: "Expertise Led By The Founder" },
+    image: { url: "/images/trust-reasons/expertise.webp", alternativeText: "Expertise Led By The Founder" },
     order: 1,
   },
   {
     id: 2,
     title: "Tailor-Made Digital Systems",
     body: "We don't rely on templates. We build from the ground up — fully custom platforms that match how your business operates, not the other way around.",
-    image: { url: "/images/trust-reasons/tailor-made.png", alternativeText: "Tailor-Made Digital Systems" },
+    image: { url: "/images/trust-reasons/tailor-made.webp", alternativeText: "Tailor-Made Digital Systems" },
     order: 2,
   },
   {
     id: 3,
     title: "Smooth Tech Integration",
     body: "From ERPs and CRMs to payments and logistics — we connect every moving part into a smooth, automated system.",
-    image: { url: "/images/trust-reasons/smooth-tech.png", alternativeText: "Smooth Tech Integration" },
+    image: { url: "/images/trust-reasons/smooth-tech.webp", alternativeText: "Smooth Tech Integration" },
     order: 3,
   },
   {
     id: 4,
     title: "Design That Drives Business",
     body: "Our designs are not just beautiful — they're designed and built for growth, clarity, and conversion.",
-    image: { url: "/images/trust-reasons/design.png", alternativeText: "Design That Drives Business" },
+    image: { url: "/images/trust-reasons/design.webp", alternativeText: "Design That Drives Business" },
     order: 4,
   },
   {
     id: 5,
     title: "Partnership After Launch",
     body: "We don't disappear after go-live. Our shared support team and monthly retainer model keep every website secure, updated, and optimized.",
-    image: { url: "/images/trust-reasons/partnership.png", alternativeText: "Partnership After Launch" },
+    image: { url: "/images/trust-reasons/partnership.webp", alternativeText: "Partnership After Launch" },
     order: 5,
   },
   {
     id: 6,
     title: "Performance Mindset",
     body: "We measure success by real impact — conversions, traffic, and operational efficiency — not vanity metrics.",
-    image: { url: "/images/trust-reasons/performance.png", alternativeText: "Performance Mindset" },
+    image: { url: "/images/trust-reasons/performance.webp", alternativeText: "Performance Mindset" },
     order: 6,
   },
 ];
@@ -473,73 +473,73 @@ export const fixtureTechStack: Array<WithId<TechItem>> = [
     id: 1,
     name: "Next.js",
     category: "frontend",
-    logo: { url: "/images/tech/nextjs.png" },
+    logo: { url: "/images/tech/nextjs.webp" },
   },
   {
     id: 2,
     name: "React",
     category: "frontend",
-    logo: { url: "/images/tech/react.png" },
+    logo: { url: "/images/tech/react.webp" },
   },
   {
     id: 3,
     name: "TypeScript",
     category: "frontend",
-    logo: { url: "/images/tech/typescript.png" },
+    logo: { url: "/images/tech/typescript.webp" },
   },
   {
     id: 4,
     name: "Tailwind",
     category: "frontend",
-    logo: { url: "/images/tech/tailwind.png" },
+    logo: { url: "/images/tech/tailwind.webp" },
   },
   {
     id: 5,
     name: "PHP 8.4",
     category: "backend",
-    logo: { url: "/images/tech/php.png" },
+    logo: { url: "/images/tech/php.webp" },
   },
   {
     id: 6,
     name: "Laveral PHP",
     category: "backend",
-    logo: { url: "/images/tech/laravel.png" },
+    logo: { url: "/images/tech/laravel.webp" },
   },
   {
     id: 7,
     name: "Strapi",
     category: "backend",
-    logo: { url: "/images/tech/strapi.png" },
+    logo: { url: "/images/tech/strapi.webp" },
   },
   {
     id: 8,
     name: "Node.js",
     category: "backend",
-    logo: { url: "/images/tech/node.png" },
+    logo: { url: "/images/tech/node.webp" },
   },
   {
     id: 9,
     name: "AWS",
     category: "infra",
-    logo: { url: "/images/tech/aws.png" },
+    logo: { url: "/images/tech/aws.webp" },
   },
   {
     id: 10,
     name: "Cloudflare",
     category: "infra",
-    logo: { url: "/images/tech/cloudflare.png" },
+    logo: { url: "/images/tech/cloudflare.webp" },
   },
   {
     id: 11,
     name: "Github",
     category: "infra",
-    logo: { url: "/images/tech/github.png" },
+    logo: { url: "/images/tech/github.webp" },
   },
   {
     id: 13,
     name: "Flutter",
     category: "mobile",
-    logo: { url: "/images/tech/flutter.png" },
+    logo: { url: "/images/tech/flutter.webp" },
   },
 ];
 
@@ -1060,8 +1060,8 @@ export const fixtureAboutPage: AboutContent = {
       body: "Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.",
     },
     images: [
-      { url: "/images/about/about-1.webp", alt: "About MitchDesigns" },
-      { url: "/images/about/about-2.webp", alt: "About MitchDesigns" },
+      { url: "/images/studio/studio-floor.webp", alt: "About MitchDesigns" },
+      { url: "/images/studio/team-review.webp", alt: "About MitchDesigns" },
     ],
   },
   metrics: [
@@ -1245,7 +1245,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
         "label": "own your customers & data"
       }
     ],
-    "image": "/images/orderbase/landing/hero-dashboard.png",
+    "image": "/images/orderbase/landing/hero-dashboard.webp",
     "imageAlt": "Orderbase analytics dashboard on mobile",
     "floatCards": [
       {
@@ -1313,7 +1313,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
         "text": "Most e-commerce solutions don't understand the complexity of food operations."
       }
     ],
-    "image": "/images/orderbase/landing/challenge-bags.png",
+    "image": "/images/orderbase/landing/challenge-bags.webp",
     "imageAlt": "Food brand fulfilling multi-branch orders with Orderbase delivery bags"
   },
   "opportunity": {
@@ -1384,7 +1384,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
     "eyebrow": "One platform, every screen",
     "titleLead": "Not a website. Your eCommerce ",
     "titleAccent": "operating system.",
-    "image": "/images/orderbase/landing/showcase-mockup.png",
+    "image": "/images/orderbase/landing/showcase-mockup.webp",
     "imageAlt": "Orderbase dashboard on laptop and mobile app",
     "features": [
       {
@@ -1642,17 +1642,17 @@ export const fixtureOrderbasePage: OrderbasePageData = {
     ],
     "images": [
       {
-        "src": "/images/orderbase/landing/pay-phone.png",
+        "src": "/images/orderbase/landing/pay-phone.webp",
         "alt": "Orderbase mobile checkout screen",
         "slot": "phone"
       },
       {
-        "src": "/images/orderbase/landing/pay-credit.png",
+        "src": "/images/orderbase/landing/pay-credit.webp",
         "alt": "Credit card details form",
         "slot": "credit"
       },
       {
-        "src": "/images/orderbase/landing/pay-wallet.png",
+        "src": "/images/orderbase/landing/pay-wallet.webp",
         "alt": "Use wallet balance toggle",
         "slot": "wallet"
       }

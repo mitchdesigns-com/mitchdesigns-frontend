@@ -5,3 +5,4 @@ export * from "./variants";
 export { useReveal, REVEAL_VIEWPORT } from "./useReveal";
 export { useTilt } from "./useTilt";
 export { Parallax, ParallaxImage } from "./Parallax";
+export { PixelReveal } from "./PixelReveal";

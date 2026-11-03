@@ -14,7 +14,9 @@ const DEFAULT_DRIVES = [
 
 /** Fallback studio photos (from the Figma design), one per drive, used when
  *  a drive has no CMS `image`; each drive's label becomes its photo's description. */
-const PHOTOS = [1, 2, 3, 4].map((n) => `/images/careers/drive-${n}.webp`);
+const PHOTOS = ["open-communication", "flat-hierarchies", "full-ownership", "innovative-culture"].map(
+  (name) => `/images/studio/careers/${name}.webp`,
+);
 
 /** Resting tilt (deg); alternate photos lean the other way. */
 const TILT = 4;

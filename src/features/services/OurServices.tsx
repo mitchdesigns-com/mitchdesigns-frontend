@@ -34,7 +34,8 @@ function toServiceItem(s: CmsService, index: number): ServiceItem {
     description: s.tagline,
     body: s.description,
     href: `/services/${s.slug}`,
-    imgSrc: `/images/services/${s.slug}.webp`,
+    // Our own team photographed doing each service (front-end only).
+    imgSrc: `/images/studio/services/${s.slug}.webp`,
   };
 }
 

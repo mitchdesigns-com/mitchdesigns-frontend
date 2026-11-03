@@ -143,6 +143,9 @@ export function ServicePageRenderer({
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
+              // Our own team photo in place of the CMS stock image (front-end only).
+              image="/images/studio/corporate-review.webp"
+              imageAlt="MitchDesigns team building a corporate website"
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
           )}
@@ -186,8 +189,8 @@ export function ServicePageRenderer({
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image is missing; our team at work (front-end only).
-              image="/images/about/about-2.webp"
-              imageAlt="MitchDesigns team reviewing a platform build together"
+              image="/images/studio/screens-review.webp"
+              imageAlt="MitchDesigns team reviewing a platform build across screens"
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
           )}
@@ -287,9 +290,9 @@ export function ServicePageRenderer({
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
-              // The CMS image is missing; one of our app shots (front-end only).
-              image={encodeURI("/images/mobile-app/Frame 2147227611.webp")}
-              imageAlt="Hand holding a phone with a finance app designed by MitchDesigns"
+              // The CMS image is missing; our team testing an app (front-end only).
+              image="/images/studio/mobile-app.webp"
+              imageAlt="MitchDesigns team testing a mobile app on a phone"
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
           )}

@@ -6,7 +6,6 @@ import { Section } from "@/components/layout/Section";
 import { ParallaxImage, Reveal } from "@/components/motion";
 import { easeOutSoft } from "@/lib/motion";
 import type { AboutContent } from "@/lib/cms/types";
-import { aboutPhoto } from "./photos";
 import { Eyebrow } from "./Eyebrow";
 
 /**
@@ -16,8 +15,8 @@ import { Eyebrow } from "./Eyebrow";
 export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
   const reduced = useReducedMotion();
   const titleLines = hero.title.split("\n");
-  const [first, second] = [aboutPhoto(hero.images[0], 0), aboutPhoto(hero.images[1], 1)];
-  const third = hero.images[2]?.url ? aboutPhoto(hero.images[2], 2) : BOARD_PHOTO;
+  // Our new studio shoot replaces the older CMS photos here (front-end only).
+  const [first, second, third] = HERO_PHOTOS;
 
   return (
     <Section className="pt-header pb-20 md:pb-32">
@@ -58,8 +57,11 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
 
 type Photo = { url: string; alt: string };
 
-/** First column's photo until the CMS sets a third hero image. */
-const BOARD_PHOTO: Photo = { url: "/images/careers/drive-4.webp", alt: "The MitchDesigns team planning on a sticky-note board" };
+const HERO_PHOTOS: [Photo, Photo, Photo] = [
+  { url: "/images/studio/about/hero-tablet.webp", alt: "A MitchDesigns designer working across laptop, tablet and screens" },
+  { url: "/images/studio/about/hero-presenting.webp", alt: "A MitchDesigns strategist presenting campaign results to the team" },
+  { url: "/images/studio/screens-review.webp", alt: "MitchDesigns team reviewing a website build across screens" },
+];
 
 /** Slides a box from the top of its column to the bottom (or back) as `p`
  *  runs 0 → 1: top 0% → 100% while lifting by its own height. */
