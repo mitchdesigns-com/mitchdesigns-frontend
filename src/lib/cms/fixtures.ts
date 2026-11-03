@@ -161,7 +161,6 @@ export const fixtureServices: Array<WithId<Service>> = [
     slug: "ecommerce",
     title: "Build an eCommerce Platform",
     tagline: "Web store and mobile app. You own the engine, data, transactions, payments and customers.",
-    hoverLogo: { url: "/images/orderbase/logo.svg", alternativeText: "Orderbase" },
     description:
       "We build eCommerce platforms that turn browsers into buyers. Custom storefronts, seamless checkout flows, and performance-optimised pages designed to reduce drop-off at every step. Integrated with your payment gateway, inventory, and logistics — built to scale.",
   },
