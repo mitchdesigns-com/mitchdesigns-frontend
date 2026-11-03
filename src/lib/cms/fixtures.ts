@@ -148,59 +148,67 @@ export const fixtureClientLogos: Array<WithId<ClientLogo>> = [
 export const fixtureServices: Array<WithId<Service>> = [
   {
     id: 1,
-    slug: "mobile-app",
-    title: "Build A Mobile App",
-    tagline: "Native and cross-platform apps designed for conversion.",
-    description:
-      "Every mobile app we build is tailored to your business goals — no templates, no shortcuts. We design native-feel experiences on iOS and Android using React Native, with animations that delight and flows that convert. Each app is built for performance, App Store approval, and post-launch growth.",
-  },
-  {
-    id: 2,
+    order: 1,
     slug: "corporate",
-    title: "Build A Corporate Website",
-    tagline: "Planning user journeys that drive engagement and clarity.",
+    title: "Launch a Corporate Website",
+    tagline: "A fast, credible website that turns visitors into enquiries.",
     description:
       "Every corporate website we build is tailored with no templates and brought to life with custom animations. We use a React frontend powered by Next.js and a headless CMS with Strapi.io to give businesses flexibility and control. Each project is designed to generate qualified leads with SEO-friendly structure, user-focused experience, and high performance speeds. After launch we provide full maintenance and technical support.",
   },
   {
-    id: 3,
+    id: 2,
+    order: 2,
     slug: "ecommerce",
-    title: "Build An eCommerce Platform",
-    tagline: "Crafting a responsive, fast, and scalable experience.",
+    title: "Build an eCommerce Platform",
+    tagline: "Custom stores on Orderbase, our own commerce engine, built to sell from day one.",
+    hoverLogo: { url: "/images/orderbase/logo.webp", alternativeText: "Orderbase" },
     description:
       "We build eCommerce platforms that turn browsers into buyers. Custom storefronts, seamless checkout flows, and performance-optimised pages designed to reduce drop-off at every step. Integrated with your payment gateway, inventory, and logistics — built to scale.",
   },
   {
+    id: 3,
+    order: 3,
+    slug: "mobile-app",
+    title: "Build a Mobile App",
+    tagline: "iOS and Android apps your customers keep opening.",
+    description:
+      "Every mobile app we build is tailored to your business goals — no templates, no shortcuts. We design native-feel experiences on iOS and Android using React Native, with animations that delight and flows that convert. Each app is built for performance, App Store approval, and post-launch growth.",
+  },
+  {
     id: 4,
+    order: 4,
     slug: "custom",
-    title: "Build A Custom Platform",
-    tagline: "Continuous testing, optimization, and team training.",
+    title: "Build the Software",
+    tagline: "ERPs, booking, car rental, limousine, travel and payment platforms.",
     description:
       "When off-the-shelf software doesn't cut it, we build exactly what you need. Booking systems, SaaS dashboards, internal tools, or client portals — architected for reliability, designed for the people who use them every day.",
   },
   {
     id: 5,
+    order: 5,
     slug: "media-buying",
     title: "Scale with Media Buying",
-    tagline: "Paid campaigns that reach the right audience at scale.",
+    tagline: "Meta and TikTok campaigns, full-funnel strategy and performance creative.",
     description:
       "We run paid social and display campaigns that don't burn budget. Data-driven targeting, creative testing, and funnel optimisation across Meta, TikTok, and Snapchat — built around your cost-per-acquisition, not just impressions.",
   },
   {
     id: 6,
-    slug: "seo",
-    title: "Rank with SEO",
-    tagline: "Organic growth through technical and content excellence.",
-    description:
-      "We combine technical SEO, content strategy, and link building into a single growth engine. Audits, on-page fixes, and a publishing roadmap that compounds — so you rank for the searches that bring buyers, not just traffic.",
-  },
-  {
-    id: 7,
+    order: 6,
     slug: "google-ads",
     title: "Scale with Google Ads",
     tagline: "Search and Performance Max campaigns that convert.",
     description:
       "We manage Google Ads accounts built around profitable keywords and tight negative lists. Search, Performance Max, and remarketing — continuously tested and optimised so every dirham in ad spend works harder.",
+  },
+  {
+    id: 7,
+    order: 7,
+    slug: "seo",
+    title: "Rank with SEO",
+    tagline: "Organic growth through technical and content excellence.",
+    description:
+      "We combine technical SEO, content strategy, and link building into a single growth engine. Audits, on-page fixes, and a publishing roadmap that compounds — so you rank for the searches that bring buyers, not just traffic.",
   },
 ];
 

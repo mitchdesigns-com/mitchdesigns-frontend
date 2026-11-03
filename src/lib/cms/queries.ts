@@ -239,7 +239,7 @@ export const getServices = async (): Promise<Array<Service & { id: number }>> =>
   try {
     return await getCollection<Service>("/our-services", {
       revalidate: 300,
-      query: { populate: "icon", sort: "order:asc" },
+      query: { "populate[0]": "icon", "populate[1]": "hoverLogo", sort: "order:asc" },
     });
   } catch {
     const { fixtureServices } = await import("./fixtures");

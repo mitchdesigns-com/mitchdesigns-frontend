@@ -165,6 +165,8 @@ export type Service = {
   tagline: string;
   description: RichText;
   icon?: StrapiImage;
+  /** Brand logo shown on hover in the homepage services list (e.g. Orderbase on eCommerce). */
+  hoverLogo?: StrapiImage | null;
 };
 
 export type Testimonial = {

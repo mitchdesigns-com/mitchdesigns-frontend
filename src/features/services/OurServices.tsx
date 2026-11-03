@@ -17,6 +17,7 @@ import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
 import { LEADS_URL } from "@/config/nav";
 import { noOrphan } from "@/lib/noOrphan";
+import { strapiMedia } from "@/lib/cms/media";
 
 interface ServiceItem {
   num: string;
@@ -25,6 +26,7 @@ interface ServiceItem {
   body: RichText;
   href: string;
   imgSrc: string;
+  hoverLogo: { src: string; alt: string } | null;
 }
 
 function toServiceItem(s: CmsService, index: number): ServiceItem {
@@ -36,6 +38,9 @@ function toServiceItem(s: CmsService, index: number): ServiceItem {
     href: `/services/${s.slug}`,
     // Our own team photographed doing each service (front-end only).
     imgSrc: `/images/studio/services/${s.slug}.webp`,
+    hoverLogo: s.hoverLogo?.url
+      ? { src: strapiMedia(s.hoverLogo.url) ?? s.hoverLogo.url, alt: s.hoverLogo.alternativeText ?? "" }
+      : null,
   };
 }
 
@@ -59,7 +64,7 @@ interface ServiceRowProps {
 }
 
 function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
-  const { num, label, description, body, href, imgSrc } = service;
+  const { num, label, description, body, href, imgSrc, hoverLogo } = service;
 
   const canHover = useHasHover();
   const [isHovered, setIsHovered] = useState(false);
@@ -161,13 +166,16 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
 
         {/* Hover: description */}
         {canHover && !isOpen && (
-          <motion.p
+          <motion.div
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.2 }}
-            className="text-balance max-w-56 text-lg text-black"
+            className="flex max-w-64 flex-col items-start gap-3"
           >
-            {noOrphan(description)}
-          </motion.p>
+            {hoverLogo && (
+              <Image src={hoverLogo.src} alt={hoverLogo.alt} width={160} height={40} className="h-8 w-auto" />
+            )}
+            <p className="text-balance text-lg text-black">{noOrphan(description)}</p>
+          </motion.div>
         )}
 
         {/* Open: close button */}
