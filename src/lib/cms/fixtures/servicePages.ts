@@ -5,7 +5,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   corporate: {
     hero: {
       title: "Corporate Websites That Work as Hard as You Do",
-      subTitle: "Corporate Website",
+      subTitle: "MitchDesigns - Corporate Website Design Company in Egypt",
       description:
         "We design and build custom corporate websites on Next.js — no templates, no shortcuts. Every page is crafted for lead generation, brand clarity, and blazing performance.",
       cta: { label: "Get a Proposal", href: LEADS_URL },
@@ -200,7 +200,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   ecommerce: {
     hero: {
       title: "eCommerce Stores Built to Sell",
-      subTitle: "eCommerce Development",
+      subTitle: "MitchDesigns - eCommerce Website & App Development in Egypt",
       description:
         "Custom storefronts with seamless checkout, local payment gateways (Paymob, Fawry), and conversion-optimised UX. Built on Next.js — fast, scalable, and yours.",
       image: "/images/services/ecommerce/hero.webp",
@@ -390,7 +390,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   custom: {
     hero: {
       title: "Custom Platforms Built Around Your Business Logic",
-      subTitle: "Custom Development",
+      subTitle: "MitchDesigns - Custom Software Development Company in Egypt",
       description:
         "Booking systems, SaaS dashboards, internal tools, and client portals — custom-architected for reliability and designed for the people who use them daily.",
       image: "/images/services/custom/hero.webp",
@@ -572,7 +572,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   "media-buying": {
     hero: {
       title: "Media Buying That Turns Ad Spend Into Profit",
-      subTitle: "Paid Social & Media Buying",
+      subTitle: "MitchDesigns - Media Buying & Performance Marketing Agency in Egypt",
       description:
         "Data-driven paid campaigns across Meta, TikTok, and Snapchat. Creative testing, audience targeting, and funnel optimisation built around your CPA — not just impressions.",
       image: "/images/services/media-buying/hero.webp",
@@ -663,7 +663,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   "google-ads": {
     hero: {
       title: "Google Ads That Capture Intent and Convert It",
-      subTitle: "Google Ads Management",
+      subTitle: "MitchDesigns - Google Ads Management Agency in Egypt",
       description:
         "Search and Performance Max campaigns built around profitable keywords and tight negative lists. Continuously tested and optimised for every dirham in ad spend.",
       image: "/images/services/google-ads/hero.webp",
@@ -754,7 +754,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   seo: {
     hero: {
       title: "Rank on Google. Surface in AI. Own Your Category.",
-      subTitle: "SEO & AI-Generative Optimisation",
+      subTitle: "MitchDesigns - SEO Agency in Egypt for Google & AI Search",
       description:
         "Technical SEO, content strategy, and AI-Generative Optimisation (AGO) to rank on Google and get cited in ChatGPT, Perplexity, and AI Overviews. Arabic SEO included.",
       image: "/images/services/seo/hero.webp",
@@ -845,7 +845,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
   "mobile-app": {
     hero: {
       title: "Mobile Apps That Feel Native and Convert",
-      subTitle: "Mobile App Development",
+      subTitle: "MitchDesigns - Mobile App Development Company in Egypt",
       description:
         "Native-feel iOS and Android apps built with React Native. Designed for conversion, built for performance, and ready for App Store and Play Store submission.",
       image: "/images/services/mobile-app/hero.webp",

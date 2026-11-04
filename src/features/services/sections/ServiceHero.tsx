@@ -77,7 +77,7 @@ export function ServiceHero({
           {subTitle && (
             <motion.p
               variants={fadeUp}
-              className="whitespace-nowrap text-sm font-medium uppercase tracking-[0.18em] text-fg-muted"
+              className="text-balance text-sm font-medium uppercase tracking-[0.18em] text-fg-muted"
             >
               {subTitle}
             </motion.p>
