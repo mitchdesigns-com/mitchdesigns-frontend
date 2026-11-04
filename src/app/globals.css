@@ -121,6 +121,17 @@
   --text-display--font-weight: 900;
   --text-display--letter-spacing: -0.01em;
 
+  /* Homepage "Our Services" row titles — scale with viewport width so every
+     title stays on one line, with room for the tagline on the right (md+). */
+  --text-service: clamp(1rem, 4.5vw, 3.5rem);
+  --text-service--line-height: 1.2;
+  --text-service--font-weight: 900;
+  --text-service--letter-spacing: -0.01em;
+  --text-service-md: clamp(1.25rem, 2.8vw, 3.5rem);
+  --text-service-md--line-height: 1.2;
+  --text-service-md--font-weight: 900;
+  --text-service-md--letter-spacing: -0.01em;
+
   /* Full-screen menu nav links — scale with viewport height so all items stay
      visible on every desktop screen (caps at the display size on tall screens). */
   --text-menu: clamp(1.75rem, 5.5vh, 3.5rem);

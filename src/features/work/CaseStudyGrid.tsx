@@ -12,15 +12,6 @@ import { Media, isVideo } from "@/components/ui/Media";
 
 const PAGE_SIZE = 3;
 
-function ServiceBullet({ label }: { label: string }) {
-  return (
-    <li className="flex items-center gap-1">
-      <span className="size-1 shrink-0 rounded-full bg-space-grey" aria-hidden />
-      <span className="text-xs text-space-grey">{label}</span>
-    </li>
-  );
-}
-
 // ── sub-components ─────────────────────────────────────────────────────────
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
@@ -39,30 +30,27 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
       {/* Left — info panel: logo + title grouped at the top */}
       <div className="flex w-full shrink-0 flex-col gap-5 bg-white p-6 lg:w-[30%]">
         {/* Logo */}
-        <div className="h-[70px] w-full">
+        <div className="h-26 w-full">
           {logoSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={logoSrc}
               alt={cs.logo?.alternativeText ?? cs.client}
-              className="h-full max-w-[120px] object-contain object-left"
+              className="h-full max-w-45 object-contain object-left"
             />
           ) : (
             <span className="text-sm font-medium text-space-grey">{cs.client}</span>
           )}
         </div>
 
-        {/* Title + divider + services */}
-        <div className="flex flex-col gap-5">
-          <h3 className="whitespace-pre-line text-hero-5 text-black text-balance lg:text-card-title">
+        {/* Title + short summary of scope, challenge and what we did (CMS `excerpt`) */}
+        <div className="flex flex-col gap-3">
+          <h3 className="whitespace-pre-line text-hero-5 text-black text-balance">
             {cs.title}
           </h3>
-          <div className="h-px w-full bg-space-grey/20" />
-          <ul className="flex flex-col gap-1">
-            {cs.services.map((s) => (
-              <ServiceBullet key={s} label={s} />
-            ))}
-          </ul>
+          {cs.excerpt && (
+            <p className="text-base text-space-grey text-balance lg:text-lg">{cs.excerpt}</p>
+          )}
         </div>
       </div>
 
@@ -145,7 +133,8 @@ export function CaseStudyGrid({
   return (
     <Section theme="dark" className="py-25">
       <div className="flex flex-col gap-10 lg:gap-[60px]">
-        {/* Header */}
+        {/* Header + category chips, kept close together */}
+        <div className="flex flex-col gap-5">
         <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
           <h1 className="text-hero-3 text-white md:text-hero-2 lg:text-hero-1">{title}</h1>
           <p className="max-w-full text-lg text-white text-balance lg:max-w-[37%] lg:text-xl">{description}</p>
@@ -170,6 +159,7 @@ export function CaseStudyGrid({
             ))}
           </div>
         )}
+        </div>
 
         {/* Rows */}
         <div className="flex flex-col gap-[60px]">

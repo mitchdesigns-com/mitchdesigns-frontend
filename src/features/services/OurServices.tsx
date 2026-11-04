@@ -77,8 +77,10 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
-  const imgTop = useTransform(mouseYSpring, [0.5, -0.5], ["40%", "60%"]);
-  const imgLeft = useTransform(mouseXSpring, [0.5, -0.5], ["70%", "60%"]);
+  // The image floats just left of the tagline and drifts a little with the
+  // cursor, never far enough to cover the tagline.
+  const imgX = useTransform(mouseXSpring, [-0.5, 0.5], [-24, 8]);
+  const imgY = useTransform(mouseYSpring, [-0.5, 0.5], [-16, 16]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLButtonElement>) {
     if (!canHover || isOpen) return;
@@ -130,11 +132,11 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         aria-expanded={isOpen}
         onClick={onToggle}
         onMouseMove={handleMouseMove}
-        className="relative z-10 flex w-full items-center justify-between px-5 py-7 text-left md:px-10 md:py-10"
+        className="relative z-10 flex w-full items-center justify-between gap-6 px-5 py-7 text-left md:px-10 md:py-10"
         style={{ overflow: "visible" }}
       >
-        {/* Number + label */}
-        <div className="flex items-center gap-5 md:gap-15">
+        {/* Number + label — always one line */}
+        <div className="flex min-w-0 items-center gap-5 md:gap-15">
           <span
             className={`shrink-0 font-medium text-base transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
           >
@@ -149,7 +151,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               staggerChildren: 0.08,
               delayChildren: 0.05,
             }}
-            className={`block font-black transition-colors duration-300 text-display ${active ? "text-black" : "text-fg-muted"}`}
+            className={`block whitespace-nowrap font-black transition-colors duration-300 text-service md:text-service-md ${active ? "text-black" : "text-fg-muted"}`}
           >
             {label.split(" ").map((word, i) => (
               <motion.span
@@ -164,18 +166,41 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
           </motion.span>
         </div>
 
-        {/* Hover: description */}
+        {/* Hover: description on the right, image floating just left of it */}
         {canHover && !isOpen && (
-          <motion.div
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
-            className="flex max-w-72 flex-col items-start gap-3"
-          >
-            {hoverLogo && (
-              <Image src={hoverLogo.src} alt={hoverLogo.alt} width={155} height={27} unoptimized className="h-7 w-auto" />
-            )}
-            <p className="text-balance text-lg text-black">{noOrphan(description)}</p>
-          </motion.div>
+          <div className="relative w-56 shrink-0 lg:w-72">
+            <motion.div
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-start gap-3"
+            >
+              {hoverLogo && (
+                <Image src={hoverLogo.src} alt={hoverLogo.alt} width={155} height={27} unoptimized className="h-7 w-auto" />
+              )}
+              <p className="text-balance text-lg text-black">{noOrphan(description)}</p>
+            </motion.div>
+
+            <motion.div
+              style={{ x: imgX, y: imgY, translateY: "-50%", aspectRatio: "170 / 245" }}
+              initial={{ scale: 0, opacity: 0, rotate: "-5deg" }}
+              animate={{
+                scale: isHovered ? 1 : 0,
+                rotate: isHovered ? "5deg" : "-5deg",
+                opacity: isHovered ? 1 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              aria-hidden
+              className="pointer-events-none absolute top-1/2 right-full z-20 mr-10 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
+            >
+              <Image
+                src={imgSrc}
+                alt={`${label} — MitchDesigns service`}
+                width={176}
+                height={253}
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          </div>
         )}
 
         {/* Open: close button */}
@@ -192,35 +217,6 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
           </button>
         )}
 
-        {/* Hover: mouse-following image */}
-        {canHover && !isOpen && (
-          <motion.div
-            style={{
-              top: imgTop,
-              left: imgLeft,
-              translateX: "-50%",
-              translateY: "-50%",
-              aspectRatio: "170 / 245",
-            }}
-            initial={{ scale: 0, opacity: 0, rotate: "-5deg" }}
-            animate={{
-              scale: isHovered ? 1 : 0,
-              rotate: isHovered ? "5deg" : "-5deg",
-              opacity: isHovered ? 1 : 0,
-            }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            aria-hidden
-            className="pointer-events-none absolute z-20 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
-          >
-            <Image
-              src={imgSrc}
-              alt={`${label} — MitchDesigns service`}
-              width={176}
-              height={253}
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
-        )}
       </button>
 
       {/* Expanding panel */}
