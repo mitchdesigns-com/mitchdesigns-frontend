@@ -17,6 +17,7 @@ import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
 import { LEADS_URL } from "@/config/nav";
 import { noOrphan } from "@/lib/noOrphan";
+import { strapiMedia } from "@/lib/cms/media";
 
 interface ServiceItem {
   num: string;
@@ -25,6 +26,7 @@ interface ServiceItem {
   body: RichText;
   href: string;
   imgSrc: string;
+  hoverLogo: { src: string; alt: string } | null;
 }
 
 function toServiceItem(s: CmsService, index: number): ServiceItem {
@@ -36,6 +38,9 @@ function toServiceItem(s: CmsService, index: number): ServiceItem {
     href: `/services/${s.slug}`,
     // Our own team photographed doing each service (front-end only).
     imgSrc: `/images/studio/services/${s.slug}.webp`,
+    hoverLogo: s.hoverLogo?.url
+      ? { src: strapiMedia(s.hoverLogo.url) ?? s.hoverLogo.url, alt: s.hoverLogo.alternativeText ?? "" }
+      : null,
   };
 }
 
@@ -59,7 +64,7 @@ interface ServiceRowProps {
 }
 
 function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
-  const { num, label, description, body, href, imgSrc } = service;
+  const { num, label, description, body, href, imgSrc, hoverLogo } = service;
 
   const canHover = useHasHover();
   const [isHovered, setIsHovered] = useState(false);
@@ -72,8 +77,10 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
-  const imgTop = useTransform(mouseYSpring, [0.5, -0.5], ["40%", "60%"]);
-  const imgLeft = useTransform(mouseXSpring, [0.5, -0.5], ["70%", "60%"]);
+  // The image floats just left of the tagline and drifts a little with the
+  // cursor, never far enough to cover the tagline.
+  const imgX = useTransform(mouseXSpring, [-0.5, 0.5], [-24, 8]);
+  const imgY = useTransform(mouseYSpring, [-0.5, 0.5], [-16, 16]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLButtonElement>) {
     if (!canHover || isOpen) return;
@@ -125,13 +132,13 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         aria-expanded={isOpen}
         onClick={onToggle}
         onMouseMove={handleMouseMove}
-        className="relative z-10 flex w-full items-center justify-between px-5 py-7 text-left md:px-10 md:py-10"
+        className="relative z-10 flex w-full items-center justify-between gap-6 px-0 py-6 text-left md:px-10 md:py-10"
         style={{ overflow: "visible" }}
       >
-        {/* Number + label */}
-        <div className="flex items-center gap-5 md:gap-15">
+        {/* Number + label — always one line */}
+        <div className="flex min-w-0 items-center gap-5 md:gap-15">
           <span
-            className={`shrink-0 font-medium text-base transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
+            className={`shrink-0 font-medium text-base tabular-nums transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
           >
             {num}
           </span>
@@ -144,7 +151,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               staggerChildren: 0.08,
               delayChildren: 0.05,
             }}
-            className={`block font-black transition-colors duration-300 text-display ${active ? "text-black" : "text-fg-muted"}`}
+            className={`block whitespace-nowrap font-black transition-colors duration-300 text-service md:text-service-md ${active ? "text-black" : "text-fg-muted"}`}
           >
             {label.split(" ").map((word, i) => (
               <motion.span
@@ -159,15 +166,41 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
           </motion.span>
         </div>
 
-        {/* Hover: description */}
+        {/* Hover: description on the right, image floating just left of it */}
         {canHover && !isOpen && (
-          <motion.p
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
-            className="text-balance max-w-56 text-lg text-black"
-          >
-            {noOrphan(description)}
-          </motion.p>
+          <div className="relative w-56 shrink-0 lg:w-72">
+            <motion.div
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-start gap-3"
+            >
+              {hoverLogo && (
+                <Image src={hoverLogo.src} alt={hoverLogo.alt} width={155} height={27} unoptimized className="h-7 w-auto" />
+              )}
+              <p className="text-balance text-lg text-black">{noOrphan(description)}</p>
+            </motion.div>
+
+            <motion.div
+              style={{ x: imgX, y: imgY, translateY: "-50%", aspectRatio: "170 / 245" }}
+              initial={{ scale: 0, opacity: 0, rotate: "-5deg" }}
+              animate={{
+                scale: isHovered ? 1 : 0,
+                rotate: isHovered ? "5deg" : "-5deg",
+                opacity: isHovered ? 1 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              aria-hidden
+              className="pointer-events-none absolute top-1/2 right-full z-20 mr-10 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
+            >
+              <Image
+                src={imgSrc}
+                alt={`${label} — MitchDesigns service`}
+                width={176}
+                height={253}
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          </div>
         )}
 
         {/* Open: close button */}
@@ -178,41 +211,14 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               e.stopPropagation();
               onToggle();
             }}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-black/40 transition-colors hover:text-black"
+            // Phones: hidden, so the one-line title keeps its width; tapping
+            // the row again closes it.
+            className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full text-black/40 transition-colors hover:text-black md:flex"
           >
             <Close size={22} />
           </button>
         )}
 
-        {/* Hover: mouse-following image */}
-        {canHover && !isOpen && (
-          <motion.div
-            style={{
-              top: imgTop,
-              left: imgLeft,
-              translateX: "-50%",
-              translateY: "-50%",
-              aspectRatio: "170 / 245",
-            }}
-            initial={{ scale: 0, opacity: 0, rotate: "-5deg" }}
-            animate={{
-              scale: isHovered ? 1 : 0,
-              rotate: isHovered ? "5deg" : "-5deg",
-              opacity: isHovered ? 1 : 0,
-            }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            aria-hidden
-            className="pointer-events-none absolute z-20 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
-          >
-            <Image
-              src={imgSrc}
-              alt={`${label} — MitchDesigns service`}
-              width={176}
-              height={253}
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
-        )}
       </button>
 
       {/* Expanding panel */}
@@ -226,7 +232,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="relative z-10 overflow-hidden"
           >
-            <div className="flex gap-10 px-5 pb-6 md:px-10 md:pb-10">
+            <div className="flex gap-10 px-0 pb-6 md:px-10 md:pb-10">
               <div
                 className="relative hidden w-88 shrink-0 overflow-hidden rounded-2xl lg:block"
                 style={{ aspectRatio: "345 / 519" }}
@@ -235,16 +241,16 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               </div>
               <div className="flex flex-1 flex-col justify-between gap-16">
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
-                <div className="flex flex-wrap items-center justify-end gap-4 self-end">
+                <div className="flex flex-col gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-4 sm:self-end">
                   <Link
                     href={LEADS_URL}
-                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
                   >
                     Get Detailed Proposal
                   </Link>
                   <Link
                     href={href}
-                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-space-grey px-6 py-4 text-base font-medium text-white transition-opacity hover:opacity-80 md:px-9"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-space-grey px-6 py-4 text-base font-medium text-white transition-opacity hover:opacity-80 md:px-9"
                   >
                     Learn More
                   </Link>

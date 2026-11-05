@@ -26,7 +26,7 @@ export function AboutApproach({ approach }: { approach: AboutContent["approach"]
         <Reveal className="flex flex-col gap-8">
           <div className="flex flex-col gap-4">
             <Eyebrow>{approach.eyebrow}</Eyebrow>
-            <h2 className="text-hero-3 font-bold text-fg text-balance">{noOrphan(approach.title)}</h2>
+            <h2 className="text-hero-3 text-left font-bold text-fg text-balance">{noOrphan(approach.title)}</h2>
           </div>
           <p className="text-xl text-fg-muted text-balance">{noOrphan(approach.body)}</p>
           <Button size="lg" asChild>

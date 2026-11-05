@@ -165,6 +165,8 @@ export type Service = {
   tagline: string;
   description: RichText;
   icon?: StrapiImage;
+  /** Brand logo shown on hover in the homepage services list (e.g. Orderbase on eCommerce). */
+  hoverLogo?: StrapiImage | null;
 };
 
 export type Testimonial = {
@@ -310,6 +312,18 @@ export type WeGotYouProps = {
   imagePosition?: "left" | "right";
   /** Image sequence played in place of `image` (e.g. the eCommerce order story). */
   story?: Array<{ src: string; alt: string }>;
+  /** Audiences to switch between (e.g. B2C, Food & Beverage, B2B). When set,
+   *  the section shows a toggle instead of the scroll scene. */
+  tabs?: AudienceTab[];
+};
+
+export type AudienceTab = {
+  label: string;
+  title: string;
+  description: RichText;
+  /** Optional brand logo for this audience (e.g. Orderbase). */
+  logo?: string;
+  logoAlt?: string;
 };
 
 export type WhyUsCard = {

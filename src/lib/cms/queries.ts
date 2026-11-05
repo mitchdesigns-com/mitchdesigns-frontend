@@ -3,7 +3,7 @@ import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
 import { blocksToText } from "./blocks";
-import { LEADS_URL } from "@/config/nav";
+import { LEADS_URL, MERGED_SERVICES } from "@/config/nav";
 import { SITE_SETTINGS_FALLBACK } from "./siteDefaults";
 import type {
   AboutContent,
@@ -236,14 +236,17 @@ export const getFAQs = async (
  * Services
  * ------------------------------------------------------------------ */
 export const getServices = async (): Promise<Array<Service & { id: number }>> => {
+  // Merged services (e.g. Google Ads → Media Buying) are left out of every list.
+  const listed = (s: Service) => !(s.slug in MERGED_SERVICES);
   try {
-    return await getCollection<Service>("/our-services", {
+    const services = await getCollection<Service>("/our-services", {
       revalidate: 300,
-      query: { populate: "icon", sort: "order:asc" },
+      query: { "populate[0]": "icon", "populate[1]": "hoverLogo", sort: "order:asc" },
     });
+    return services.filter(listed);
   } catch {
     const { fixtureServices } = await import("./fixtures");
-    return fixtureServices as Array<Service & { id: number }>;
+    return (fixtureServices as Array<Service & { id: number }>).filter(listed);
   }
 };
 
@@ -1106,6 +1109,15 @@ function mapServicePage(raw: any): ServicePageData {
           cta: raw.weGotYou.cta ?? undefined,
           theme: raw.weGotYou.theme ?? undefined,
           imagePosition: raw.weGotYou.imagePosition ?? undefined,
+          tabs: Array.isArray(raw.weGotYou.tabs) && raw.weGotYou.tabs.length
+            ? raw.weGotYou.tabs.map((tab: any) => ({
+                label: tab.label,
+                title: tab.title,
+                description: tab.description,
+                logo: tab.logo ? mediaUrl(tab.logo) : undefined,
+                logoAlt: tab.logo ? mediaAlt(tab.logo) : undefined,
+              }))
+            : undefined,
           story: images(raw.weGotYou.story).length
             ? images(raw.weGotYou.story).map((m: any) => ({
                 src: mediaSrc(m)!,
@@ -1257,7 +1269,11 @@ export async function getServicePageData(
           // Flat sections — one level of populate gets all their fields + media
           "populate[hero][populate]": "*",
           "populate[prototypes][populate]": "*",
-          "populate[weGotYou][populate]": "*",
+          // weGotYou: listed so its audience tabs' logos load too.
+          "populate[weGotYou][populate][image]": "true",
+          "populate[weGotYou][populate][cta]": "true",
+          "populate[weGotYou][populate][story]": "true",
+          "populate[weGotYou][populate][tabs][populate][logo]": "true",
           "populate[brief][populate]": "*",
           "populate[featuresSimplified][populate]": "*",
           "populate[accordion][populate]": "*",

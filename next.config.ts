@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
   // homepage. All three use IANA-registered relation types and point to
   // resources that actually exist. Relative URIs resolve against the request
   // host, so this works on staging and prod without env coupling.
+  // Merged services (MERGED_SERVICES in src/config/nav.ts) keep their old URL alive.
+  async redirects() {
+    return [
+      { source: "/services/google-ads", destination: "/services/media-buying", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

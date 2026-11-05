@@ -121,9 +121,24 @@
   --text-display--font-weight: 900;
   --text-display--letter-spacing: -0.01em;
 
+  /* About hero "MitchDesigns" on phones: 48px, scaled down on the narrowest. */
+  --text-about-hero: clamp(2.25rem, 14vw, 3rem);
+  --text-about-hero--line-height: 1;
+
+  /* Homepage "Our Services" row titles — scale with viewport width so every
+     title stays on one line, with room for the tagline on the right (md+). */
+  --text-service: clamp(1rem, 5vw, 3.5rem);
+  --text-service--line-height: 1.2;
+  --text-service--font-weight: 900;
+  --text-service--letter-spacing: -0.01em;
+  --text-service-md: clamp(1.25rem, 2.8vw, 3.5rem);
+  --text-service-md--line-height: 1.2;
+  --text-service-md--font-weight: 900;
+  --text-service-md--letter-spacing: -0.01em;
+
   /* Full-screen menu nav links — scale with viewport height so all items stay
      visible on every desktop screen (caps at the display size on tall screens). */
-  --text-menu: clamp(1.75rem, 5.5vh, 3.5rem);
+  --text-menu: clamp(1.5rem, min(5.5vh, 8vw), 3.5rem); /* phones: also capped by width so "Our Services" + arrow fits one line */
   --text-menu--line-height: 1.1;
   --text-menu--font-weight: 900;
   --text-menu--letter-spacing: -0.01em;
@@ -402,6 +417,14 @@
 /* Reserve exactly two lines of the element's own line-height, so a 1-line
    and a 2-line title (or clamped excerpt) take the same space and card rows
    stay aligned. Pair with line-clamp-2. */
+/* Sideways-scrolling rows (service switcher on phones), no visible scrollbar. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility min-h-lines-2 {
   min-height: 2lh;
 }
@@ -977,6 +1000,11 @@
     line-height: 1.1; /* 110% */
     font-weight: 700;
     text-align: center;
+  }
+  /* Opt out of the centring where the heading sits in a left-aligned column. */
+  .text-hero-2.text-left,
+  .text-hero-3.text-left {
+    text-align: left;
   }
   .text-hero-5 {
     font-size: 1.5rem; /* 24px */

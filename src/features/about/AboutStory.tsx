@@ -8,28 +8,66 @@ import type { AboutContent, RichText } from "@/lib/cms/types";
 import { Eyebrow } from "./Eyebrow";
 
 type InlineNode = { type: "text"; text: string; bold?: boolean; italic?: boolean; underline?: boolean };
-type Word = { text: string; bold?: boolean; italic?: boolean; underline?: boolean };
+/** A styled run inside a word ("2005" bold, then "," plain). */
+type Part = { text: string; bold?: boolean; underline?: boolean };
+/** One word as the reader sees it: runs with no space between them. */
+type Word = Part[];
 
-/** The story title (plain text or Strapi blocks) as a flat list of styled words. */
+/**
+ * The story title (plain text or Strapi blocks) as a flat list of words.
+ * Sentence case, regular weight: only the words marked bold in the CMS stand
+ * out. CMS italics are ignored. Punctuation stuck to a styled word ("2005"
+ * then ", we've") stays in the same word, so no space appears before it.
+ */
 function titleWords(content: RichText): Word[] {
   if (!content) return [];
-  if (typeof content === "string") return content.split(/\s+/).filter(Boolean).map((text) => ({ text }));
-  if (!Array.isArray(content)) return [];
-  return (content as Array<{ children?: InlineNode[] }>).flatMap((block) =>
-    (block.children ?? []).flatMap((n) =>
-      n.text.split(/\s+/).filter(Boolean).map((text) => ({ text, bold: n.bold, italic: n.italic, underline: n.underline })),
-    ),
-  );
+  let nodes: Part[];
+  if (typeof content === "string") nodes = [{ text: content }];
+  else if (!Array.isArray(content)) return [];
+  else
+    nodes = (content as Array<{ children?: InlineNode[] }>).flatMap((block) => [
+      ...(block.children ?? []).map((n) => ({ text: n.text, bold: n.bold, underline: n.underline })),
+      { text: " " }, // blocks never run into each other
+    ]);
+  const words: Word[] = [];
+  let joined = false; // last token ended without whitespace
+  for (const n of nodes) {
+    for (const token of n.text.split(/(\s+)/)) {
+      if (!token) continue;
+      if (/^\s+$/.test(token)) {
+        joined = false;
+        continue;
+      }
+      const part = { text: token, bold: n.bold, underline: n.underline };
+      if (joined && words.length) words[words.length - 1].push(part);
+      else words.push([part]);
+      joined = true;
+    }
+  }
+  // Only the first word is forced to a capital; the rest keeps the CMS casing
+  // (so "Egypt" and "MENA" stay as written).
+  const first = words[0]?.[0];
+  if (first) first.text = first.text.charAt(0).toUpperCase() + first.text.slice(1);
+  return words;
+}
+
+function PartText({ part }: { part: Part }) {
+  let el: React.ReactNode = part.text;
+  if (part.bold) el = <strong className="font-black">{el}</strong>;
+  if (part.underline) el = <u>{el}</u>;
+  return el;
 }
 
 /** One word of the statement, inked in as the scroll reaches it. */
 function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; from: number; to: number }) {
   const opacity = useTransform(p, [from, to], [0.18, 1]);
-  let el: React.ReactNode = word.text;
-  if (word.bold) el = <strong className="font-black">{el}</strong>;
-  if (word.italic) el = <em className="font-light">{el}</em>;
-  if (word.underline) el = <u>{el}</u>;
-  return <motion.span style={{ opacity }}>{el} </motion.span>;
+  return (
+    <motion.span style={{ opacity }}>
+      {word.map((part, i) => (
+        <PartText key={i} part={part} />
+      ))}{" "}
+    </motion.span>
+  );
 }
 
 const STORY_PHOTOS = [
@@ -72,9 +110,9 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
 
         <Reveal className="relative z-10 flex flex-col items-center gap-4 text-center">
           <Eyebrow tone="dark">{story.eyebrow}</Eyebrow>
-          <h2 className="max-w-3xl text-hero-3 capitalize text-black lg:text-story">
+          <h2 className="max-w-3xl text-hero-3 text-black lg:text-story">
             {reduced
-              ? words.map((w, i) => <Fragment key={i}>{w.text} </Fragment>)
+              ? words.map((w, i) => <Fragment key={i}>{w.map((part, j) => <PartText key={j} part={part} />)} </Fragment>)
               : words.map((w, i) => (
                   <InkWord key={i} word={w} p={scrollYProgress} from={i / words.length} to={(i + 1.5) / words.length} />
                 ))}

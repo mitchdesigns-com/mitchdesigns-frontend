@@ -76,48 +76,50 @@ export const SERVICES: {
   title: string;
   subtitle: string | null;
   footerLabel: string;
+  /** Short pill label for the service switcher at the top of each service page. */
+  shortLabel: string;
 }[] = [
   {
     slug: "corporate",
     title: "Corporate Website",
     subtitle: "Design & Development",
     footerLabel: "Corporate Website Design",
+    shortLabel: "Corporate",
   },
   {
     slug: "ecommerce",
     title: "eCommerce Platform",
     subtitle: "Custom Design & Development",
     footerLabel: "eCommerce Development",
+    shortLabel: "eCommerce",
   },
   {
     slug: "mobile-app",
     title: "Mobile App",
     subtitle: "Design & Development",
     footerLabel: "Mobile App Design",
+    shortLabel: "Mobile App",
   },
   {
     slug: "custom",
     title: "Custom Platform",
     subtitle: "Design & Development",
     footerLabel: "Custom Web Apps Development",
+    shortLabel: "Software",
   },
   {
     slug: "media-buying",
     title: "Media Buying",
-    subtitle: "Meta / TikTok",
+    subtitle: "Meta / TikTok / Google",
     footerLabel: "Media Buying",
-  },
-  {
-    slug: "google-ads",
-    title: "Google Ads",
-    subtitle: null,
-    footerLabel: "Google Ads",
+    shortLabel: "Media Buying",
   },
   {
     slug: "seo",
-    title: "Rank With SEO",
-    subtitle: null,
-    footerLabel: "Rank With SEO",
+    title: "Get Found on Google & AI",
+    subtitle: "SEO / AEO",
+    footerLabel: "SEO & AEO",
+    shortLabel: "SEO & AEO",
   },
 ];
 
@@ -134,6 +136,14 @@ export const SERVICE_FAQ_CATEGORY: Record<ServiceSlug, string> = {
   "media-buying": "Media Buying",
   "google-ads": "Google Ads",
   seo: "SEO / AGO",
+};
+
+/**
+ * Services folded into another one: no row, menu item or page of their own.
+ * Their URL redirects to the target (see `redirects()` in next.config.ts).
+ */
+export const MERGED_SERVICES: Partial<Record<ServiceSlug, ServiceSlug>> = {
+  "google-ads": "media-buying",
 };
 
 export function serviceHref(slug: ServiceSlug) {

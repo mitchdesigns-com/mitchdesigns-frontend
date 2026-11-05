@@ -60,7 +60,7 @@ const EMPTY: Box = { w: 0, h: 0, tx: 0, ty: 0, tw: 0, th: 0, cx: 0, cy: 0, pr: 0
  * hand-drawn yellow underline draws under it. Plays when `on` turns true,
  * reverses when off.
  */
-function HighlightTitle({
+export function HighlightTitle({
   title,
   highlights = [],
   Tag,

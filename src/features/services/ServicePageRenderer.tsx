@@ -5,8 +5,9 @@ import type {
   Service,
   ServicePageData,
 } from "@/lib/cms/types";
-import { isLeadFunnelHref, leadsUrl } from "@/config/nav";
+import { SERVICES, isLeadFunnelHref, leadsUrl } from "@/config/nav";
 import { ServiceHero } from "./sections/ServiceHero";
+import { ServiceSwitcher } from "./sections/ServiceSwitcher";
 import { CORPORATE_REEL, CUSTOM_REEL, MOBILE_REEL } from "@/config/serviceReels";
 import { EcommerceReel } from "./ecommerceReel/EcommerceReel";
 import { MediaBuyingScene } from "./mediaBuyingScene/MediaBuyingScene";
@@ -26,6 +27,7 @@ const ECOMMERCE_ORDER_STORY = [
   { src: "/images/services/ecommerce/story-3-packing.webp", alt: "Staff packing the order for delivery" },
   { src: "/images/services/ecommerce/story-4-delivery.webp", alt: "Courier delivering the order to the customer" },
 ];
+import { WeGotYouTabs } from "./sections/WeGotYouTabs";
 import { WeGotYouOrbit } from "./sections/WeGotYouOrbit";
 import { WhyUsSection } from "./sections/WhyUsSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -126,6 +128,13 @@ export function ServicePageRenderer({
   } = data;
 
   const hero = withServiceLeadCta(rawHero, slug);
+  // Same services, labels and order as the main menu.
+  const switcher = (
+    <ServiceSwitcher
+      current={slug}
+      items={SERVICES.map((s) => ({ slug: s.slug, label: s.shortLabel, href: `/services/${s.slug}` }))}
+    />
+  );
 
   // The FAQ section shows this service's questions only (no category filter):
   // the CMS category for the service, or — if that comes back empty — any FAQ
@@ -139,7 +148,7 @@ export function ServicePageRenderer({
     case "corporate":
       return (
         <>
-          <ServiceHero {...hero} reel={heroReel ?? CORPORATE_REEL} />
+          <ServiceHero {...hero} switcher={switcher} reel={heroReel ?? CORPORATE_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
@@ -161,20 +170,39 @@ export function ServicePageRenderer({
     case "ecommerce":
       return (
         <>
-          <ServiceHero {...hero} scene={<EcommerceReel />} bleedScene />
-          {weGotYou && (
-            <WeGotYouOrbit
-              {...weGotYou}
-              // The CMS image is still a placeholder: the card tells an order's
-              // story instead — ordered, received, packed, delivered.
-              image="/images/services/ecommerce/we-got-you.webp"
-              imageAlt="Store owner managing orders on a tablet"
-              story={weGotYou.story ?? ECOMMERCE_ORDER_STORY}
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
-            />
-          )}
+          <ServiceHero {...hero} switcher={switcher} scene={<EcommerceReel />} bleedScene />
+          {weGotYou &&
+            (() => {
+              const ecommerceWeGotYou = {
+                ...weGotYou,
+                // The CMS image is still a placeholder: the card tells an order's
+                // story instead — ordered, received, packed, delivered.
+                image: "/images/services/ecommerce/we-got-you.webp",
+                imageAlt: "Store owner managing orders on a tablet",
+                story: weGotYou.story ?? ECOMMERCE_ORDER_STORY,
+                cta: { label: "Get Proposal", href: leadsUrl(slug) },
+              };
+              // Audience tabs (B2C · Food & Beverage · B2B) when the CMS has them.
+              return weGotYou.tabs?.length ? (
+                <WeGotYouTabs {...ecommerceWeGotYou} />
+              ) : (
+                <WeGotYouOrbit {...ecommerceWeGotYou} />
+              );
+            })()}
           {whyUs && <WhyUsSection {...whyUs} />}
           {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
+          {/* Website + app: the retention story, told on the 3D phone (CMS `process`). */}
+          {process?.processCards?.length ? (
+            <AppFlowSection
+              steps={appFlowSteps(process)}
+              eyebrow={process.eyebrow}
+              closingTitle={process.closingTitle}
+              closingText={process.closingText}
+              screens={process.appScreens}
+            />
+          ) : null}
+          {/* Same stack as Corporate, minus the CMS (stores run on their own engine). */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["Strapi"]} />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -184,7 +212,7 @@ export function ServicePageRenderer({
     case "custom":
       return (
         <>
-          <ServiceHero {...hero} reel={heroReel ?? CUSTOM_REEL} />
+          <ServiceHero {...hero} switcher={switcher} reel={heroReel ?? CUSTOM_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
@@ -214,7 +242,7 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our live dashboard widgets, animated (front-end only). */}
-          <ServiceHero {...hero} scene={<MediaBuyingScene />} />
+          <ServiceHero {...hero} switcher={switcher} scene={<MediaBuyingScene />} />
           {numbers && <NumbersSection {...numbers} />}
           {/* The brief quote gives way to the scroll-written "We Got You"
               scene the other service pages open with. */}
@@ -229,6 +257,8 @@ export function ServicePageRenderer({
           )}
           {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
           <MacbookVideoSection video={deviceVideo} />
+          {/* Google Ads is part of media buying now: its tablet recording follows. */}
+          <TabletVideoSection />
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -239,7 +269,7 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our live dashboard widgets, animated (front-end only). */}
-          <ServiceHero {...hero} scene={<GoogleAdsScene />} />
+          <ServiceHero {...hero} switcher={switcher} scene={<GoogleAdsScene />} />
           {numbers && <NumbersSection {...numbers} />}
           {/* As on the other service pages: the scroll-written "We Got You"
               scene instead of the prototype shot, brief quote and old card. */}
@@ -264,7 +294,7 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our organic-clicks widget, animated (front-end only). */}
-          <ServiceHero {...hero} scene={<SeoScene />} />
+          <ServiceHero {...hero} switcher={switcher} scene={<SeoScene />} />
           {numbers && <NumbersSection {...numbers} />}
           {/* As on the other service pages: the scroll-written "We Got You"
               scene instead of the prototype shot, brief quote and old card. */}
@@ -286,7 +316,7 @@ export function ServicePageRenderer({
     case "mobile-app":
       return (
         <>
-          <ServiceHero {...hero} reel={heroReel ?? MOBILE_REEL} />
+          <ServiceHero {...hero} switcher={switcher} reel={heroReel ?? MOBILE_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}

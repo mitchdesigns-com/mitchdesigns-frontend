@@ -146,7 +146,7 @@ export function FeaturesSimplified({
 
   return (
     <div ref={root}>
-      <Section className={cn("bg-bg", scene ? "flex h-svh items-center" : "py-20 md:py-28")}>
+      <Section className={cn("bg-bg max-md:overflow-x-clip", scene ? "flex h-svh items-center" : "py-20 md:py-28")}>
         <div className="flex flex-col gap-12 md:flex-row md:items-center md:gap-20">
           {/* Heading, rolling counter and progress */}
           <div className="flex flex-col gap-8 md:w-2/5 md:shrink-0">

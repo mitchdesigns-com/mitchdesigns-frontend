@@ -40,7 +40,9 @@ export function SectionHeader({
           {eyebrow}
         </p>
       ) : null}
-      <h2 className={cn("text-hero-4 font-bold md:text-hero-3", !icon && "mt-4")}>
+      {/* text-hero-3 follows the Mobile Heading spec below 1024px (28px), so
+          long glued words like "Choose MitchDesigns?" still fit a phone. */}
+      <h2 className={cn("text-hero-3 font-bold", !icon && "mt-4")}>
         {typeof title === "string" ? noOrphan(title) : title}
       </h2>
       {description ? (
