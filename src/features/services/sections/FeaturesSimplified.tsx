@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Section } from "@/components/layout/Section";
 import { RichText } from "@/components/ui/RichText";
@@ -11,7 +10,7 @@ import { cn } from "@/lib/cn";
 import { armTickFeedback, buzz, tick } from "@/lib/tickFeedback";
 import { noOrphan } from "@/lib/noOrphan";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(useGSAP);
 
 const labelColors: Record<string, string> = {
   New: "bg-accent text-accent-fg",
@@ -25,20 +24,16 @@ const labelColorsOnDark: Record<string, string> = {
   Trending: "bg-bg/15 text-bg",
 };
 
-/** Scroll distance per feature while pinned, as a share of the viewport. */
-const STEP = 0.42;
-
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
- * "Every feature" list as a pinned scroll scene (≥768px, GSAP ScrollTrigger):
- * the section holds while each feature in turn opens up — its description
- * and badge slide out, the list glides to keep it centred, a rolling counter
- * and progress bar track the way through, and the scroll snaps to every
- * feature. Rows are clickable to jump straight to one. Each step ticks
+ * "Every feature" list. Desktop: a screen-tall section the page scrolls past
+ * freely; the list is its own scroll box (wheel over it to move through the
+ * features), with the row in its middle lit and a rolling counter and progress
+ * bar following it. Rows are clickable to jump straight to one. Each step ticks
  * (once the visitor has interacted with the page). Phones get the full list
- * with the row crossing mid-screen lit up, ticking and buzzing (Android) as
- * it changes. Reduced motion: the plain list, silent.
+ * with the row crossing mid-screen lit up, ticking and buzzing (Android) as it
+ * changes. Reduced motion: the plain list, silent.
  */
 export function FeaturesSimplified({
   title,
@@ -48,7 +43,6 @@ export function FeaturesSimplified({
   const root = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<ScrollTrigger | null>(null);
   const [active, setActive] = useState(0);
   const [scene, setScene] = useState(false);
   const [follow, setFollow] = useState(false);
@@ -59,26 +53,39 @@ export function FeaturesSimplified({
       const mm = gsap.matchMedia();
       mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
         setScene(true);
-        const st = ScrollTrigger.create({
-          trigger: root.current,
-          start: "top top",
-          end: () => `+=${window.innerHeight * STEP * (total - 1)}`,
-          pin: true,
-          scrub: true,
-          snap: {
-            snapTo: 1 / Math.max(total - 1, 1),
-            duration: { min: 0.2, max: 0.5 },
-            ease: "power2.inOut",
-          },
-          onUpdate: (self) => {
-            setActive(Math.round(self.progress * (total - 1)));
-            gsap.set("[data-progress]", { scaleX: self.progress });
-          },
-        });
-        triggerRef.current = st;
+        // No pin: the page scrolls past freely. The list is its own scroll box,
+        // so the wheel moves through the features only while the cursor is on it
+        // (and carries on down the page at its end). The row in the middle of
+        // the box is the open one; counter and progress follow its scroll.
+        const win = windowRef.current;
+        let frame = 0;
+        const update = () => {
+          frame = 0;
+          if (!win || !listRef.current) return;
+          const mid = win.scrollTop + win.clientHeight / 2;
+          let best = 0;
+          let dist = Infinity;
+          Array.from(listRef.current.children).forEach((row, i) => {
+            const el = row as HTMLElement;
+            const d = Math.abs(el.offsetTop + el.offsetHeight / 2 - mid);
+            if (d < dist) {
+              dist = d;
+              best = i;
+            }
+          });
+          setActive(best);
+          const max = win.scrollHeight - win.clientHeight;
+          gsap.set("[data-progress]", { scaleX: max > 0 ? win.scrollTop / max : 0 });
+        };
+        const onScroll = () => {
+          if (!frame) frame = requestAnimationFrame(update);
+        };
+        win?.addEventListener("scroll", onScroll, { passive: true });
+        update();
         return () => {
+          win?.removeEventListener("scroll", onScroll);
+          cancelAnimationFrame(frame);
           setScene(false);
-          triggerRef.current = null;
         };
       });
       // Phones: light up the row crossing the middle of the screen.
@@ -125,28 +132,16 @@ export function FeaturesSimplified({
     lastTick.current = active;
   }, [active, scene, follow]);
 
-  // Glide the list so the open feature sits in the middle of the window.
-  useGSAP(
-    () => {
-      const list = listRef.current;
-      const win = windowRef.current;
-      const row = list?.children[active] as HTMLElement | undefined;
-      if (!scene || !list || !win || !row) return;
-      const target = win.clientHeight / 2 - (row.offsetTop + row.offsetHeight / 2);
-      gsap.to(list, { y: target, duration: 0.7, ease: "power3.out", overwrite: true });
-    },
-    { dependencies: [active, scene], scope: root },
-  );
-
   const jumpTo = (i: number) => {
-    const st = triggerRef.current;
-    if (!st) return;
-    window.scrollTo({ top: st.start + (st.end - st.start) * (i / Math.max(total - 1, 1)), behavior: "smooth" });
+    const win = windowRef.current;
+    const row = listRef.current?.children[i] as HTMLElement | undefined;
+    if (!win || !row) return;
+    win.scrollTo({ top: row.offsetTop + row.offsetHeight / 2 - win.clientHeight / 2, behavior: "smooth" });
   };
 
   return (
     <div ref={root}>
-      <Section className={cn("bg-bg max-md:overflow-x-clip", scene ? "flex h-svh items-center" : "py-20 md:py-28")}>
+      <Section className={cn("bg-bg max-md:overflow-x-clip", scene ? "flex min-h-svh items-center py-16" : "py-20 md:py-28")}>
         <div className="flex flex-col gap-12 md:flex-row md:items-center md:gap-20">
           {/* Heading, rolling counter and progress */}
           <div className="flex flex-col gap-8 md:w-2/5 md:shrink-0">
@@ -182,16 +177,25 @@ export function FeaturesSimplified({
           {/* Feature list: one open at a time while pinned */}
           <div
             ref={windowRef}
-            className={cn("relative flex-1", scene && "h-svh overflow-hidden")}
+            className={cn("relative flex-1", scene && "overflow-y-auto scrollbar-none")}
             style={
               scene
-                ? { maskImage: "linear-gradient(to bottom, transparent, black 18%, black 82%, transparent)" }
+                ? {
+                    height: "75svh",
+                    maskImage: "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)",
+                  }
                 : undefined
             }
           >
-            <ol ref={listRef} className="flex flex-col gap-3">
+            <ol
+              ref={listRef}
+              className="flex flex-col gap-3"
+              style={scene ? { paddingBlock: "calc(37.5svh - 2.5rem)" } : undefined}
+            >
               {featureCards.map((card, i) => {
-                const open = !scene || i === active;
+                // Every row stays open: rows that grow as they light up would shift the
+                // list under the scroll position.
+                const open = true;
                 const lit = i === active && (scene || follow);
                 return (
                   <li key={card.title}>
@@ -205,7 +209,7 @@ export function FeaturesSimplified({
                         lit
                           ? "scale-100 border-fg bg-fg text-bg"
                           : "border-border bg-bg text-fg",
-                        scene && !open && "scale-95 opacity-70 hover:opacity-100",
+                        scene && !lit && "opacity-70 hover:opacity-100",
                       )}
                     >
                       <span className="flex items-center gap-4">
@@ -220,9 +224,7 @@ export function FeaturesSimplified({
                         <span
                           className={cn(
                             "font-semibold transition-all duration-500 ease-out-soft",
-                            // Grows only in the pinned scene; on phones a size change would
-                            // shift the rows below and throw off their scroll markers.
-                            lit && scene ? "text-2xl" : "text-base",
+                            "text-base",
                           )}
                         >
                           {card.title}

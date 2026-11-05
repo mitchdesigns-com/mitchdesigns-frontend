@@ -97,7 +97,8 @@ export function WeGotYouTabs({
                   width={180}
                   height={40}
                   unoptimized
-                  className="h-14 w-auto"
+                  // The wordmark is wide, so it stays small and gets room above the title.
+                  className="mb-3 h-6 w-auto md:h-7"
                 />
               )}
               <h3 className="text-hero-5 font-bold text-black text-balance">{tab.title}</h3>

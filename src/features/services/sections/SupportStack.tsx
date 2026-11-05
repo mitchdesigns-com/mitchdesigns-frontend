@@ -7,14 +7,13 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { RichText } from "@/components/ui/RichText";
 import type { SupportSectionProps } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
-import { supportIconFor } from "./supportIcons";
 
 /** Card skins, cycled: yellow, black, white, grey. */
 const SKINS = [
-  { card: "bg-yellow text-black", muted: "text-black/70", tile: "bg-black text-yellow" },
-  { card: "bg-black text-white", muted: "text-grey-500", tile: "bg-yellow text-black" },
-  { card: "bg-white text-black", muted: "text-fg-muted", tile: "bg-yellow text-black" },
-  { card: "bg-space-grey text-white", muted: "text-grey-500", tile: "bg-yellow text-black" },
+  { card: "bg-yellow text-black", muted: "text-black/70" },
+  { card: "bg-black text-white", muted: "text-grey-500" },
+  { card: "bg-white text-black", muted: "text-fg-muted" },
+  { card: "bg-space-grey text-white", muted: "text-grey-500" },
 ];
 /** Each card pins this much lower than the one before, so the stack shows. */
 const STEP_PX = 28;
@@ -57,7 +56,6 @@ function StackCard({
 }) {
   const reduced = useReducedMotion();
   const skin = SKINS[index % SKINS.length];
-  const { Icon, loop } = supportIconFor(card.title, index, card.icon);
   // Once the cards after it start covering it, it eases back.
   const scale = useTransform(progress, [index / total, 1], reduced ? [1, 1] : [1, 1 - (total - index) * 0.04]);
 
@@ -70,12 +68,7 @@ function StackCard({
           skin.card,
         )}
       >
-        <div className="flex items-center gap-6 md:w-2/5 md:flex-col md:items-start md:gap-8">
-          <span className="text-hero-2 font-bold leading-none tabular-nums md:text-hero-1">{pad(index + 1)}</span>
-          <span className={cn("flex size-16 shrink-0 items-center justify-center rounded-card-sm md:size-20", skin.tile)}>
-            <Icon size={40} className={loop} />
-          </span>
-        </div>
+        <span className="text-hero-2 font-bold leading-none tabular-nums md:w-2/5 md:text-hero-1">{pad(index + 1)}</span>
         <div className="flex flex-col gap-4 md:w-3/5">
           <h3 className="text-hero-5 font-bold text-balance md:text-hero-3">{card.title}</h3>
           <RichText content={card.description} className={cn("text-lg text-balance md:text-2xl", skin.muted)} />

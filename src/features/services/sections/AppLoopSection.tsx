@@ -41,13 +41,13 @@ export function AppLoopSection({
   const phoneY = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [30, -30]);
 
   return (
-    <Section theme="dark" className="overflow-hidden py-20 md:py-28">
+    <Section theme="dark" className="overflow-hidden py-14 md:py-16">
       <div ref={ref} className="grid gap-16 md:grid-cols-2 md:gap-12 lg:gap-20">
         {/* Copy: the reasons, one lit at a time */}
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             {eyebrow && <p className="text-sm font-medium uppercase tracking-1 text-yellow">{eyebrow}</p>}
-            <h2 className="text-hero-3 text-left font-bold text-balance md:text-hero-2">{title}</h2>
+            <h2 className="text-hero-3 text-left font-bold text-balance">{title}</h2>
           </div>
           <ol className="flex flex-col">
             {steps.map((s, i) => (
@@ -55,7 +55,7 @@ export function AppLoopSection({
             ))}
           </ol>
           {(closingTitle || closingText) && (
-            <div className="rounded-card bg-yellow p-6 text-black">
+            <div className="rounded-card bg-yellow px-6 py-5 text-black">
               {closingTitle && <p className="text-xl font-bold text-balance">{closingTitle}</p>}
               {closingText && <p className="mt-2 text-base text-black/75 text-balance">{closingText}</p>}
             </div>
@@ -64,7 +64,7 @@ export function AppLoopSection({
 
         {/* The app: real checkout, with its wallet and card pieces around it */}
         <div className="relative order-first md:order-none md:sticky md:top-24 md:self-start">
-          <div className="relative mx-auto aspect-3/4 w-full max-w-md">
+          <div className="relative mx-auto aspect-3/4 w-full max-w-sm">
             <motion.div style={{ y: phoneY }} className="absolute inset-0">
               <Image src={PHONE.src} alt={PHONE.alt} fill className="object-contain drop-shadow-2xl" sizes="(max-width: 768px) 90vw, 28rem" />
             </motion.div>
@@ -93,16 +93,16 @@ function Reason({ step, index }: { step: FlowStep; index: number }) {
     <li
       ref={ref}
       className={cn(
-        "flex gap-5 border-t border-white/10 py-6 transition-opacity duration-500 last:border-b",
+        "flex gap-5 border-t border-white/10 py-4 transition-opacity duration-500 last:border-b",
         lit ? "opacity-100" : "opacity-40",
       )}
     >
       <span className={cn("pt-1 text-sm font-semibold tabular-nums transition-colors duration-500", lit ? "text-yellow" : "text-grey-500")}>
         {pad(index + 1)}
       </span>
-      <div className="flex flex-col gap-2">
-        <h3 className="text-xl font-semibold text-balance md:text-2xl">{step.title}</h3>
-        <p className="text-base text-grey-500 text-balance md:text-lg">{step.description}</p>
+      <div className="flex flex-col gap-1">
+        <h3 className="text-xl font-semibold text-balance">{step.title}</h3>
+        <p className="text-base text-grey-500 text-balance">{step.description}</p>
       </div>
     </li>
   );
