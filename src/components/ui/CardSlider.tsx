@@ -59,6 +59,9 @@ export function CardSlider({
             {child}
           </motion.div>
         ))}
+        {/* Room after the last card, as wide as the nav arrows that sit over
+            the track's right edge, so the last card can scroll clear of them. */}
+        <div aria-hidden className="hidden shrink-0 sm:block sm:w-40 lg:w-56" />
       </motion.div>
 
       {/* Nav arrows — desktop only; mobile uses touch scroll */}
