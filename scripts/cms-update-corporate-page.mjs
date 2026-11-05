@@ -43,12 +43,12 @@ const STEPS = [
   ["Discovery", "Competitor analysis, personas, marketing analysis, sitemap and information architecture: the plan the site is built on."],
   ["User Experience (UX)", "Wireframes for every page, shaped around your users' goals and your business goals."],
   ["UI Design", "Everything visual: layout, typography, colour, photography and composition, designed to look stunning on every screen."],
-  ["Copywriting & Data Entry", "Clear, persuasive copy for your audience, with every page, image and detail entered for you."],
+  ["Copywriting", "Clear, persuasive copy written for your audience and your brand's voice."],
   ["Coding", "We build it on a modern, fast stack, with a CMS your team can use without a developer."],
-  ["Testing", "Every page, form and journey checked across browsers and devices."],
+  ["Testing & Data Entry", "Every page, image and detail entered for you, then every page, form and journey checked across browsers and devices."],
   ["Deployment", "Hosting, domain and security set up, and the site moved to its live servers."],
   ["Quality Assurance", "A final pass on the live site: speed, content, SEO basics and accessibility."],
-  ["Launch", "Your website goes live, and we stay on for support, maintenance and updates."],
+  ["Website Launch 🚀", "Your website goes live, and we stay on for support, maintenance and updates."],
 ];
 
 // ── FAQs (category "Corporate Website") ─────────────────────────────────────
@@ -143,7 +143,8 @@ const weGotYou = { id: w.id, title: w.title, titleHighlights: w.titleHighlights,
 const whyUs = {
   id: y.id, title: y.title, titleHighlights: y.titleHighlights, description: y.description, variant: y.variant,
   cards: WHY_US.map(([from, title, text]) => {
-    const c = y.cards.find((x) => x.title.trim() === from);
+    // Match the original title or the new one, so the script can run again.
+    const c = y.cards.find((x) => [from, title].includes(x.title.trim()));
     if (!c) throw new Error(`Why Us card not found: ${from}`);
     return { id: c.id, title, description: para(text), image: id(c.image), icon: c.icon };
   }),
