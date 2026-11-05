@@ -27,6 +27,7 @@ const ECOMMERCE_ORDER_STORY = [
   { src: "/images/services/ecommerce/story-3-packing.webp", alt: "Staff packing the order for delivery" },
   { src: "/images/services/ecommerce/story-4-delivery.webp", alt: "Courier delivering the order to the customer" },
 ];
+import { WeGotYouTabs } from "./sections/WeGotYouTabs";
 import { WeGotYouOrbit } from "./sections/WeGotYouOrbit";
 import { WhyUsSection } from "./sections/WhyUsSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -170,19 +171,38 @@ export function ServicePageRenderer({
       return (
         <>
           <ServiceHero {...hero} switcher={switcher} scene={<EcommerceReel />} bleedScene />
-          {weGotYou && (
-            <WeGotYouOrbit
-              {...weGotYou}
-              // The CMS image is still a placeholder: the card tells an order's
-              // story instead — ordered, received, packed, delivered.
-              image="/images/services/ecommerce/we-got-you.webp"
-              imageAlt="Store owner managing orders on a tablet"
-              story={weGotYou.story ?? ECOMMERCE_ORDER_STORY}
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
-            />
-          )}
+          {weGotYou &&
+            (() => {
+              const ecommerceWeGotYou = {
+                ...weGotYou,
+                // The CMS image is still a placeholder: the card tells an order's
+                // story instead — ordered, received, packed, delivered.
+                image: "/images/services/ecommerce/we-got-you.webp",
+                imageAlt: "Store owner managing orders on a tablet",
+                story: weGotYou.story ?? ECOMMERCE_ORDER_STORY,
+                cta: { label: "Get Proposal", href: leadsUrl(slug) },
+              };
+              // Audience tabs (B2C · Food & Beverage · B2B) when the CMS has them.
+              return weGotYou.tabs?.length ? (
+                <WeGotYouTabs {...ecommerceWeGotYou} />
+              ) : (
+                <WeGotYouOrbit {...ecommerceWeGotYou} />
+              );
+            })()}
           {whyUs && <WhyUsSection {...whyUs} />}
           {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
+          {/* Website + app: the retention story, told on the 3D phone (CMS `process`). */}
+          {process?.processCards?.length ? (
+            <AppFlowSection
+              steps={appFlowSteps(process)}
+              eyebrow={process.eyebrow}
+              closingTitle={process.closingTitle}
+              closingText={process.closingText}
+              screens={process.appScreens}
+            />
+          ) : null}
+          {/* Same stack as Corporate, minus the CMS (stores run on their own engine). */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["Strapi"]} />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
