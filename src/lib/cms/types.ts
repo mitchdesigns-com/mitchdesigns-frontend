@@ -501,6 +501,9 @@ export type HomeHero = {
   /** Showreel; falls back to the bundled webm. */
   video?: string;
   videoPoster?: string;
+  /** Portrait (4:5) showreel for phones; falls back to the bundled mp4. */
+  videoMobile?: string;
+  videoMobilePoster?: string;
   playLabel?: string;
   stopLabel?: string;
 };

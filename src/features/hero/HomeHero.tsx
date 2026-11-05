@@ -11,6 +11,9 @@ import { RotatingWord } from "./RotatingWord";
 import { VideoHero } from "./VideoHero";
 
 const HERO_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
+/** Phones: the portrait (4:5) cut of the showreel. */
+const MOBILE_VIDEO = "/videos/Mitch_Showreel_2026_Portrait.mp4";
+const MOBILE_POSTER = "/videos/Mitch_Showreel_2026_Portrait-poster.webp";
 const ease = [0.65, 0, 0.35, 1] as const;
 /** The reel opens/closes over 1s; scrolling is held for most of that, and a
  *  still-running swipe is let through soon after. */
@@ -23,6 +26,8 @@ type Props = {
   rotatingWords?: string[];
   video?: string;
   videoPoster?: string;
+  videoMobile?: string;
+  videoMobilePoster?: string;
 };
 
 /** Muted looping reel; `sound` unmutes it in place. */
@@ -314,19 +319,34 @@ function ReelExpandHero(p: Props) {
 /**
  * Homepage hero. Laptop / desktop (lg+): the expanding reel hero above.
  * Phones and tablets: VideoHero's mobile layout (copy, then the reel with a
- * play button that rotates it into a full-screen player). Until the screen
- * size is known (first paint) a plain black hero holds the space.
+ * play button that opens it full screen); phones play the portrait cut.
+ * Until the screen size is known (first paint) a plain black hero holds
+ * the space.
  */
-export function HomeHero(props: Props) {
-  const [desktop, setDesktop] = useState<boolean | null>(null);
+export function HomeHero({ videoMobile, videoMobilePoster, ...props }: Props) {
+  const [screenSize, setScreenSize] = useState<"phone" | "tablet" | "desktop" | null>(null);
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setDesktop(mq.matches);
+    const desktopMq = window.matchMedia("(min-width: 1024px)");
+    const phoneMq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setScreenSize(desktopMq.matches ? "desktop" : phoneMq.matches ? "phone" : "tablet");
     sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    desktopMq.addEventListener("change", sync);
+    phoneMq.addEventListener("change", sync);
+    return () => {
+      desktopMq.removeEventListener("change", sync);
+      phoneMq.removeEventListener("change", sync);
+    };
   }, []);
 
-  if (desktop === null) return <section data-theme="dark" className="h-svh bg-black" />;
-  return desktop ? <ReelExpandHero {...props} /> : <VideoHero {...props} />;
+  if (screenSize === null) return <section data-theme="dark" className="h-svh bg-black" />;
+  if (screenSize === "desktop") return <ReelExpandHero {...props} />;
+  if (screenSize === "tablet") return <VideoHero {...props} />;
+  return (
+    <VideoHero
+      {...props}
+      video={videoMobile ?? MOBILE_VIDEO}
+      videoPoster={videoMobilePoster ?? (videoMobile ? undefined : MOBILE_POSTER)}
+      portraitReel
+    />
+  );
 }

@@ -46,6 +46,9 @@ type VideoHeroProps = {
   videoPoster?: string;
   playLabel?: string;
   stopLabel?: string;
+  /** The reel is portrait (phones): it opens full screen upright, without
+   *  turning to landscape. */
+  portraitReel?: boolean;
 };
 
 /**
@@ -68,6 +71,7 @@ export function VideoHero({
   videoPoster,
   playLabel = "Play Video",
   stopLabel = "Stop",
+  portraitReel = false,
 }: VideoHeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -177,16 +181,17 @@ export function VideoHero({
     // Two frames so the "from" box paints before the transition starts.
     requestAnimationFrame(() => requestAnimationFrame(() => setPhase("open")));
     playWithSound();
-    // Where supported, go truly full screen and turn the device to landscape;
-    // the CSS rotation drops by itself once the viewport is landscape.
+    // Where supported, go truly full screen and (landscape reels) turn the
+    // device to landscape; the CSS rotation drops by itself once the viewport
+    // is landscape. A portrait reel stays upright.
     const root = document.documentElement;
     if (root.requestFullscreen && !document.fullscreenElement) {
       root
         .requestFullscreen({ navigationUI: "hide" })
-        .then(() => (screen.orientation as LockableOrientation).lock?.("landscape"))
+        .then(() => (portraitReel ? undefined : (screen.orientation as LockableOrientation).lock?.("landscape")))
         .catch(() => {});
     }
-  }, [playWithSound]);
+  }, [playWithSound, portraitReel]);
 
   const closeReel = useCallback(() => {
     const frame = frameRef.current;
@@ -342,8 +347,9 @@ export function VideoHero({
   const tail = words.slice(-2).join(" ");
 
   // The moving player box. "from"/"closing" sit exactly on the inline frame;
-  // "open" fills the screen, turned 90° while the viewport is portrait.
-  const portrait = viewport.h > viewport.w;
+  // "open" fills the screen, turned 90° while the viewport is portrait
+  // (never for a portrait reel, which already matches the screen).
+  const portrait = !portraitReel && viewport.h > viewport.w;
   const transition = `left ${EXPAND_MS}ms ${EXPAND_EASE}, top ${EXPAND_MS}ms ${EXPAND_EASE}, width ${EXPAND_MS}ms ${EXPAND_EASE}, height ${EXPAND_MS}ms ${EXPAND_EASE}, transform ${EXPAND_MS}ms ${EXPAND_EASE}`;
   let playerStyle: React.CSSProperties | undefined;
   if (phase === "open") {

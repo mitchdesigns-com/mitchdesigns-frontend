@@ -433,6 +433,8 @@ export const getHomePage = async (): Promise<HomePageData> => {
               rotatingWords: parseWords(raw.hero.rotatingWords),
               video: mediaSrc(raw.hero.video),
               videoPoster: mediaSrc(raw.hero.videoPoster),
+              videoMobile: mediaSrc(raw.hero.videoMobile),
+              videoMobilePoster: mediaSrc(raw.hero.videoMobilePoster),
               playLabel: str(raw.hero.playLabel),
               stopLabel: str(raw.hero.stopLabel),
             }
