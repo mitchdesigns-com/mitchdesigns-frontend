@@ -12,6 +12,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getSiteSettings } from "@/lib/cms/queries";
 import type { SiteSettings } from "@/lib/cms/types";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
+import { RouteProgress } from "@/components/layout/RouteProgress";
 // import { UserbackWidget } from "@/components/Userback";
 
 const SITE_URL = "https://mitchdesigns.com";
@@ -118,6 +119,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-dvh antialiased">
+        <RouteProgress />
         <JsonLd data={siteGraph} />
         <SiteSettingsProvider settings={settings}>{children}</SiteSettingsProvider>
         {/* <UserbackWidget /> */}

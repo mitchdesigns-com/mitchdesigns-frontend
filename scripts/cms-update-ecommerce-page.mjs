@@ -25,7 +25,7 @@ const HERO = {
   title: "eCommerce Agency For B2B & B2C Brands",
   titleHighlights: "B2B & B2C",
   description: para(
-    "If your brand sells products and you're not selling online, you're leaving money on the table. Whether you sell to consumers or to businesses, we build the platform that does it: your own online store and mobile app, with the engine, the data, the payments and the customers all yours.",
+    "If your brand sells products and you're not selling online, you're leaving money on the table. Whether you sell to consumers or to businesses, we build the platform that does it. Your own online store and mobile app, with the engine, the data, the payments and the customers all yours.",
   ),
 };
 
@@ -34,7 +34,7 @@ const WE_GOT_YOU = {
   titleHighlights: "eCommerce Agencies?",
   label: "We Got You",
   // Reads on its own too (sites without the toggle still show this line).
-  description: para("One platform, tailored to how you sell: to consumers, to food lovers or to other businesses."),
+  description: para("One platform, tailored to how you sell, whether to consumers, food lovers or other businesses."),
   tabs: [
     {
       label: "B2C Brands",
@@ -45,7 +45,7 @@ const WE_GOT_YOU = {
     },
     {
       label: "Food & Beverage",
-      title: "Orderbase: ordering built for food brands",
+      title: "Ordering built for food brands",
       description: para(
         "Orderbase is our ordering platform for restaurants, cafés and food brands. Online ordering on web and app, menus and stock per branch, delivery zones, pickup, scheduled orders and loyalty, so you take orders directly instead of paying aggregator commissions.",
       ),
@@ -55,14 +55,14 @@ const WE_GOT_YOU = {
       label: "B2B",
       title: "Wholesale ordering, made simple",
       description: para(
-        "Built for distributors, wholesalers and manufacturers: bulk orders, customer tiers and segments, contract and volume pricing, subscriptions and recurring orders, and company accounts with several buyers, all synced with your ERP.",
+        "Built for distributors, wholesalers and manufacturers, with bulk orders, customer tiers and segments, contract and volume pricing, subscriptions and recurring orders, and company accounts with several buyers, all synced with your ERP.",
       ),
     },
   ],
 };
 
 const WHY_US = {
-  description: para("We know eCommerce from the inside: what sells, what converts and what keeps customers coming back."),
+  description: para("We know eCommerce from the inside. We know what sells, what converts and what keeps customers coming back."),
   cards: [
     ["eCommerce Experience", "Years of building and running online stores taught us what makes them profitable, not just pretty.", "trend"],
     ["Conversion First", "Every page, from product to checkout, is designed and tested to turn visitors into orders.", "funnel"],
@@ -125,7 +125,7 @@ const APP = {
   title: "Your Brand Deserves an App",
   eyebrow: "Website + mobile app",
   closingTitle: "Scale With Every Order",
-  closingText: "Website plus app: one engine, one dashboard, and a business that grows faster with every repeat customer.",
+  closingText: "Website plus app means one engine, one dashboard, and a business that grows faster with every repeat customer.",
   steps: [
     ["Close the Loop", "A website wins new customers. An app keeps them. Together they make one complete platform."],
     ["Built for Repeat Customers", "Customers who come back love your brand. An app on their home screen makes the next order one tap away."],
@@ -186,7 +186,7 @@ const FAQS = [
   {
     from: ["Is WooCommerce good for large ecommerce stores (10,000 products and more)?"],
     question: "Can you manage the store for us?",
-    answer: para("Yes. You get a dedicated eCommerce account manager who looks after your store with you: new products and collections, campaigns and offers, reports and improvements. Running an online store is a big responsibility, and you don't have to carry it alone."),
+    answer: para("Yes. You get a dedicated eCommerce account manager who looks after your store with you, from new products and collections to campaigns, offers, reports and improvements. Running an online store is a big responsibility, and you don't have to carry it alone."),
   },
   {
     from: ["Which technology is used in ecommerce website development?"],
@@ -224,15 +224,16 @@ async function api(path, init = {}) {
 }
 const put = (path, data) => (DRY ? console.log("[dry] PUT", path) : api(path, { method: "PUT", body: JSON.stringify({ data }) }));
 
-// Orderbase logo in the media library (uploaded once, then reused by name).
+// Orderbase wordmark in the media library (uploaded once, then reused by name).
+// Same wordmark as orderbase.mitchdesigns.com, letters in black for light sections.
 async function orderbaseLogo() {
-  const name = "orderbase-logo.webp";
+  const name = "orderbase-wordmark.svg";
   const found = await api(`/api/upload/files?filters[name][$eq]=${name}`);
   if (found?.length) return found[0].id;
   if (DRY) return null;
   const form = new FormData();
-  const file = await readFile(new URL("../public/images/orderbase/logo.webp", import.meta.url));
-  form.append("files", new Blob([file], { type: "image/webp" }), name);
+  const file = await readFile(new URL("../public/images/orderbase/wordmark.svg", import.meta.url));
+  form.append("files", new Blob([file], { type: "image/svg+xml" }), name);
   form.append("fileInfo", JSON.stringify({ name, alternativeText: "Orderbase" }));
   const res = await fetch(`${STRAPI}/api/upload`, { method: "POST", headers: auth, body: form });
   if (!res.ok) throw new Error(`upload → ${res.status} ${await res.text()}`);
