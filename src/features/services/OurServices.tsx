@@ -39,11 +39,16 @@ function toServiceItem(s: CmsService, index: number): ServiceItem {
   };
 }
 
-// True only on devices with a real hover-capable pointer (excludes touch).
+// True only with a real hover-capable pointer (excludes touch) AND room for the
+// hover layout: below md the title and the side description share too narrow a
+// row and print over each other (e.g. a desktop window or device mockup at
+// phone width), so narrow screens use the tap-to-open accordion instead.
 function useHasHover() {
   const [hasHover, setHasHover] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mq = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (min-width: 48rem)",
+    );
     setHasHover(mq.matches);
     const onChange = (e: MediaQueryListEvent) => setHasHover(e.matches);
     mq.addEventListener("change", onChange);
