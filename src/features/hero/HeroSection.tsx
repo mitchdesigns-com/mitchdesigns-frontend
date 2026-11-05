@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { VideoLightbox } from "./VideoLightbox";
-import { LEADS_URL } from "@/config/nav";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 // TODO: replace preview/video with real assets
 const CARDS = [
@@ -43,6 +43,7 @@ const DOTS_BG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 
 
 export function HeroSection() {
+  const { primaryCta } = useSiteSettings();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(
     null,
@@ -128,7 +129,7 @@ export function HeroSection() {
             className="absolute bottom-20 left-0 right-0 flex justify-center"
           >
             <Button asChild size="lg">
-              <Link href={LEADS_URL}>Get Detailed Proposal →</Link>
+              <Link href={primaryCta.href}>{primaryCta.label} →</Link>
             </Button>
           </motion.div>
         </div>

@@ -1167,8 +1167,8 @@ export const fixtureHomePage: HomePageData = {
 export const fixtureCtaBanner: CtaBannerData = {
   title: "Ready For Your Next Project?",
   description:
-    "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
-  cta: { label: "Get Detailed Proposal", href: LEADS_URL },
+    "Book a free 30-minute call with our team. Talk through your project and get clear direction on scope, timeline and budget.",
+  cta: { label: "Schedule Consultation Meeting", href: LEADS_URL },
   bgImage: "/images/cta-bg.webp",
 };
 

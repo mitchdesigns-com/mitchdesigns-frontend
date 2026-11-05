@@ -1,3 +1,4 @@
+import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
 import type {
   CaseStudy,
   FAQ,
@@ -155,7 +156,7 @@ export function ServicePageRenderer({
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/corporate-review.webp"}
               imageAlt="MitchDesigns team building a corporate website"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
@@ -180,7 +181,7 @@ export function ServicePageRenderer({
                 image: "/images/services/ecommerce/we-got-you.webp",
                 imageAlt: "Store owner managing orders on a tablet",
                 story: weGotYou.story ?? ECOMMERCE_ORDER_STORY,
-                cta: { label: "Get Proposal", href: leadsUrl(slug) },
+                cta: { label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) },
               };
               // Audience tabs (B2C · Food & Beverage · B2B) when the CMS has them.
               return weGotYou.tabs?.length ? (
@@ -219,7 +220,7 @@ export function ServicePageRenderer({
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/screens-review.webp"}
               imageAlt="MitchDesigns team reviewing a platform build across screens"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* "Built on Solid Foundations" as the 3D tilt-card grid the other
@@ -252,7 +253,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our geography widget (front-end only).
               image={encodeURI("/images/media-buying/webp/Widgets [Marketing & Sales] [1.1].webp")}
               imageAlt="Audience geography dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
@@ -279,7 +280,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our emotions radar widget (front-end only).
               image={encodeURI("/images/google ads/webp/radar.webp")}
               imageAlt="Audience emotions radar dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* Our Google Ads recording on a tablet that rises as you scroll. */}
@@ -304,7 +305,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our organic-clicks widget (front-end only).
               image="/images/SEO/seo-clicks.webp"
               imageAlt="Total organic clicks dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
@@ -323,7 +324,7 @@ export function ServicePageRenderer({
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/mobile-app.webp"}
               imageAlt="MitchDesigns team testing a mobile app on a phone"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}

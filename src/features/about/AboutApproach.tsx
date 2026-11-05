@@ -1,3 +1,4 @@
+import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -31,7 +32,7 @@ export function AboutApproach({ approach }: { approach: AboutContent["approach"]
           <p className="text-xl text-fg-muted text-balance">{noOrphan(approach.body)}</p>
           <Button size="lg" asChild>
             <Link href={approach.cta?.href ?? LEADS_URL} className="flex w-fit items-center gap-2">
-              {approach.cta?.label ?? "Get Detailed Proposal"}
+              {approach.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label}
               <ArrowRight size={20} />
             </Link>
           </Button>

@@ -15,7 +15,7 @@ import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { Close } from "@/components/icons/Close";
 import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
-import { LEADS_URL } from "@/config/nav";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { noOrphan } from "@/lib/noOrphan";
 import { strapiMedia } from "@/lib/cms/media";
 
@@ -69,6 +69,7 @@ interface ServiceRowProps {
 }
 
 function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
+  const { primaryCta } = useSiteSettings();
   const { num, label, description, body, href, imgSrc, hoverLogo } = service;
 
   const canHover = useHasHover();
@@ -248,10 +249,10 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
                 <div className="flex flex-col gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-4 sm:self-end">
                   <Link
-                    href={LEADS_URL}
+                    href={primaryCta.href}
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
                   >
-                    Get Detailed Proposal
+                    {primaryCta.label}
                   </Link>
                   <Link
                     href={href}

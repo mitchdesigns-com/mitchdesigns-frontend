@@ -19,27 +19,14 @@ export function isLeadFunnelHref(href?: string | null): boolean {
 }
 
 /**
- * Marketing service slug → lead-funnel service slug (md-leads routes). Only the
- * four productised services have a dedicated funnel; the rest fall back to the
- * leads home, which redirects gracefully.
+ * Where a service page's CTA goes. Always the funnel's start page: it asks
+ * "Schedule consultation meeting" or "Get quote estimate" (consultation
+ * preselected). Per-service deep links (`quote/<service>/1`) skip that choice
+ * and land on the estimate questions, which doesn't match the button label.
+ * `service` is kept so callers don't change if per-service links return.
  */
-const LEADS_FUNNEL_SERVICE: Partial<Record<ServiceSlug, string>> = {
-  corporate: "corporate-website",
-  ecommerce: "ecommerce",
-  "mobile-app": "mobile-app",
-  custom: "custom-web",
-};
-
-/**
- * Deep link into the leads app with a service preselected, e.g.
- * `https://leads.mitchdesigns.com/quote/mobile-app/1`. Falls back to the leads
- * home for services without a dedicated funnel.
- */
-export function leadsUrl(service?: string): string {
-  const funnelService = service
-    ? LEADS_FUNNEL_SERVICE[service as ServiceSlug]
-    : undefined;
-  return funnelService ? `${LEADS_URL}quote/${funnelService}/1` : LEADS_URL;
+export function leadsUrl(_service?: string): string {
+  return LEADS_URL;
 }
 
 export const NAV_LINKS = [
@@ -50,7 +37,7 @@ export const NAV_LINKS = [
   { label: "Talks", href: "/talks" },
   { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
-  { label: "Get Detailed Proposal", href: LEADS_URL },
+  { label: "Schedule Consultation Meeting", href: LEADS_URL },
 ] as const;
 
 export const COMPANY_LINKS = [

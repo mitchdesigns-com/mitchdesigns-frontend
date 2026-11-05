@@ -602,7 +602,7 @@ export type SiteSettings = {
   tagline?: string;
   copyright?: string;
   socialLinks: Array<{ platform: SocialPlatform; url: string }>;
-  /** Site-wide "Get Detailed Proposal" button. */
+  /** Site-wide primary button ("Schedule Consultation Meeting"). */
   primaryCta: CmsLink;
   legalLinks: CmsLink[];
   testimonialsHeading: string;
