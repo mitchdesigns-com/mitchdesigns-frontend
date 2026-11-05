@@ -4,12 +4,14 @@
 // Sends whole components back so images, CTAs and other fields stay intact.
 // Uploads the Orderbase logo once for the Food & Beverage audience tab.
 //
-//   STRAPI_WRITE_TOKEN=... node scripts/cms-update-ecommerce-page.mjs [--dry]
+//   STRAPI_WRITE_TOKEN=... node scripts/cms-update-ecommerce-page.mjs [--dry] [--faqs]
 import { readFile } from "node:fs/promises";
 
 const STRAPI = process.env.NEXT_PUBLIC_STRAPI_URL ?? "https://cms.mitchdesigns.com";
 const TOKEN = process.env.STRAPI_WRITE_TOKEN;
 const DRY = process.argv.includes("--dry");
+// --faqs: only the FAQs (leaves page copy as edited in Strapi).
+const ONLY_FAQS = process.argv.includes("--faqs");
 if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API token).");
 const auth = { Authorization: `Bearer ${TOKEN}` };
 const headers = { ...auth, "Content-Type": "application/json" };
@@ -146,19 +148,71 @@ const SUPPORT = {
 };
 
 // ── FAQs (category "eCommerce website") ─────────────────────────────────────
+// What store owners actually ask: cost, time, and how much we take off their
+// hands. Each entry rewrites an existing FAQ (matched by its current or former
+// question, so nothing is deleted) or is created when missing.
 
 const CATEGORY = "eCommerce website";
-const COST = {
-  question: "How much does an eCommerce platform cost?",
-  answer: para("Most eCommerce platforms we build cost between EGP 240,000 and EGP 1,000,000. Where yours falls depends on the number of products and pages, the features you need (B2B pricing, subscriptions, a mobile app) and your integrations. Tell us about your business and we'll send a detailed proposal."),
-  order: 1,
-};
-const TIMELINE = {
-  from: "How long does it take to design and develop an ecommerce website?",
-  question: "How long does it take to build an eCommerce platform?",
-  answer: para("Usually 3 to 6 months from kickoff to launch. It depends on the complexity of the design, the size of the catalogue and sitemap, and the number of features. We share a schedule with clear milestones at the start, so you always know what comes next."),
-  order: 2,
-};
+const FAQS = [
+  {
+    question: "How much does an eCommerce platform cost?",
+    answer: para("Most eCommerce platforms we build cost between EGP 240,000 and EGP 1,000,000. Where yours falls depends on the number of products and pages, the features you need (B2B pricing, subscriptions, a mobile app) and your integrations. Tell us about your business and we'll send a detailed proposal."),
+  },
+  {
+    from: ["How long does it take to design and develop an ecommerce website?"],
+    question: "How long does it take to build an eCommerce platform?",
+    answer: para("Usually 3 to 6 months from kickoff to launch. It depends on the complexity of the design, the size of the catalogue and sitemap, and the number of features. We share a schedule with clear milestones at the start, so you always know what comes next."),
+  },
+  {
+    from: ["Do you provide media buying services for ecommerce brands?"],
+    question: "Do you also run our ads on Meta, TikTok and Google?",
+    answer: para("Yes. Our media buying team runs your campaigns on Meta, TikTok and Google Ads, built as full funnels with performance creative. Because we built your store, we track every sale back to the ad that brought it, so your budget goes where it sells."),
+  },
+  {
+    from: ["Do you offer SEO services for ecommerce businesses?"],
+    question: "Does the platform come with a mobile app?",
+    answer: para("It can. The same engine powers your website and native iOS and Android apps, so products, stock, orders and customers stay in sync. We design the app for your brand, add push notifications and publish it on the App Store and Google Play for you."),
+  },
+  {
+    from: ["Do you provide email marketing services?"],
+    question: "Can customers pay with Apple Pay and save their cards?",
+    answer: para("Yes. Customers can pay by card through local bank gateways, with Apple Pay, from their wallet or cash on delivery. Cards can be saved securely as tokens, so repeat orders take one tap."),
+  },
+  {
+    from: ["Do you use SEO-friendly website design and development practices?"],
+    question: "Do you support wallets, loyalty points and memberships?",
+    answer: para("Yes. Customers earn and spend loyalty points, keep store credit and refunds in a wallet, and can join paid or tiered memberships. Add gift cards, vouchers and automatic discounts, and you have everything you need to bring customers back."),
+  },
+  {
+    from: ["Is WooCommerce good for large ecommerce stores (10,000 products and more)?"],
+    question: "Can you manage the store for us?",
+    answer: para("Yes. You get a dedicated eCommerce account manager who looks after your store with you: new products and collections, campaigns and offers, reports and improvements. Running an online store is a big responsibility, and you don't have to carry it alone."),
+  },
+  {
+    from: ["Which technology is used in ecommerce website development?"],
+    question: "What does your support and maintenance include?",
+    answer: para("Technical support with a guaranteed response time, security monitoring, updates, bug fixes and performance tuning, with priority handling when it matters. We keep your store fast, secure and selling, so your team can focus on the business."),
+  },
+  {
+    from: ["Do you handle the website hosting, servers, domain names, SSL, and backups?"],
+    question: "Do you handle hosting, domain, SSL and backups?",
+    answer: para("Yes. We set up and manage hosting, servers, your domain, SSL certificates and regular backups, so the technical side is fully taken care of."),
+  },
+  {
+    from: ["Do you handle data entry for ecommerce websites before launching?"],
+    question: "Do you add our products before launch?",
+    answer: para("Yes. We enter your products, categories, prices, images and descriptions, so your store launches complete and ready to sell."),
+  },
+  {
+    from: ["Do you design and develop Arabic ecommerce websites?"],
+    question: "Do you build Arabic stores?",
+    answer: para("Yes. Every store we build can be fully bilingual in Arabic and English, right-to-left layout included, on the website and the app."),
+  },
+  {
+    question: "Who owns the store, the data and the customers?",
+    answer: para("You do. The platform runs under your brand, and your sales data, payments and customer list belong to you. No marketplace sits between you and your customers."),
+  },
+];
 
 // ── Run ─────────────────────────────────────────────────────────────────────
 
@@ -202,7 +256,7 @@ const { hero: h, weGotYou: w, whyUs: y, featuresSimplified: f, support: s, proce
 // Any image already on the page, for components whose schema requires one
 // that the design doesn't show (cards, steps).
 const filler = id(w?.image) ?? id(f?.image) ?? id(y?.cards?.[0]?.image);
-const logoId = await orderbaseLogo();
+const logoId = ONLY_FAQS ? null : await orderbaseLogo();
 
 const hero = {
   id: h.id, subTitle: h.subTitle, reverseLayout: h.reverseLayout, image: id(h.image),
@@ -238,20 +292,22 @@ console.log("ecommerce:", {
   hero: hero.title, tabs: weGotYou.tabs.map((t) => t.label + (t.logo ? " (logo)" : "")),
   whyUs: whyUs.cards.length, features: featuresSimplified.featureCards.length, appSteps: processSection.processCards.length, support: support.cards.length,
 });
-await put(`/api/service-pages/${page.documentId}?status=published`, { hero, weGotYou, whyUs, featuresSimplified, process: processSection, support });
+if (!ONLY_FAQS) await put(`/api/service-pages/${page.documentId}?status=published`, { hero, weGotYou, whyUs, featuresSimplified, process: processSection, support });
 
-// FAQs: cost first, timeline second, everything else after.
+// FAQs, in this order.
 const faqs = (await api(`/api/faqs?status=draft&filters[category][$eq]=${encodeURIComponent(CATEGORY)}&pagination[pageSize]=100`)).data;
-for (const faq of faqs) {
-  const question = faq.question.trim();
-  if (question === TIMELINE.from || question === TIMELINE.question) {
-    console.log(`faq ${TIMELINE.order}: ${TIMELINE.question}`);
-    await put(`/api/faqs/${faq.documentId}?status=published`, { question: TIMELINE.question, answer: TIMELINE.answer, order: TIMELINE.order });
-  } else if (question !== COST.question && (faq.order ?? 0) < 10) {
-    await put(`/api/faqs/${faq.documentId}?status=published`, { order: (faq.order ?? 0) + 10 });
+const used = new Set();
+for (const [i, entry] of FAQS.entries()) {
+  const names = [entry.question, ...(entry.from ?? [])];
+  const faq = faqs.find((x) => !used.has(x.documentId) && names.includes(x.question.trim()));
+  const data = { question: entry.question, answer: entry.answer, order: i + 1 };
+  if (faq) {
+    used.add(faq.documentId);
+    console.log(`faq ${i + 1}: ${entry.question}`);
+    await put(`/api/faqs/${faq.documentId}?status=published`, data);
+  } else {
+    console.log(`faq ${i + 1} (new): ${entry.question}`);
+    if (!DRY) await api(`/api/faqs?status=published`, { method: "POST", body: JSON.stringify({ data: { ...data, category: CATEGORY } }) });
   }
 }
-if (!faqs.some((faq) => faq.question.trim() === COST.question)) {
-  console.log(`faq ${COST.order} (new): ${COST.question}`);
-  if (!DRY) await api(`/api/faqs?status=published`, { method: "POST", body: JSON.stringify({ data: { ...COST, category: CATEGORY } }) });
-}
+for (const faq of faqs.filter((x) => !used.has(x.documentId))) console.log(`faq left as is: ${faq.question}`);
