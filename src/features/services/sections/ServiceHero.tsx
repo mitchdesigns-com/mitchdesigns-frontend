@@ -48,7 +48,10 @@ export function ServiceHero({
   reel,
   scene,
   bleedScene = false,
+  switcher,
 }: ServiceHeroProps & {
+  /** Row for jumping to the other service pages, shown above the eyebrow. */
+  switcher?: ReactNode;
   /** Fast project montage shown instead of the CMS image (front-end only). */
   reel?: ReelShot[];
   /** Coded animated scene shown instead of the CMS image (front-end only). */
@@ -73,7 +76,12 @@ export function ServiceHero({
         animate="visible"
         className={`flex flex-col gap-12 md:flex-row md:items-center ${reverseLayout ? "md:flex-row-reverse" : ""}`}
       >
-        <div className={bleed ? "space-y-6 md:w-1/2 md:pr-12" : "flex-1 space-y-6"}>
+        <div className={bleed ? "min-w-0 space-y-6 md:w-1/2 md:pr-12" : "min-w-0 flex-1 space-y-6"}>
+          {switcher && (
+            <motion.div variants={fadeUp} className="pb-2">
+              {switcher}
+            </motion.div>
+          )}
           {subTitle && (
             <motion.p
               variants={fadeUp}
