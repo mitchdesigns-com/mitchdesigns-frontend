@@ -10,6 +10,7 @@ import {
   type Variants,
 } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NewsletterForm } from "@/components/layout/NewsletterForm";
 import { Facebook } from "@/components/icons/Facebook";
 import { Instagram } from "@/components/icons/Instagram";
@@ -145,7 +146,10 @@ export function Footer({
   const contextSettings = useSiteSettings();
   const settings = settingsProp ?? contextSettings;
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  // Service pages get a plain footer that just scrolls in after the content:
+  // no parallax drift, dimming overlay or entrance animation.
+  const pathname = usePathname();
+  const reduced = useReducedMotion() || pathname.startsWith("/services/");
 
   const social = settings?.socialLinks?.length ? settings.socialLinks : DEFAULT_SOCIAL;
   const urlFor = (p: SocialPlatform, fallback: string) =>
