@@ -132,13 +132,13 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         aria-expanded={isOpen}
         onClick={onToggle}
         onMouseMove={handleMouseMove}
-        className="relative z-10 flex w-full items-center justify-between gap-6 px-5 py-7 text-left md:px-10 md:py-10"
+        className="relative z-10 flex w-full items-center justify-between gap-6 px-0 py-6 text-left md:px-10 md:py-10"
         style={{ overflow: "visible" }}
       >
         {/* Number + label — always one line */}
         <div className="flex min-w-0 items-center gap-5 md:gap-15">
           <span
-            className={`shrink-0 font-medium text-base transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
+            className={`shrink-0 font-medium text-base tabular-nums transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
           >
             {num}
           </span>
@@ -211,7 +211,9 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               e.stopPropagation();
               onToggle();
             }}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-black/40 transition-colors hover:text-black"
+            // Phones: hidden, so the one-line title keeps its width; tapping
+            // the row again closes it.
+            className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full text-black/40 transition-colors hover:text-black md:flex"
           >
             <Close size={22} />
           </button>
@@ -230,7 +232,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="relative z-10 overflow-hidden"
           >
-            <div className="flex gap-10 px-5 pb-6 md:px-10 md:pb-10">
+            <div className="flex gap-10 px-0 pb-6 md:px-10 md:pb-10">
               <div
                 className="relative hidden w-88 shrink-0 overflow-hidden rounded-2xl lg:block"
                 style={{ aspectRatio: "345 / 519" }}
@@ -239,16 +241,16 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               </div>
               <div className="flex flex-1 flex-col justify-between gap-16">
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
-                <div className="flex flex-wrap items-center justify-end gap-4 self-end">
+                <div className="flex flex-col gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-4 sm:self-end">
                   <Link
                     href={LEADS_URL}
-                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
                   >
                     Get Detailed Proposal
                   </Link>
                   <Link
                     href={href}
-                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-space-grey px-6 py-4 text-base font-medium text-white transition-opacity hover:opacity-80 md:px-9"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-space-grey px-6 py-4 text-base font-medium text-white transition-opacity hover:opacity-80 md:px-9"
                   >
                     Learn More
                   </Link>

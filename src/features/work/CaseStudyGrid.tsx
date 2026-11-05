@@ -131,7 +131,7 @@ export function CaseStudyGrid({
   }, [hasMore, loadMore]);
 
   return (
-    <Section theme="dark" className="py-25">
+    <Section theme="dark" className="pt-32 pb-25 lg:py-25">
       <div className="flex flex-col gap-10 lg:gap-[60px]">
         {/* Header + category chips, kept close together */}
         <div className="flex flex-col gap-5">
@@ -142,7 +142,8 @@ export function CaseStudyGrid({
 
         {/* Category filter — derived from the data */}
         {categories.length > 1 && (
-          <div className="flex flex-wrap gap-4">
+          // Phones: one row that scrolls sideways (like the service switcher).
+          <div className="-mx-(--container-padding) flex gap-2 overflow-x-auto px-(--container-padding) scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -150,8 +151,8 @@ export function CaseStudyGrid({
                 onClick={() => setActiveCategory(cat)}
                 className={
                   cat === activeCategory
-                    ? "whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-base font-medium text-black"
-                    : "whitespace-nowrap rounded-pill border border-grey-200 px-6 py-3 text-base font-medium text-grey-200"
+                    ? "shrink-0 whitespace-nowrap rounded-pill border border-yellow bg-yellow px-5 py-2.5 text-base font-medium text-black md:px-6 md:py-3"
+                    : "shrink-0 whitespace-nowrap rounded-pill border border-grey-200 px-5 py-2.5 text-base font-medium text-grey-200 md:px-6 md:py-3"
                 }
               >
                 {cat}

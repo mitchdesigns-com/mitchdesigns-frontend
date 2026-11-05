@@ -61,12 +61,16 @@ export function FullScreenMenuNav({
           className={cn(
             "flex w-full flex-col transition-[width] duration-500 ease-out-soft",
             anchorY !== undefined && "justify-between",
+            // At least 3/4 of the screen; taller when the rows need it, so they
+            // never run into what follows. Phones drop it while the services
+            // list is open, so the list sits right under "Our Services".
+            anchorY !== undefined && (showServices ? "md:min-h-(--menu-h)" : "min-h-(--menu-h)"),
             showServices ? "md:w-1/2" : "md:w-full",
           )}
           style={
             anchorY === undefined
               ? undefined
-              : { height: `calc(75svh - ${anchorY}px + ${rowHalf})` }
+              : ({ "--menu-h": `calc(75svh - ${anchorY}px + ${rowHalf})` } as React.CSSProperties)
           }
         >
           {navLinks.map((item, i) => {
@@ -75,6 +79,12 @@ export function FullScreenMenuNav({
             return (
               <motion.li
                 key={item.label}
+                // Phones show the proposal as the black button below instead.
+                className={cn(
+                  item.href === primaryCta.href && "max-sm:hidden",
+                  // Phones: only "Our Services" stays while its list is open.
+                  dimmed && "max-md:hidden",
+                )}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.18 + i * 0.05, ease: EASE }}
@@ -126,7 +136,9 @@ export function FullScreenMenuNav({
                       <motion.span
                         animate={{ x: showServices ? 8 : 0 }}
                         transition={{ duration: 0.3, ease: EASE }}
-                        className="shrink-0 text-black"
+                        // Phones: the open row moves up level with the close
+                        // button, so the arrow would run under it.
+                        className={cn("shrink-0 text-black", showServices && "max-md:hidden")}
                       >
                         <ArrowRight size={40} />
                       </motion.span>

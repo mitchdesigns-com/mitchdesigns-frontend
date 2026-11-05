@@ -25,9 +25,9 @@ type Widget = { key: string; src: string; x: number; y: number; w: number; alt: 
 
 const dir = "/images/media-buying/";
 const WIDGETS: Widget[] = [
-  { key: "categories", src: `${dir}Widgets [Marketing & Sales] 3@2x.webp`, x: 62, y: 48, w: 352, alt: "Product categories widget: 58% of goal" },
-  { key: "segments", src: `${dir}Widgets [Marketing & Sales] 2@2x.webp`, x: 47, y: 243, w: 352, alt: "Customer segments donut chart" },
-  { key: "geo", src: `${dir}Widgets [Marketing & Sales] [1.1]@2x.webp`, x: 414, y: 33, w: 356, alt: "Audience geography map, focused on Egypt" },
+  { key: "categories", src: `${dir}Widgets [Marketing & Sales] 3.svg`, x: 62, y: 48, w: 352, alt: "Product categories widget: 58% of goal" },
+  { key: "segments", src: `${dir}Widgets [Marketing & Sales] 2.svg`, x: 47, y: 243, w: 352, alt: "Customer segments donut chart" },
+  { key: "geo", src: `${dir}Widgets [Marketing & Sales] [1.1].svg`, x: 414, y: 33, w: 356, alt: "Audience geography map, focused on Egypt" },
 ];
 
 const shot = cameraShot(W, H);

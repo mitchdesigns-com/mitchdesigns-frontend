@@ -9,7 +9,7 @@ export interface ServiceSwitcherItem {
 
 /**
  * Pill row at the top of a service page hero for jumping straight to another
- * service without opening the main menu. Wraps to a second row when narrow.
+ * service without opening the main menu.
  */
 export function ServiceSwitcher({
   items,
@@ -19,12 +19,18 @@ export function ServiceSwitcher({
   current: string;
 }) {
   return (
-    <nav aria-label="Services">
-      <ul className="flex flex-wrap gap-1">
+    // Phones: one row that scrolls sideways out to the screen edge.
+    // md+: wraps inside the hero's copy column.
+    <nav
+      aria-label="Services"
+      className="-mx-(--container-padding) overflow-x-auto px-(--container-padding) scrollbar-none md:mx-0 md:overflow-visible md:px-0"
+    >
+      {/* No `w-max` here: in this theme it resolves to --container-max (1920px). */}
+      <ul className="flex gap-1 md:flex-wrap">
         {items.map((s) => {
           const active = s.slug === current;
           return (
-            <li key={s.slug}>
+            <li key={s.slug} className="shrink-0">
               <Link
                 href={s.href}
                 aria-current={active ? "page" : undefined}
