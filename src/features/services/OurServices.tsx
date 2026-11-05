@@ -16,6 +16,7 @@ import { Close } from "@/components/icons/Close";
 import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
+import { isLeadsHref, leadsUrl } from "@/config/nav";
 import { noOrphan } from "@/lib/noOrphan";
 import { strapiMedia } from "@/lib/cms/media";
 
@@ -25,6 +26,7 @@ interface ServiceItem {
   description: string;
   body: RichText;
   href: string;
+  leadsHref: string;
   imgSrc: string;
   hoverLogo: { src: string; alt: string } | null;
 }
@@ -36,6 +38,8 @@ function toServiceItem(s: CmsService, index: number): ServiceItem {
     description: s.tagline,
     body: s.description,
     href: `/services/${s.slug}`,
+    // The funnel opens with this service preselected.
+    leadsHref: leadsUrl(s.slug),
     // Our own team photographed doing each service (front-end only).
     imgSrc: `/images/studio/services/${s.slug}.webp`,
     hoverLogo: s.hoverLogo?.url
@@ -70,7 +74,7 @@ interface ServiceRowProps {
 
 function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
   const { primaryCta } = useSiteSettings();
-  const { num, label, description, body, href, imgSrc, hoverLogo } = service;
+  const { num, label, description, body, href, leadsHref, imgSrc, hoverLogo } = service;
 
   const canHover = useHasHover();
   const [isHovered, setIsHovered] = useState(false);
@@ -249,7 +253,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
                 <div className="flex flex-col gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-4 sm:self-end">
                   <Link
-                    href={primaryCta.href}
+                    href={isLeadsHref(primaryCta.href) ? leadsHref : primaryCta.href}
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
                   >
                     {primaryCta.label}

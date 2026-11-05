@@ -18,15 +18,27 @@ export function isLeadFunnelHref(href?: string | null): boolean {
   return !!href && (href.startsWith("/quote") || isLeadsHref(href));
 }
 
+/** Marketing service slug → the lead funnel's project type (md-leads). */
+const LEADS_FUNNEL_SERVICE: Partial<Record<ServiceSlug, string>> = {
+  corporate: "corporate-website",
+  ecommerce: "ecommerce",
+  "mobile-app": "mobile-app",
+  custom: "custom-web",
+  "media-buying": "media-buying",
+  "google-ads": "media-buying",
+  seo: "seo",
+};
+
 /**
- * Where a service page's CTA goes. Always the funnel's start page: it asks
- * "Schedule consultation meeting" or "Get quote estimate" (consultation
- * preselected). Per-service deep links (`quote/<service>/1`) skip that choice
- * and land on the estimate questions, which doesn't match the button label.
- * `service` is kept so callers don't change if per-service links return.
+ * Where a service page's CTA goes: the funnel's start page with that service
+ * and the consultation path preselected (`?service=ecommerce&action=schedule-call`),
+ * so the visitor doesn't land on whatever they picked on an earlier visit.
+ * (Per-service step links like `quote/<service>/1` skip the consultation
+ * choice, so they aren't used.) No service → the plain start page.
  */
-export function leadsUrl(_service?: string): string {
-  return LEADS_URL;
+export function leadsUrl(service?: string): string {
+  const funnelService = service ? LEADS_FUNNEL_SERVICE[service as ServiceSlug] : undefined;
+  return funnelService ? `${LEADS_URL}?service=${funnelService}&action=schedule-call` : LEADS_URL;
 }
 
 export const NAV_LINKS = [
