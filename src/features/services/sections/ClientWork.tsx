@@ -6,6 +6,7 @@ import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Media, isVideo } from "@/components/ui/Media";
 import { strapiMedia } from "@/lib/cms/media";
 import { cn } from "@/lib/cn";
+import { Reveal, RevealItem, RevealStagger } from "@/components/motion";
 import type { CaseStudy, RichText as RichTextValue } from "@/lib/cms/types";
 
 type Study = CaseStudy & { id: number };
@@ -43,7 +44,7 @@ export function ClientWork({
   return (
     <Section className="py-20 md:py-28">
       <div className="flex flex-col gap-12 md:gap-16">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="flex max-w-2xl flex-col gap-4">
             <h2 className="text-hero-3 text-left font-bold text-balance">{title}</h2>
             {description ? <RichText content={description} className="text-lg text-fg-muted text-balance" /> : null}
@@ -55,12 +56,13 @@ export function ClientWork({
             View all {category} work
             <ArrowRight size={18} />
           </Link>
-        </div>
+        </Reveal>
 
         {/* Logo wall: rows kept even, a shorter last row sits centred */}
-        <ul className="-m-1.5 flex flex-wrap justify-center">
+        <RevealStagger as="ul" stagger={0.07} className="-m-1.5 flex flex-wrap justify-center">
           {withLogo.map((s) => (
-            <li
+            <RevealItem
+              as="li"
               key={s.slug}
               className={cn("basis-1/2 p-1.5", SM_BASIS[balancedCols(withLogo.length, 4)], LG_BASIS[balancedCols(withLogo.length, 5)])}
             >
@@ -76,9 +78,9 @@ export function ClientWork({
                   className="max-h-20 w-4/5 object-contain grayscale transition duration-300 group-hover:grayscale-0"
                 />
               </Link>
-            </li>
+            </RevealItem>
           ))}
-        </ul>
+        </RevealStagger>
 
         {/* Project cards */}
         {cards.length > 0 && (

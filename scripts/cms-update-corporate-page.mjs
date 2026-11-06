@@ -38,7 +38,8 @@ const WHY_US = [
 ];
 
 // Process ("Your Website's Journey"): one line per stage (`summary` is what shows).
-const PROCESS_TITLE = "Your Website’s Journey From Concept to Launch";
+const PROCESS_TITLE = "From Idea to Launch";
+const PROCESS_HIGHLIGHT = "Launch";
 const STEPS = [
   ["Discovery", "Competitor analysis, personas, marketing analysis, sitemap and information architecture, the plan the whole site is built on."],
   ["User Experience (UX)", "Wireframes for every page, shaped around your users' goals and your business goals."],
@@ -151,12 +152,17 @@ const whyUs = {
 };
 const images = p.processCards.map((c) => id(c.image)).filter(Boolean);
 const processSection = {
-  id: p.id, title: PROCESS_TITLE, titleHighlights: p.titleHighlights, description: p.description, eyebrow: p.eyebrow, closingTitle: p.closingTitle, closingText: p.closingText,
+  id: p.id, title: PROCESS_TITLE, titleHighlights: Array.isArray(p.titleHighlights) ? [PROCESS_HIGHLIGHT] : PROCESS_HIGHLIGHT, description: p.description, eyebrow: p.eyebrow, closingTitle: p.closingTitle, closingText: p.closingText,
   appScreens: (p.appScreens ?? []).map((s) => s.id),
   // The page shows only title + summary; the schema requires an image, so the existing ones are reused.
   processCards: STEPS.map(([title, summary], i) => ({ stepNumber: i + 1, title, summary, description: para(summary), image: images[i % images.length], stepIcon: null })),
 };
 console.log("corporate page:", { hero: "description", weGotYou: "description", whyUs: whyUs.cards.map((c) => c.title), process: processSection.processCards.map((c) => c.title) });
+// --process writes only the process section.
+if (process.argv.includes("--process")) {
+  await put(`/api/service-pages/${page.documentId}?status=published`, { process: processSection });
+  process.exit(0);
+}
 await put(`/api/service-pages/${page.documentId}?status=published`, { hero, weGotYou, whyUs, process: processSection });
 
 // FAQs

@@ -46,10 +46,12 @@ export function CardSlider({
 
   return (
     <div className={`relative ${className ?? ""}`}>
+      {/* The row scrolls sideways, so it clips; py-10 (cancelled by -my-10) gives the
+          rising cards room above and below. */}
       <motion.div
         ref={trackRef}
         onScroll={updateArrows}
-        className="bleed-carousel flex gap-2 overflow-x-auto scroll-smooth sm:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="bleed-carousel -my-10 flex gap-2 overflow-x-auto scroll-smooth py-10 sm:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         variants={staggerChildren(0.1)}
         initial={reduced ? "visible" : "hidden"}
         animate={inView || reduced ? "visible" : "hidden"}

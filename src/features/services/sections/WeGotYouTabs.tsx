@@ -14,6 +14,7 @@ import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
 import type { WeGotYouProps } from "@/lib/cms/types";
 import { HighlightTitle } from "./WeGotYouOrbit";
+import { Reveal, useReveal } from "@/components/motion";
 
 /**
  * "We Got You" for pages that speak to several audiences: the shared headline
@@ -40,6 +41,7 @@ export function WeGotYouTabs({
 }) {
   const [active, setActive] = useState(0);
   const reduced = useReducedMotion();
+  const { ref: stageRef, inView: stageIn } = useReveal({ margin: "-25% 0px" });
   const tab = tabs[active];
   // Without icons: one photo per audience, cycling the section's story (or its image).
   const shots = icons.length ? icons : story?.length ? story : [{ src: image, alt: imageAlt ?? "" }];
@@ -54,9 +56,12 @@ export function WeGotYouTabs({
           </span>
         )}
         <HighlightTitle title={title} highlights={titleHighlights} Tag={titleTag} />
-        <RichText content={description} className="max-w-3xl text-xl font-medium text-black text-balance md:text-2xl" />
+        <Reveal delay={0.2}>
+          <RichText content={description} className="max-w-3xl text-xl font-medium text-black text-balance md:text-2xl" />
+        </Reveal>
 
         {/* Audience toggle: phones scroll it sideways on one line */}
+        <Reveal delay={0.35} className="flex justify-center self-stretch md:self-auto">
         <div
           role="tablist"
           aria-label="Who we build for"
@@ -80,10 +85,12 @@ export function WeGotYouTabs({
             </button>
           ))}
         </div>
+        </Reveal>
       </div>
 
       {tab && (
-        <div className="relative mt-12 overflow-hidden rounded-card bg-panel-cool px-6 py-12 md:mt-16 md:px-16 md:py-16">
+        <Reveal className="mt-12 md:mt-16">
+        <div ref={stageRef} className="relative overflow-hidden rounded-card bg-panel-cool px-6 py-12 md:px-16 md:py-16">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={active}
@@ -102,8 +109,9 @@ export function WeGotYouTabs({
                   <div aria-hidden className="absolute inset-x-1/6 bottom-0 h-1/3 rounded-full bg-yellow blur-2xl" />
                   <motion.div
                     className="relative aspect-square"
+                    // Pops in once the stage is in view, and again on every switch.
                     initial={reduced ? false : { scale: 0.4, rotate: -14, y: 40 }}
-                    animate={{ scale: 1, rotate: 0, y: 0 }}
+                    animate={stageIn || reduced ? { scale: 1, rotate: 0, y: 0 } : { scale: 0.4, rotate: -14, y: 40 }}
                     transition={{ type: "spring", stiffness: 220, damping: 14 }}
                   >
                     <motion.div
@@ -154,6 +162,7 @@ export function WeGotYouTabs({
             </motion.div>
           </AnimatePresence>
         </div>
+        </Reveal>
       )}
     </Section>
   );

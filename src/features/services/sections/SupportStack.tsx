@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Reveal } from "@/components/motion";
 import { RichText } from "@/components/ui/RichText";
 import type { SupportSectionProps } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
@@ -32,7 +33,9 @@ export function SupportStack({ title, description, cards }: SupportSectionProps)
   return (
     <Section theme="beige" className="py-20 md:py-28">
       <div className="space-y-12 md:space-y-16">
-        <SectionHeader title={title} description={description} align="center" />
+        <Reveal>
+          <SectionHeader title={title} description={description} align="center" />
+        </Reveal>
         <div ref={ref} className="flex flex-col gap-6 md:gap-10">
           {cards.map((card, i) => (
             <StackCard key={card.title} card={card} index={i} total={cards.length} progress={scrollYProgress} />

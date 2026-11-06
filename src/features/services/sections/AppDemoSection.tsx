@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion, type TargetAndTransition } from "framer-motion";
 import { Section } from "@/components/layout/Section";
+import { RevealItem, RevealStagger } from "@/components/motion";
 import { SparklesIcon } from "@/components/icons/SparklesIcon";
 import { ScooterIcon } from "@/components/icons/ScooterIcon";
 import { BellIcon } from "@/components/icons/BellIcon";
@@ -85,6 +86,8 @@ export function AppDemoSection({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.4 });
+  // Latched: the entrance plays once, the first time the section shows.
+  const seen = useInView(ref, { amount: 0.25, once: true });
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
   const [pausedUntil, setPausedUntil] = useState(0);
@@ -108,15 +111,16 @@ export function AppDemoSection({
     <Section className="overflow-hidden py-16 md:py-20">
       <div ref={ref} className="grid items-center gap-12 md:min-h-stage md:grid-cols-12 md:gap-10 lg:gap-16">
         {/* Features */}
-        <div className="flex flex-col gap-8 md:col-span-5">
-          <div className="flex flex-col gap-4">
+        <RevealStagger className="flex flex-col gap-8 md:col-span-5">
+          <RevealItem className="flex flex-col gap-4">
             {logo && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={logo.src} alt={logo.alt} className="mb-2 h-6 w-auto self-start md:h-7" />
             )}
             {eyebrow && <p className="text-sm font-medium uppercase tracking-1 text-black text-balance">{eyebrow}</p>}
             <h2 className="text-hero-3 text-left font-bold text-balance">{title}</h2>
-          </div>
+          </RevealItem>
+          <RevealItem>
           <div role="tablist" aria-label={title} className="flex flex-wrap gap-2">
             {steps.map((s, i) => (
               <Fragment key={s.title}>
@@ -148,6 +152,8 @@ export function AppDemoSection({
               </Fragment>
             ))}
           </div>
+          </RevealItem>
+          <RevealItem>
           <AnimatePresence mode="wait" initial={false}>
             <motion.p
               key={active}
@@ -161,11 +167,18 @@ export function AppDemoSection({
               {step?.description}
             </motion.p>
           </AnimatePresence>
-        </div>
+          </RevealItem>
+        </RevealStagger>
 
         {/* The stage: a yellow disc with a ripple on every feature, tokens popping out, the phone in 3D */}
         <div aria-hidden className="relative mx-auto aspect-square w-full max-w-3xl md:col-span-7">
-          <div className="absolute inset-1/12 rounded-full bg-yellow" />
+          {/* The disc grows in when the section arrives */}
+          <motion.div
+            className="absolute inset-1/12 rounded-full bg-yellow"
+            initial={reduced ? false : { scale: 0.3, opacity: 0 }}
+            animate={seen || reduced ? { scale: 1, opacity: 1 } : { scale: 0.3, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 90, damping: 16 }}
+          />
           {!reduced &&
             [0, 1].map((k) => (
               <motion.div
@@ -180,6 +193,13 @@ export function AppDemoSection({
           <div className="absolute bottom-1/12 left-1/2 h-6 w-2/5 -translate-x-1/2 rounded-full bg-black/25 blur-xl" />
 
           <div className="perspective-stage absolute inset-0 flex items-center justify-center">
+            {/* Entrance: the phone rises and turns into its pose */}
+            <motion.div
+              className="preserve-3d"
+              initial={reduced ? false : { y: 220, rotate: 14, opacity: 0 }}
+              animate={seen || reduced ? { y: 0, rotate: 0, opacity: 1 } : { y: 220, rotate: 14, opacity: 0 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 70, damping: 15 }}
+            >
             {/* Idle float */}
             <motion.div
               className="preserve-3d"
@@ -216,11 +236,12 @@ export function AppDemoSection({
                 </div>
               </motion.div>
             </motion.div>
+            </motion.div>
           </div>
 
           {/* Tokens burst out from behind the phone, then float */}
           <AnimatePresence>
-            {(TOKENS[active % TOKENS.length] ?? []).map((t, k) => (
+            {(seen ? (TOKENS[active % TOKENS.length] ?? []) : []).map((t, k) => (
               <motion.div
                 key={`${active}-${k}`}
                 className="absolute"

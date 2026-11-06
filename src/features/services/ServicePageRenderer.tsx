@@ -75,6 +75,7 @@ function WorkSteps({ process }: { process: ProcessSectionProps }) {
       titleHighlights={process.titleHighlights}
       description={process.description}
       image=""
+      pageScroll
       featureCards={[...process.processCards]
         .sort((a, b) => a.stepNumber - b.stepNumber)
         .map((c) => ({ title: c.title, description: workStepSummary(c) }))}
