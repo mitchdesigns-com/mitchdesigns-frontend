@@ -1,16 +1,28 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
+import { cn } from "@/lib/cn";
+import { chipBase } from "@/lib/chip";
 import { Section } from "@/components/layout/Section";
 import { strapiMedia } from "@/lib/cms/media";
 import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
+import { ProjectTypeTag } from "./ProjectTypeTag";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 3;
+
+/** Filter chips, in order — Strapi `category` value and the label shown. */
+const FILTERS = [
+  { value: "All", label: "All" },
+  { value: "Corporate", label: "Corporate" },
+  { value: "eCommerce", label: "ecommerce" },
+  { value: "Mobile App", label: "Mobile Apps" },
+  { value: "Software", label: "Software" },
+] as const;
 
 // ── sub-components ─────────────────────────────────────────────────────────
 
@@ -45,6 +57,7 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
 
         {/* Title + short summary of scope, challenge and what we did (CMS `excerpt`) */}
         <div className="flex flex-col gap-3">
+          <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} />
           <h3 className="whitespace-pre-line text-hero-5 text-black text-balance">
             {cs.title}
           </h3>
@@ -91,20 +104,19 @@ export function CaseStudyGrid({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Categories are derived from the data — every distinct category present,
-  // in first-seen order, with "All" pinned first.
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(caseStudies.map((cs) => cs.category).filter((c): c is string => !!c)))],
-    [caseStudies],
+  // A chip only shows while at least one project sits under it.
+  const filters = FILTERS.filter(
+    ({ value }) => value === "All" || caseStudies.some((cs) => cs.category === value),
   );
 
   // `?category=eCommerce` (e.g. from a service page) opens on that filter.
   useEffect(() => {
     const wanted = new URLSearchParams(window.location.search).get("category");
-    const match = wanted && categories.find((c) => c.toLowerCase() === wanted.toLowerCase());
+    const match = wanted && filters.map((f) => f.value as string).find((c) => c.toLowerCase() === wanted.toLowerCase());
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (match) setActiveCategory(match);
-  }, [categories]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filtered = activeCategory === "All"
     ? caseStudies
@@ -149,21 +161,22 @@ export function CaseStudyGrid({
         </div>
 
         {/* Category filter — derived from the data */}
-        {categories.length > 1 && (
+        {(
           // Phones: one row that scrolls sideways (like the service switcher).
           <div className="-mx-(--container-padding) flex gap-2 overflow-x-auto px-(--container-padding) scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
-            {categories.map((cat) => (
+            {filters.map(({ value: cat, label }) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setActiveCategory(cat)}
-                className={
+                className={cn(
+                  chipBase,
                   cat === activeCategory
-                    ? "shrink-0 whitespace-nowrap rounded-pill border border-yellow bg-yellow px-5 py-2.5 text-base font-medium text-black md:px-6 md:py-3"
-                    : "shrink-0 whitespace-nowrap rounded-pill border border-grey-200 px-5 py-2.5 text-base font-medium text-grey-200 md:px-6 md:py-3"
-                }
+                    ? "border-yellow bg-yellow text-black"
+                    : "border-grey-200 text-grey-200",
+                )}
               >
-                {cat}
+                {label}
               </button>
             ))}
           </div>
