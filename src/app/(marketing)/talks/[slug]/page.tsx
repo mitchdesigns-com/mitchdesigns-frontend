@@ -64,7 +64,7 @@ export async function generateMetadata({
 
   // CMS SEO overrides on top of title/excerpt fallbacks, keeping article OG fields.
   const seo = talk.seo;
-  const title = seo?.metaTitle ?? `${talk.title} — MitchDesigns`;
+  const title = seo?.metaTitle ?? `${talk.title} | MitchDesigns`;
   const description = seo?.metaDescription ?? talk.excerpt;
   const canonical = seo?.canonicalURL ?? `/talks/${slug}`;
   const ogImageUrl = seo?.ogImage?.url ?? talk.cover?.url;

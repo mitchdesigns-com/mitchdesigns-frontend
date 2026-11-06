@@ -61,7 +61,7 @@ type VideoHeroProps = {
  * browser allows it, a CSS-rotated frame everywhere else).
  */
 export function VideoHero({
-  eyebrow = "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
+  eyebrow = "MitchDesigns - Website & Mobile App Design Company Based in Egypt",
   headline = "Start Building Digital Experiences that",
   rotatingWords,
   video = HERO_VIDEO,

@@ -22,7 +22,7 @@ import { Footer } from "./_components/Footer";
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getOrderbasePage();
   return {
-    title: data.meta?.title ?? "Orderbase — eCommerce for Food Brands",
+    title: data.meta?.title ?? "Orderbase | eCommerce for Food Brands",
     description: data.meta?.description,
   };
 }

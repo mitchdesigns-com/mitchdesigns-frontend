@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalDocument } from "@/features/legal/LegalDocument";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — MitchDesigns",
+  title: "Privacy Policy | MitchDesigns",
   description:
     "How MitchDesigns collects, uses, and protects your personal data across our website and services.",
   alternates: { canonical: "/privacy" },
@@ -24,12 +24,7 @@ export default function PrivacyPage() {
 
       <h2>Information We Collect</h2>
       <p>
-        We collect information you provide directly — such as your name, email
-        address, phone number, and project details when you submit a proposal
-        request, book a call, or contact us. We also collect limited technical
-        data automatically, including IP address, browser type, device
-        information, and pages visited, through cookies and analytics tools.
-      </p>
+        We collect information you provide directly, such as your name, email address, phone number, and project details when you submit a proposal request, book a call, or contact us. We also collect limited technical data automatically, including IP address, browser type, device information, and pages visited, through cookies and analytics tools. </p>
 
       <h2>How We Use Your Information</h2>
       <ul>

@@ -50,7 +50,7 @@ export async function generateMetadata({
 
   return buildPageMetadata(
     {
-      title: `${study.title} — Case Study`,
+      title: `${study.title} | Case Study`,
       description:
         study.tagline ||
         `How MitchDesigns designed and built ${study.title} for ${study.client}.`,

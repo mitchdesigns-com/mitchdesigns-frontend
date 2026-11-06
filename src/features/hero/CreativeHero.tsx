@@ -344,7 +344,7 @@ type CreativeHeroProps = {
 };
 
 export function CreativeHero({
-  eyebrow = "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
+  eyebrow = "MitchDesigns - Website & Mobile App Design Company Based in Egypt",
   headline = "Start Building Digital Experiences that",
   rotatingWords,
   cards,

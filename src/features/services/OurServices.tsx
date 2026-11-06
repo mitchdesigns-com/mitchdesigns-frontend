@@ -204,7 +204,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             >
               <Image
                 src={imgSrc}
-                alt={`${label} — MitchDesigns service`}
+                alt={`${label} | MitchDesigns service`}
                 width={176}
                 height={253}
                 className="h-full w-full object-cover"
@@ -247,7 +247,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
                 className="relative hidden w-88 shrink-0 overflow-hidden rounded-2xl lg:block"
                 style={{ aspectRatio: "345 / 519" }}
               >
-                <Image src={imgSrc} alt={`${label} — MitchDesigns service`} fill className="object-cover" />
+                <Image src={imgSrc} alt={`${label} | MitchDesigns service`} fill className="object-cover" />
               </div>
               <div className="flex flex-1 flex-col justify-between gap-16">
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />

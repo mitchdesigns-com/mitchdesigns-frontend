@@ -188,7 +188,7 @@ export function StepRenderer({ service, flow, step }: Props) {
 
           {/* Screen-reader progress */}
           <p className="sr-only">
-            {flow.label} quote — step {step.step} of {getStepCount(service)}
+            {flow.label} quote, step {step.step} of {getStepCount(service)}
           </p>
 
           {/* Title */}
@@ -268,8 +268,7 @@ export function StepRenderer({ service, flow, step }: Props) {
                     onClick={handleScheduled}
                     className="text-base font-medium text-fg-muted underline-offset-4 transition-colors hover:text-black hover:underline"
                   >
-                    I&apos;ll book later — finish up
-                  </button>
+                    I&apos;ll book later, finish up </button>
                 </div>
               </div>
             )}

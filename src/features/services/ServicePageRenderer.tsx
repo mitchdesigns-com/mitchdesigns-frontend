@@ -342,7 +342,7 @@ export function ServicePageRenderer({
             {...techStackCopy(techStack, {
               title: "Craft seamless digital platforms with our modern tech stack",
               description:
-                "More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client.",
+                "More than a stack. It's how we build reliable, scalable, and secure digital ecosystems for every client.",
               highlight: "modern tech stack",
             })}
           />

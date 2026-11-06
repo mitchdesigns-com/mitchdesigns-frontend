@@ -28,5 +28,5 @@ export const SITE_SETTINGS_FALLBACK: SiteSettings = {
   ],
   testimonialsHeading: "Loved By Clients",
   testimonialsIntro:
-    "Hear it from the brands and people who trusted us — genuine feedback that tells our story better than we can.",
+    "Hear it from the brands and people who trusted us, genuine feedback that tells our story better than we can.",
 };

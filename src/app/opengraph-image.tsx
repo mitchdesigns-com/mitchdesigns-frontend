@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "MitchDesigns — Website & Mobile App Design Agency in Egypt";
+export const alt = "MitchDesigns - Website & Mobile App Design Agency in Egypt";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -53,8 +53,7 @@ export default function OpengraphImage() {
               margin: 0,
             }}
           >
-            Website &amp; Mobile App Design — Egypt
-          </p>
+            Website &amp; Mobile App Design, Egypt </p>
           <h1
             style={{
               color: "#ffffff",

@@ -33,7 +33,7 @@ const DEFAULT_STATS = [
 ];
 
 const DEFAULT_BODY =
-  "It started in 2005 with one corporate website. Twenty years later, we build the whole digital business, from eCommerce and mobile apps to custom systems, dashboards and ERPs, all connected and powered by performance marketing for premium brands.\n\nPretty was never the goal. Our mission is to transform brands that already win offline, with systems that automate their work for the AI era and experiences their customers love, so they grow, scale and earn more.";
+  "In 2005, I built my first corporate website.\n\nThen came online stores, mobile apps, dashboards and ERPs, and the campaigns that brought them customers.\n\nAlong the way I learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nTo give them systems that automate their work for the AI era, and experiences their customers love.\n\nSo they grow, scale and earn more. That's what my team and I build, every single day.";
 
 const DEFAULT_SIGNATURE = "Mitch";
 
@@ -49,7 +49,7 @@ const BADGE_TEXT = "Since 2005 • Built in Egypt • ";
 // Matched against the (CMS-editable) body; a phrase that isn't there is skipped.
 // CMS `about.marks` replaces these.
 const DEFAULT_MARKS: { phrase: string; shape: DoodleShape }[] = [
-  { phrase: "Pretty was never the goal", shape: "strike" },
+  { phrase: "pretty was never the goal", shape: "strike" },
   { phrase: "grow, scale and earn more", shape: "wave" },
 ];
 

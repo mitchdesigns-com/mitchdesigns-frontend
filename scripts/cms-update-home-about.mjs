@@ -10,13 +10,18 @@ if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API to
 const headers = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
 
 // No em dashes, no colons.
+// Short story lines, one beat each (each is its own paragraph).
 export const BODY = [
-  "It started in 2005 with one corporate website. Twenty years later, we build the whole digital business, from eCommerce and mobile apps to custom systems, dashboards and ERPs, all connected and powered by performance marketing for premium brands.",
-  "Pretty was never the goal. Our mission is to transform brands that already win offline, with systems that automate their work for the AI era and experiences their customers love, so they grow, scale and earn more.",
+  "In 2005, I built my first corporate website.",
+  "Then came online stores, mobile apps, dashboards and ERPs, and the campaigns that brought them customers.",
+  "Along the way I learned that pretty was never the goal.",
+  "Our mission is to transform successful brands digitally.",
+  "To give them systems that automate their work for the AI era, and experiences their customers love.",
+  "So they grow, scale and earn more. That's what my team and I build, every single day.",
 ];
 // Phrases the scroll sweep marks by hand.
 const MARKS = [
-  { phrase: "Pretty was never the goal", shape: "strike" },
+  { phrase: "pretty was never the goal", shape: "strike" },
   { phrase: "grow, scale and earn more", shape: "wave" },
 ];
 // Stat value overrides, by unit.

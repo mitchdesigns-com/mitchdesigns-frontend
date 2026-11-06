@@ -9,7 +9,7 @@ const ABOUT_FILM = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 
 /** Fallback line under the film when `team.caption` is empty. */
 const FILM_CAPTION =
-  "Step inside our studio — meet the designers, developers and strategists who turn bold ideas into digital products people love to use, and see how we work, day in and day out.";
+  "Step inside our studio, meet the designers, developers and strategists who turn bold ideas into digital products people love to use, and see how we work, day in and day out.";
 
 /**
  * Team: the belief statement centred over the company film, shown frozen

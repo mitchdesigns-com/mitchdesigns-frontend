@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const about = await getAboutPage().catch(() => null);
   return buildPageMetadata(
     {
-      title: "About MitchDesigns — Egyptian Design Studio",
+      title: "About MitchDesigns | Egyptian Design Studio",
       description:
         "MitchDesigns is an Egyptian design studio that has shipped digital products for brands like El Gouna, Lychee, Mountain View, and GoBus. Meet the team behind the work.",
       canonical: "/about",

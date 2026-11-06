@@ -40,7 +40,7 @@ export function AppFlowSection({
   steps,
   eyebrow = "How we build your app",
   closingTitle = "Idea to App Store",
-  closingText = "Every stage, one accountable partner — from the first idea to an app in your customers' hands.",
+  closingText = "Every stage, one accountable partner, from the first idea to an app in your customers' hands.",
   screens = APP_SCREENS,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);

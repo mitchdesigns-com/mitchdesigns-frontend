@@ -85,7 +85,7 @@ export type CaseStudyGridProps = {
 export function CaseStudyGrid({
   caseStudies,
   title = "Case Studies",
-  description = "We don't just promise results — we prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
+  description = "We don't just promise results. We prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
 }: CaseStudyGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);

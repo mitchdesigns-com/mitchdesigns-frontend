@@ -7,7 +7,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       title: "Corporate Websites That Work as Hard as You Do",
       subTitle: "MitchDesigns - Corporate Website Design Company in Egypt",
       description:
-        "We design and build custom corporate websites on Next.js — no templates, no shortcuts. Every page is crafted for lead generation, brand clarity, and blazing performance.",
+        "We design and build custom corporate websites on Next.js, no templates, no shortcuts. Every page is crafted for lead generation, brand clarity, and blazing performance.",
       cta: { label: "Get a Proposal", href: LEADS_URL },
     },
     prototypes: {
@@ -20,7 +20,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Strategy", "Launch"],
       label: "Full-Service Delivery",
       description:
-        "From discovery workshops and UX strategy to pixel-perfect build and post-launch support — we own every phase so you don't have to manage multiple vendors.",
+        "From discovery workshops and UX strategy to pixel-perfect build and post-launch support. We own every phase so you don't have to manage multiple vendors.",
       image: "/images/studio/corporate-review.webp",
       imageAlt: "MitchDesigns team building a corporate website",
       cta: { label: "See How We Work", href: "/about" },
@@ -50,7 +50,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/corporate/why-3.webp",
           imageAlt: "CMS dashboard interface",
           description:
-            "Your team can update content without touching code — forever.",
+            "Your team can update content without touching code, forever.",
         },
         {
           title: "Conversion-Optimised UX",
@@ -78,7 +78,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/corporate/why-7.webp",
           imageAlt: "Ongoing support illustration",
           description:
-            "We stay on as your growth partner — not just a one-off agency.",
+            "We stay on as your growth partner, not just a one-off agency.",
         },
         {
           title: "MENA Market Expertise",
@@ -92,7 +92,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
     process: {
       title: "Our Proven 6-Step Process",
       description:
-        "From your first brief to a live site — here's exactly what happens.",
+        "From your first brief to a live site. Here's exactly what happens.",
       processCards: [
         {
           stepNumber: 1,
@@ -145,7 +145,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           imageAlt: "Browser QA testing",
           description: [
             "Cross-browser and device testing",
-            "Lighthouse audit — 90+ on all Core Web Vitals",
+            "Lighthouse audit, 90+ on all Core Web Vitals",
             "Accessibility audit (WCAG 2.1 AA)",
           ],
         },
@@ -170,7 +170,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/corporate/support-1.webp",
           imageAlt: "Project manager icon",
           description:
-            "One point of contact from kick-off to handover — no chasing multiple people.",
+            "One point of contact from kick-off to handover, no chasing multiple people.",
         },
         {
           title: "Async-First Communication",
@@ -202,7 +202,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       title: "eCommerce Stores Built to Sell",
       subTitle: "MitchDesigns - eCommerce Website & App Development in Egypt",
       description:
-        "Custom storefronts with seamless checkout, local payment gateways (Paymob, Fawry), and conversion-optimised UX. Built on Next.js — fast, scalable, and yours.",
+        "Custom storefronts with seamless checkout, local payment gateways (Paymob, Fawry), and conversion-optimised UX. Built on Next.js, fast, scalable, and yours.",
       image: "/images/services/ecommerce/hero.webp",
       imageAlt: "eCommerce store product page on mobile and desktop",
       cta: { label: "Start Your Store", href: LEADS_URL },
@@ -217,7 +217,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Compete", "Convert"],
       label: "End-to-End eCommerce",
       description:
-        "From product catalogue and search to cart, checkout, and post-purchase flows — we design and build every touchpoint with conversion as the north star.",
+        "From product catalogue and search to cart, checkout, and post-purchase flows. We design and build every touchpoint with conversion as the north star.",
       image: "/images/services/ecommerce/we-got-you.webp",
       imageAlt: "eCommerce conversion flow diagram",
       cta: { label: "See Our Work", href: "/case-studies" },
@@ -239,7 +239,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/ecommerce/why-2.webp",
           imageAlt: "Mobile checkout flow",
           description:
-            "70%+ of MENA purchases happen on mobile — every pixel is optimised for it.",
+            "70%+ of MENA purchases happen on mobile, every pixel is optimised for it.",
         },
         {
           title: "Blazing Fast Catalogue",
@@ -360,7 +360,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/ecommerce/support-1.webp",
           imageAlt: "Payment configuration",
           description:
-            "We handle merchant onboarding, API keys, and testing — you just sell.",
+            "We handle merchant onboarding, API keys, and testing. You just sell.",
         },
         {
           title: "Staff Training",
@@ -381,7 +381,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/ecommerce/support-4.webp",
           imageAlt: "Growth experiments",
           description:
-            "Monthly CRO experiments — A/B tests, checkout tweaks, and feature rollouts.",
+            "Monthly CRO experiments, A/B tests, checkout tweaks, and feature rollouts.",
         },
       ],
     },
@@ -392,7 +392,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       title: "Custom Platforms Built Around Your Business Logic",
       subTitle: "MitchDesigns - Custom Software Development Company in Egypt",
       description:
-        "Booking systems, SaaS dashboards, internal tools, and client portals — custom-architected for reliability and designed for the people who use them daily.",
+        "Booking systems, SaaS dashboards, internal tools, and client portals, custom-architected for reliability and designed for the people who use them daily.",
       image: "/images/services/custom/hero.webp",
       imageAlt: "Custom platform dashboard on a large monitor",
       cta: { label: "Discuss Your Project", href: LEADS_URL },
@@ -405,7 +405,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
     designsAdapt: {
       title: "Designs That Adapt to Every Device and Context",
       description:
-        "We build interfaces that work beautifully — whether your users are on a phone in the field or a wide monitor in the office.",
+        "We build interfaces that work beautifully, whether your users are on a phone in the field or a wide monitor in the office.",
       cards: [
         {
           title: "Desktop Dashboard",
@@ -424,7 +424,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         {
           title: "Mobile-First Access",
           description:
-            "Critical actions available on mobile — approvals, alerts, and quick updates.",
+            "Critical actions available on mobile, approvals, alerts, and quick updates.",
           image: "/images/services/custom/adapt-mobile.webp",
           imageAlt: "Mobile app access screen",
         },
@@ -433,7 +433,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
     moreAbout: {
       title: "Built on Solid Foundations",
       description:
-        "Every custom platform we deliver is production-grade — not a prototype dressed up for demos.",
+        "Every custom platform we deliver is production-grade, not a prototype dressed up for demos.",
       cards: [
         {
           title: "Role-Based Access Control",
@@ -452,7 +452,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
         {
           title: "Third-Party Integrations",
           description:
-            "CRMs, ERPs, payment rails, and communication tools — connected through clean, versioned APIs.",
+            "CRMs, ERPs, payment rails, and communication tools, connected through clean, versioned APIs.",
           image: "/images/services/custom/more-3.webp",
           imageAlt: "Integration connectors diagram",
         },
@@ -473,7 +473,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           id: "2",
           title: "Do you build mobile apps as well as web platforms?",
           content:
-            "Yes. We build React Native mobile apps that share business logic with your web platform — reducing cost and keeping both in sync. See our Mobile App service for details.",
+            "Yes. We build React Native mobile apps that share business logic with your web platform, reducing cost and keeping both in sync. See our Mobile App service for details.",
         },
         {
           id: "3",
@@ -485,7 +485,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           id: "4",
           title: "Who owns the code after the project is done?",
           content:
-            "You do — 100%. All source code is delivered to your repository at the end of the project. There are no licensing fees or lock-ins.",
+            "You do, 100%. All source code is delivered to your repository at the end of the project. There are no licensing fees or lock-ins.",
         },
         {
           id: "5",
@@ -560,7 +560,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Technical", "Challenge"],
       label: "End-to-End Ownership",
       description:
-        "From database schema to pixel-perfect UI — we own the full stack so you get a cohesive product, not stitched-together modules from different vendors.",
+        "From database schema to pixel-perfect UI. We own the full stack so you get a cohesive product, not stitched-together modules from different vendors.",
       image: "/images/studio/screens-review.webp",
       imageAlt: "MitchDesigns team reviewing a platform build across screens",
       cta: { label: "Get a Proposal", href: LEADS_URL },
@@ -574,7 +574,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       title: "Media Buying That Turns Ad Spend Into Profit",
       subTitle: "MitchDesigns - Media Buying & Performance Marketing Agency in Egypt",
       description:
-        "Data-driven paid campaigns across Meta, TikTok, and Snapchat. Creative testing, audience targeting, and funnel optimisation built around your CPA — not just impressions.",
+        "Data-driven paid campaigns across Meta, TikTok, and Snapchat. Creative testing, audience targeting, and funnel optimisation built around your CPA, not just impressions.",
       image: "/images/services/media-buying/hero.webp",
       imageAlt: "Media buying campaign performance dashboard",
       cta: { label: "Start Scaling", href: LEADS_URL },
@@ -610,7 +610,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
     },
     brief: {
       description:
-        "Most agencies chase reach. We chase profit. Every campaign we run is structured around your unit economics — so as you spend more, you make more.",
+        "Most agencies chase reach. We chase profit. Every campaign we run is structured around your unit economics, so as you spend more, you make more.",
       signature: "Mitch",
     },
     weGotYou: {
@@ -618,7 +618,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Awareness", "Purchase"],
       label: "Full-Funnel Media Strategy",
       description:
-        "We map your customer journey and build a campaign structure that nurtures strangers into buyers — with the right creative, audience, and bid strategy at every stage.",
+        "We map your customer journey and build a campaign structure that nurtures strangers into buyers, with the right creative, audience, and bid strategy at every stage.",
       image: "/images/services/media-buying/we-got-you.webp",
       imageAlt: "Full-funnel campaign structure diagram",
       cta: { label: "See Our Approach", href: "/about" },
@@ -633,14 +633,14 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/media-buying/why-1.webp",
           imageAlt: "Creative ad variations",
           description:
-            "We test creative variables systematically — not randomly — to find what actually converts.",
+            "We test creative variables systematically, not randomly, to find what actually converts.",
         },
         {
           title: "Weekly Performance Reports",
           image: "/images/services/media-buying/why-2.webp",
           imageAlt: "Weekly performance report",
           description:
-            "Plain-English reports every Monday — no vanity metrics, just numbers that matter.",
+            "Plain-English reports every Monday, no vanity metrics, just numbers that matter.",
         },
         {
           title: "Audience Architecture",
@@ -701,7 +701,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
     },
     brief: {
       description:
-        "Google rewards relevance. We build campaigns where every keyword, ad copy, and landing page tells a consistent story — which means higher Quality Scores and lower CPCs than your competitors.",
+        "Google rewards relevance. We build campaigns where every keyword, ad copy, and landing page tells a consistent story, which means higher Quality Scores and lower CPCs than your competitors.",
       signature: "Mitch",
     },
     weGotYou: {
@@ -709,7 +709,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Complexity", "Growth"],
       label: "Full Account Management",
       description:
-        "Keyword research, campaign structure, ad copy, bid strategy, negative keywords, and landing page alignment — all handled by certified specialists who live inside your account.",
+        "Keyword research, campaign structure, ad copy, bid strategy, negative keywords, and landing page alignment, all handled by certified specialists who live inside your account.",
       image: "/images/services/google-ads/we-got-you.webp",
       imageAlt: "Google Ads account management workflow",
       cta: { label: "Book a Free Audit", href: LEADS_URL },
@@ -724,14 +724,14 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/google-ads/why-1.webp",
           imageAlt: "Keyword research spreadsheet",
           description:
-            "We build keyword lists from your actual sales data — not guesswork or auto-suggest.",
+            "We build keyword lists from your actual sales data, not guesswork or auto-suggest.",
         },
         {
           title: "Ad Copy Testing Framework",
           image: "/images/services/google-ads/why-2.webp",
           imageAlt: "A/B ad copy test",
           description:
-            "Systematic RSA variant testing with statistical significance — not arbitrary changes.",
+            "Systematic RSA variant testing with statistical significance, not arbitrary changes.",
         },
         {
           title: "Landing Page Alignment",
@@ -745,7 +745,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/google-ads/why-4.webp",
           imageAlt: "Billing transparency",
           description:
-            "You pay Google directly. Our management fee is flat and agreed upfront — no surprises.",
+            "You pay Google directly. Our management fee is flat and agreed upfront, no surprises.",
         },
       ],
     },
@@ -800,7 +800,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Technical", "Content"],
       label: "Full-Spectrum SEO",
       description:
-        "We fix what's broken under the hood, then build the content infrastructure that earns authority — in Arabic and English, for humans and AI models alike.",
+        "We fix what's broken under the hood, then build the content infrastructure that earns authority, in Arabic and English, for humans and AI models alike.",
       image: "/images/services/seo/we-got-you.webp",
       imageAlt: "SEO strategy whiteboard session",
       cta: { label: "See Our Methodology", href: "/about" },
@@ -815,7 +815,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/seo/why-1.webp",
           imageAlt: "Technical SEO audit report",
           description:
-            "Core Web Vitals, crawl budget, canonical strategy, and schema — not just meta tags.",
+            "Core Web Vitals, crawl budget, canonical strategy, and schema, not just meta tags.",
         },
         {
           title: "Arabic & Bilingual SEO",
@@ -883,7 +883,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
     },
     brief: {
       description:
-        "A great mobile app isn't just functional — it's effortless. We obsess over every swipe, load time, and empty state so your users never feel friction between their intent and their action.",
+        "A great mobile app isn't just functional. It's effortless. We obsess over every swipe, load time, and empty state so your users never feel friction between their intent and their action.",
       signature: "Mitch",
     },
     weGotYou: {
@@ -891,7 +891,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       titleHighlights: ["Concept", "App", "Store"],
       label: "Full Lifecycle Delivery",
       description:
-        "We handle design, development, testing, App Store submission, and post-launch analytics — so you have one accountable partner from the first wireframe to the first 10,000 downloads.",
+        "We handle design, development, testing, App Store submission, and post-launch analytics, so you have one accountable partner from the first wireframe to the first 10,000 downloads.",
       image: "/images/studio/mobile-app.webp",
       imageAlt: "MitchDesigns team testing a mobile app on a phone",
       cta: { label: "See Our Apps", href: "/case-studies" },
@@ -907,7 +907,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/mobile-app/why-1.webp",
           imageAlt: "React Native code",
           description:
-            "One codebase, two platforms — without the performance compromises of lesser cross-platform tools.",
+            "One codebase, two platforms, without the performance compromises of lesser cross-platform tools.",
         },
         {
           title: "App Store Optimisation",
@@ -921,14 +921,14 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
           image: "/images/services/mobile-app/why-3.webp",
           imageAlt: "Offline mode illustration",
           description:
-            "Apps that work without internet — essential for field teams and emerging market users.",
+            "Apps that work without internet, essential for field teams and emerging market users.",
         },
         {
           title: "Push Notification Strategy",
           image: "/images/services/mobile-app/why-4.webp",
           imageAlt: "Push notification examples",
           description:
-            "Personalised push campaigns built on user behaviour — not blasts that get turned off.",
+            "Personalised push campaigns built on user behaviour, not blasts that get turned off.",
         },
       ],
     },

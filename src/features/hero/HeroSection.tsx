@@ -15,21 +15,21 @@ import { useSiteSettings } from "@/context/SiteSettingsContext";
 // TODO: replace preview/video with real assets
 const CARDS = [
   {
-    alt: "Mountain View — website design",
+    alt: "Mountain View, website design",
     previewSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     videoSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     fanRotate: -12,
     zIndex: 30,
   },
   {
-    alt: "Real estate app — mobile design",
+    alt: "Real estate app, mobile design",
     previewSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     videoSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     fanRotate: 6,
     zIndex: 20,
   },
   {
-    alt: "Travel booking — product design",
+    alt: "Travel booking, product design",
     previewSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     videoSrc: "/videos/Mitch_Showreel_2026_Final_25MB.webm",
     fanRotate: -6,
