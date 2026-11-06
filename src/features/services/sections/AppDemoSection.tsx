@@ -14,6 +14,7 @@ import { Star } from "@/components/icons/Star";
 import { Tick } from "@/components/icons/Tick";
 import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
+import { armTickFeedback, buzz, chime, pop } from "@/lib/tickFeedback";
 import type { FlowStep } from "./appFlow/screens";
 
 /** How long each feature plays before the next (ms). */
@@ -99,6 +100,23 @@ export function AppDemoSection({
     const t = window.setTimeout(() => setActive((i) => (i + 1) % steps.length), wait);
     return () => window.clearTimeout(t);
   }, [active, playing, pausedUntil, steps.length]);
+
+  // Sound: a chime as each chip fills and the next feature starts, then a pop
+  // per floating label as it bursts out (silent until the visitor has
+  // clicked or tapped somewhere, as browsers require; haptic tap on Android).
+  useEffect(() => armTickFeedback(), []);
+  const firstSound = useRef(true);
+  useEffect(() => {
+    if (!seen || reduced) return;
+    if (firstSound.current) {
+      firstSound.current = false;
+      return;
+    }
+    chime();
+    buzz(10);
+    const timers = [0, 1, 2].map((k) => window.setTimeout(() => pop(1 + k * 0.18), (MOVE_S * 0.6 + k * 0.12 + 0.15) * 1000));
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [active, seen, reduced]);
 
   const pick = (i: number) => {
     setActive(i);

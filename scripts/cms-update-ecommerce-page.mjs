@@ -14,6 +14,8 @@ const DRY = process.argv.includes("--dry");
 const ONLY_FAQS = process.argv.includes("--faqs");
 // --app writes only the app section (the `process` component).
 const ONLY_APP = process.argv.includes("--app");
+// --features writes only the features list section.
+const ONLY_FEATURES = process.argv.includes("--features");
 if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API token).");
 const auth = { Authorization: `Bearer ${TOKEN}` };
 const headers = { ...auth, "Content-Type": "application/json" };
@@ -79,7 +81,8 @@ const WHY_US = {
 
 // Features list: the top Orderbase features for B2C and B2B (no product names).
 const FEATURES = {
-  title: "36 Features, Simplified",
+  // No count in the title: the list shows its own counter and can grow.
+  title: "Every Feature You Need, Simplified",
   titleHighlights: "Simplified",
   description: para("One platform for B2C and B2B selling, on the web and in your app."),
   cards: [
@@ -299,6 +302,10 @@ console.log("ecommerce:", {
   hero: hero.title, tabs: weGotYou.tabs.map((t) => t.label + (t.logo ? " (logo)" : "")),
   whyUs: whyUs.cards.length, features: featuresSimplified.featureCards.length, appSteps: processSection.processCards.length, support: support.cards.length,
 });
+if (ONLY_FEATURES) {
+  await put(`/api/service-pages/${page.documentId}?status=published`, { featuresSimplified });
+  process.exit(0);
+}
 if (ONLY_APP) {
   await put(`/api/service-pages/${page.documentId}?status=published`, { process: processSection });
   process.exit(0);
