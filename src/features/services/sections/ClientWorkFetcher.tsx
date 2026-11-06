@@ -7,13 +7,16 @@ export async function ClientWorkFetcher({
   category,
   title,
   description,
+  exclude = [],
 }: {
   category: string;
   title: string;
   description?: RichText;
+  /** Case-study slugs to leave out (tagged with the category but not a fit). */
+  exclude?: string[];
 }) {
   const all = await getCaseStudies().catch(() => []);
-  const studies = all.filter((s) => s.category?.toLowerCase() === category.toLowerCase());
+  const studies = all.filter((s) => s.category?.toLowerCase() === category.toLowerCase() && !exclude.includes(s.slug));
   if (!studies.length) return null;
   return <ClientWork title={title} description={description} studies={studies} category={category} />;
 }

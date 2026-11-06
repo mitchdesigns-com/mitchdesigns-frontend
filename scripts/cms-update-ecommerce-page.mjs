@@ -12,6 +12,8 @@ const TOKEN = process.env.STRAPI_WRITE_TOKEN;
 const DRY = process.argv.includes("--dry");
 // --faqs: only the FAQs (leaves page copy as edited in Strapi).
 const ONLY_FAQS = process.argv.includes("--faqs");
+// --app writes only the app section (the `process` component).
+const ONLY_APP = process.argv.includes("--app");
 if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API token).");
 const auth = { Authorization: `Bearer ${TOKEN}` };
 const headers = { ...auth, "Content-Type": "application/json" };
@@ -126,12 +128,16 @@ const APP = {
   eyebrow: "Website + mobile app",
   closingTitle: "Scale With Every Order",
   closingText: "Website plus app means one engine, one dashboard, and a business that grows faster with every repeat customer.",
+  // One chip per app feature; the phone plays each one (order matters, it matches the scenes).
   steps: [
-    ["Close the Loop", "A website wins new customers. An app keeps them. Together they make one complete platform."],
-    ["Built for Repeat Customers", "Customers who come back love your brand. An app on their home screen makes the next order one tap away."],
-    ["Push Notifications", "Reach customers directly with offers and updates, without paying for every ad."],
-    ["Loyalty in Their Pocket", "Points, wallet and rewards on their phone bring them back again and again."],
-    ["Lower Cost Per Order", "Repeat orders through your own app skip ad spend and marketplace commissions."],
+    ["Points", "Every order earns points, so the next one is already on its way."],
+    ["Wallet", "Refunds and credit land in their wallet, ready for the next order."],
+    ["Push Notifications", "Offers reach their lock screen directly, with no ad spend."],
+    ["Apple Pay", "Double click and done. Checkout takes a second."],
+    ["Credit Card", "Any card, paid securely without leaving the app."],
+    ["Saved Cards", "Their card is saved, so the next order or reorder is one tap."],
+    ["Order Tracking", "Customers watch their order travel from your store to their door."],
+    ["Smart AI", "Item out of stock? AI swaps in the closest match before they ask."],
   ],
 };
 
@@ -293,6 +299,10 @@ console.log("ecommerce:", {
   hero: hero.title, tabs: weGotYou.tabs.map((t) => t.label + (t.logo ? " (logo)" : "")),
   whyUs: whyUs.cards.length, features: featuresSimplified.featureCards.length, appSteps: processSection.processCards.length, support: support.cards.length,
 });
+if (ONLY_APP) {
+  await put(`/api/service-pages/${page.documentId}?status=published`, { process: processSection });
+  process.exit(0);
+}
 if (!ONLY_FAQS) await put(`/api/service-pages/${page.documentId}?status=published`, { hero, weGotYou, whyUs, featuresSimplified, process: processSection, support });
 
 // FAQs, in this order.

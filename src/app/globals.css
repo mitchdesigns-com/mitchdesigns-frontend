@@ -427,6 +427,19 @@
   }
 }
 
+/* eCommerce app section: about 80% of the screen tall on desktop. */
+@utility min-h-stage {
+  min-height: 80svh;
+}
+
+/* 3D stage for the coded phone (perspective, children keep their depth). */
+@utility perspective-stage {
+  perspective: 1600px;
+}
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
 @utility min-h-lines-2 {
   min-height: 2lh;
 }

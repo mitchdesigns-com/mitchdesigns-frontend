@@ -23,6 +23,9 @@ import { AppDemoSection } from "./sections/AppDemoSection";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
 import { appFlowSteps } from "./sections/appFlow/steps";
 
+/** Tagged eCommerce in the CMS, but not online stores. */
+const NOT_ECOMMERCE = ["fam-beef", "la-poire", "tank"];
+
 /** "We Got You" card on eCommerce: one order from tap to doorstep
  *  (fallback until `weGotYou.story` is filled in Strapi). */
 const ECOMMERCE_ORDER_STORY = [
@@ -194,7 +197,7 @@ export function ServicePageRenderer({
               );
             })()}
           {/* The brands we built stores for (CMS heading in `moreAbout`, projects from case studies). */}
-          {moreAbout && <ClientWorkFetcher category="eCommerce" title={moreAbout.title} description={moreAbout.description} />}
+          {moreAbout && <ClientWorkFetcher category="eCommerce" title={moreAbout.title} description={moreAbout.description} exclude={NOT_ECOMMERCE} />}
           {whyUs && <WhyUsSection {...whyUs} />}
           {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
           {/* Website + app: the app playing live on a coded phone (CMS `process` copy). */}
