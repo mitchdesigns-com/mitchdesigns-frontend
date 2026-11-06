@@ -35,10 +35,10 @@ export function ServiceSwitcher({
                 href={s.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex whitespace-nowrap rounded-pill border px-3 py-2 text-sm font-medium transition-colors duration-200",
+                  "inline-flex whitespace-nowrap rounded-pill border-2 px-3 py-1.5 text-sm font-medium transition-colors duration-200",
                   active
                     ? "border-yellow bg-yellow text-black"
-                    : "border-white/15 text-fg-muted hover:border-white/40 hover:text-white",
+                    : "border-white/15 text-fg-muted hover:border-white hover:text-white",
                 )}
               >
                 {s.label}
