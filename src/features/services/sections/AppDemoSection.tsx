@@ -66,8 +66,8 @@ const TOKENS: ReactNode[][] = [
 ];
 
 /**
- * eCommerce "your brand deserves an app": a coded phone, turned in 3D on a
- * yellow disc that ripples on every feature, shows one app feature at a time (points, wallet,
+ * eCommerce "your brand deserves an app": a coded phone, turned in 3D over a
+ * soft yellow glow that pulses on every feature, shows one app feature at a time (points, wallet,
  * push, Apple Pay, cards, saved cards, tracking, smart AI). Each feature opens
  * with a playful move of the phone, then plays inside it. The feature chips
  * fill yellow as they play; clicking one jumps there.
@@ -89,12 +89,6 @@ export function AppDemoSection({
   const inView = useInView(ref, { amount: 0.4 });
   // Latched: the entrance plays once, the first time the section shows.
   const seen = useInView(ref, { amount: 0.25, once: true });
-  // Backdrop under review: ?bd=disc|tile|rings|dots previews the options.
-  const [backdrop, setBackdrop] = useState<BackdropVariant>("disc");
-  useEffect(() => {
-    const v = new URLSearchParams(window.location.search).get("bd");
-    if (v === "tile" || v === "rings" || v === "dots") setBackdrop(v);
-  }, []);
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
   const [pausedUntil, setPausedUntil] = useState(0);
@@ -191,9 +185,9 @@ export function AppDemoSection({
           </RevealItem>
         </RevealStagger>
 
-        {/* The stage: a yellow disc with a ripple on every feature, tokens popping out, the phone in 3D */}
+        {/* The stage: a soft yellow glow that pulses on every feature, tokens popping out, the phone in 3D */}
         <div aria-hidden className="relative mx-auto aspect-square w-full max-w-3xl md:col-span-7">
-          <Backdrop variant={backdrop} active={active} seen={seen} reduced={!!reduced} />
+          <Glow active={active} seen={seen} reduced={!!reduced} />
           {/* Ground shadow */}
           <div className="absolute bottom-1/12 left-1/2 h-6 w-2/5 -translate-x-1/2 rounded-full bg-black/25 blur-xl" />
 
@@ -272,99 +266,27 @@ export function AppDemoSection({
   );
 }
 
-// ── Backdrops (behind the phone) ────────────────────────────────────────────
+// ── Backdrop (behind the phone) ─────────────────────────────────────────────
 
-type BackdropVariant = "disc" | "tile" | "rings" | "dots";
-
-function Backdrop({ variant, active, seen, reduced }: { variant: BackdropVariant; active: number; seen: boolean; reduced: boolean }) {
-  const grow = {
-    initial: reduced ? false : { scale: 0.3, opacity: 0 },
-    animate: seen || reduced ? { scale: 1, opacity: 1 } : { scale: 0.3, opacity: 0 },
-    transition: { type: "spring" as const, stiffness: 90, damping: 16 },
-  };
-  if (variant === "tile") {
-    // A big tilted app-icon tile; its outline pulses out on every feature.
-    return (
-      <>
-        <motion.div className="absolute inset-1/6 rotate-6 rounded-phone bg-yellow" {...grow} />
-        {!reduced && (
-          <motion.div
-            key={active}
-            className="absolute inset-1/6 rotate-6 rounded-phone border-2 border-yellow"
-            initial={{ scale: 1, opacity: 0.9 }}
-            animate={{ scale: 1.3, opacity: 0 }}
-            transition={{ delay: 0.15, duration: 1.4, ease: "easeOut" }}
-          />
-        )}
-      </>
-    );
-  }
-  if (variant === "rings") {
-    // Thin orbit rings with yellow dots circling, a soft glow in the middle.
-    return (
-      <>
-        <motion.div className="absolute inset-1/4 rounded-full bg-yellow blur-3xl" {...grow} />
-        {["inset-0", "inset-1/12", "inset-1/6"].map((inset, k) => (
-          <motion.div
-            key={inset}
-            className={cn("absolute rounded-full border border-black/10", inset)}
-            initial={reduced ? false : { opacity: 0, scale: 0.8 }}
-            animate={seen || reduced ? { opacity: 1, scale: 1, rotate: reduced ? 0 : 360 } : { opacity: 0, scale: 0.8 }}
-            transition={{ opacity: { delay: 0.1 * k }, scale: { delay: 0.1 * k }, rotate: { duration: 30 + k * 12, repeat: Infinity, ease: "linear" } }}
-          >
-            <span className={cn("absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow", k === 1 ? "top-1/2 left-0" : k === 2 ? "top-full left-1/2" : "top-0 left-1/2")} />
-          </motion.div>
-        ))}
-        {!reduced && (
-          <motion.div
-            key={active}
-            className="absolute inset-1/6 rounded-full border-2 border-yellow"
-            initial={{ scale: 0.8, opacity: 0.9 }}
-            animate={{ scale: 1.2, opacity: 0 }}
-            transition={{ delay: 0.15, duration: 1.4, ease: "easeOut" }}
-          />
-        )}
-      </>
-    );
-  }
-  if (variant === "dots") {
-    // A dotted grid fading out at the edges, with a yellow glow under the phone.
-    return (
-      <>
-        <motion.div
-          className="absolute inset-0 bg-dots"
-          style={{ maskImage: "radial-gradient(circle, black 35%, transparent 70%)" }}
-          initial={reduced ? false : { opacity: 0 }}
-          animate={seen || reduced ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.8 }}
-        />
-        <motion.div className="absolute inset-1/4 rounded-full bg-yellow blur-3xl" {...grow} />
-        {!reduced && (
-          <motion.div
-            key={active}
-            className="absolute inset-1/4 rounded-full bg-yellow blur-2xl"
-            initial={{ scale: 0.9, opacity: 0.6 }}
-            animate={{ scale: 1.5, opacity: 0 }}
-            transition={{ delay: 0.1, duration: 1.2, ease: "easeOut" }}
-          />
-        )}
-      </>
-    );
-  }
-  // "disc": the yellow disc with a ripple on every feature.
+/** A soft yellow glow under the phone that swells in, and pulses on every feature. */
+function Glow({ active, seen, reduced }: { active: number; seen: boolean; reduced: boolean }) {
   return (
     <>
-      <motion.div className="absolute inset-1/12 rounded-full bg-yellow" {...grow} />
-      {!reduced &&
-        [0, 1].map((k) => (
-          <motion.div
-            key={`${active}-${k}`}
-            className="absolute inset-1/12 rounded-full border-2 border-yellow"
-            initial={{ scale: 1, opacity: 0.9 }}
-            animate={{ scale: 1.35, opacity: 0 }}
-            transition={{ delay: 0.15 + k * 0.35, duration: 1.6, ease: "easeOut" }}
-          />
-        ))}
+      <motion.div
+        className="absolute inset-1/4 rounded-full bg-yellow blur-3xl"
+        initial={reduced ? false : { scale: 0.3, opacity: 0 }}
+        animate={seen || reduced ? { scale: 1, opacity: 1 } : { scale: 0.3, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 90, damping: 16 }}
+      />
+      {!reduced && (
+        <motion.div
+          key={active}
+          className="absolute inset-1/4 rounded-full bg-yellow blur-2xl"
+          initial={{ scale: 0.9, opacity: 0.6 }}
+          animate={{ scale: 1.5, opacity: 0 }}
+          transition={{ delay: 0.1, duration: 1.2, ease: "easeOut" }}
+        />
+      )}
     </>
   );
 }
