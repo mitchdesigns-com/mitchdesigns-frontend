@@ -359,7 +359,7 @@ function mapAboutPage(raw: any): AboutContent {
       eyebrow: raw.story?.eyebrow ?? "",
       title: raw.story?.title ?? "",
       cards: (raw.story?.cards ?? []).map((c: any) => ({
-        body: blocksToText(c.body) ?? "",
+        body: c.body ?? "",
         image: aboutImage(c.image),
       })),
     },

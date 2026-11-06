@@ -1101,11 +1101,11 @@ export const fixtureAboutPage: AboutContent = {
     cards: [
       {
         image: null,
-        body: "What began as a small design studio in 2005 has grown into a team of dedicated experts building websites, mobile apps and platforms for premium brands across the region. Every project taught us something, and we kept what worked.",
+        body: [{"type": "paragraph", "children": [{"type": "text", "text": "What began as a small design studio in 2005 has grown into a team of "}, {"type": "text", "text": "dedicated experts", "bold": true}, {"type": "text", "text": " building websites, mobile apps and platforms for "}, {"type": "text", "text": "premium brands", "bold": true}, {"type": "text", "text": " across the region. Every project taught us something, and we kept what worked."}]}],
       },
       {
         image: null,
-        body: "We measure ourselves by the work and by the brands that come back to us. Clients trust us with their digital presence, and we answer with support that continues long after launch.",
+        body: [{"type": "paragraph", "children": [{"type": "text", "text": "We measure ourselves by "}, {"type": "text", "text": "the work", "bold": true}, {"type": "text", "text": " and by the brands that come back to us. Clients trust us with their digital presence, and we answer with support that continues "}, {"type": "text", "text": "long after launch", "bold": true}, {"type": "text", "text": "."}]}],
       },
       { image: null, body: "" },
       { image: null, body: "" },
