@@ -4,6 +4,7 @@ import { Fragment, useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Parallax, ParallaxImage, Reveal } from "@/components/motion";
+import { useTilt } from "@/components/motion/useTilt";
 import type { AboutContent, RichText } from "@/lib/cms/types";
 import { Eyebrow } from "./Eyebrow";
 
@@ -73,57 +74,89 @@ function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; fr
 const STORY_PHOTOS = [
   { url: "/images/studio/about/story-office.webp", alt: "The MitchDesigns studio" },
   { url: "/images/studio/about/story-desk.webp", alt: "A MitchDesigns developer focused at his desk" },
+  { url: "/images/studio/about/strip-presenting.webp", alt: "A MitchDesigns strategist presenting to the team" },
+  { url: "/images/studio/about/strip-keyboard.webp", alt: "Hands on a keyboard in the MitchDesigns studio" },
 ];
 
-function StoryCard({ card, index }: { card: AboutContent["story"]["cards"][number]; index: number }) {
-  // The CMS image, or our studio shoot until one is set.
-  const fallback = STORY_PHOTOS[index % STORY_PHOTOS.length];
-  const photo = card.image?.url ? { url: card.image.url, alt: card.image.alt ?? fallback.alt } : fallback;
+type Photo = { url: string; alt: string };
+
+/** A story photo that leans toward the pointer, lifts and zooms on hover. */
+function StoryPhoto({ photo }: { photo: Photo }) {
+  const { rotateX, rotateY, handlers } = useTilt(12);
   return (
-    <div className="flex w-full max-w-60 flex-col gap-4">
-      <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-4/3" sizes="240px" drift={10} zoom={0.08} />
-      <p className="text-base text-black text-balance">{card.body}</p>
+    <div className="group relative w-full max-w-60 perspective-midrange" {...handlers}>
+      <motion.div
+        style={{ rotateX, rotateY }}
+        className="transform-3d overflow-hidden transition-transform duration-500 ease-out-soft group-hover:-translate-y-2 group-hover:scale-105"
+      >
+        <ParallaxImage
+          src={photo.url}
+          alt={photo.alt}
+          className="aspect-4/3"
+          imageClassName="transition-transform duration-700 ease-out-soft group-hover:scale-110"
+          sizes="240px"
+          drift={10}
+          zoom={0.08}
+        />
+      </motion.div>
     </div>
   );
 }
 
 /**
  * Our Story (yellow): the big statement writes itself in word by word as
- * you scroll, while the two story cards float past at different speeds on
- * either side.
+ * you scroll, the paragraphs follow under it in the same voice, and four
+ * photos float past at different speeds, each tilting and zooming on hover.
  */
 export function AboutStory({ story }: { story: AboutContent["story"] }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "center 0.45"] });
   const words = titleWords(story.title);
-  const [topCard, bottomCard] = story.cards;
+  // Photos come from the cards' images (CMS first, studio shoot as fallback);
+  // the paragraphs are whatever text the cards carry, in order.
+  const photos: Photo[] = STORY_PHOTOS.map((fallback, i) => {
+    const img = story.cards[i]?.image;
+    return img?.url ? { url: img.url, alt: img.alt ?? fallback.alt } : fallback;
+  });
+  const paragraphs = story.cards.map((c) => c.body).filter(Boolean);
 
   return (
     <Section className="overflow-hidden bg-yellow py-24 md:py-32">
       <div ref={ref} className="relative flex flex-col gap-12 md:gap-0">
-        {topCard && (
-          <Parallax speed={-60} className="flex justify-end md:-mb-24">
-            <StoryCard card={topCard} index={0} />
+        <div className="flex justify-between gap-4 md:-mb-16">
+          <Parallax speed={-60} className="flex w-full justify-start">
+            <StoryPhoto photo={photos[0]} />
           </Parallax>
-        )}
+          <Parallax speed={-100} className="flex w-full justify-end md:pt-24">
+            <StoryPhoto photo={photos[1]} />
+          </Parallax>
+        </div>
 
-        <Reveal className="relative z-10 flex flex-col items-center gap-4 text-center">
+        <Reveal className="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
           <Eyebrow tone="dark">{story.eyebrow}</Eyebrow>
-          <h2 className="max-w-3xl text-hero-3 text-black lg:text-story">
+          <h2 className="text-hero-3 text-black lg:text-story">
             {reduced
               ? words.map((w, i) => <Fragment key={i}>{w.map((part, j) => <PartText key={j} part={part} />)} </Fragment>)
               : words.map((w, i) => (
                   <InkWord key={i} word={w} p={scrollYProgress} from={i / words.length} to={(i + 1.5) / words.length} />
                 ))}
           </h2>
+          <div className="mt-6 flex flex-col gap-6">
+            {paragraphs.map((text, i) => (
+              <p key={i} className="text-hero-5 text-black text-balance">{text}</p>
+            ))}
+          </div>
         </Reveal>
 
-        {bottomCard && (
-          <Parallax speed={40} className="flex md:-mt-24">
-            <StoryCard card={bottomCard} index={1} />
+        <div className="flex justify-between gap-4 md:-mt-16">
+          <Parallax speed={50} className="flex w-full justify-start md:pt-24">
+            <StoryPhoto photo={photos[2]} />
           </Parallax>
-        )}
+          <Parallax speed={90} className="flex w-full justify-end">
+            <StoryPhoto photo={photos[3]} />
+          </Parallax>
+        </div>
       </div>
     </Section>
   );

@@ -1077,10 +1077,9 @@ export const fixtureAboutPage: AboutContent = {
     { value: "30+", label: "Dedicated Experts" },
   ],
   approach: {
-    eyebrow: "How We Work",
-    title:
-      "Every project follows a structured framework designed to align business objectives.",
-    body: "At Mitch Designs, design is seen as the meeting point of a business’s goals and the customer’s needs. That’s why we put your customer at the center of our design process. We act as your customer advocates to design and develop digital products that help you scale your business.",
+    eyebrow: "Our Culture",
+    title: "A culture of continuous learning.",
+    body: "To innovate products and offer high-technology digital services to premium brands, it takes a culture of transparency, an open mind, flexibility, mutual respect, consultation first and consistency.\n\nOur people are encouraged to question, experiment and keep growing every single day.\n\nWe believe in these values inside the company, and our clients feel them in everything we deliver. That is how innovation, sustainability and growth show up in their products, and why they keep building with us.",
     image: null,
   },
   innovate: {
@@ -1088,9 +1087,11 @@ export const fixtureAboutPage: AboutContent = {
     photos: [],
   },
   team: {
-    badge: "Our Team",
+    badge: "Our Success",
     heading:
-      "We believe that positive change comes from diverse minds working together to make a difference.",
+      "Our success is the work we do. It brings more brands to trust us with their digital presence and the technology behind it.",
+    caption:
+      "Trust, support and partnership shape how we work with every client. MitchDesigns is a network of premium brands we are glad to work with.",
     groupPhoto: null,
   },
   story: {
@@ -1100,12 +1101,14 @@ export const fixtureAboutPage: AboutContent = {
     cards: [
       {
         image: null,
-        body: "We believe that positive change comes from diverse minds working together to make a difference.",
+        body: "What began as a small design studio in 2005 has grown into a team of dedicated experts building websites, mobile apps and platforms for premium brands across the region. Every project taught us something, and we kept what worked.",
       },
       {
         image: null,
-        body: "We act as your customer advocates to develop products that help you scale efficiently.",
+        body: "We measure ourselves by the work and by the brands that come back to us. Clients trust us with their digital presence, and we answer with support that continues long after launch.",
       },
+      { image: null, body: "" },
+      { image: null, body: "" },
     ],
   },
 };
