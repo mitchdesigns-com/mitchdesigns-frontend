@@ -19,7 +19,7 @@ const PAGE_SIZE = 3;
 const FILTERS = [
   { value: "All", label: "All" },
   { value: "Corporate", label: "Corporate" },
-  { value: "eCommerce", label: "ecommerce" },
+  { value: "eCommerce", label: "eCommerce" },
   { value: "Mobile App", label: "Mobile Apps" },
   { value: "Software", label: "Software" },
 ] as const;

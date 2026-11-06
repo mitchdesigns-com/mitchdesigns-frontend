@@ -243,7 +243,8 @@ export type AboutContent = {
     eyebrow: string;
     /** Rich text (Strapi blocks) so editors can bold/italic words. */
     title: RichText;
-    cards: Array<{ image?: AboutImage | null; body: string }>;
+    /** Each card gives a photo and, optionally, a paragraph (rich text, so bold words carry over). */
+    cards: Array<{ image?: AboutImage | null; body: RichText }>;
   };
   /** CMS SEO override; falls back to the hardcoded page metadata when unset. */
   seo?: SeoData;

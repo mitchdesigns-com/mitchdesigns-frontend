@@ -9,7 +9,7 @@ const ABOUT_FILM = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 
 /** Fallback line under the film when `team.caption` is empty. */
 const FILM_CAPTION =
-  "Trust, support and partnership shape how we work with every client. MitchDesigns is a network of premium brands we are glad to work with.";
+  "Trust, support and partnership shape how we work with every brand. MitchDesigns is a network of premium brands we are glad to work with.";
 
 /**
  * Team: the belief statement centred over the company film, shown frozen
