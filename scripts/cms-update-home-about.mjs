@@ -10,23 +10,23 @@ if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API to
 const headers = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
 
 // No em dashes, no colons.
-// Short story lines, one beat each (each is its own paragraph). Told as "we";
-// one personal "I" at the end, above the signature.
+// Short story lines, one beat each (each is its own paragraph). Told as "we",
+// with one "I" (the founding). **word** = bold in the rich text.
 export const BODY = [
-  "In 2005, we built our first corporate website in Egypt.",
+  "In 2005, I founded MitchDesigns, and we built our first corporate website in Egypt.",
   "Brands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.",
   "Twenty years and 500 projects later, we learned that pretty was never the goal.",
   "Our mission is to transform successful brands digitally.",
   "We give them systems that automate their work for the AI era, and experiences their customers love to use.",
-  "We connect design, data and marketing into one platform that works as hard as they do.",
-  "So they grow, scale and earn more.",
-  "I still put my name on every project, because every one of them carries it.",
+  "We work as partners, not vendors. We share their targets, sit at the same table and stay long after launch.",
+  "And we keep everything transparent. Clear scope, clear pricing, honest numbers and no surprises.",
+  "We connect design, data and marketing into one platform, so they **grow**, **scale** and **earn**.",
+  "And we never stop innovating, so every brand we work with gets a service that stays hassle free, today and for years to come.",
 ];
 // Phrases the scroll sweep marks by hand.
-const MARKS = [
-  { phrase: "pretty was never the goal", shape: "strike" },
-  { phrase: "grow, scale and earn more", shape: "wave" },
-];
+const MARKS = [{ phrase: "pretty was never the goal", shape: "strike" }];
+/** "a **b** c" → text children with bold runs. */
+const runs = (line) => line.split(/(\*\*[^*]+\*\*)/).filter(Boolean).map((t) => (t.startsWith("**") ? { type: "text", text: t.slice(2, -2), bold: true } : { type: "text", text: t }));
 // Stat value overrides, by unit.
 const STATS = { Projects: "500+" };
 
@@ -44,7 +44,7 @@ const about = {
   signature: a.signature,
   ctaLabel: a.ctaLabel,
   ctaHref: a.ctaHref,
-  body: BODY.map((text) => ({ type: "paragraph", children: [{ type: "text", text }] })),
+  body: BODY.map((line) => ({ type: "paragraph", children: runs(line) })),
   stats: (a.stats ?? []).map((s) => ({ id: s.id, unit: s.unit, label: s.label, value: STATS[s.unit] ?? s.value })),
   marks: MARKS,
 };

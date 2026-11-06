@@ -37,6 +37,26 @@ export function ServiceSwitcher({
     return () => io.disconnect();
   }, []);
 
+  // When the site header slides back in (scrolling up), sit just under it
+  // instead of being covered. Follows the header's own slide frame by frame.
+  const [drop, setDrop] = useState(0);
+  useEffect(() => {
+    if (!floating) return;
+    const header = document.querySelector("header");
+    let raf = 0;
+    let last = -1;
+    const loop = () => {
+      const bottom = Math.max(0, Math.round(header?.getBoundingClientRect().bottom ?? 0));
+      if (bottom !== last) {
+        last = bottom;
+        setDrop(bottom);
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [floating]);
+
   return (
     <>
       {/* Phones: one row that scrolls sideways out to the screen edge.
@@ -57,7 +77,8 @@ export function ServiceSwitcher({
             aria-label="Switch service"
             className="pointer-events-none fixed inset-x-0 top-8 z-40 flex px-4 pr-24 md:justify-center md:px-28"
             initial={{ y: -80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            // Under the header while it shows (its bottom, less the bar's own top gap).
+            animate={{ y: drop > 0 ? drop - 16 : 0, opacity: 1 }}
             exit={{ y: -80, opacity: 0 }}
             transition={{ duration: 0.4, ease: easeOutSoft }}
           >

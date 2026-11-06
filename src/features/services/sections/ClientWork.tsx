@@ -14,7 +14,9 @@ type Study = CaseStudy & { id: number };
 /** Columns that keep the logo rows even: 7 logos with up to 5 a row become 4 + 3. */
 const balancedCols = (n: number, max: number) => Math.max(1, Math.ceil(n / Math.ceil(n / max)));
 const SM_BASIS: Record<number, string> = { 1: "sm:basis-full", 2: "sm:basis-1/2", 3: "sm:basis-1/3", 4: "sm:basis-1/4" };
-const LG_BASIS: Record<number, string> = { 1: "lg:basis-full", 2: "lg:basis-1/2", 3: "lg:basis-1/3", 4: "lg:basis-1/4", 5: "lg:basis-1/5" };
+const LG_BASIS: Record<number, string> = {
+  1: "lg:basis-full", 2: "lg:basis-1/2", 3: "lg:basis-1/3", 4: "lg:basis-1/4", 5: "lg:basis-1/5", 6: "lg:basis-1/6", 7: "lg:basis-1/7",
+};
 
 /**
  * "Brands that sell with us": the clients of one category (e.g. eCommerce) as
@@ -64,18 +66,18 @@ export function ClientWork({
             <RevealItem
               as="li"
               key={s.slug}
-              className={cn("basis-1/2 p-1.5", SM_BASIS[balancedCols(withLogo.length, 4)], LG_BASIS[balancedCols(withLogo.length, 5)])}
+              className={cn("basis-1/2 p-1.5", SM_BASIS[balancedCols(withLogo.length, 4)], LG_BASIS[balancedCols(withLogo.length, 7)])}
             >
               <Link
                 href={`/case-studies/${s.slug}`}
                 aria-label={`${s.client} case study`}
-                className="group flex aspect-3/2 items-center justify-center rounded-card-sm border border-border bg-white p-5 transition-colors duration-300 hover:border-black"
+                className="group flex aspect-3/2 items-center justify-center rounded-card-sm border border-border bg-white p-3 transition-colors duration-300 hover:border-black"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={strapiMedia(s.logo!.url) ?? undefined}
                   alt={s.logo?.alternativeText || s.client}
-                  className="max-h-20 w-4/5 object-contain grayscale transition duration-300 group-hover:grayscale-0"
+                  className="size-full object-contain grayscale transition duration-300 group-hover:grayscale-0"
                 />
               </Link>
             </RevealItem>

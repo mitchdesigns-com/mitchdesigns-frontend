@@ -32,8 +32,18 @@ const DEFAULT_STATS = [
   { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
 ];
 
-const DEFAULT_BODY =
-  "In 2005, we built our first corporate website in Egypt.\n\nBrands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.\n\nTwenty years and 500 projects later, we learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nWe give them systems that automate their work for the AI era, and experiences their customers love to use.\n\nWe connect design, data and marketing into one platform that works as hard as they do.\n\nSo they grow, scale and earn more.\n\nI still put my name on every project, because every one of them carries it.";
+// Told as "we", with one "I" (the founding). No em dashes, no colons.
+const DEFAULT_BODY = [
+  "In 2005, I founded MitchDesigns, and we built our first corporate website in Egypt.",
+  "Brands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.",
+  "Twenty years and 500 projects later, we learned that pretty was never the goal.",
+  "Our mission is to transform successful brands digitally.",
+  "We give them systems that automate their work for the AI era, and experiences their customers love to use.",
+  "We work as partners, not vendors. We share their targets, sit at the same table and stay long after launch.",
+  "And we keep everything transparent. Clear scope, clear pricing, honest numbers and no surprises.",
+  "We connect design, data and marketing into one platform, so they grow, scale and earn.",
+  "And we never stop innovating, so every brand we work with gets a service that stays hassle free, today and for years to come.",
+].join("\n\n");
 
 const DEFAULT_SIGNATURE = "Mitch";
 
@@ -48,9 +58,11 @@ const BADGE_TEXT = "Since 2005 • Built in Egypt • ";
 // Phrases that get a hand-drawn yellow mark as the white sweep passes them.
 // Matched against the (CMS-editable) body; a phrase that isn't there is skipped.
 // CMS `about.marks` replaces these.
-const DEFAULT_MARKS: { phrase: string; shape: DoodleShape }[] = [
+// "bold" just sets the words in bold (`at` pins the spot: "earn" is also in "learned").
+type Mark = { phrase: string; shape: DoodleShape | "bold"; at?: number };
+const DEFAULT_MARKS: Mark[] = [
   { phrase: "pretty was never the goal", shape: "strike" },
-  { phrase: "grow, scale and earn more", shape: "wave" },
+  ...["grow", "scale", "earn"].map((w) => ({ phrase: w, shape: "bold" as const, at: DEFAULT_BODY.lastIndexOf(` ${w}`) + 1 })),
 ];
 
 // Colour stops (mirror the grey-600 / white / yellow tokens — interpolated in JS).
@@ -80,10 +92,11 @@ const PIN_SCROLL_SVH = 160;
 // Space kept above and below the pinned block (px).
 const PIN_GUTTER = 96;
 
-type Segment = { text: string; start: number; mark?: DoodleShape };
+type Segment = { text: string; start: number; mark?: Mark["shape"] };
 
-function splitMarks(body: string, marks: { phrase: string; shape: DoodleShape }[]): Segment[] {
-  const hits = marks.map((m) => ({ ...m, at: body.indexOf(m.phrase) }))
+function splitMarks(body: string, marks: Mark[]): Segment[] {
+  const hits = marks
+    .map((m) => ({ ...m, at: m.at != null && body.startsWith(m.phrase, m.at) ? m.at : body.indexOf(m.phrase) }))
     .filter((m) => m.at >= 0)
     .sort((a, b) => a.at - b.at);
   const segments: Segment[] = [];
@@ -398,6 +411,7 @@ export function AboutSection({
                       />
                     ));
                     if (!seg.mark) return <Fragment key={seg.start}>{chars}</Fragment>;
+                    if (seg.mark === "bold") return <strong key={seg.start} className="font-bold">{chars}</strong>;
                     // The mark draws as the sweep crosses its phrase, finishing
                     // just after the last letter turns white.
                     const from = bodySweepAt(seg.start);
