@@ -16,6 +16,8 @@ const ONLY_FAQS = process.argv.includes("--faqs");
 const ONLY_APP = process.argv.includes("--app");
 // --features writes only the features list section.
 const ONLY_FEATURES = process.argv.includes("--features");
+// --wegotyou writes only the We Got You section.
+const ONLY_WGY = process.argv.includes("--wegotyou");
 if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API token).");
 const auth = { Authorization: `Bearer ${TOKEN}` };
 const headers = { ...auth, "Content-Type": "application/json" };
@@ -34,8 +36,9 @@ const HERO = {
 };
 
 const WE_GOT_YOU = {
-  title: "Tired Of Unreliable eCommerce Agencies?",
-  titleHighlights: "eCommerce Agencies?",
+  // Orderbase against off-the-shelf platforms and custom-coded stores.
+  title: "Tired of eCommerce Platforms That Hold You Back?",
+  titleHighlights: "Hold You Back?",
   label: "We Got You",
   // Reads on its own too (sites without the toggle still show this line).
   description: para("One platform, tailored to how you sell, whether to consumers, food lovers or other businesses."),
@@ -302,6 +305,10 @@ console.log("ecommerce:", {
   hero: hero.title, tabs: weGotYou.tabs.map((t) => t.label + (t.logo ? " (logo)" : "")),
   whyUs: whyUs.cards.length, features: featuresSimplified.featureCards.length, appSteps: processSection.processCards.length, support: support.cards.length,
 });
+if (ONLY_WGY) {
+  await put(`/api/service-pages/${page.documentId}?status=published`, { weGotYou });
+  process.exit(0);
+}
 if (ONLY_FEATURES) {
   await put(`/api/service-pages/${page.documentId}?status=published`, { featuresSimplified });
   process.exit(0);
