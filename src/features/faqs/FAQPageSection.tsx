@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Section } from "@/components/layout/Section";
 import type { FAQ } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
-import { chipBase } from "@/lib/chip";
 import { FAQCard } from "./FAQCard";
 
 type FAQPageSectionProps = {
@@ -55,7 +54,7 @@ export function FAQPageSection({
                                         setOpenId(null);
                                     }}
                                     className={cn(
-                                        chipBase,
+                                        "whitespace-nowrap rounded-pill border px-5 py-2.5 text-sm font-medium transition-colors",
                                         isActive
                                             ? "border-yellow bg-yellow text-black"
                                             : "border-white/20 bg-space-grey/50 text-white hover:border-white/40 hover:bg-space-grey/70"

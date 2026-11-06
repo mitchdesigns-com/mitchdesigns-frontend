@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Section } from "@/components/layout/Section";
 import { cn } from "@/lib/cn";
-import { chipBase } from "@/lib/chip";
 import type { FAQ } from "@/lib/cms/types";
 import { fixtureFAQs } from "@/lib/cms/fixtures";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion";
@@ -71,8 +70,7 @@ export function FAQSection({
                   setOpenId(null);
                 }}
                 className={cn(
-                  chipBase,
-                  "border-transparent bg-space-grey",
+                  "shrink-0 whitespace-nowrap rounded-pill bg-space-grey px-5 py-2.5 text-sm font-medium transition-colors",
                   activeCategory === cat
                     ? "text-white"
                     : "text-grey-500 hover:text-white"

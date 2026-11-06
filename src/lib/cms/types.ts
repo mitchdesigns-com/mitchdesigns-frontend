@@ -56,9 +56,6 @@ export type CaseStudyBlock =
   | { __component: "blocks.case-point"; title: string; body: string }
   | { __component: "blocks.case-testimonial"; quote: string; author: string; role?: string; avatar?: StrapiImage };
 
-/** Project type — the Strapi `category` enum on a case study. */
-export type ProjectType = "Corporate" | "eCommerce" | "Mobile App" | "Software";
-
 export type CaseStudy = {
   slug: string;
   title: string;
@@ -79,10 +76,8 @@ export type CaseStudy = {
   content?: CaseStudyBlock[];
   featured?: boolean;
   publishedAt: string;
-  /** Project type — shown as a tag on cards and the project page, and used by the work filter. */
-  category?: ProjectType;
-  /** Free-text kind within the type, e.g. "Booking Website" or "ERP" under Software. */
-  subcategory?: string;
+  /** Filter category — e.g. "Corporate", "eCommerce", "Mobile App", "Booking Website" */
+  category?: string;
   /** Full-colour client logo for the white info panel on /case-studies. */
   logo?: StrapiImage;
   /** White logo for the homepage logos grid. */
