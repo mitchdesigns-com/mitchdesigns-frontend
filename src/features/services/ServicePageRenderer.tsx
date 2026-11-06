@@ -39,6 +39,7 @@ const ECOMMERCE_ORDER_STORY = [
   { src: "/images/services/ecommerce/story-4-delivery.webp", alt: "Courier delivering the order to the customer" },
 ];
 import { WeGotYouTabs } from "./sections/WeGotYouTabs";
+import { FeatureGrid } from "./sections/FeatureGrid";
 import { WeGotYouOrbit } from "./sections/WeGotYouOrbit";
 import { WhyUsSection } from "./sections/WhyUsSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -204,7 +205,8 @@ export function ServicePageRenderer({
           {/* The brands we built stores for (CMS heading in `moreAbout`, projects from case studies). */}
           {moreAbout && <ClientWorkFetcher category="eCommerce" title={moreAbout.title} description={moreAbout.description} />}
           {whyUs && <WhyUsSection {...whyUs} />}
-          {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
+          {/* Every feature as a plain grid the page scrolls past (no inner scroll). */}
+          {featuresSimplified && <FeatureGrid {...featuresSimplified} />}
           {/* Website + app: the app playing live on a coded phone (CMS `process` copy). */}
           {process?.processCards?.length ? (
             <AppDemoSection
