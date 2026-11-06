@@ -14,13 +14,13 @@ import { Star } from "@/components/icons/Star";
 import { Tick } from "@/components/icons/Tick";
 import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
-import { armTickFeedback, buzz, chime, pop } from "@/lib/tickFeedback";
+import { armTickFeedback, pop } from "@/lib/tickFeedback";
 import type { FlowStep } from "./appFlow/screens";
 
 /** How long each feature plays before the next (ms). */
 const SCENE_MS = 4600;
-/** Scenes that need longer (index → ms): Apple Pay's sheet, scan and tick. */
-const SCENE_MS_AT: Record<number, number> = { 3: 5600 };
+/** Scenes that need longer (index → ms): Apple Pay, cards, and order tracking (the highlight). */
+const SCENE_MS_AT: Record<number, number> = { 3: 5600, 4: 5600, 6: 6800 };
 const sceneMs = (i: number) => SCENE_MS_AT[i] ?? SCENE_MS;
 /** After a visitor picks a feature, autoplay waits this long (ms). */
 const PAUSE_AFTER_PICK_MS = 9000;
@@ -89,6 +89,12 @@ export function AppDemoSection({
   const inView = useInView(ref, { amount: 0.4 });
   // Latched: the entrance plays once, the first time the section shows.
   const seen = useInView(ref, { amount: 0.25, once: true });
+  // Backdrop under review: ?bd=disc|tile|rings|dots previews the options.
+  const [backdrop, setBackdrop] = useState<BackdropVariant>("disc");
+  useEffect(() => {
+    const v = new URLSearchParams(window.location.search).get("bd");
+    if (v === "tile" || v === "rings" || v === "dots") setBackdrop(v);
+  }, []);
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
   const [pausedUntil, setPausedUntil] = useState(0);
@@ -101,9 +107,9 @@ export function AppDemoSection({
     return () => window.clearTimeout(t);
   }, [active, playing, pausedUntil, steps.length]);
 
-  // Sound: a chime as each chip fills and the next feature starts, then a pop
-  // per floating label as it bursts out (silent until the visitor has
-  // clicked or tapped somewhere, as browsers require; haptic tap on Android).
+  // Sound: one soft pop as each chip fills and the next feature starts, nothing
+  // else (silent until the visitor has clicked or tapped somewhere, as
+  // browsers require).
   useEffect(() => armTickFeedback(), []);
   const firstSound = useRef(true);
   useEffect(() => {
@@ -112,10 +118,7 @@ export function AppDemoSection({
       firstSound.current = false;
       return;
     }
-    chime();
-    buzz(10);
-    const timers = [0, 1, 2].map((k) => window.setTimeout(() => pop(1 + k * 0.18), (MOVE_S * 0.6 + k * 0.12 + 0.15) * 1000));
-    return () => timers.forEach((t) => window.clearTimeout(t));
+    pop(0.8);
   }, [active, seen, reduced]);
 
   const pick = (i: number) => {
@@ -190,23 +193,7 @@ export function AppDemoSection({
 
         {/* The stage: a yellow disc with a ripple on every feature, tokens popping out, the phone in 3D */}
         <div aria-hidden className="relative mx-auto aspect-square w-full max-w-3xl md:col-span-7">
-          {/* The disc grows in when the section arrives */}
-          <motion.div
-            className="absolute inset-1/12 rounded-full bg-yellow"
-            initial={reduced ? false : { scale: 0.3, opacity: 0 }}
-            animate={seen || reduced ? { scale: 1, opacity: 1 } : { scale: 0.3, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 90, damping: 16 }}
-          />
-          {!reduced &&
-            [0, 1].map((k) => (
-              <motion.div
-                key={`${active}-${k}`}
-                className="absolute inset-1/12 rounded-full border-2 border-yellow"
-                initial={{ scale: 1, opacity: 0.9 }}
-                animate={{ scale: 1.35, opacity: 0 }}
-                transition={{ delay: 0.15 + k * 0.35, duration: 1.6, ease: "easeOut" }}
-              />
-            ))}
+          <Backdrop variant={backdrop} active={active} seen={seen} reduced={!!reduced} />
           {/* Ground shadow */}
           <div className="absolute bottom-1/12 left-1/2 h-6 w-2/5 -translate-x-1/2 rounded-full bg-black/25 blur-xl" />
 
@@ -282,6 +269,103 @@ export function AppDemoSection({
         </div>
       </div>
     </Section>
+  );
+}
+
+// ── Backdrops (behind the phone) ────────────────────────────────────────────
+
+type BackdropVariant = "disc" | "tile" | "rings" | "dots";
+
+function Backdrop({ variant, active, seen, reduced }: { variant: BackdropVariant; active: number; seen: boolean; reduced: boolean }) {
+  const grow = {
+    initial: reduced ? false : { scale: 0.3, opacity: 0 },
+    animate: seen || reduced ? { scale: 1, opacity: 1 } : { scale: 0.3, opacity: 0 },
+    transition: { type: "spring" as const, stiffness: 90, damping: 16 },
+  };
+  if (variant === "tile") {
+    // A big tilted app-icon tile; its outline pulses out on every feature.
+    return (
+      <>
+        <motion.div className="absolute inset-1/6 rotate-6 rounded-phone bg-yellow" {...grow} />
+        {!reduced && (
+          <motion.div
+            key={active}
+            className="absolute inset-1/6 rotate-6 rounded-phone border-2 border-yellow"
+            initial={{ scale: 1, opacity: 0.9 }}
+            animate={{ scale: 1.3, opacity: 0 }}
+            transition={{ delay: 0.15, duration: 1.4, ease: "easeOut" }}
+          />
+        )}
+      </>
+    );
+  }
+  if (variant === "rings") {
+    // Thin orbit rings with yellow dots circling, a soft glow in the middle.
+    return (
+      <>
+        <motion.div className="absolute inset-1/4 rounded-full bg-yellow blur-3xl" {...grow} />
+        {["inset-0", "inset-1/12", "inset-1/6"].map((inset, k) => (
+          <motion.div
+            key={inset}
+            className={cn("absolute rounded-full border border-black/10", inset)}
+            initial={reduced ? false : { opacity: 0, scale: 0.8 }}
+            animate={seen || reduced ? { opacity: 1, scale: 1, rotate: reduced ? 0 : 360 } : { opacity: 0, scale: 0.8 }}
+            transition={{ opacity: { delay: 0.1 * k }, scale: { delay: 0.1 * k }, rotate: { duration: 30 + k * 12, repeat: Infinity, ease: "linear" } }}
+          >
+            <span className={cn("absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow", k === 1 ? "top-1/2 left-0" : k === 2 ? "top-full left-1/2" : "top-0 left-1/2")} />
+          </motion.div>
+        ))}
+        {!reduced && (
+          <motion.div
+            key={active}
+            className="absolute inset-1/6 rounded-full border-2 border-yellow"
+            initial={{ scale: 0.8, opacity: 0.9 }}
+            animate={{ scale: 1.2, opacity: 0 }}
+            transition={{ delay: 0.15, duration: 1.4, ease: "easeOut" }}
+          />
+        )}
+      </>
+    );
+  }
+  if (variant === "dots") {
+    // A dotted grid fading out at the edges, with a yellow glow under the phone.
+    return (
+      <>
+        <motion.div
+          className="absolute inset-0 bg-dots"
+          style={{ maskImage: "radial-gradient(circle, black 35%, transparent 70%)" }}
+          initial={reduced ? false : { opacity: 0 }}
+          animate={seen || reduced ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.8 }}
+        />
+        <motion.div className="absolute inset-1/4 rounded-full bg-yellow blur-3xl" {...grow} />
+        {!reduced && (
+          <motion.div
+            key={active}
+            className="absolute inset-1/4 rounded-full bg-yellow blur-2xl"
+            initial={{ scale: 0.9, opacity: 0.6 }}
+            animate={{ scale: 1.5, opacity: 0 }}
+            transition={{ delay: 0.1, duration: 1.2, ease: "easeOut" }}
+          />
+        )}
+      </>
+    );
+  }
+  // "disc": the yellow disc with a ripple on every feature.
+  return (
+    <>
+      <motion.div className="absolute inset-1/12 rounded-full bg-yellow" {...grow} />
+      {!reduced &&
+        [0, 1].map((k) => (
+          <motion.div
+            key={`${active}-${k}`}
+            className="absolute inset-1/12 rounded-full border-2 border-yellow"
+            initial={{ scale: 1, opacity: 0.9 }}
+            animate={{ scale: 1.35, opacity: 0 }}
+            transition={{ delay: 0.15 + k * 0.35, duration: 1.6, ease: "easeOut" }}
+          />
+        ))}
+    </>
   );
 }
 
@@ -571,33 +655,98 @@ function ApplePayScene() {
   );
 }
 
-/** 5. Credit card: the card flips in, the number types out, paid. */
+/** Visa / Mastercard marks, drawn (decorative). */
+function VisaMark({ className }: { className?: string }) {
+  return <span className={cn("text-sm font-black tracking-tight italic", className)}>VISA</span>;
+}
+function MastercardMark() {
+  return (
+    <span className="flex">
+      <span className="size-5 rounded-full bg-mastercard-red" />
+      <span className="-ml-2 size-5 rounded-full bg-mastercard-orange opacity-90" />
+    </span>
+  );
+}
+
+/**
+ * 5. Credit card: Visa and Mastercard as chips, the Visa card in front, then
+ * a tap on the Mastercard chip shuffles that card forward, its number types
+ * out and the payment goes through.
+ */
 function CardScene() {
-  const digits = "4242";
+  const [brand, setBrand] = useState<"visa" | "mc">("visa");
+  useEffect(() => {
+    const t = window.setTimeout(() => setBrand("mc"), (MOVE_S + 1.1) * 1000);
+    return () => window.clearTimeout(t);
+  }, []);
+  const cards = [
+    { id: "visa" as const, className: "bg-visa text-white", mark: <VisaMark />, digits: "4242" },
+    { id: "mc" as const, className: "bg-black text-white", mark: <MastercardMark />, digits: "5454" },
+  ];
   return (
     <Screen title="Pay by card">
-      <motion.div
-        className="flex aspect-8/5 flex-col justify-between rounded-card-sm bg-black p-4 text-white"
-        initial={{ rotateY: 90, opacity: 0 }}
-        animate={{ rotateY: 0, opacity: 1 }}
-        transition={after(0)}
-      >
-        <span className="h-5 w-7 rounded-sm bg-yellow" />
-        <p className="text-xs font-semibold whitespace-nowrap tabular-nums">
-          •••• •••• ••••{" "}
-          {digits.split("").map((d, i) => (
-            <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: MOVE_S + 0.5 + i * 0.15 }}>
-              {d}
-            </motion.span>
-          ))}
-        </p>
-        <div className="flex justify-between text-xs"><span>NOUR SAMIR</span><span>08/29</span></div>
-      </motion.div>
-      <motion.div className="flex items-center gap-2 text-xs font-semibold" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={after(1.2)}>
+      {/* Brand chips */}
+      <div className="flex gap-1.5">
+        {cards.map((c) => (
+          <motion.span
+            key={c.id}
+            className={cn(
+              "flex items-center gap-1.5 rounded-pill border px-2.5 py-1 text-xs font-semibold transition-colors duration-300",
+              brand === c.id ? "border-black bg-black text-white" : "border-black/15 bg-white text-black",
+            )}
+            animate={c.id === "mc" ? { scale: [1, 1, 0.9, 1] } : undefined}
+            transition={{ delay: MOVE_S + 0.9, duration: 0.35, times: [0, 0.01, 0.5, 1] }}
+          >
+            {c.id === "visa" ? <VisaMark className={brand === "visa" ? "text-white" : "text-visa"} /> : <MastercardMark />}
+            {c.id === "visa" ? "Visa" : "Mastercard"}
+          </motion.span>
+        ))}
+      </div>
+
+      {/* The two cards, the chosen one in front */}
+      <div className="relative mt-1 aspect-8/5">
+        {cards.map((c) => {
+          const front = brand === c.id;
+          return (
+            <motion.div
+              key={c.id}
+              className={cn("absolute inset-0 flex flex-col justify-between rounded-card-sm p-3.5 shadow-soft-lg", c.className)}
+              initial={{ y: 40, opacity: 0, rotate: c.id === "visa" ? -4 : 6 }}
+              animate={{
+                y: front ? 0 : -16,
+                x: front ? 0 : 10,
+                scale: front ? 1 : 0.92,
+                rotate: front ? 0 : 5,
+                opacity: 1,
+                zIndex: front ? 2 : 1,
+              }}
+              transition={{ delay: brand === "visa" ? MOVE_S + (c.id === "visa" ? 0 : 0.12) : 0, type: "spring", stiffness: 240, damping: 20 }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="h-4 w-6 rounded-sm bg-yellow" />
+                {c.mark}
+              </div>
+              <p className="text-xs font-semibold whitespace-nowrap tabular-nums">
+                •••• •••• ••••{" "}
+                {front && brand === "mc"
+                  ? c.digits.split("").map((d, i) => (
+                      <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 + i * 0.12 }}>
+                        {d}
+                      </motion.span>
+                    ))
+                  : c.digits}
+              </p>
+              <div className="flex justify-between text-xs"><span>NOUR SAMIR</span><span>08/29</span></div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <motion.div className="flex items-center gap-2 text-xs font-semibold" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={after(1.8)}>
         <span className="flex size-4 items-center justify-center rounded-sm bg-yellow text-xs">✓</span>
         Secure payment
       </motion.div>
-      <PressButton label="Pay 3,250 EGP" done="Paid ✓" at={1.6} className="mt-auto bg-yellow" />
+      <PressButton label="Pay 3,250 EGP" done="Paid ✓" at={2.4} className="mt-auto bg-yellow" />
     </Screen>
   );
 }
@@ -629,41 +778,120 @@ function SavedCardScene() {
   );
 }
 
-/** 7. Order tracking: the scooter rides the route, steps tick off. */
+/** Route on the tracking map, in % of the map (store → door). */
+const ROUTE = [
+  [14, 86],
+  [14, 46],
+  [52, 46],
+  [52, 24],
+  [80, 24],
+];
+
+/**
+ * 7. Order tracking (the longest scene): a live map where the driver rides
+ * the route to the door, the ETA counts down, the steps tick off, the driver
+ * card slides up and a "nearby" alert drops in at the end.
+ */
 function TrackingScene() {
-  const stops = ["Confirmed", "Packed", "On the way", "Delivered"];
+  const eta = useCount(12, 3, MOVE_S + 0.2, 3.6);
+  const steps = ["Confirmed", "Packed", "On the way", "Here"];
+  const xs = ROUTE.map(([x]) => `${x}%`);
+  const ys = ROUTE.map(([, y]) => `${y}%`);
   return (
-    <Screen title="Track order">
-      <div className="relative h-28 overflow-hidden rounded-card-sm bg-panel">
-        <div className="absolute top-1/2 right-6 left-6 h-1 -translate-y-1/2 rounded-pill bg-black/10" />
-        <motion.div className="absolute top-1/2 left-6 h-1 -translate-y-1/2 rounded-pill bg-black" initial={{ width: "0%" }} animate={{ width: "70%" }} transition={{ delay: MOVE_S, duration: 2.2, ease: "easeInOut" }} />
-        <motion.div
-          className="absolute top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-yellow"
-          initial={{ left: "4%" }}
-          animate={{ left: "68%", y: [0, -3, 0, -3, 0] }}
-          transition={{ delay: MOVE_S, duration: 2.2, ease: "easeInOut" }}
+    <div className="relative flex size-full flex-col text-black">
+      {/* Map */}
+      <div className="relative h-3/5 overflow-hidden bg-panel">
+        {/* Streets */}
+        {["top-1/4", "top-1/2", "top-3/4"].map((t) => (
+          <span key={t} className={cn("absolute inset-x-0 h-2 bg-white", t)} />
+        ))}
+        {["left-1/6", "left-1/2", "left-4/5"].map((l) => (
+          <span key={l} className={cn("absolute inset-y-0 w-2 bg-white", l)} />
+        ))}
+        {/* Route, drawn as the driver rides it */}
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full" aria-hidden>
+          <polyline points={ROUTE.map((p) => p.join(",")).join(" ")} fill="none" stroke="currentColor" strokeOpacity="0.15" strokeWidth="2.5" vectorEffect="non-scaling-stroke" strokeDasharray="4 4" />
+          <motion.polyline
+            points={ROUTE.map((p) => p.join(",")).join(" ")}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ delay: MOVE_S + 0.2, duration: 3.6, ease: "linear" }}
+          />
+        </svg>
+        {/* Destination */}
+        <span className="absolute -translate-x-1/2 -translate-y-full" style={{ left: "80%", top: "24%" }}>
+          <motion.span
+            className="absolute bottom-0 left-1/2 size-8 -translate-x-1/2 translate-y-1/2 rounded-full bg-yellow"
+            animate={{ scale: [0.6, 1.4], opacity: [0.7, 0] }}
+            transition={{ duration: 1.4, repeat: Infinity }}
+          />
+          <MapPinIcon size={26} className="relative" />
+        </span>
+        {/* Driver */}
+        <motion.span
+          className="absolute flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-yellow shadow-soft-lg ring-2 ring-white"
+          initial={{ left: xs[0], top: ys[0] }}
+          animate={{ left: xs, top: ys }}
+          transition={{ delay: MOVE_S + 0.2, duration: 3.6, ease: "linear" }}
         >
           <ScooterIcon size={18} />
+        </motion.span>
+        {/* "Nearby" alert */}
+        <motion.div
+          className="absolute inset-x-2 top-9 flex items-center gap-2 rounded-card-sm bg-black px-3 py-2 text-xs font-semibold text-white"
+          initial={{ y: -70, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={springAfter(3.4)}
+        >
+          <BellIcon size={14} />
+          Your order is around the corner
         </motion.div>
-        <span className="absolute top-1/2 right-4 size-3 -translate-y-1/2 rounded-full border-2 border-black bg-white" />
       </div>
-      <div className="flex flex-col gap-2">
-        {stops.map((s, i) => (
-          <div key={s} className="flex items-center gap-2 text-xs font-semibold">
-            <motion.span
-              className="size-4 rounded-full border-2 border-black"
-              initial={{ backgroundColor: "#ffffff" }}
-              animate={{ backgroundColor: i < 3 ? "#ffdb00" : "#ffffff" }}
-              transition={{ delay: MOVE_S + 0.3 + i * 0.6 }}
-            />
-            {s}
+
+      {/* Sheet */}
+      <motion.div
+        className="-mt-4 flex flex-1 flex-col gap-3 rounded-t-card bg-white px-4 pt-4 pb-5 shadow-soft-lg"
+        initial={{ y: 60 }}
+        animate={{ y: 0 }}
+        transition={springAfter(0)}
+      >
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-xs font-semibold">Arriving in</p>
+            <p className="text-2xl font-bold tabular-nums">{eta} min</p>
           </div>
-        ))}
-      </div>
-      <motion.p className="mt-auto rounded-pill bg-black py-3 text-center text-sm font-bold text-white" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={after(1.4)}>
-        Arriving in 12 min
-      </motion.p>
-    </Screen>
+          <div className="flex items-center gap-2">
+            <span className="flex size-8 items-center justify-center rounded-full bg-yellow text-xs font-bold">A</span>
+            <div className="text-xs">
+              <p className="font-bold">Ahmed</p>
+              <p className="flex items-center gap-0.5"><Star size={10} filled /> 4.9</p>
+            </div>
+          </div>
+        </div>
+        {/* Steps */}
+        <div className="flex gap-1">
+          {steps.map((s, i) => (
+            <div key={s} className="flex flex-1 flex-col gap-1">
+              <div className="h-1.5 overflow-hidden rounded-pill bg-panel">
+                <motion.div
+                  className="h-full rounded-pill bg-black"
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ delay: MOVE_S + 0.2 + i * 0.9, duration: 0.9, ease: "linear" }}
+                />
+              </div>
+              <span className="text-xs font-semibold whitespace-nowrap">{s}</span>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
