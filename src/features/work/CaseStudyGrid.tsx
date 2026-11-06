@@ -154,7 +154,8 @@ export function CaseStudyGrid({
         {/* Category filter — derived from the data */}
         {(
           // Phones: one row that scrolls sideways (like the service switcher).
-          <div className="-mx-(--container-padding) flex gap-2 overflow-x-auto px-(--container-padding) scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
+          // Sticky: pins to the top while the list scrolls, released at its end.
+          <div className="sticky top-0 z-40 -mx-(--container-padding) flex gap-2 overflow-x-auto bg-bg px-(--container-padding) py-4 scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
             {filters.map(({ value: cat, label }) => (
               <button
                 key={cat}
