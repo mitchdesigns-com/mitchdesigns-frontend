@@ -1079,7 +1079,7 @@ export const fixtureAboutPage: AboutContent = {
   approach: {
     eyebrow: "Our Culture",
     title: "A culture of continuous learning.",
-    body: "To innovate products and offer high-technology digital services to premium brands, it takes a culture of transparency, an open mind, flexibility, mutual respect, consultation first and consistency.\n\nOur people are encouraged to question, experiment and keep growing every single day.\n\nWe believe in these values inside the company, and our clients feel them in everything we deliver. That is how innovation, sustainability and growth show up in their products, and why they keep building with us.",
+    body: "To innovate products and offer high-technology digital services to premium brands, it takes a culture of transparency, an open mind, flexibility, mutual respect, consultation first and consistency.\n\nOur people are encouraged to question, experiment and keep growing every single day.\n\nWe believe in these values inside the company, and the brands we work with feel them in everything we deliver. That is how innovation, sustainability and growth show up in their products, and why they keep building with us.",
     image: null,
   },
   innovate: {
@@ -1091,13 +1091,13 @@ export const fixtureAboutPage: AboutContent = {
     heading:
       "Our success is the work we do. It brings more brands to trust us with their digital presence and the technology behind it.",
     caption:
-      "Trust, support and partnership shape how we work with every client. MitchDesigns is a network of premium brands we are glad to work with.",
+      "Trust, support and partnership shape how we work with every brand. MitchDesigns is a network of premium brands we are glad to work with.",
     groupPhoto: null,
   },
   story: {
     eyebrow: "Our Story",
     title:
-      "Since 2005, we’ve partnered with over 200 clients across 15 industries to innovate and transform the digital landscape in Egypt and the MENA region.",
+      "Since 2005, we’ve partnered with over 500 brands across 15 industries to innovate and transform the digital landscape in Egypt and the MENA region.",
     cards: [
       {
         image: null,
@@ -1105,7 +1105,7 @@ export const fixtureAboutPage: AboutContent = {
       },
       {
         image: null,
-        body: [{"type": "paragraph", "children": [{"type": "text", "text": "We measure ourselves by "}, {"type": "text", "text": "the work", "bold": true}, {"type": "text", "text": " and by the brands that come back to us. Clients trust us with their digital presence, and we answer with support that continues "}, {"type": "text", "text": "long after launch", "bold": true}, {"type": "text", "text": "."}]}],
+        body: [{"type": "paragraph", "children": [{"type": "text", "text": "We measure ourselves by "}, {"type": "text", "text": "the work", "bold": true}, {"type": "text", "text": " and by the brands that come back to us. They trust us with their digital presence, and we answer with support that continues "}, {"type": "text", "text": "long after launch", "bold": true}, {"type": "text", "text": "."}]}],
       },
       { image: null, body: "" },
       { image: null, body: "" },
