@@ -194,7 +194,7 @@
   /* About copy — scales with viewport height too, so the pinned About screen
      always fits with breathing room (20px → 32px). */
   --text-about-body: clamp(1.25rem, min(2.2vw, 3.6svh), 2rem);
-  --text-about-body--line-height: 1.5;
+  --text-about-body--line-height: 1.3;
   --text-review-sm: 0.8125rem; /* 13px — compact testimonial quote (mobile) */
   --text-sm: 0.875rem; /* 14px */
   --text-sm--line-height: 1.3;
@@ -209,6 +209,8 @@
   --radius-card-md: 1.25rem; /* 20px — testimonial cards */
   --radius-card-sm: 0.625rem; /* 10px — FAQs, featured, tech */
   --radius-pill: 9999px;
+  --radius-phone: 2.75rem; /* coded phone frame */
+  --radius-phone-screen: 2.25rem; /* its screen */
 
   /* ---------------- Shadows (soft modern) ---------------- */
   --shadow-soft: 0 4px 24px -8px rgb(7 2 13 / 0.08);

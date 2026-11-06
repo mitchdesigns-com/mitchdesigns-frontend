@@ -1118,7 +1118,7 @@ export const fixtureHomePage: HomePageData = {
     rotatingWords: ["Convert", "Engage", "Interact", "Succeed", "Grow"],
   },
   about: {
-    body: "In 2005, I built my first corporate website.\n\nThen came online stores, mobile apps, dashboards and ERPs, and the campaigns that brought them customers.\n\nAlong the way I learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nTo give them systems that automate their work for the AI era, and experiences their customers love.\n\nSo they grow, scale and earn more. That's what my team and I build, every single day.",
+    body: "In 2005, we built our first corporate website in Egypt.\n\nBrands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.\n\nTwenty years and 500 projects later, we learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nWe give them systems that automate their work for the AI era, and experiences their customers love to use.\n\nWe connect design, data and marketing into one platform that works as hard as they do.\n\nSo they grow, scale and earn more.\n\nI still put my name on every project, because every one of them carries it.",
     signature: "Mitch",
     stats: [
       { value: "20+", unit: "Years", label: "Years of experience," },

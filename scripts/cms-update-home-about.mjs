@@ -10,14 +10,17 @@ if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API to
 const headers = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
 
 // No em dashes, no colons.
-// Short story lines, one beat each (each is its own paragraph).
+// Short story lines, one beat each (each is its own paragraph). Told as "we";
+// one personal "I" at the end, above the signature.
 export const BODY = [
-  "In 2005, I built my first corporate website.",
-  "Then came online stores, mobile apps, dashboards and ERPs, and the campaigns that brought them customers.",
-  "Along the way I learned that pretty was never the goal.",
+  "In 2005, we built our first corporate website in Egypt.",
+  "Brands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.",
+  "Twenty years and 500 projects later, we learned that pretty was never the goal.",
   "Our mission is to transform successful brands digitally.",
-  "To give them systems that automate their work for the AI era, and experiences their customers love.",
-  "So they grow, scale and earn more. That's what my team and I build, every single day.",
+  "We give them systems that automate their work for the AI era, and experiences their customers love to use.",
+  "We connect design, data and marketing into one platform that works as hard as they do.",
+  "So they grow, scale and earn more.",
+  "I still put my name on every project, because every one of them carries it.",
 ];
 // Phrases the scroll sweep marks by hand.
 const MARKS = [

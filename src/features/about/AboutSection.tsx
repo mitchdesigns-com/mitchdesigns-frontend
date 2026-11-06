@@ -33,7 +33,7 @@ const DEFAULT_STATS = [
 ];
 
 const DEFAULT_BODY =
-  "In 2005, I built my first corporate website.\n\nThen came online stores, mobile apps, dashboards and ERPs, and the campaigns that brought them customers.\n\nAlong the way I learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nTo give them systems that automate their work for the AI era, and experiences their customers love.\n\nSo they grow, scale and earn more. That's what my team and I build, every single day.";
+  "In 2005, we built our first corporate website in Egypt.\n\nBrands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.\n\nTwenty years and 500 projects later, we learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nWe give them systems that automate their work for the AI era, and experiences their customers love to use.\n\nWe connect design, data and marketing into one platform that works as hard as they do.\n\nSo they grow, scale and earn more.\n\nI still put my name on every project, because every one of them carries it.";
 
 const DEFAULT_SIGNATURE = "Mitch";
 
@@ -120,8 +120,11 @@ function BodyChar({
   sweep,
   writeAt,
   sweepAt,
+  paraBreak = false,
 }: {
   char: string;
+  /** The second newline of a paragraph break: a small gap, not a whole empty line. */
+  paraBreak?: boolean;
   write: MotionValue<number>;
   sweep: MotionValue<number>;
   writeAt: number;
@@ -129,7 +132,7 @@ function BodyChar({
 }) {
   const opacity = useTransform(write, [writeAt, writeAt + WRITE_WINDOW], [0, 1]);
   const color = useTransform(sweep, [sweepAt, sweepAt + SWEEP_WINDOW], [GREY, WHITE]);
-  if (char === "\n") return <br />;
+  if (char === "\n") return paraBreak ? <span aria-hidden className="block h-1" /> : <br />;
   return <motion.span style={{ opacity, color }}>{char}</motion.span>;
 }
 
@@ -360,9 +363,9 @@ export function AboutSection({
             {/* Right — body copy + signature */}
             <div
               ref={textRef}
-              className="order-2 flex max-w-[895px] flex-col items-center gap-10 text-center lg:order-none lg:items-start lg:text-left"
+              className="order-2 flex max-w-2xl flex-col items-center gap-10 text-center lg:order-none lg:items-start lg:text-left"
             >
-              <p className="text-[1.5rem] leading-normal tracking-[0.01em] text-balance sm:text-[1.75rem] lg:text-about-body">
+              <p className="text-[1.5rem] leading-snug tracking-[0.01em] text-balance sm:text-[1.75rem] lg:text-about-body">
                 <span className="sr-only">{text}</span>
                 <span aria-hidden>
                   {segments.map((seg) => {
@@ -374,6 +377,7 @@ export function AboutSection({
                         sweep={drive}
                         writeAt={bodyWriteAt(seg.start + k)}
                         sweepAt={bodySweepAt(seg.start + k)}
+                        paraBreak={char === "\n" && text[seg.start + k - 1] === "\n"}
                       />
                     ));
                     if (!seg.mark) return <Fragment key={seg.start}>{chars}</Fragment>;

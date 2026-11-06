@@ -17,8 +17,9 @@ import { SeoScene } from "./seoScene/SeoScene";
 import { TabletVideoSection } from "./googleAdsScene/TabletVideoSection";
 import { MacbookVideoSection } from "./mediaBuyingScene/MacbookVideoSection";
 import { workStepSummary } from "./sections/workSteps";
+import { ClientWorkFetcher } from "./sections/ClientWorkFetcher";
 import { SupportStack } from "./sections/SupportStack";
-import { AppLoopSection } from "./sections/AppLoopSection";
+import { AppDemoSection } from "./sections/AppDemoSection";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
 import { appFlowSteps } from "./sections/appFlow/steps";
 
@@ -192,17 +193,13 @@ export function ServicePageRenderer({
                 <WeGotYouOrbit {...ecommerceWeGotYou} />
               );
             })()}
+          {/* The brands we built stores for (CMS heading in `moreAbout`, projects from case studies). */}
+          {moreAbout && <ClientWorkFetcher category="eCommerce" title={moreAbout.title} description={moreAbout.description} />}
           {whyUs && <WhyUsSection {...whyUs} />}
           {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
-          {/* Website + app: the retention story beside our real eCommerce app (CMS `process`). */}
+          {/* Website + app: the app playing live on a coded phone (CMS `process` copy). */}
           {process?.processCards?.length ? (
-            <AppLoopSection
-              eyebrow={process.eyebrow}
-              title={process.title}
-              steps={appFlowSteps(process)}
-              closingTitle={process.closingTitle}
-              closingText={process.closingText}
-            />
+            <AppDemoSection eyebrow={process.eyebrow} title={process.title} steps={appFlowSteps(process)} />
           ) : null}
           {/* Same stack as Corporate, minus the CMS (stores run on their own engine). */}
           <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["Strapi"]} />

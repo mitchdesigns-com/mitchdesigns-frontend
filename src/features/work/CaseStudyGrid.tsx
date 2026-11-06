@@ -98,6 +98,14 @@ export function CaseStudyGrid({
     [caseStudies],
   );
 
+  // `?category=eCommerce` (e.g. from a service page) opens on that filter.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("category");
+    const match = wanted && categories.find((c) => c.toLowerCase() === wanted.toLowerCase());
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match) setActiveCategory(match);
+  }, [categories]);
+
   const filtered = activeCategory === "All"
     ? caseStudies
     : caseStudies.filter(
