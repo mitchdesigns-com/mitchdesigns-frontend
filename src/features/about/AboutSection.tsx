@@ -77,6 +77,8 @@ const SIG_COLOR: [number, number] = [0.78, 0.88];
 const SIG_UNDERLINE: [number, number] = [0.85, 0.98];
 // Extra scroll (beyond one screen) the section stays pinned for on desktop.
 const PIN_SCROLL_SVH = 160;
+// Space kept above and below the pinned block (px).
+const PIN_GUTTER = 96;
 
 type Segment = { text: string; start: number; mark?: DoodleShape };
 
@@ -179,13 +181,28 @@ export function AboutSection({
   const pinnedRef = useRef(false);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px) and (min-height: 700px)");
+    // …and only when the block fits with breathing room above and below
+    // (PIN_GUTTER each side); otherwise it scrolls past normally.
     const sync = () => {
-      pinnedRef.current = mq.matches;
-      setPinned(mq.matches);
+      // Content height, without the block's own padding (which differs pinned/unpinned).
+      const el = blockRef.current;
+      const cs = el ? getComputedStyle(el) : null;
+      const h = el && cs ? el.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) : Infinity;
+      const fits = h + PIN_GUTTER * 2 <= window.innerHeight;
+      const next = mq.matches && fits;
+      pinnedRef.current = next;
+      setPinned(next);
     };
     sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    window.addEventListener("resize", sync);
+    const ro = new ResizeObserver(sync);
+    if (blockRef.current) ro.observe(blockRef.current);
+    return () => {
+      mq.removeEventListener("change", sync);
+      window.removeEventListener("resize", sync);
+      ro.disconnect();
+    };
   }, []);
 
   // One scroll driver for the sweep, fed by whichever layout is active.
@@ -283,12 +300,12 @@ export function AboutSection({
         style={pinned ? { height: `calc(100svh + ${PIN_SCROLL_SVH}svh)` } : undefined}
       >
         {/* Pinned: a full screen with fixed breathing room above and below. */}
-        <div className={cn(pinned && "sticky top-0 flex h-svh items-center py-20")}>
+        <div className={cn(pinned && "sticky top-0 flex h-svh items-center py-24")}>
           <div
             ref={blockRef}
             className={cn(
               "container-page flex flex-col items-center gap-14 bg-black lg:flex-row lg:items-start lg:justify-between lg:gap-16",
-              pinned ? "py-0" : "py-14",
+              pinned ? "py-0" : "py-14 lg:py-24",
             )}
           >
             {/* Left — stats + CTA. Below lg this column dissolves (`contents`)
