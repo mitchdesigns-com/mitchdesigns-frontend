@@ -2,7 +2,7 @@
 import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
-import { blocksToText } from "./blocks";
+import { blocksToText, blocksBoldRuns } from "./blocks";
 import { LEADS_URL, MERGED_SERVICES } from "@/config/nav";
 import { SITE_SETTINGS_FALLBACK } from "./siteDefaults";
 import type {
@@ -452,14 +452,20 @@ export const getHomePage = async (): Promise<HomePageData> => {
               cta: raw.about.ctaLabel
                 ? { label: raw.about.ctaLabel, href: raw.about.ctaHref ?? "#" }
                 : undefined,
-              marks: Array.isArray(raw.about.marks) && raw.about.marks.length
-                ? raw.about.marks
-                    .filter((m: any) => m?.phrase)
-                    .map((m: any) => ({
-                      phrase: m.phrase,
-                      shape: m.shape === "strike" || m.shape === "swash" ? m.shape : "wave",
-                    }))
-                : undefined,
+              // Doodle marks from the CMS, plus any words bolded in the body.
+              marks: (() => {
+                const doodles = Array.isArray(raw.about.marks)
+                  ? raw.about.marks
+                      .filter((m: any) => m?.phrase)
+                      .map((m: any) => ({
+                        phrase: m.phrase as string,
+                        shape: (m.shape === "strike" || m.shape === "swash" ? m.shape : "wave") as "strike" | "swash" | "wave",
+                      }))
+                  : [];
+                const bold = blocksBoldRuns(raw.about.body).map((r) => ({ ...r, shape: "bold" as const }));
+                const all = [...doodles, ...bold];
+                return all.length ? all : undefined;
+              })(),
             }
           : undefined,
         orderbaseOverview: raw.orderbaseOverview

@@ -28,12 +28,22 @@ import { Doodle, type DoodleShape } from "./Doodle";
 
 const DEFAULT_STATS = [
   { value: "20+", unit: "Years", label: "Years of experience," },
-  { value: "400+", unit: "Projects", label: "Delivered with Impact" },
+  { value: "500+", unit: "Projects", label: "Delivered with Impact" },
   { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
 ];
 
-const DEFAULT_BODY =
-  "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns into results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don’t chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it’s always about the user, the customer, and their experience. That’s why Mitch Designs has become the partner businesses trust when growth can’t wait.";
+// Told as "we", with one "I" (the founding). No em dashes, no colons.
+const DEFAULT_BODY = [
+  "In 2005, I founded MitchDesigns, and we built our first corporate website in Egypt.",
+  "Brands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.",
+  "Twenty years and 500 projects later, we learned that pretty was never the goal.",
+  "Our mission is to transform successful brands digitally.",
+  "We give them systems that automate their work for the AI era, and experiences their customers love to use.",
+  "We work as partners, not vendors. We share their targets, sit at the same table and stay long after launch.",
+  "And we keep everything transparent. Clear scope, clear pricing, honest numbers and no surprises.",
+  "We connect design, data and marketing into one platform, so they grow, scale and earn.",
+  "And we never stop innovating, so every brand we work with gets a service that stays hassle free, today and for years to come.",
+].join("\n\n");
 
 const DEFAULT_SIGNATURE = "Mitch";
 
@@ -48,9 +58,11 @@ const BADGE_TEXT = "Since 2005 • Built in Egypt • ";
 // Phrases that get a hand-drawn yellow mark as the white sweep passes them.
 // Matched against the (CMS-editable) body; a phrase that isn't there is skipped.
 // CMS `about.marks` replaces these.
-const DEFAULT_MARKS: { phrase: string; shape: DoodleShape }[] = [
-  { phrase: "“pretty”", shape: "strike" },
-  { phrase: "measurable success", shape: "wave" },
+// "bold" just sets the words in bold (`at` pins the spot: "earn" is also in "learned").
+type Mark = { phrase: string; shape: DoodleShape | "bold"; at?: number };
+const DEFAULT_MARKS: Mark[] = [
+  { phrase: "pretty was never the goal", shape: "strike" },
+  ...["grow", "scale", "earn"].map((w) => ({ phrase: w, shape: "bold" as const, at: DEFAULT_BODY.lastIndexOf(` ${w}`) + 1 })),
 ];
 
 // Colour stops (mirror the grey-600 / white / yellow tokens — interpolated in JS).
@@ -77,11 +89,14 @@ const SIG_COLOR: [number, number] = [0.78, 0.88];
 const SIG_UNDERLINE: [number, number] = [0.85, 0.98];
 // Extra scroll (beyond one screen) the section stays pinned for on desktop.
 const PIN_SCROLL_SVH = 160;
+// Space kept above and below the pinned block (px).
+const PIN_GUTTER = 96;
 
-type Segment = { text: string; start: number; mark?: DoodleShape };
+type Segment = { text: string; start: number; mark?: Mark["shape"] };
 
-function splitMarks(body: string, marks: { phrase: string; shape: DoodleShape }[]): Segment[] {
-  const hits = marks.map((m) => ({ ...m, at: body.indexOf(m.phrase) }))
+function splitMarks(body: string, marks: Mark[]): Segment[] {
+  const hits = marks
+    .map((m) => ({ ...m, at: m.at != null && body.startsWith(m.phrase, m.at) ? m.at : body.indexOf(m.phrase) }))
     .filter((m) => m.at >= 0)
     .sort((a, b) => a.at - b.at);
   const segments: Segment[] = [];
@@ -120,8 +135,11 @@ function BodyChar({
   sweep,
   writeAt,
   sweepAt,
+  paraBreak = false,
 }: {
   char: string;
+  /** The second newline of a paragraph break: a small gap, not a whole empty line. */
+  paraBreak?: boolean;
   write: MotionValue<number>;
   sweep: MotionValue<number>;
   writeAt: number;
@@ -129,7 +147,7 @@ function BodyChar({
 }) {
   const opacity = useTransform(write, [writeAt, writeAt + WRITE_WINDOW], [0, 1]);
   const color = useTransform(sweep, [sweepAt, sweepAt + SWEEP_WINDOW], [GREY, WHITE]);
-  if (char === "\n") return <br />;
+  if (char === "\n") return paraBreak ? <span aria-hidden className="block h-1" /> : <br />;
   return <motion.span style={{ opacity, color }}>{char}</motion.span>;
 }
 
@@ -176,13 +194,28 @@ export function AboutSection({
   const pinnedRef = useRef(false);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px) and (min-height: 700px)");
+    // …and only when the block fits with breathing room above and below
+    // (PIN_GUTTER each side); otherwise it scrolls past normally.
     const sync = () => {
-      pinnedRef.current = mq.matches;
-      setPinned(mq.matches);
+      // Content height, without the block's own padding (which differs pinned/unpinned).
+      const el = blockRef.current;
+      const cs = el ? getComputedStyle(el) : null;
+      const h = el && cs ? el.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) : Infinity;
+      const fits = h + PIN_GUTTER * 2 <= window.innerHeight;
+      const next = mq.matches && fits;
+      pinnedRef.current = next;
+      setPinned(next);
     };
     sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    window.addEventListener("resize", sync);
+    const ro = new ResizeObserver(sync);
+    if (blockRef.current) ro.observe(blockRef.current);
+    return () => {
+      mq.removeEventListener("change", sync);
+      window.removeEventListener("resize", sync);
+      ro.disconnect();
+    };
   }, []);
 
   // One scroll driver for the sweep, fed by whichever layout is active.
@@ -280,12 +313,12 @@ export function AboutSection({
         style={pinned ? { height: `calc(100svh + ${PIN_SCROLL_SVH}svh)` } : undefined}
       >
         {/* Pinned: a full screen with fixed breathing room above and below. */}
-        <div className={cn(pinned && "sticky top-0 flex h-svh items-center py-20")}>
+        <div className={cn(pinned && "sticky top-0 flex h-svh items-center py-24")}>
           <div
             ref={blockRef}
             className={cn(
               "container-page flex flex-col items-center gap-14 bg-black lg:flex-row lg:items-start lg:justify-between lg:gap-16",
-              pinned ? "py-0" : "py-14",
+              pinned ? "py-0" : "py-14 lg:py-24",
             )}
           >
             {/* Left — stats + CTA. Below lg this column dissolves (`contents`)
@@ -360,9 +393,9 @@ export function AboutSection({
             {/* Right — body copy + signature */}
             <div
               ref={textRef}
-              className="order-2 flex max-w-[895px] flex-col items-center gap-10 text-center lg:order-none lg:items-start lg:text-left"
+              className="order-2 flex max-w-2xl flex-col items-center gap-10 text-center lg:order-none lg:items-start lg:text-left"
             >
-              <p className="text-[1.5rem] leading-normal tracking-[0.01em] text-balance sm:text-[1.75rem] lg:text-about-body">
+              <p className="text-[1.5rem] leading-snug tracking-[0.01em] text-balance sm:text-[1.75rem] lg:text-about-body">
                 <span className="sr-only">{text}</span>
                 <span aria-hidden>
                   {segments.map((seg) => {
@@ -374,9 +407,11 @@ export function AboutSection({
                         sweep={drive}
                         writeAt={bodyWriteAt(seg.start + k)}
                         sweepAt={bodySweepAt(seg.start + k)}
+                        paraBreak={char === "\n" && text[seg.start + k - 1] === "\n"}
                       />
                     ));
                     if (!seg.mark) return <Fragment key={seg.start}>{chars}</Fragment>;
+                    if (seg.mark === "bold") return <strong key={seg.start} className="font-bold">{chars}</strong>;
                     // The mark draws as the sweep crosses its phrase, finishing
                     // just after the last letter turns white.
                     const from = bodySweepAt(seg.start);
