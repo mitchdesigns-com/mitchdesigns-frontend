@@ -120,6 +120,8 @@ export function AppDemoSection({
     setPausedUntil(Date.now() + PAUSE_AFTER_PICK_MS);
   };
   const step = steps[active];
+  // Order tracking is the highlight: the driver's app joins the customer's.
+  const tracking = /track/i.test(step?.title ?? "");
   const move = MOVES[active % MOVES.length];
 
   return (
@@ -186,7 +188,7 @@ export function AppDemoSection({
         </RevealStagger>
 
         {/* The stage: a soft yellow glow that pulses on every feature, tokens popping out, the phone in 3D */}
-        <div aria-hidden className="relative mx-auto aspect-square w-full max-w-3xl md:col-span-7">
+        <div aria-hidden className="relative mx-auto aspect-4/5 w-full max-w-3xl sm:aspect-square md:col-span-7">
           <Glow active={active} seen={seen} reduced={!!reduced} />
           {/* Ground shadow */}
           <div className="absolute bottom-1/12 left-1/2 h-6 w-2/5 -translate-x-1/2 rounded-full bg-black/25 blur-xl" />
@@ -207,7 +209,7 @@ export function AppDemoSection({
             >
               <motion.div
                 key={reduced ? "still" : active}
-                className="preserve-3d relative aspect-9/19 w-56 md:w-60 lg:w-72"
+                className="preserve-3d relative aspect-9/19 w-48 sm:w-56 md:w-60 lg:w-72"
                 initial={POSE}
                 animate={reduced ? POSE : { ...POSE, ...move }}
                 transition={{ duration: MOVE_S, ease: easeOutSoft }}
@@ -238,9 +240,31 @@ export function AppDemoSection({
             </motion.div>
           </div>
 
-          {/* Tokens burst out from behind the phone, then float */}
+          {/* Order tracking: the driver app slides in beside the customer app */}
           <AnimatePresence>
-            {(seen ? (TOKENS[active % TOKENS.length] ?? []) : []).map((t, k) => (
+            {tracking && seen && (
+              <motion.div
+                key="driver"
+                className="absolute bottom-1/12 left-0 z-10 hidden w-36 sm:block lg:w-44"
+                initial={reduced ? false : { x: -80, y: 40, opacity: 0, rotate: -16 }}
+                animate={{ x: 0, y: 0, opacity: 1, rotate: -8 }}
+                exit={{ x: -60, opacity: 0, rotate: -16, transition: { duration: 0.3 } }}
+                transition={{ delay: MOVE_S * 0.5, type: "spring", stiffness: 140, damping: 16 }}
+              >
+                <div className="relative aspect-9/19 rounded-phone bg-black p-1.5 shadow-soft-lg">
+                  <div className="relative size-full overflow-hidden rounded-phone-screen bg-black">
+                    <div className="absolute top-1.5 left-1/2 z-20 h-3 w-12 -translate-x-1/2 rounded-pill bg-black ring-1 ring-white/10" />
+                    <DriverScene />
+                  </div>
+                </div>
+                <span className="mt-2 block text-center text-xs font-semibold text-black">Driver app</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Tokens burst out from behind the phone, then float (not while the driver app shows) */}
+          <AnimatePresence>
+            {(seen && !tracking ? (TOKENS[active % TOKENS.length] ?? []) : []).map((t, k) => (
               <motion.div
                 key={`${active}-${k}`}
                 className="absolute"
@@ -786,7 +810,7 @@ function TrackingScene() {
         <div className="flex items-end justify-between">
           <div>
             <p className="text-xs font-semibold">Arriving in</p>
-            <p className="text-2xl font-bold tabular-nums">{eta} min</p>
+            <p className="text-2xl font-bold whitespace-nowrap tabular-nums">{eta} min</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="flex size-8 items-center justify-center rounded-full bg-yellow text-xs font-bold">A</span>
@@ -799,7 +823,7 @@ function TrackingScene() {
         {/* Steps */}
         <div className="flex gap-1">
           {steps.map((s, i) => (
-            <div key={s} className="flex flex-1 flex-col gap-1">
+            <div key={s} className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="h-1.5 overflow-hidden rounded-pill bg-panel">
                 <motion.div
                   className="h-full rounded-pill bg-black"
@@ -808,11 +832,109 @@ function TrackingScene() {
                   transition={{ delay: MOVE_S + 0.2 + i * 0.9, duration: 0.9, ease: "linear" }}
                 />
               </div>
-              <span className="text-xs font-semibold whitespace-nowrap">{s}</span>
+              <span className="truncate text-xs font-semibold">{s}</span>
             </div>
           ))}
         </div>
       </motion.div>
+    </div>
+  );
+}
+
+/**
+ * The driver's side of order tracking (dark app, small phone): a new order
+ * comes in and is accepted, the route to the customer draws, then the order
+ * is marked delivered and the trip's earnings pop. Timed with the customer's
+ * tracking map beside it.
+ */
+function DriverScene() {
+  const t = (s: number) => MOVE_S + s;
+  return (
+    <div className="relative flex size-full flex-col gap-2 px-2.5 pt-6 pb-3 text-white">
+      <div className="flex items-center justify-between text-xs">
+        <span className="font-bold">Online</span>
+        <span className="size-2 rounded-full bg-yellow" />
+      </div>
+
+      {/* Route map */}
+      <div className="relative flex-1 overflow-hidden rounded-card-sm bg-white/10">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full text-yellow" aria-hidden>
+          <motion.polyline
+            points="20,85 20,50 70,50 70,18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ delay: t(1.1), duration: 2, ease: "linear" }}
+          />
+        </svg>
+        <motion.span
+          className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ring-2 ring-yellow"
+          initial={{ left: "20%", top: "85%" }}
+          animate={{ left: ["20%", "20%", "70%", "70%"], top: ["85%", "50%", "50%", "18%"] }}
+          transition={{ delay: t(1.1), duration: 2, ease: "linear" }}
+        />
+        <span className="absolute -translate-x-1/2 -translate-y-full text-yellow" style={{ left: "70%", top: "18%" }}>
+          <MapPinIcon size={14} />
+        </span>
+      </div>
+
+      {/* New order → accepted */}
+      <motion.div
+        className="flex flex-col gap-1.5 rounded-card-sm bg-white p-2 text-black"
+        initial={{ y: 80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: t(0.1), type: "spring", stiffness: 240, damping: 20 }}
+      >
+        <div className="flex justify-between text-xs font-bold">
+          <span>New order</span>
+          <span>45 EGP</span>
+        </div>
+        <p className="text-xs">2.4 km · Your Store</p>
+        <div className="relative h-7 overflow-hidden rounded-pill bg-panel text-xs font-bold">
+          {/* Accept fills, then the trip status steps through */}
+          <motion.span
+            className="absolute inset-y-0 left-0 rounded-pill bg-yellow"
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ delay: t(0.4), duration: 0.6, ease: "easeOut" }}
+          />
+          {[
+            ["Accept", 0, 1.0],
+            ["Picking up", 1.0, 1.9],
+            ["On the way", 1.9, 3.1],
+            ["Delivered ✓", 3.1, 99],
+          ].map(([label, from, to]) => (
+            <motion.span
+              key={label as string}
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              initial={{ opacity: from === 0 ? 1 : 0 }}
+              animate={{ opacity: [from === 0 ? 1 : 0, 1, 1, 0] }}
+              transition={{
+                delay: t(from as number),
+                duration: Math.min(20, (to as number) - (from as number)),
+                times: [0, 0.08, 0.92, 1],
+              }}
+            >
+              {label}
+            </motion.span>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Earnings pop */}
+      <motion.span
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 rounded-pill bg-yellow px-2.5 py-1 text-xs font-bold whitespace-nowrap text-black"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1.2, 1], opacity: 1 }}
+        transition={{ delay: t(3.3), duration: 0.45 }}
+      >
+        +45 EGP
+      </motion.span>
     </div>
   );
 }
