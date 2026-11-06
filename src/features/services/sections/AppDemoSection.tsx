@@ -17,6 +17,9 @@ import type { FlowStep } from "./appFlow/screens";
 
 /** How long each feature plays before the next (ms). */
 const SCENE_MS = 4600;
+/** Scenes that need longer (index → ms): Apple Pay's sheet, scan and tick. */
+const SCENE_MS_AT: Record<number, number> = { 3: 5600 };
+const sceneMs = (i: number) => SCENE_MS_AT[i] ?? SCENE_MS;
 /** After a visitor picks a feature, autoplay waits this long (ms). */
 const PAUSE_AFTER_PICK_MS = 9000;
 /** The phone's playful move takes this long; the feature plays inside it after (s). */
@@ -89,7 +92,7 @@ export function AppDemoSection({
 
   useEffect(() => {
     if (!playing) return;
-    const wait = Math.max(SCENE_MS, pausedUntil - Date.now());
+    const wait = Math.max(sceneMs(active), pausedUntil - Date.now());
     const t = window.setTimeout(() => setActive((i) => (i + 1) % steps.length), wait);
     return () => window.clearTimeout(t);
   }, [active, playing, pausedUntil, steps.length]);
@@ -135,7 +138,7 @@ export function AppDemoSection({
                     className="absolute inset-y-0 left-0 bg-yellow"
                     initial={{ width: playing ? "0%" : "100%" }}
                     animate={{ width: "100%" }}
-                    transition={{ duration: playing ? Math.max(SCENE_MS, pausedUntil - Date.now()) / 1000 : 0, ease: "linear" }}
+                    transition={{ duration: playing ? Math.max(sceneMs(active), pausedUntil - Date.now()) / 1000 : 0, ease: "linear" }}
                   />
                 )}
                 <span className="relative">{s.title}</span>
@@ -401,28 +404,128 @@ function PushScene() {
   );
 }
 
-/** 4. Apple Pay: the sheet slides up, double click, paid. */
+/**
+ * 4. Apple Pay: tap Buy, the screen dims and the pay sheet springs up with the
+ * card, the side button pulses twice (double click), Face ID scans, a tick
+ * pops and the order is done.
+ */
 function ApplePayScene() {
+  const t = (s: number) => MOVE_S + s;
   return (
-    <Screen title="Checkout">
-      <div className="flex items-center gap-3 rounded-card-sm bg-panel p-3">
-        <Product className="size-12 rounded-sm" />
-        <div className="flex-1 text-xs">
-          <p className="font-bold">The King</p>
-          <p>3,250 EGP</p>
+    <div className="relative size-full overflow-hidden">
+      {/* The product page underneath */}
+      <Screen title="The King">
+        <Product className="aspect-square w-full rounded-card-sm" />
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-bold">The King</span>
+          <span className="font-semibold">3,250 EGP</span>
         </div>
-      </div>
+        <motion.div
+          className="flex items-center justify-center gap-1 rounded-pill bg-black py-3 text-sm font-bold whitespace-nowrap text-white"
+          animate={{ scale: [1, 0.9, 1] }}
+          transition={{ delay: t(0), duration: 0.3 }}
+        >
+          Buy with Apple Pay
+        </motion.div>
+      </Screen>
+
+      {/* Dim */}
+      <motion.div className="absolute inset-0 bg-black" initial={{ opacity: 0 }} animate={{ opacity: 0.45 }} transition={{ delay: t(0.2), duration: 0.3 }} />
+
+      {/* Side button hint: two pulses on the right edge = double click */}
       <motion.div
-        className="mt-auto flex flex-col gap-3 rounded-card bg-black p-4 text-white"
-        initial={{ y: 160 }}
-        animate={{ y: 0 }}
-        transition={{ delay: MOVE_S, type: "spring", stiffness: 200, damping: 22 }}
+        className="absolute top-1/5 right-0 flex items-center gap-1.5"
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: [0, 1, 1, 0], x: 0 }}
+        transition={{ delay: t(0.6), duration: 1.3, times: [0, 0.15, 0.85, 1] }}
       >
-        <p className="text-sm font-bold">Apple Pay</p>
-        <div className="flex justify-between text-xs"><span>Pay Your Store</span><span>3,250 EGP</span></div>
-        <PressButton label="Double click" done="Paid ✓" at={1.3} className="bg-white text-black" />
+        <span className="rounded-pill bg-white px-2 py-1 text-xs font-bold whitespace-nowrap text-black">Double click</span>
+        <motion.span
+          className="h-10 w-1.5 rounded-l-pill bg-yellow"
+          animate={{ scaleX: [1, 1.8, 1, 1.8, 1], opacity: [0.7, 1, 0.7, 1, 0.7] }}
+          transition={{ delay: t(0.9), duration: 0.6, times: [0, 0.25, 0.5, 0.75, 1] }}
+        />
       </motion.div>
-    </Screen>
+
+      {/* The pay sheet */}
+      <motion.div
+        className="absolute inset-x-1.5 bottom-1.5 flex flex-col gap-3 rounded-card bg-white p-4 text-black shadow-soft-lg"
+        initial={{ y: "110%" }}
+        animate={{ y: 0 }}
+        transition={{ delay: t(0.25), type: "spring", stiffness: 210, damping: 22 }}
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-bold">Apple Pay</span>
+          <span className="flex size-5 items-center justify-center rounded-full bg-panel text-xs">✕</span>
+        </div>
+
+        {/* Card, sliding in from a little stack */}
+        <div className="relative h-16">
+          <motion.div className="absolute inset-x-3 top-0 h-full rounded-card-sm bg-black" initial={{ y: 0 }} animate={{ y: -6 }} transition={{ delay: t(0.5) }} />
+          <motion.div
+            className="absolute inset-0 flex flex-col justify-between rounded-card-sm bg-yellow p-2.5"
+            initial={{ x: "-110%", rotate: -8 }}
+            animate={{ x: 0, rotate: 0 }}
+            transition={{ delay: t(0.45), type: "spring", stiffness: 240, damping: 18 }}
+          >
+            <span className="h-2.5 w-4 rounded-sm bg-black" />
+            <span className="text-xs font-bold tabular-nums">•••• 4242</span>
+          </motion.div>
+        </div>
+
+        <div className="flex justify-between text-xs">
+          <span>Pay Your Store</span>
+          <span className="font-bold">3,250 EGP</span>
+        </div>
+
+        {/* Face ID: brackets scan, then turn into a tick */}
+        <div className="relative flex h-14 items-center justify-center">
+          <motion.div
+            className="relative size-11"
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 0.85, 0.6] }}
+            transition={{ delay: t(1.6), duration: 0.9, times: [0, 0.2, 0.7, 1] }}
+          >
+            {["top-0 left-0 border-t-2 border-l-2 rounded-tl-lg", "top-0 right-0 border-t-2 border-r-2 rounded-tr-lg", "bottom-0 left-0 border-b-2 border-l-2 rounded-bl-lg", "bottom-0 right-0 border-r-2 border-b-2 rounded-br-lg"].map((c) => (
+              <span key={c} className={cn("absolute size-3 border-black", c)} />
+            ))}
+            <motion.span
+              className="absolute inset-x-1 h-0.5 rounded-pill bg-yellow"
+              initial={{ top: "15%" }}
+              animate={{ top: ["15%", "85%", "15%"] }}
+              transition={{ delay: t(1.7), duration: 0.7 }}
+            />
+          </motion.div>
+          <motion.div
+            className="absolute flex size-11 items-center justify-center rounded-full bg-yellow"
+            initial={{ scale: 0 }}
+            animate={{ scale: [0, 1.25, 1] }}
+            transition={{ delay: t(2.45), duration: 0.45 }}
+          >
+            <Tick size={22} />
+          </motion.div>
+          {/* Burst */}
+          {[0, 60, 120, 180, 240, 300].map((deg) => (
+            <motion.span
+              key={deg}
+              className="absolute size-1.5 rounded-full bg-yellow"
+              initial={{ opacity: 0, x: 0, y: 0 }}
+              animate={{ opacity: [0, 1, 0], x: Math.cos((deg * Math.PI) / 180) * 34, y: Math.sin((deg * Math.PI) / 180) * 34 }}
+              transition={{ delay: t(2.5), duration: 0.6, ease: "easeOut" }}
+            />
+          ))}
+        </div>
+
+        <motion.p
+          className="text-center text-xs font-bold"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: t(2.7) }}
+        >
+          Done
+        </motion.p>
+      </motion.div>
+    </div>
   );
 }
 
