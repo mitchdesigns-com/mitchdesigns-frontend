@@ -19,8 +19,7 @@ import { HighlightTitle } from "./WeGotYouOrbit";
  * "We Got You" for pages that speak to several audiences: the shared headline
  * and intro, then a toggle (e.g. B2C · Food & Beverage · B2B). Under it, one
  * stage: the audience's 3D icon floats big in the centre with its message
- * below, and the other audiences' icons wait small at the sides (click to
- * switch). Without icons it falls back to the section's photos.
+ * below. Without icons it falls back to the section's photos.
  */
 export function WeGotYouTabs({
   title,
@@ -45,8 +44,6 @@ export function WeGotYouTabs({
   // Without icons: one photo per audience, cycling the section's story (or its image).
   const shots = icons.length ? icons : story?.length ? story : [{ src: image, alt: imageAlt ?? "" }];
   const shot = shots[active % shots.length];
-  const prev = (active - 1 + tabs.length) % tabs.length;
-  const next = (active + 1) % tabs.length;
 
   return (
     <Section theme={theme} className="py-20 md:py-28">
@@ -86,35 +83,7 @@ export function WeGotYouTabs({
       </div>
 
       {tab && (
-        <div className="relative mt-12 overflow-hidden rounded-card bg-panel px-6 py-12 md:mt-16 md:px-16 md:py-16">
-          {/* Neighbours, small at the sides (desktop) */}
-          {icons.length > 1 &&
-            [
-              { i: prev, side: "left-6 lg:left-16 -rotate-12" },
-              { i: next, side: "right-6 lg:right-16 rotate-12" },
-            ].map(({ i, side }) => (
-              <button
-                key={side}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-label={tabs[i]?.label}
-                className={cn("absolute top-1/2 hidden w-24 -translate-y-1/2 transition-transform duration-300 hover:scale-110 md:block lg:w-36", side)}
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={i}
-                    className="relative block aspect-square"
-                    initial={{ opacity: 0, scale: 0.6 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.6 }}
-                    transition={{ duration: 0.3, ease: easeOutSoft }}
-                  >
-                    <Image src={icons[i % icons.length].src} alt="" fill className="object-contain" sizes="9rem" />
-                  </motion.span>
-                </AnimatePresence>
-              </button>
-            ))}
-
+        <div className="relative mt-12 overflow-hidden rounded-card bg-panel-cool px-6 py-12 md:mt-16 md:px-16 md:py-16">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={active}
