@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion, type TargetAndTransition } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { SparklesIcon } from "@/components/icons/SparklesIcon";
@@ -106,9 +106,9 @@ export function AppDemoSection({
 
   return (
     <Section className="overflow-hidden py-16 md:py-20">
-      <div ref={ref} className="grid items-center gap-12 md:min-h-stage md:grid-cols-2 md:gap-16">
+      <div ref={ref} className="grid items-center gap-12 md:min-h-stage md:grid-cols-12 md:gap-10 lg:gap-16">
         {/* Features */}
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 md:col-span-5">
           <div className="flex flex-col gap-4">
             {logo && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -119,14 +119,14 @@ export function AppDemoSection({
           </div>
           <div role="tablist" aria-label={title} className="flex flex-wrap gap-2">
             {steps.map((s, i) => (
+              <Fragment key={s.title}>
               <button
-                key={s.title}
                 type="button"
                 role="tab"
                 aria-selected={i === active}
                 onClick={() => pick(i)}
                 className={cn(
-                  "relative overflow-hidden rounded-pill px-5 py-2.5 text-base font-semibold text-black transition-colors duration-300",
+                  "relative overflow-hidden rounded-pill px-4 py-2.5 text-base font-semibold whitespace-nowrap text-black transition-colors duration-300",
                   i < active ? "bg-yellow" : "bg-panel hover:bg-panel-mid",
                 )}
               >
@@ -143,6 +143,9 @@ export function AppDemoSection({
                 )}
                 <span className="relative">{s.title}</span>
               </button>
+              {/* Two even rows on desktop (4 + 4) */}
+              {i === Math.ceil(steps.length / 2) - 1 && <span aria-hidden className="hidden basis-full lg:block" />}
+              </Fragment>
             ))}
           </div>
           <AnimatePresence mode="wait" initial={false}>
@@ -161,7 +164,7 @@ export function AppDemoSection({
         </div>
 
         {/* The stage: a yellow disc with a ripple on every feature, tokens popping out, the phone in 3D */}
-        <div aria-hidden className="relative mx-auto aspect-square w-full max-w-xl">
+        <div aria-hidden className="relative mx-auto aspect-square w-full max-w-3xl md:col-span-7">
           <div className="absolute inset-1/12 rounded-full bg-yellow" />
           {!reduced &&
             [0, 1].map((k) => (
@@ -185,7 +188,7 @@ export function AppDemoSection({
             >
               <motion.div
                 key={reduced ? "still" : active}
-                className="preserve-3d relative aspect-9/19 w-48 lg:w-56"
+                className="preserve-3d relative aspect-9/19 w-56 md:w-60 lg:w-72"
                 initial={POSE}
                 animate={reduced ? POSE : { ...POSE, ...move }}
                 transition={{ duration: MOVE_S, ease: easeOutSoft }}
@@ -228,7 +231,7 @@ export function AppDemoSection({
                 transition={{ delay: MOVE_S * 0.6 + k * 0.12, type: "spring", stiffness: 220, damping: 15 }}
               >
                 <motion.div
-                  className="flex items-center gap-1.5 rounded-pill bg-white px-4 py-2.5 text-sm font-bold whitespace-nowrap text-black shadow-soft-lg"
+                  className="flex items-center gap-1.5 rounded-pill bg-white px-4 py-2.5 text-sm font-bold whitespace-nowrap text-black shadow-soft-lg lg:px-5 lg:py-3 lg:text-base"
                   animate={reduced ? undefined : { y: [0, -8, 0] }}
                   transition={{ duration: 3 + k * 0.6, repeat: Infinity, ease: "easeInOut", delay: k * 0.4 }}
                 >

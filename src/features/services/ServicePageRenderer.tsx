@@ -23,6 +23,13 @@ import { AppDemoSection } from "./sections/AppDemoSection";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
 import { appFlowSteps } from "./sections/appFlow/steps";
 
+/** 3D icons for the eCommerce audience tabs (B2C, Food & Beverage, B2B). */
+const ECOMMERCE_MODEL_ICONS = [
+  { src: "/images/services/ecommerce-models/b2c.webp", alt: "Shopping bag and card, B2C online store" },
+  { src: "/images/services/ecommerce-models/food-beverage.webp", alt: "Delivery bag with burger and coffee, food ordering" },
+  { src: "/images/services/ecommerce-models/b2b.webp", alt: "Storefront, boxes on a pallet and an invoice, B2B wholesale" },
+];
+
 /** "We Got You" card on eCommerce: one order from tap to doorstep
  *  (fallback until `weGotYou.story` is filled in Strapi). */
 const ECOMMERCE_ORDER_STORY = [
@@ -188,7 +195,7 @@ export function ServicePageRenderer({
               };
               // Audience tabs (B2C · Food & Beverage · B2B) when the CMS has them.
               return weGotYou.tabs?.length ? (
-                <WeGotYouTabs {...ecommerceWeGotYou} />
+                <WeGotYouTabs {...ecommerceWeGotYou} icons={ECOMMERCE_MODEL_ICONS} />
               ) : (
                 <WeGotYouOrbit {...ecommerceWeGotYou} />
               );
