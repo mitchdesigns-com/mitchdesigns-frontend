@@ -5,9 +5,15 @@ import { CardSlider } from "@/components/ui/CardSlider";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Media, isVideo } from "@/components/ui/Media";
 import { strapiMedia } from "@/lib/cms/media";
+import { cn } from "@/lib/cn";
 import type { CaseStudy, RichText as RichTextValue } from "@/lib/cms/types";
 
 type Study = CaseStudy & { id: number };
+
+/** Columns that keep the logo rows even: 7 logos with up to 5 a row become 4 + 3. */
+const balancedCols = (n: number, max: number) => Math.max(1, Math.ceil(n / Math.ceil(n / max)));
+const SM_BASIS: Record<number, string> = { 1: "sm:basis-full", 2: "sm:basis-1/2", 3: "sm:basis-1/3", 4: "sm:basis-1/4" };
+const LG_BASIS: Record<number, string> = { 1: "lg:basis-full", 2: "lg:basis-1/2", 3: "lg:basis-1/3", 4: "lg:basis-1/4", 5: "lg:basis-1/5" };
 
 /**
  * "Brands that sell with us": the clients of one category (e.g. eCommerce) as
@@ -51,10 +57,13 @@ export function ClientWork({
           </Link>
         </div>
 
-        {/* Logo wall */}
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {/* Logo wall: rows kept even, a shorter last row sits centred */}
+        <ul className="-m-1.5 flex flex-wrap justify-center">
           {withLogo.map((s) => (
-            <li key={s.slug}>
+            <li
+              key={s.slug}
+              className={cn("basis-1/2 p-1.5", SM_BASIS[balancedCols(withLogo.length, 4)], LG_BASIS[balancedCols(withLogo.length, 5)])}
+            >
               <Link
                 href={`/case-studies/${s.slug}`}
                 aria-label={`${s.client} case study`}
