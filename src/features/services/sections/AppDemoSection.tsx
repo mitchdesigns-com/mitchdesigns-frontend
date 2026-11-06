@@ -6,6 +6,11 @@ import { AnimatePresence, motion, useInView, useReducedMotion, type TargetAndTra
 import { Section } from "@/components/layout/Section";
 import { SparklesIcon } from "@/components/icons/SparklesIcon";
 import { ScooterIcon } from "@/components/icons/ScooterIcon";
+import { BellIcon } from "@/components/icons/BellIcon";
+import { CardIcon } from "@/components/icons/CardIcon";
+import { MapPinIcon } from "@/components/icons/MapPinIcon";
+import { Star } from "@/components/icons/Star";
+import { Tick } from "@/components/icons/Tick";
 import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
 import type { FlowStep } from "./appFlow/screens";
@@ -36,25 +41,45 @@ const MOVES: TargetAndTransition[] = [
   { rotateY: [-24, -48, -6, -24], y: [0, -20, -10, 0] },
 ];
 
-/** The yellow squares behind the phone (our logo's square, scattered). */
-const SQUARES = [
-  { size: "w-3/5", x: 20, y: 20, r: -6 },
-  { size: "w-1/5", x: 6, y: 8, r: 12 },
-  { size: "w-1/6", x: 78, y: 10, r: -14 },
-  { size: "w-1/8", x: 84, y: 64, r: 20 },
-  { size: "w-1/5", x: 4, y: 70, r: -10 },
-  { size: "w-1/12", x: 62, y: 86, r: 30 },
+/** Where the pop-out tokens land around the phone (% of the stage). */
+const SLOTS = [
+  { left: "6%", top: "22%", r: -8 },
+  { left: "70%", top: "40%", r: 6 },
+  { left: "10%", top: "70%", r: 4 },
+];
+
+/** Three tokens per feature that burst out from behind the phone. */
+const TOKENS: ReactNode[][] = [
+  [<><Star size={16} filled /> +250</>, <>Gold</>, <><Star size={16} filled /> 1,490</>],
+  [<>+300 EGP</>, <>Refund</>, <>Cashback</>],
+  [<><BellIcon size={16} /> 20% off</>, <>Now</>, <><BellIcon size={16} /> 2</>],
+  [<>Paid <Tick size={16} /></>, <>1 second</>, <>Pay</>],
+  [<><CardIcon size={16} /> 4242</>, <>Secure</>, <>Visa</>],
+  [<>1 tap</>, <><CardIcon size={16} /> Saved</>, <>Reorder</>],
+  [<><ScooterIcon size={16} /> 12 min</>, <><MapPinIcon size={16} /> Home</>, <>On the way</>],
+  [<><SparklesIcon size={16} /> Smart pick</>, <>Swap</>, <>In stock <Tick size={16} /></>],
 ];
 
 /**
  * eCommerce "your brand deserves an app": a coded phone, turned in 3D on a
- * scatter of yellow squares, shows one app feature at a time (points, wallet,
+ * yellow disc that ripples on every feature, shows one app feature at a time (points, wallet,
  * push, Apple Pay, cards, saved cards, tracking, smart AI). Each feature opens
  * with a playful move of the phone, then plays inside it. The feature chips
  * fill yellow as they play; clicking one jumps there.
  * Copy (eyebrow, title, chip names and lines) comes from the CMS `process` steps.
  */
-export function AppDemoSection({ eyebrow, title, steps }: { eyebrow?: string; title: string; steps: FlowStep[] }) {
+export function AppDemoSection({
+  eyebrow,
+  title,
+  steps,
+  logo,
+}: {
+  eyebrow?: string;
+  title: string;
+  steps: FlowStep[];
+  /** Platform wordmark shown above the eyebrow (e.g. Orderbase). */
+  logo?: { src: string; alt: string };
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.4 });
   const reduced = useReducedMotion();
@@ -82,6 +107,10 @@ export function AppDemoSection({ eyebrow, title, steps }: { eyebrow?: string; ti
         {/* Features */}
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-4">
+            {logo && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logo.src} alt={logo.alt} className="mb-2 h-6 w-auto self-start md:h-7" />
+            )}
             {eyebrow && <p className="text-sm font-medium uppercase tracking-1 text-black text-balance">{eyebrow}</p>}
             <h2 className="text-hero-3 text-left font-bold text-balance">{title}</h2>
           </div>
@@ -128,22 +157,21 @@ export function AppDemoSection({ eyebrow, title, steps }: { eyebrow?: string; ti
           </AnimatePresence>
         </div>
 
-        {/* The stage: squares, and the phone in 3D */}
+        {/* The stage: a yellow disc with a ripple on every feature, tokens popping out, the phone in 3D */}
         <div aria-hidden className="relative mx-auto aspect-square w-full max-w-xl">
-          {SQUARES.map((q, k) => {
-            // Each feature reshuffles the squares a little.
-            const dx = Math.sin((active + 1) * (k + 2)) * 5;
-            const dy = Math.cos((active + 1) * (k + 3)) * 5;
-            return (
+          <div className="absolute inset-1/12 rounded-full bg-yellow" />
+          {!reduced &&
+            [0, 1].map((k) => (
               <motion.div
-                key={k}
-                className={cn("absolute aspect-square bg-yellow", q.size)}
-                style={{ left: `${q.x}%`, top: `${q.y}%` }}
-                animate={reduced ? { rotate: q.r } : { x: `${dx * 2.5}%`, y: `${dy * 2.5}%`, rotate: q.r + dx * 3 }}
-                transition={{ type: "spring", stiffness: 120, damping: 14, delay: k * 0.04 }}
+                key={`${active}-${k}`}
+                className="absolute inset-1/12 rounded-full border-2 border-yellow"
+                initial={{ scale: 1, opacity: 0.9 }}
+                animate={{ scale: 1.35, opacity: 0 }}
+                transition={{ delay: 0.15 + k * 0.35, duration: 1.6, ease: "easeOut" }}
               />
-            );
-          })}
+            ))}
+          {/* Ground shadow */}
+          <div className="absolute bottom-1/12 left-1/2 h-6 w-2/5 -translate-x-1/2 rounded-full bg-black/25 blur-xl" />
 
           <div className="perspective-stage absolute inset-0 flex items-center justify-center">
             {/* Idle float */}
@@ -183,6 +211,29 @@ export function AppDemoSection({ eyebrow, title, steps }: { eyebrow?: string; ti
               </motion.div>
             </motion.div>
           </div>
+
+          {/* Tokens burst out from behind the phone, then float */}
+          <AnimatePresence>
+            {(TOKENS[active % TOKENS.length] ?? []).map((t, k) => (
+              <motion.div
+                key={`${active}-${k}`}
+                className="absolute"
+                style={{ left: SLOTS[k].left, top: SLOTS[k].top, zIndex: k === 1 ? 10 : 0 }}
+                initial={reduced ? false : { x: k === 1 ? "-120%" : "120%", y: 0, scale: 0.2, opacity: 0, rotate: 0 }}
+                animate={{ x: 0, y: 0, scale: 1, opacity: 1, rotate: SLOTS[k].r }}
+                exit={{ scale: 0.6, opacity: 0, transition: { duration: 0.2 } }}
+                transition={{ delay: MOVE_S * 0.6 + k * 0.12, type: "spring", stiffness: 220, damping: 15 }}
+              >
+                <motion.div
+                  className="flex items-center gap-1.5 rounded-pill bg-white px-4 py-2.5 text-sm font-bold whitespace-nowrap text-black shadow-soft-lg"
+                  animate={reduced ? undefined : { y: [0, -8, 0] }}
+                  transition={{ duration: 3 + k * 0.6, repeat: Infinity, ease: "easeInOut", delay: k * 0.4 }}
+                >
+                  {t}
+                </motion.div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </Section>
@@ -233,7 +284,7 @@ function Product({ className, pos = "50% 38%" }: { className?: string; pos?: str
 function PressButton({ label, done, at, className }: { label: string; done: string; at: number; className?: string }) {
   return (
     <motion.div
-      className={cn("relative flex items-center justify-center rounded-pill py-3 text-sm font-bold", className)}
+      className={cn("relative flex items-center justify-center rounded-pill py-3 text-sm font-bold whitespace-nowrap", className)}
       animate={{ scale: [1, 0.92, 1] }}
       transition={{ delay: MOVE_S + at, duration: 0.35 }}
     >
@@ -369,7 +420,7 @@ function ApplePayScene() {
       >
         <p className="text-sm font-bold">Apple Pay</p>
         <div className="flex justify-between text-xs"><span>Pay Your Store</span><span>3,250 EGP</span></div>
-        <PressButton label="Double click to pay" done="Paid ✓" at={1.3} className="bg-white text-black" />
+        <PressButton label="Double click" done="Paid ✓" at={1.3} className="bg-white text-black" />
       </motion.div>
     </Screen>
   );

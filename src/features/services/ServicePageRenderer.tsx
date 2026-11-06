@@ -199,7 +199,12 @@ export function ServicePageRenderer({
           {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
           {/* Website + app: the app playing live on a coded phone (CMS `process` copy). */}
           {process?.processCards?.length ? (
-            <AppDemoSection eyebrow={process.eyebrow} title={process.title} steps={appFlowSteps(process)} />
+            <AppDemoSection
+              eyebrow={process.eyebrow}
+              title={process.title}
+              steps={appFlowSteps(process)}
+              logo={{ src: "/images/orderbase/wordmark.svg", alt: "Orderbase" }}
+            />
           ) : null}
           {/* Same stack as Corporate, minus the CMS (stores run on their own engine). */}
           <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["Strapi"]} />
