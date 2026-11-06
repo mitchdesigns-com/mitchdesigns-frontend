@@ -1073,7 +1073,7 @@ export const fixtureAboutPage: AboutContent = {
   },
   metrics: [
     { value: "20+", label: "Years of experience," },
-    { value: "400+", label: "Projects Delivered" },
+    { value: "500+", label: "Projects Delivered" },
     { value: "30+", label: "Dedicated Experts" },
   ],
   approach: {
@@ -1118,11 +1118,11 @@ export const fixtureHomePage: HomePageData = {
     rotatingWords: ["Convert", "Engage", "Interact", "Succeed", "Grow"],
   },
   about: {
-    body: "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns into results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don't chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it's always about the user, the customer, and their experience. That's why Mitch Designs has become the partner businesses trust when growth can't wait.",
+    body: "It started in 2005 with one corporate website. Twenty years later, we build the whole digital business, from eCommerce and mobile apps to custom systems, dashboards and ERPs, all connected and powered by performance marketing for premium brands.\n\nPretty was never the goal. Our mission is to transform brands that already win offline, with systems that automate their work for the AI era and experiences their customers love, so they grow, scale and earn more.",
     signature: "Mitch",
     stats: [
       { value: "20+", unit: "Years", label: "Years of experience," },
-      { value: "400+", unit: "Projects", label: "Delivered with Impact" },
+      { value: "500+", unit: "Projects", label: "Delivered with Impact" },
       { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
     ],
     cta: { label: "About Us", href: "/about" },
