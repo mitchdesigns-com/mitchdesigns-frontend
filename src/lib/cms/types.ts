@@ -541,8 +541,11 @@ export type HomeAboutSection = {
   signature?: string;
   stats: HomeStat[];
   cta?: { label: string; href: string };
-  /** Hand-drawn marks over phrases in `body`. */
-  marks?: Array<{ phrase: string; shape: "strike" | "wave" | "swash" }>;
+  /**
+   * Hand-drawn marks over phrases in `body`, or "bold" for words bolded in the
+   * CMS body (`at` pins the exact spot when the phrase appears more than once).
+   */
+  marks?: Array<{ phrase: string; shape: "strike" | "wave" | "swash" | "bold"; at?: number }>;
 };
 
 export type OrderbaseFeature = {

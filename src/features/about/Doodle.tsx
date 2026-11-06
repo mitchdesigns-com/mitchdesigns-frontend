@@ -13,10 +13,9 @@ type Box = { w: number; h: number };
  * (the svg is overflow-visible). Multi-stroke shapes draw stroke after stroke.
  */
 const SHAPES: Record<DoodleShape, (b: Box) => string[]> = {
-  // Crossed-out: two slightly wobbly lines through the middle.
+  // Crossed-out: one slightly wobbly line through the middle.
   strike: ({ w, h }) => [
-    `M -5 ${h * 0.6} C ${w * 0.3} ${h * 0.48}, ${w * 0.66} ${h * 0.64}, ${w + 5} ${h * 0.5}`,
-    `M ${w * 0.04} ${h * 0.68} C ${w * 0.38} ${h * 0.58}, ${w * 0.7} ${h * 0.72}, ${w + 2} ${h * 0.6}`,
+    `M -5 ${h * 0.6} C ${w * 0.3} ${h * 0.52}, ${w * 0.66} ${h * 0.62}, ${w + 5} ${h * 0.54}`,
   ],
   // Wavy underline, wavelength kept roughly constant.
   wave: ({ w, h }) => {
