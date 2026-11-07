@@ -147,7 +147,7 @@ function BodyChar({
 }) {
   const opacity = useTransform(write, [writeAt, writeAt + WRITE_WINDOW], [0, 1]);
   const color = useTransform(sweep, [sweepAt, sweepAt + SWEEP_WINDOW], [GREY, WHITE]);
-  if (char === "\n") return paraBreak ? <span aria-hidden className="block h-1" /> : <br />;
+  if (char === "\n") return paraBreak ? <span aria-hidden className="block h-3" /> : <br />;
   return <motion.span style={{ opacity, color }}>{char}</motion.span>;
 }
 
