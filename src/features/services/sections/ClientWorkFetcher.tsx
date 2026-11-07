@@ -13,7 +13,10 @@ export async function ClientWorkFetcher({
   description?: RichText;
 }) {
   const all = await getCaseStudies().catch(() => []);
-  const studies = all.filter((s) => s.category?.toLowerCase() === category.toLowerCase());
+  // CMS `order` first (lower first), the rest after it, newest first as loaded.
+  const studies = all
+    .filter((s) => s.category?.toLowerCase() === category.toLowerCase())
+    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
   if (!studies.length) return null;
   return <ClientWork title={title} description={description} studies={studies} category={category} />;
 }

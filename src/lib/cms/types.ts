@@ -78,6 +78,8 @@ export type CaseStudy = {
   featuredThumbnail?: StrapiImage;
   content?: CaseStudyBlock[];
   featured?: boolean;
+  /** Position in a service page's work section (lower first); unset sorts last. */
+  order?: number | null;
   publishedAt: string;
   /** Project type — shown as a tag on cards and the project page, and used by the work filter. */
   category?: ProjectType;
