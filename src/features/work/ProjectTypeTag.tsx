@@ -1,27 +1,39 @@
-import type { CaseStudy } from "@/lib/cms/types";
+import type { CaseStudy, ProjectType } from "@/lib/cms/types";
 import { projectTypeLabel } from "@/lib/cms/projectType";
+
+/** Each type gets its own colour dot so the four read apart at a glance. */
+const DOT: Record<ProjectType, string> = {
+  Corporate: "bg-type-corporate",
+  eCommerce: "bg-type-ecommerce",
+  "Mobile App": "bg-type-mobile",
+  Software: "bg-type-software",
+};
 
 type Props = {
   type: CaseStudy["category"];
   subcategory?: CaseStudy["subcategory"];
-  /** "dark" sits on dark surfaces, "light" on white / yellow ones. */
-  theme?: "dark" | "light";
+  /** Text colour for the surface it sits on, e.g. "text-black". */
+  className?: string;
 };
 
-/** Pill naming what kind of project a case study is (Strapi `category`).
- *  Renders nothing when the project has no type. */
-export function ProjectTypeTag({ type, subcategory, theme = "light" }: Props) {
+/** Coloured label naming what kind of project a case study is (Strapi
+ *  `category`, plus the optional `subcategory`). Text takes the surrounding
+ *  colour, so it works on white, yellow and dark surfaces alike. Renders
+ *  nothing when the project has no type. */
+export function ProjectTypeTag({ type, subcategory, className = "" }: Props) {
   const label = projectTypeLabel(type);
-  if (!label) return null;
-
-  const pill = `inline-flex shrink-0 items-center rounded-full px-2 py-1.5 text-sm ${
-    theme === "dark" ? "bg-card-border text-white" : "bg-border text-black"
-  }`;
+  if (!type || !label) return null;
 
   return (
-    <span className="flex flex-wrap items-center gap-2 self-start">
-      <span className={pill}>{label}</span>
-      {subcategory ? <span className={pill}>{subcategory}</span> : null}
+    <span className={`inline-flex flex-wrap items-center gap-x-2 gap-y-1 self-start text-sm font-semibold ${className}`}>
+      <span className={`size-2 shrink-0 rounded-full ${DOT[type] ?? "bg-fg-muted"}`} aria-hidden />
+      <span>{label}</span>
+      {subcategory ? (
+        <>
+          <span className="size-1 shrink-0 rounded-full bg-current opacity-40" aria-hidden />
+          <span className="opacity-60">{subcategory}</span>
+        </>
+      ) : null}
     </span>
   );
 }

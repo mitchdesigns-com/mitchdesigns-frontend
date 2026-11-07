@@ -55,12 +55,12 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
           )}
         </div>
 
-        {/* Title + short summary of scope, challenge and what we did (CMS `excerpt`) */}
+        {/* Title, type label + short summary of scope, challenge and what we did (CMS `excerpt`) */}
         <div className="flex flex-col gap-3">
-          <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} />
           <h3 className="whitespace-pre-line text-hero-5 text-black text-balance">
             {cs.title}
           </h3>
+          <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} className="text-black" />
           {cs.excerpt && (
             <p className="text-base text-space-grey text-balance lg:text-lg">{cs.excerpt}</p>
           )}

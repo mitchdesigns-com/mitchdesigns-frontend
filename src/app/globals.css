@@ -29,6 +29,11 @@
   --color-card: #141414; /* testimonial / review card surface */
   --color-card-border: #282828; /* testimonial / review card border */
   --color-tech-card-border: #e8e8e8; /* tech card border (light mode) */
+  /* Project type labels (work cards, project pages) — never yellow, so they read on the yellow Related section. */
+  --color-type-corporate: #2f6bff;
+  --color-type-ecommerce: #1fa45b;
+  --color-type-mobile: #8b5cf6;
+  --color-type-software: #f2681d;
 
   /* ---------------- Orderbase landing (bespoke microsite) ----------------
      Scoped palette + fonts + radii/shadows for the /orderbase page. Ported

@@ -202,10 +202,8 @@ function Card({
           >
             {noOrphan(`${project.title}’s Website`)}
           </Link>
-          {project.category ? (
-            <ProjectTypeTag type={project.category} subcategory={project.subcategory} theme={theme} />
-          ) : null}
         </div>
+        <ProjectTypeTag type={project.category} subcategory={project.subcategory} className={titleColor} />
         {project.year && (
           <span className="text-base text-fg-muted">Since {project.year}</span>
         )}
