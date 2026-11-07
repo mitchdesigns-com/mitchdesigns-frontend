@@ -28,7 +28,7 @@ const id = (m) => m?.id ?? null;
 // ── Page copy ───────────────────────────────────────────────────────────────
 
 const HERO = {
-  title: "eCommerce Agency For B2B & B2C Brands",
+  title: "eCommerce agency for B2B & B2C brands",
   titleHighlights: "B2B & B2C",
   description: para(
     "If your brand sells products and you're not selling online, you're leaving money on the table. Whether you sell to consumers or to businesses, we build the platform that does it. Your own online store and mobile app, with the engine, the data, the payments and the customers all yours.",
@@ -37,8 +37,8 @@ const HERO = {
 
 const WE_GOT_YOU = {
   // Orderbase against off-the-shelf platforms and custom-coded stores.
-  title: "Tired of eCommerce Platforms That Hold You Back?",
-  titleHighlights: "Hold You Back?",
+  title: "Tired of eCommerce platforms that hold you back?",
+  titleHighlights: "hold you back?",
   label: "We Got You",
   // Reads on its own too (sites without the toggle still show this line).
   description: para("One platform, tailored to how you sell, whether to consumers, food lovers or other businesses."),
@@ -85,7 +85,7 @@ const WHY_US = {
 // Features list: the top Orderbase features for B2C and B2B (no product names).
 const FEATURES = {
   // No count in the title: the list shows its own counter and can grow.
-  title: "Every Feature You Need, Simplified",
+  title: "Every feature you need, simplified",
   titleHighlights: "Simplified",
   description: para("One platform for B2C and B2B selling, on the web and in your app."),
   cards: [
@@ -130,9 +130,9 @@ const FEATURES = {
 
 // The app section (shown on the 3D phone). Uses the page's `process` component.
 const APP = {
-  title: "Your Brand Deserves an App",
+  title: "Your brand deserves an app",
   eyebrow: "Website + mobile app",
-  closingTitle: "Scale With Every Order",
+  closingTitle: "Scale with every order",
   closingText: "Website plus app means one engine, one dashboard, and a business that grows faster with every repeat customer.",
   // One chip per app feature; the phone plays each one (order matters, it matches the scenes).
   steps: [
@@ -148,8 +148,8 @@ const APP = {
 };
 
 const SUPPORT = {
-  title: "Why Brands Stay With Us",
-  titleHighlights: "Stay With Us",
+  title: "Why brands stay with us",
+  titleHighlights: "stay with us",
   description: para("Launch is only the start. Our ongoing service keeps your store growing."),
   cards: [
     ["Strategic Clarity", "A clear roadmap for your store, tied to your sales goals and reviewed as you grow.", "compass"],

@@ -2,6 +2,22 @@ import { Section } from "@/components/layout/Section";
 import { RichText } from "@/components/ui/RichText";
 import { Reveal, RevealItem, RevealStagger } from "@/components/motion";
 import { HighlightTitle } from "./WeGotYouOrbit";
+import { AppWindowIcon } from "@/components/icons/AppWindowIcon";
+import { BellIcon } from "@/components/icons/BellIcon";
+import { BellRingIcon } from "@/components/icons/BellRingIcon";
+import { ChatIcon } from "@/components/icons/ChatIcon";
+import { CheckmarkSquareIcon } from "@/components/icons/CheckmarkSquareIcon";
+import { CompassIcon } from "@/components/icons/CompassIcon";
+import { LifeBuoyIcon } from "@/components/icons/LifeBuoyIcon";
+import { LinkIcon } from "@/components/icons/LinkIcon";
+import { MonitorIcon } from "@/components/icons/MonitorIcon";
+import { PulseIcon } from "@/components/icons/PulseIcon";
+import { ReceiptIcon } from "@/components/icons/ReceiptIcon";
+import { RouteIcon } from "@/components/icons/RouteIcon";
+import { ShoppingBagIcon } from "@/components/icons/ShoppingBagIcon";
+import { SparklesIcon } from "@/components/icons/SparklesIcon";
+import { SplitTestIcon } from "@/components/icons/SplitTestIcon";
+import { TargetIcon } from "@/components/icons/TargetIcon";
 import { BarChartIcon } from "@/components/icons/BarChartIcon";
 import { BoxIcon } from "@/components/icons/BoxIcon";
 import { Briefcase } from "@/components/icons/Briefcase";
@@ -44,6 +60,37 @@ type Icon = (p: { size?: number; className?: string }) => React.ReactNode;
 
 /** Line icon per feature, matched on the (CMS) title; first match wins. */
 const ICONS: [RegExp, Icon][] = [
+  // Mobile app page
+  [/sign up|social login/i, UserPlusIcon],
+  [/face id|fingerprint/i, LockIcon],
+  [/otp/i, CheckmarkSquareIcon],
+  [/onboarding/i, CompassIcon],
+  [/profile/i, UserIcon],
+  [/push/i, BellRingIcon],
+  [/in app message/i, AppWindowIcon],
+  [/live chat/i, ChatIcon],
+  [/ai assistant/i, SparklesIcon],
+  [/recommendation/i, TargetIcon],
+  [/cart/i, ShoppingBagIcon],
+  [/in app purchase|order history/i, ReceiptIcon],
+  [/referral/i, TeamIcon],
+  [/booking/i, CalendarIcon],
+  [/reminder/i, BellIcon],
+  [/maps|location/i, MapPinIcon],
+  [/real time tracking/i, RouteIcon],
+  [/rating/i, (p) => <Star size={p.size} className={p.className} />],
+  [/qr|barcode/i, PhoneIcon],
+  [/photo|video/i, LayersIcon],
+  [/sharing|deep link/i, LinkIcon],
+  [/offline/i, CloudSyncIcon],
+  [/dark mode/i, MonitorIcon],
+  [/widget/i, LayoutGridIcon],
+  [/watch|wearable/i, TimerIcon],
+  [/health|fitness/i, PulseIcon],
+  [/split test/i, SplitTestIcon],
+  [/crash/i, LifeBuoyIcon],
+  [/admin dashboard/i, DashboardIcon],
+  // eCommerce page
   [/mobile app|website/i, PhoneIcon],
   [/ui design|custom ui/i, PenToolIcon],
   [/catalog/i, ProductGridIcon],
