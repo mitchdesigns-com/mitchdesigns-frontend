@@ -76,13 +76,13 @@ function StackCard({
         <div className="flex flex-col gap-4 md:w-3/5">
           {card.label && (
             // CMS badge (e.g. Trending): a pill with a gentle sparkle.
-            <span className={cn("inline-flex items-center gap-1.5 self-start rounded-pill px-3 py-1 text-sm font-semibold", skin.badge)}>
+            <span className={cn("inline-flex items-center gap-2 self-start rounded-pill px-4 py-1.5 text-base font-bold", skin.badge)}>
               <motion.span
                 className="inline-flex"
                 animate={reduced ? undefined : { rotate: [0, 14, -10, 0], scale: [1, 1.2, 1] }}
                 transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 1.2 }}
               >
-                <SparklesIcon size={16} />
+                <SparklesIcon size={18} />
               </motion.span>
               {card.label}
             </span>
