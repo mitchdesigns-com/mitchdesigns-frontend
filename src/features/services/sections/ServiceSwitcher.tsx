@@ -6,6 +6,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
 
+/** How far back up (px) the visitor scrolls before the bar shows. */
+const UP_SHOW_PX = 40;
+
 export interface ServiceSwitcherItem {
   slug: string;
   label: string;
@@ -15,8 +18,8 @@ export interface ServiceSwitcherItem {
 /**
  * Pill row at the top of a service page hero for jumping straight to another
  * service without opening the main menu. Once the hero's row scrolls away, the
- * same pills float at the top of the screen (a dark bar), so visitors can
- * switch service at any point on the page.
+ * same pills float under the header as a dark bar, but only while the visitor
+ * scrolls back up a little; scrolling down tucks the bar away again.
  */
 export function ServiceSwitcher({
   items,
@@ -37,11 +40,31 @@ export function ServiceSwitcher({
     return () => io.disconnect();
   }, []);
 
+  // Shown only after scrolling up a little; any scroll down hides it.
+  const [up, setUp] = useState(false);
+  useEffect(() => {
+    let anchor = window.scrollY;
+    let last = anchor;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > last) {
+        anchor = y;
+        setUp(false);
+      } else if (anchor - y > UP_SHOW_PX) {
+        setUp(true);
+      }
+      last = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   // When the site header slides back in (scrolling up), sit just under it
   // instead of being covered. Follows the header's own slide frame by frame.
   const [drop, setDrop] = useState(0);
+  const show = floating && up;
   useEffect(() => {
-    if (!floating) return;
+    if (!show) return;
     const header = document.querySelector("header");
     let raf = 0;
     let last = -1;
@@ -55,7 +78,7 @@ export function ServiceSwitcher({
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [floating]);
+  }, [show]);
 
   return (
     <>
@@ -72,7 +95,7 @@ export function ServiceSwitcher({
 
       {/* Floating copy while the page scrolls (below the menu overlay). */}
       <AnimatePresence>
-        {floating && (
+        {show && (
           <motion.nav
             aria-label="Switch service"
             className="pointer-events-none fixed inset-x-0 top-8 z-40 flex px-4 pr-24 md:justify-center md:px-28"
