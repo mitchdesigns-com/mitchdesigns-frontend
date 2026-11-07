@@ -1188,6 +1188,8 @@ export const fixtureCareersPage: CareersPageData = {
     { label: "Full Ownership" },
     { label: "Innovative Culture" },
   ],
+  noPositionsTitle: "We currently don't have jobs",
+  noPositionsBody: "New roles show up here first, so check back soon.",
 };
 
 export const fixtureOrderbasePage: OrderbasePageData = {

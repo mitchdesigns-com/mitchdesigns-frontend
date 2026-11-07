@@ -62,7 +62,7 @@ export function OurDrive({ drives = DEFAULT_DRIVES }: Props = {}) {
   const p = useTransform(scrollY, (y) => (reduced ? 0 : Math.min(1, Math.max(0, (y - range.from) / (range.to - range.from)))));
 
   return (
-    <Section theme="dark" className="py-25">
+    <Section theme="dark" className="pb-25">
       <div
         ref={ref}
         className="-mx-2 flex snap-x snap-mandatory gap-6 overflow-x-auto px-2 py-6 sm:snap-none sm:overflow-x-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
