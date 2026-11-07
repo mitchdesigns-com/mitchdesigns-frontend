@@ -26,7 +26,7 @@ type EditorialHeroProps = {
  * on the right.
  */
 export function EditorialHero({
-  eyebrow = "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
+  eyebrow = "MitchDesigns - Website & Mobile App Design Company Based in Egypt",
   headline = "Start Building Digital Experiences that",
   rotatingWords,
 }: EditorialHeroProps) {
@@ -99,9 +99,7 @@ export function EditorialHero({
             variants={fadeUp}
             className="mt-8 max-w-120 text-lg text-black/65 text-balance"
           >
-            No templates, no shortcuts — custom websites, apps and platforms
-            built in-house since 2005.
-          </motion.p>
+            No templates, no shortcuts, custom websites, apps and platforms built in-house since 2005. </motion.p>
         </div>
 
         <motion.div variants={fadeUp} className="relative">

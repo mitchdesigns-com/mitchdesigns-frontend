@@ -51,7 +51,7 @@ export default async function SingleCareerPage({
   if (!role) notFound();
 
   const applyHref = `mailto:${careersPage?.applyEmail ?? APPLY_EMAIL}?subject=${encodeURIComponent(
-    `Application — ${role.title}`,
+    `Application | ${role.title}`,
   )}`;
 
   return (

@@ -1,7 +1,7 @@
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CardSlider } from "@/components/ui/CardSlider";
-import { RevealItem } from "@/components/motion";
+import { Reveal, RevealItem } from "@/components/motion";
 import { TiltGrid } from "@/components/ui/TiltGrid";
 import { GlowCard } from "@/components/ui/GlowCard";
 import type { WhyUsSectionProps } from "@/lib/cms/types";
@@ -43,12 +43,14 @@ export function WhyUsSection({
   return (
     <Section theme="dark" className="py-20 md:py-28">
       <div className="space-y-12">
-        <SectionHeader
-          icon={<Logo />}
-          title={title}
-          description={description}
-          align="center"
-        />
+        <Reveal>
+          <SectionHeader
+            icon={<Logo />}
+            title={title}
+            description={description}
+            align="center"
+          />
+        </Reveal>
         {variant === "slider" ? (
           <CardSlider scrollStep={288 + 16}>
             {cards.map((card, i) => {

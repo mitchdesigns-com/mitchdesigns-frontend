@@ -29,7 +29,7 @@ import {
 } from "@/lib/cms/fixtures";
 
 export const metadata: Metadata = {
-  title: "Homepage V2 — Hero Lab",
+  title: "Homepage V2 | Hero Lab",
   description:
     "The MitchDesigns homepage with alternative hero directions to preview.",
   alternates: { canonical: "/v2" },

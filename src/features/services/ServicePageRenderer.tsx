@@ -1,3 +1,4 @@
+import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
 import type {
   CaseStudy,
   FAQ,
@@ -16,8 +17,18 @@ import { SeoScene } from "./seoScene/SeoScene";
 import { TabletVideoSection } from "./googleAdsScene/TabletVideoSection";
 import { MacbookVideoSection } from "./mediaBuyingScene/MacbookVideoSection";
 import { workStepSummary } from "./sections/workSteps";
+import { ClientWorkFetcher } from "./sections/ClientWorkFetcher";
+import { SupportStack } from "./sections/SupportStack";
+import { AppDemoSection } from "./sections/AppDemoSection";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
 import { appFlowSteps } from "./sections/appFlow/steps";
+
+/** 3D icons for the eCommerce audience tabs (B2C, Food & Beverage, B2B). */
+const ECOMMERCE_MODEL_ICONS = [
+  { src: "/images/services/ecommerce-models/b2c.webp", alt: "Shopping bag and card, B2C online store" },
+  { src: "/images/services/ecommerce-models/food-beverage.webp", alt: "Delivery bag with burger and coffee, food ordering" },
+  { src: "/images/services/ecommerce-models/b2b.webp", alt: "Storefront, boxes on a pallet and an invoice, B2B wholesale" },
+];
 
 /** "We Got You" card on eCommerce: one order from tap to doorstep
  *  (fallback until `weGotYou.story` is filled in Strapi). */
@@ -28,6 +39,7 @@ const ECOMMERCE_ORDER_STORY = [
   { src: "/images/services/ecommerce/story-4-delivery.webp", alt: "Courier delivering the order to the customer" },
 ];
 import { WeGotYouTabs } from "./sections/WeGotYouTabs";
+import { FeatureGrid } from "./sections/FeatureGrid";
 import { WeGotYouOrbit } from "./sections/WeGotYouOrbit";
 import { WhyUsSection } from "./sections/WhyUsSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -64,6 +76,7 @@ function WorkSteps({ process }: { process: ProcessSectionProps }) {
       titleHighlights={process.titleHighlights}
       description={process.description}
       image=""
+      pageScroll
       featureCards={[...process.processCards]
         .sort((a, b) => a.stepNumber - b.stepNumber)
         .map((c) => ({ title: c.title, description: workStepSummary(c) }))}
@@ -155,7 +168,7 @@ export function ServicePageRenderer({
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/corporate-review.webp"}
               imageAlt="MitchDesigns team building a corporate website"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
@@ -180,30 +193,33 @@ export function ServicePageRenderer({
                 image: "/images/services/ecommerce/we-got-you.webp",
                 imageAlt: "Store owner managing orders on a tablet",
                 story: weGotYou.story ?? ECOMMERCE_ORDER_STORY,
-                cta: { label: "Get Proposal", href: leadsUrl(slug) },
+                cta: { label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) },
               };
               // Audience tabs (B2C · Food & Beverage · B2B) when the CMS has them.
               return weGotYou.tabs?.length ? (
-                <WeGotYouTabs {...ecommerceWeGotYou} />
+                <WeGotYouTabs {...ecommerceWeGotYou} icons={ECOMMERCE_MODEL_ICONS} />
               ) : (
                 <WeGotYouOrbit {...ecommerceWeGotYou} />
               );
             })()}
+          {/* The brands we built stores for (CMS heading in `moreAbout`, projects from case studies). */}
+          {moreAbout && <ClientWorkFetcher category="eCommerce" title={moreAbout.title} description={moreAbout.description} />}
           {whyUs && <WhyUsSection {...whyUs} />}
-          {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
-          {/* Website + app: the retention story, told on the 3D phone (CMS `process`). */}
+          {/* Every feature as a plain grid the page scrolls past (no inner scroll). */}
+          {featuresSimplified && <FeatureGrid {...featuresSimplified} />}
+          {/* Website + app: the app playing live on a coded phone (CMS `process` copy). */}
           {process?.processCards?.length ? (
-            <AppFlowSection
-              steps={appFlowSteps(process)}
+            <AppDemoSection
               eyebrow={process.eyebrow}
-              closingTitle={process.closingTitle}
-              closingText={process.closingText}
-              screens={process.appScreens}
+              title={process.title}
+              steps={appFlowSteps(process)}
+              logo={{ src: "/images/orderbase/wordmark.svg", alt: "Orderbase" }}
             />
           ) : null}
           {/* Same stack as Corporate, minus the CMS (stores run on their own engine). */}
           <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["Strapi"]} />
-          {support && <SupportSection {...support} />}
+          {/* "Why Brands Stay With Us" as a scroll stack of big cards. */}
+          {support && <SupportStack {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>
@@ -219,7 +235,7 @@ export function ServicePageRenderer({
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/screens-review.webp"}
               imageAlt="MitchDesigns team reviewing a platform build across screens"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* "Built on Solid Foundations" as the 3D tilt-card grid the other
@@ -252,7 +268,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our geography widget (front-end only).
               image={encodeURI("/images/media-buying/webp/Widgets [Marketing & Sales] [1.1].webp")}
               imageAlt="Audience geography dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
@@ -279,7 +295,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our emotions radar widget (front-end only).
               image={encodeURI("/images/google ads/webp/radar.webp")}
               imageAlt="Audience emotions radar dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* Our Google Ads recording on a tablet that rises as you scroll. */}
@@ -304,7 +320,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our organic-clicks widget (front-end only).
               image="/images/SEO/seo-clicks.webp"
               imageAlt="Total organic clicks dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
@@ -323,7 +339,7 @@ export function ServicePageRenderer({
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/mobile-app.webp"}
               imageAlt="MitchDesigns team testing a mobile app on a phone"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
@@ -338,7 +354,7 @@ export function ServicePageRenderer({
             {...techStackCopy(techStack, {
               title: "Craft seamless digital platforms with our modern tech stack",
               description:
-                "More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client.",
+                "More than a stack. It's how we build reliable, scalable, and secure digital ecosystems for every client.",
               highlight: "modern tech stack",
             })}
           />

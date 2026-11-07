@@ -18,28 +18,27 @@ export function isLeadFunnelHref(href?: string | null): boolean {
   return !!href && (href.startsWith("/quote") || isLeadsHref(href));
 }
 
-/**
- * Marketing service slug → lead-funnel service slug (md-leads routes). Only the
- * four productised services have a dedicated funnel; the rest fall back to the
- * leads home, which redirects gracefully.
- */
+/** Marketing service slug → the lead funnel's project type (md-leads). */
 const LEADS_FUNNEL_SERVICE: Partial<Record<ServiceSlug, string>> = {
   corporate: "corporate-website",
   ecommerce: "ecommerce",
   "mobile-app": "mobile-app",
   custom: "custom-web",
+  "media-buying": "media-buying",
+  "google-ads": "media-buying",
+  seo: "seo",
 };
 
 /**
- * Deep link into the leads app with a service preselected, e.g.
- * `https://leads.mitchdesigns.com/quote/mobile-app/1`. Falls back to the leads
- * home for services without a dedicated funnel.
+ * Where a service page's CTA goes: the funnel's start page with that service
+ * and the consultation path preselected (`?service=ecommerce&action=schedule-call`),
+ * so the visitor doesn't land on whatever they picked on an earlier visit.
+ * (Per-service step links like `quote/<service>/1` skip the consultation
+ * choice, so they aren't used.) No service → the plain start page.
  */
 export function leadsUrl(service?: string): string {
-  const funnelService = service
-    ? LEADS_FUNNEL_SERVICE[service as ServiceSlug]
-    : undefined;
-  return funnelService ? `${LEADS_URL}quote/${funnelService}/1` : LEADS_URL;
+  const funnelService = service ? LEADS_FUNNEL_SERVICE[service as ServiceSlug] : undefined;
+  return funnelService ? `${LEADS_URL}?service=${funnelService}&action=schedule-call` : LEADS_URL;
 }
 
 export const NAV_LINKS = [
@@ -50,7 +49,7 @@ export const NAV_LINKS = [
   { label: "Talks", href: "/talks" },
   { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
-  { label: "Get Detailed Proposal", href: LEADS_URL },
+  { label: "Schedule Consultation Meeting", href: LEADS_URL },
 ] as const;
 
 export const COMPANY_LINKS = [

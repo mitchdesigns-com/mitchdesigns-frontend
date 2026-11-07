@@ -98,7 +98,7 @@ export type CaseStudyGridProps = {
 export function CaseStudyGrid({
   caseStudies,
   title = "Case Studies",
-  description = "We don't just promise results — we prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
+  description = "We don't just promise results. We prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
 }: CaseStudyGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -108,6 +108,15 @@ export function CaseStudyGrid({
   const filters = FILTERS.filter(
     ({ value }) => value === "All" || caseStudies.some((cs) => cs.category === value),
   );
+
+  // `?category=eCommerce` (e.g. from a service page) opens on that filter.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("category");
+    const match = wanted && filters.map((f) => f.value as string).find((c) => c.toLowerCase() === wanted.toLowerCase());
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match) setActiveCategory(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filtered = activeCategory === "All"
     ? caseStudies

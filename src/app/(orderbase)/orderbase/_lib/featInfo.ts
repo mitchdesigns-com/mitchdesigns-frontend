@@ -11,7 +11,7 @@ export const FEAT_INFO: Record<string, FeatInfo> = {
   "mobileApp": {
     "w": "A native iOS & Android ordering app branded entirely to your business.",
     "b": "A permanent icon on your customer's home screen plus push-notification reach.",
-    "v": "Drives repeat orders and direct engagement you own — no aggregator commissions.",
+    "v": "Drives repeat orders and direct engagement you own, no aggregator commissions.",
     "s": "Native iOS & Android, push notifications, app-store publishing. Elite & Custom plans."
   },
   "shopWebsite": {
@@ -34,7 +34,7 @@ export const FEAT_INFO: Record<string, FeatInfo> = {
   },
   "variants": {
     "w": "Sell both simple products and products with options like size, flavour or attribute.",
-    "b": "One product page cleanly handles every variation — no duplicate listings.",
+    "b": "One product page cleanly handles every variation, no duplicate listings.",
     "v": "A single flexible catalogue models your entire real-world menu and speeds up ordering.",
     "s": "Simple & variable products, multiple option sets, per-variant price, stock & SKU."
   },
@@ -63,14 +63,14 @@ export const FEAT_INFO: Record<string, FeatInfo> = {
     "s": "Live order queue, statuses, branch routing, roles & notifications."
   },
   "promoCodes": {
-    "w": "Discount codes — fixed amount, percentage or free delivery.",
+    "w": "Discount codes, fixed amount, percentage or free delivery.",
     "b": "Launch targeted offers in minutes without developer help.",
     "v": "Drives campaigns, wins back customers and boosts slow periods on demand.",
     "s": "Fixed / % / free-delivery, expiry dates, usage limits, per-customer caps."
   },
   "paymentGateways": {
     "w": "Direct integration with the MPGS (MasterCard) gateway through Crédit Agricole Bank, plus any local processor.",
-    "b": "Customers pay by credit card inside your own website or app — never handed off to a third-party processor's page.",
+    "b": "Customers pay by credit card inside your own website or app, never handed off to a third-party processor's page.",
     "v": "A seamless, on-brand and trusted checkout that lifts payment completion.",
     "s": "MPGS / Crédit Agricole direct integration; connects to any local payment processor; card, wallet & cash."
   },
@@ -238,7 +238,7 @@ export const FEAT_INFO: Record<string, FeatInfo> = {
   },
   "guestCheckout": {
     "w": "Checkout as a guest or as a registered account.",
-    "b": "No forced sign-up — customers buy the way they prefer.",
+    "b": "No forced sign-up, customers buy the way they prefer.",
     "v": "Removes a top cause of cart abandonment while still growing your database.",
     "s": "Guest & account checkout, optional post-order sign-up."
   },

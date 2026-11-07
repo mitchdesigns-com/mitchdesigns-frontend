@@ -9,6 +9,8 @@ import { useSectionTheme } from "@/hooks/useSectionTheme";
 import { HeaderConfigContext } from "@/context/HeaderConfigContext";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { FullScreenMenuNav } from "./FullScreenMenuNav";
+import { usePathname } from "next/navigation";
+import { isLeadsHref, leadsUrl } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
@@ -21,6 +23,9 @@ const FAB_HIDE_IN_FOOTER = 0.6;
 export function Header() {
   const { sticky, showCta, ctaInView, immersive } = useContext(HeaderConfigContext);
   const { primaryCta } = useSiteSettings();
+  // On a service page the button opens the funnel with that service preselected.
+  const serviceSlug = usePathname().match(/^\/services\/([^/]+)/)?.[1];
+  const ctaHref = serviceSlug && isLeadsHref(primaryCta.href) ? leadsUrl(serviceSlug) : primaryCta.href;
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
   // Distance each bar travels to meet in the middle as an X (bars sit
@@ -161,7 +166,7 @@ export function Header() {
           <div className="flex items-center gap-6">
             {showCta && (
               <Link
-                href={primaryCta.href}
+                href={ctaHref}
                 className={cn(
                   "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
                   (menuOpen || ctaInView) && "opacity-0 pointer-events-none",

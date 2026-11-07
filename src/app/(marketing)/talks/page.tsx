@@ -5,11 +5,11 @@ import { fixtureTalks } from "@/lib/cms/fixtures";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Talks & Articles — MitchDesigns",
+  title: "Talks & Articles | MitchDesigns",
   description:
-    "Insights on UX, product design, and digital growth from the MitchDesigns team — conference talks, workshops, and community sessions across Egypt and the region.",
+    "Insights on UX, product design, and digital growth from the MitchDesigns team, conference talks, workshops, and community sessions across Egypt and the region.",
   openGraph: {
-    title: "Talks & Articles — MitchDesigns",
+    title: "Talks & Articles | MitchDesigns",
     description:
       "Insights on UX, product design, and digital growth from the MitchDesigns team.",
     url: "https://mitchdesigns.com/talks",

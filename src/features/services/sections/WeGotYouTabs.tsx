@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { HeaderCtaInView } from "@/components/layout/HeaderCtaInView";
@@ -14,11 +14,13 @@ import { cn } from "@/lib/cn";
 import { easeOutSoft } from "@/lib/motion";
 import type { WeGotYouProps } from "@/lib/cms/types";
 import { HighlightTitle } from "./WeGotYouOrbit";
+import { Reveal, useReveal } from "@/components/motion";
 
 /**
  * "We Got You" for pages that speak to several audiences: the shared headline
- * and intro, then a toggle (e.g. B2C · Food & Beverage · B2B) that swaps a
- * message, an optional brand logo (Orderbase) and a photo for each one.
+ * and intro, then a toggle (e.g. B2C · Food & Beverage · B2B). Under it, one
+ * stage: the audience's 3D icon floats big in the centre with its message
+ * below. Without icons it falls back to the section's photos.
  */
 export function WeGotYouTabs({
   title,
@@ -32,11 +34,17 @@ export function WeGotYouTabs({
   cta,
   theme = "light",
   tabs = [],
-}: WeGotYouProps) {
+  icons = [],
+}: WeGotYouProps & {
+  /** One 3D icon per audience tab, in tab order. */
+  icons?: { src: string; alt: string }[];
+}) {
   const [active, setActive] = useState(0);
+  const reduced = useReducedMotion();
+  const { ref: stageRef, inView: stageIn } = useReveal({ margin: "-25% 0px" });
   const tab = tabs[active];
-  // One photo per audience, cycling the section's story (or its image).
-  const shots = story?.length ? story : [{ src: image, alt: imageAlt ?? "" }];
+  // Without icons: one photo per audience, cycling the section's story (or its image).
+  const shots = icons.length ? icons : story?.length ? story : [{ src: image, alt: imageAlt ?? "" }];
   const shot = shots[active % shots.length];
 
   return (
@@ -48,9 +56,12 @@ export function WeGotYouTabs({
           </span>
         )}
         <HighlightTitle title={title} highlights={titleHighlights} Tag={titleTag} />
-        <RichText content={description} className="max-w-3xl text-xl font-medium text-black text-balance md:text-2xl" />
+        <Reveal delay={0.2}>
+          <RichText content={description} className="max-w-3xl text-xl font-medium text-black text-balance md:text-2xl" />
+        </Reveal>
 
         {/* Audience toggle: phones scroll it sideways on one line */}
+        <Reveal delay={0.35} className="flex justify-center self-stretch md:self-auto">
         <div
           role="tablist"
           aria-label="Who we build for"
@@ -67,29 +78,57 @@ export function WeGotYouTabs({
               onClick={() => setActive(i)}
               className={cn(
                 "shrink-0 whitespace-nowrap rounded-pill border px-5 py-2.5 text-base font-semibold transition-colors duration-200 md:border-transparent md:px-6 md:py-3",
-                i === active ? "border-black bg-black text-yellow" : "border-black/15 text-black/60 hover:text-black",
+                i === active ? "border-black bg-black text-yellow" : "border-black/15 text-black hover:bg-black/5",
               )}
             >
               {t.label}
             </button>
           ))}
         </div>
+        </Reveal>
       </div>
 
       {tab && (
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={active}
-            id="audience-panel"
-            role="tabpanel"
-            aria-labelledby={`audience-tab-${active}`}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.35, ease: easeOutSoft }}
-            className="mt-12 grid items-center gap-10 md:mt-16 md:grid-cols-2 md:gap-16"
-          >
-            <div className="flex flex-col items-start gap-5">
+        <Reveal className="mt-12 md:mt-16">
+        <div ref={stageRef} className="relative overflow-hidden rounded-card bg-panel-cool px-6 py-12 md:px-16 md:py-16">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={active}
+              id="audience-panel"
+              role="tabpanel"
+              aria-labelledby={`audience-tab-${active}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="relative mx-auto flex max-w-2xl flex-col items-center gap-5 text-center"
+            >
+              {icons.length ? (
+                <div className="relative w-48 md:w-64 lg:w-72">
+                  {/* Yellow glow under the icon */}
+                  <div aria-hidden className="absolute inset-x-1/6 bottom-0 h-1/3 rounded-full bg-yellow blur-2xl" />
+                  <motion.div
+                    className="relative aspect-square"
+                    // Pops in once the stage is in view, and again on every switch.
+                    initial={reduced ? false : { scale: 0.4, rotate: -14, y: 40 }}
+                    animate={stageIn || reduced ? { scale: 1, rotate: 0, y: 0 } : { scale: 0.4, rotate: -14, y: 40 }}
+                    transition={{ type: "spring", stiffness: 220, damping: 14 }}
+                  >
+                    <motion.div
+                      className="relative size-full"
+                      animate={reduced ? undefined : { y: [0, -12, 0], rotate: [0, 2, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                    >
+                      <Image src={shot.src} alt={shot.alt} fill priority={active === 0} className="object-contain drop-shadow-xl" sizes="18rem" />
+                    </motion.div>
+                  </motion.div>
+                </div>
+              ) : (
+                <div className="relative aspect-4/3 w-full overflow-hidden rounded-card shadow-soft-lg">
+                  <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 42rem" />
+                </div>
+              )}
+
               {tab.logo && (
                 <Image
                   src={tab.logo}
@@ -97,27 +136,33 @@ export function WeGotYouTabs({
                   width={180}
                   height={40}
                   unoptimized
-                  className="h-14 w-auto"
+                  // The wordmark is wide, so it stays small and gets room above the title.
+                  className="mt-2 h-6 w-auto md:h-7"
                 />
               )}
-              <h3 className="text-hero-5 font-bold text-black text-balance">{tab.title}</h3>
-              <RichText content={tab.description} className="text-lg text-black/75 text-balance md:text-xl" />
-              {cta && (
-                <HeaderCtaInView active={isLeadsHref(cta.href)}>
-                  <Button asChild size="lg" className="mt-2">
-                    <Link href={cta.href}>
-                      {cta.label}
-                      <ArrowRight size={20} />
-                    </Link>
-                  </Button>
-                </HeaderCtaInView>
-              )}
-            </div>
-            <div className="relative aspect-4/3 overflow-hidden rounded-card shadow-soft-lg">
-              <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-            </div>
-          </motion.div>
-        </AnimatePresence>
+              <motion.div
+                className="flex flex-col items-center gap-4"
+                initial={reduced ? false : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12, duration: 0.4, ease: easeOutSoft }}
+              >
+                <h3 className="text-hero-5 font-bold text-black text-balance">{tab.title}</h3>
+                <RichText content={tab.description} className="text-lg text-black text-balance md:text-xl" />
+                {cta && (
+                  <HeaderCtaInView active={isLeadsHref(cta.href)}>
+                    <Button asChild size="lg" className="mt-2">
+                      <Link href={cta.href}>
+                        {cta.label}
+                        <ArrowRight size={20} />
+                      </Link>
+                    </Button>
+                  </HeaderCtaInView>
+                )}
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        </Reveal>
       )}
     </Section>
   );

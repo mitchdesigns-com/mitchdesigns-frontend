@@ -10,7 +10,7 @@ export const APP_SCREENS = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) =>
 
 /** Default mobile-app flow, used when the CMS has no process steps. */
 const DEFAULT_STEPS: FlowStep[] = [
-  { title: "Discovery & Strategy", description: "We map your users, goals and the features that matter — before a single pixel." },
+  { title: "Discovery & Strategy", description: "We map your users, goals and the features that matter, before a single pixel." },
   { title: "UX Wireframes", description: "Flows and wireframes prove the journey works while it's still quick to change." },
   { title: "UI Design", description: "A polished, on-brand interface designed for both iOS and Android." },
   { title: "Interactive Prototype", description: "A clickable prototype to test the real flow with users before any code." },

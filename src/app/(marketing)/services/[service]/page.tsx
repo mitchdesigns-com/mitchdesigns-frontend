@@ -27,22 +27,22 @@ const SERVICE_META: Record<ServiceSlug, { title: string; description: string }> 
   corporate: {
     title: "Corporate Website Design & Development",
     description:
-      "Custom corporate websites built on Next.js with headless CMS. No templates — designed for lead generation, brand clarity, and high performance. Based in Egypt, serving the MENA region.",
+      "Custom corporate websites built on Next.js with headless CMS. No templates, designed for lead generation, brand clarity, and high performance. Based in Egypt, serving the MENA region.",
   },
   "mobile-app": {
     title: "Mobile App Design & Development",
     description:
-      "Native-feel iOS and Android apps built with React Native. Designed for conversion, built for performance, and ready for App Store submission. MitchDesigns — Egypt.",
+      "Native-feel iOS and Android apps built with React Native. Designed for conversion, built for performance, and ready for App Store submission. MitchDesigns. Egypt.",
   },
   ecommerce: {
     title: "eCommerce Platform Design & Development",
     description:
-      "Custom eCommerce storefronts with seamless checkout, local payment gateway integration (Paymob, Fawry), and conversion-optimised UX. MitchDesigns — Egypt.",
+      "Custom eCommerce storefronts with seamless checkout, local payment gateway integration (Paymob, Fawry), and conversion-optimised UX. MitchDesigns. Egypt.",
   },
   custom: {
     title: "Custom Platform & Software Development",
     description:
-      "Booking systems, SaaS dashboards, internal tools, and client portals — custom-architected for reliability and designed for the people who use them daily.",
+      "Booking systems, SaaS dashboards, internal tools, and client portals, custom-architected for reliability and designed for the people who use them daily.",
   },
   "media-buying": {
     title: "Media Buying: Meta, TikTok & Google Ads",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalDocument } from "@/features/legal/LegalDocument";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — MitchDesigns",
+  title: "Terms of Service | MitchDesigns",
   description:
     "The terms and conditions that govern your use of the MitchDesigns website and services.",
   alternates: { canonical: "/terms" },

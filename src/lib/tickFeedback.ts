@@ -61,3 +61,41 @@ export function tick() {
 export function buzz(ms = 8) {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(ms);
 }
+
+/** A soft two-note chime (~0.35s): a step completes and the next one starts. */
+export function chime() {
+  if (!ctx || !unlocked || ctx.state !== "running") return;
+  const t = ctx.currentTime;
+  [
+    [880, 0],
+    [1318.5, 0.09],
+  ].forEach(([freq, at]) => {
+    const osc = ctx!.createOscillator();
+    const gain = ctx!.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, t + at);
+    gain.gain.setValueAtTime(0.0001, t + at);
+    gain.gain.exponentialRampToValueAtTime(0.12, t + at + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + at + 0.3);
+    osc.connect(gain).connect(ctx!.destination);
+    osc.start(t + at);
+    osc.stop(t + at + 0.32);
+  });
+}
+
+/** A tiny bubbly pop (~60ms): something lands on screen. */
+export function pop(pitch = 1) {
+  if (!ctx || !unlocked || ctx.state !== "running") return;
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(420 * pitch, t);
+  osc.frequency.exponentialRampToValueAtTime(980 * pitch, t + 0.05);
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.exponentialRampToValueAtTime(0.14, t + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.07);
+}
