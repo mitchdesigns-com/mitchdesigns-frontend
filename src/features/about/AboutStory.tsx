@@ -108,7 +108,7 @@ function StoryPhoto({ photo, toward }: { photo: Photo; toward: Toward }) {
   };
   return (
     <motion.div
-      className="group relative w-full max-w-60 perspective-midrange"
+      className="group relative w-full max-w-72 perspective-midrange"
       initial="rest"
       animate="rest"
       whileHover="hover"
@@ -117,7 +117,7 @@ function StoryPhoto({ photo, toward }: { photo: Photo; toward: Toward }) {
         variants={variants}
         className="transform-3d shadow-none transition-shadow duration-700 ease-out-soft group-hover:shadow-2xl"
       >
-        <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-4/3" sizes="320px" drift={10} zoom={0.08} />
+        <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-4/3" sizes="360px" drift={10} zoom={0.08} />
       </motion.div>
     </motion.div>
   );
@@ -156,11 +156,11 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
   return (
     <Section className="overflow-hidden bg-yellow py-24 md:py-32">
       <div className="relative flex flex-col gap-12 md:gap-0">
-        <div className="flex justify-between gap-4 md:-mb-16">
-          <Parallax speed={-60} className="relative flex w-full justify-start hover:z-20">
+        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4 md:-mb-16">
+          <Parallax speed={-60} className="relative flex w-full justify-start md:justify-center md:pt-16 hover:z-20">
             <StoryPhoto photo={photos[0]} toward={{ x: 1, y: 1 }} />
           </Parallax>
-          <Parallax speed={-100} className="relative flex w-full justify-end md:pt-24 hover:z-20">
+          <Parallax speed={-100} className="relative flex w-full justify-end md:justify-center md:pt-24 hover:z-20">
             <StoryPhoto photo={photos[1]} toward={{ x: -1, y: 1 }} />
           </Parallax>
         </div>
@@ -177,11 +177,11 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
           </div>
         </Reveal>
 
-        <div className="flex justify-between gap-4 md:-mt-16">
-          <Parallax speed={50} className="relative flex w-full justify-start md:pt-24 hover:z-20">
+        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4 md:-mt-16">
+          <Parallax speed={50} className="relative flex w-full justify-start md:justify-center md:pt-24 hover:z-20">
             <StoryPhoto photo={photos[2]} toward={{ x: 1, y: -1 }} />
           </Parallax>
-          <Parallax speed={90} className="relative flex w-full justify-end hover:z-20">
+          <Parallax speed={90} className="relative flex w-full justify-end md:justify-center hover:z-20">
             <StoryPhoto photo={photos[3]} toward={{ x: -1, y: -1 }} />
           </Parallax>
         </div>
