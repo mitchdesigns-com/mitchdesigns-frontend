@@ -1184,6 +1184,7 @@ function mapServicePage(raw: any): ServicePageData {
             imageAlt: mediaAlt(c.image),
             description: c.description,
             icon: c.icon ?? undefined,
+            label: c.label ?? undefined,
           })),
         }
       : undefined,
