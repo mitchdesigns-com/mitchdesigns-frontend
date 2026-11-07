@@ -7,6 +7,8 @@
 const STRAPI = process.env.NEXT_PUBLIC_STRAPI_URL ?? "https://cms.mitchdesigns.com";
 const TOKEN = process.env.STRAPI_WRITE_TOKEN;
 const DRY = process.argv.includes("--dry");
+// --labels also writes support card badges (once Strapi has the field).
+const WITH_LABELS = process.argv.includes("--labels");
 if (!TOKEN) throw new Error("Set STRAPI_WRITE_TOKEN (a full-access Strapi API token).");
 const headers = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
 
@@ -122,7 +124,7 @@ const SUPPORT = {
   cards: [
     ["Strategic clarity", "A clear product roadmap for your app, tied to your business goals and reviewed as you grow.", "compass"],
     ["Retention first", "We study how people use your app and keep refining it, so they open it more often and stay longer.", "funnel"],
-    ["AI and automation", "We're an AI company too. We add smart features, automate the busywork and keep your app up to date with what's next.", "sparkle"],
+    ["AI & Automation", "We're an AI company too. We add smart features, automate the busywork and keep your app up to date with what's next.", "sparkle", "Trending"],
     ["Ongoing partnership", "Updates for every new iOS and Android release, bug fixes, monitoring and new features, from a team that knows your app inside out.", "team"],
   ],
 };
@@ -191,7 +193,8 @@ const featuresSimplified = {
 };
 const support = {
   id: s.id, title: SUPPORT.title, titleHighlights: SUPPORT.titleHighlights, description: SUPPORT.description,
-  cards: SUPPORT.cards.map(([title, text, icon], i) => ({ title, description: para(text), icon, image: id(s.cards?.[i]?.image) ?? filler })),
+  // The 4th entry is the card badge (needs the support-card `label` field in Strapi).
+  cards: SUPPORT.cards.map(([title, text, icon, label], i) => ({ title, description: para(text), icon, ...(WITH_LABELS ? { label: label ?? null } : {}), image: id(s.cards?.[i]?.image) ?? filler })),
 };
 // The design doesn't show these cards, but the schema needs at least one.
 const moreAbout = {

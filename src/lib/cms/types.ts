@@ -383,6 +383,8 @@ export type SupportCard = {
   description: RichText;
   /** Picks the card's line icon; unset → guessed from the title. */
   icon?: LineIconKey;
+  /** Optional badge on the card (e.g. Trending). */
+  label?: "New" | "Popular" | "Trending";
 };
 
 export type SupportSectionProps = {
