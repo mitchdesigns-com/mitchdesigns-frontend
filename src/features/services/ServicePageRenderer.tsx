@@ -21,7 +21,7 @@ import { ClientWorkFetcher } from "./sections/ClientWorkFetcher";
 import { SupportStack } from "./sections/SupportStack";
 import { AppDemoSection } from "./sections/AppDemoSection";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
-import { appFlowSteps } from "./sections/appFlow/steps";
+import { MOBILE_FLOW_SCREENS, appFlowSteps } from "./sections/appFlow/steps";
 
 /** 3D icons for the eCommerce audience tabs (B2C, Food & Beverage, B2B). */
 const ECOMMERCE_MODEL_ICONS = [
@@ -64,10 +64,18 @@ function techStackCopy(
 }
 
 const PLATFORM_STACK = {
-  title: "Our Technology Stack",
+  title: "Our technology stack",
   description: "The tools and frameworks we use to build custom platforms that scale.",
-  highlight: "Technology Stack",
+  highlight: "technology stack",
 };
+
+const MOBILE_STACK = {
+  title: "The tech behind our apps",
+  description: "Flutter and React Native on the front, a secure and scalable backend behind them.",
+  highlight: "our apps",
+};
+/** Mobile page tools, in this order (CMS tech item names). */
+const MOBILE_TECH = ["React Native", "Flutter", "Laravel PHP", "PHP", "AWS", "Cloudflare", "Github"];
 
 function WorkSteps({ process }: { process: ProcessSectionProps }) {
   return (
@@ -173,7 +181,8 @@ export function ServicePageRenderer({
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
           {process && <WorkSteps process={process} />}
-          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} />
+          {/* Websites only: no mobile app framework here. */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["React Native"]} />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -342,23 +351,24 @@ export function ServicePageRenderer({
               cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
+          {/* The brands we built apps for, as on eCommerce (shows once there are Mobile App case studies). */}
+          {moreAbout && <ClientWorkFetcher category="Mobile App" title={moreAbout.title} description={moreAbout.description} />}
           {whyUs && <WhyUsSection {...whyUs} />}
+          {/* The common app features we build, as a plain grid. */}
+          {featuresSimplified && <FeatureGrid {...featuresSimplified} />}
           <AppFlowSection
             steps={appFlowSteps(process)}
             eyebrow={process?.eyebrow}
+            title={process?.title}
+            titleHighlights={process?.titleHighlights}
             closingTitle={process?.closingTitle}
             closingText={process?.closingText}
-            screens={process?.appScreens}
+            screens={process?.appScreens?.length ? process.appScreens : MOBILE_FLOW_SCREENS}
           />
-          <TechStackFetcher
-            {...techStackCopy(techStack, {
-              title: "Craft seamless digital platforms with our modern tech stack",
-              description:
-                "More than a stack. It's how we build reliable, scalable, and secure digital ecosystems for every client.",
-              highlight: "modern tech stack",
-            })}
-          />
-          {support && <SupportSection {...support} />}
+          {/* Mobile tools and the backend behind them, no web-only tools. */}
+          <TechStackFetcher {...techStackCopy(techStack, MOBILE_STACK)} only={MOBILE_TECH} />
+          {/* "Why brands stay with us" as the same scroll stack as eCommerce. */}
+          {support && <SupportStack {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>

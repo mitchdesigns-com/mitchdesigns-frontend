@@ -8,6 +8,10 @@ export const APP_SCREENS = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) =>
   encodeURI(`/images/mobile-app/3d-mockup-screens/mobile mockup ${n}.webp`),
 );
 
+/** Mobile app page: the pastry store, golimo booking, the green travel app,
+ *  the trading wallet and, for the closing pose, the bakery store. */
+export const MOBILE_FLOW_SCREENS = [1, 3, 4, 6, 7].map((n) => APP_SCREENS[n - 1]);
+
 /** Default mobile-app flow, used when the CMS has no process steps. */
 const DEFAULT_STEPS: FlowStep[] = [
   { title: "Discovery & Strategy", description: "We map your users, goals and the features that matter, before a single pixel." },

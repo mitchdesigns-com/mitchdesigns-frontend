@@ -102,7 +102,7 @@ export function ServiceHero({
             {renderTitle(title, titleHighlights)}
           </motion.h1>
           <motion.div variants={fadeUp}>
-            <RichText content={description} className="max-w-xl text-lg text-fg-muted" />
+            <RichText content={description} className="text-lg text-fg-muted text-balance" />
           </motion.div>
           {cta && (
             <motion.div variants={fadeUp} ref={ctaRef}>

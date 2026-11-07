@@ -38,8 +38,8 @@ const WHY_US = [
 ];
 
 // Process ("Your Website's Journey"): one line per stage (`summary` is what shows).
-const PROCESS_TITLE = "From Idea to Launch";
-const PROCESS_HIGHLIGHT = "Launch";
+const PROCESS_TITLE = "From idea to launch";
+const PROCESS_HIGHLIGHT = "launch";
 const STEPS = [
   ["Discovery", "Competitor analysis, personas, marketing analysis, sitemap and information architecture, the plan the whole site is built on."],
   ["User Experience (UX)", "Wireframes for every page, shaped around your users' goals and your business goals."],
