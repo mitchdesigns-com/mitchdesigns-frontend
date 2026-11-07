@@ -163,7 +163,7 @@ export function HighlightTitle({
 
 /** Yellow pill eyebrow: the pill paints in left→right while the letters are
  *  written, then it tips into a slight tilt. Reverses when `on` turns off. */
-function WrittenEyebrow({ text, on }: { text: string; on: boolean }) {
+export function WrittenEyebrow({ text, on }: { text: string; on: boolean }) {
   const chars = Array.from(text);
   return (
     <motion.span

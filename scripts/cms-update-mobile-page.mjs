@@ -50,14 +50,16 @@ const WHY_US = {
 // The 3D phone scene: four steps, then the closing pose (five stops in all).
 const PROCESS = {
   title: "How we build mobile apps",
-  eyebrow: "How we build mobile apps",
+  titleHighlights: "mobile apps",
+  // Yellow label above the title, like "We Got You".
+  eyebrow: "How we do it",
   closingTitle: "Launch and grow",
   closingText: "Your app goes live on the App Store and Google Play, and we keep improving it with every release.",
   steps: [
-    ["Discovery and UX", "We study your customers, their daily habits and your goals, then map the shortest path to every action."],
-    ["UI design", "A clean, stunning interface tailored to your brand, with a native feel on iOS and Android."],
-    ["Testing and split tests", "We prototype, test with real users and split test the key flows until every task feels effortless."],
-    ["Development", "Flutter or React Native on a scalable backend, fast and stable on every device."],
+    ["Discovery", "We study your customers, their daily habits and your goals, then map the shortest path to every action."],
+    ["UX and UI design", "Wireframes and prototypes we try with real users, then a clean, stunning interface tailored to your brand."],
+    ["Development", "Flutter or React Native on a scalable backend, with a native feel on iOS and Android."],
+    ["Optimization", "Real device checks and A/B comparisons of the key flows, until every task feels effortless."],
   ],
 };
 
@@ -178,7 +180,7 @@ const whyUs = {
   cards: WHY_US.cards.map(([title, text, icon], i) => ({ title, description: para(text), icon, image: id(y.cards?.[i]?.image) ?? filler })),
 };
 const processSection = {
-  id: p.id, title: PROCESS.title, eyebrow: PROCESS.eyebrow, closingTitle: PROCESS.closingTitle, closingText: PROCESS.closingText,
+  id: p.id, title: PROCESS.title, titleHighlights: PROCESS.titleHighlights, eyebrow: PROCESS.eyebrow, closingTitle: PROCESS.closingTitle, closingText: PROCESS.closingText,
   appScreens: (p.appScreens ?? []).map((x) => x.id),
   processCards: PROCESS.steps.map(([title, text], i) => ({ stepNumber: i + 1, title, description: para(text), summary: text, image: filler })),
 };

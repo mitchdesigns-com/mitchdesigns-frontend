@@ -359,6 +359,8 @@ export function ServicePageRenderer({
           <AppFlowSection
             steps={appFlowSteps(process)}
             eyebrow={process?.eyebrow}
+            title={process?.title}
+            titleHighlights={process?.titleHighlights}
             closingTitle={process?.closingTitle}
             closingText={process?.closingText}
             screens={process?.appScreens?.length ? process.appScreens : MOBILE_FLOW_SCREENS}
