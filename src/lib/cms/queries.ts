@@ -760,6 +760,7 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
       },
     });
     if (raw?.hero || (raw?.drives && raw.drives.length)) {
+      const { fixtureCareersPage: fx } = await import("./fixtures");
       return {
         hero: raw.hero
           ? {
@@ -774,6 +775,8 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
         })),
         positionsHeading: str(raw.positionsHeading),
         applyLabel: str(raw.applyLabel),
+        noPositionsTitle: str(raw.noPositionsTitle) ?? fx.noPositionsTitle,
+        noPositionsBody: str(raw.noPositionsBody) ?? fx.noPositionsBody,
         jobDetailsLabel: str(raw.jobDetailsLabel),
         applyNowLabel: str(raw.applyNowLabel),
         applyEmail: str(raw.applyEmail),

@@ -5,6 +5,7 @@ import { SlideLabel } from "@/components/ui/SlideLabel";
 import { Eyebrow } from "@/features/about/Eyebrow";
 import { MapPin } from "@/components/icons/MapPin";
 import { Briefcase } from "@/components/icons/Briefcase";
+import { Reveal } from "@/components/motion";
 import type { Career } from "@/lib/cms/types";
 
 function JobTag({ icon, label }: { icon: React.ReactNode; label: string }) {
@@ -58,16 +59,39 @@ function JobRow({ job, applyLabel }: { job: Career; applyLabel: string }) {
   );
 }
 
+/** The blank slate in place of the list when no roles are open. */
+function NoPositions({ title, body }: { title?: string; body?: string }) {
+  return (
+    <Reveal className="flex flex-col items-center gap-6 rounded-card border border-border px-6 py-16 text-center md:py-20">
+      <span className="flex size-16 items-center justify-center rounded-pill bg-yellow text-black">
+        <Briefcase size={28} />
+      </span>
+      {title && <h3 className="text-hero-4 font-bold text-fg text-balance">{title}</h3>}
+      {body && <p className="max-w-xl text-lg text-fg-muted text-balance">{body}</p>}
+    </Reveal>
+  );
+}
+
 export function OpenPositions({
   jobs,
   heading = "Open Positions",
   applyLabel = "Apply Today",
+  emptyTitle,
+  emptyBody,
 }: {
   jobs: Career[];
   heading?: string;
   applyLabel?: string;
+  emptyTitle?: string;
+  emptyBody?: string;
 }) {
-  if (jobs.length === 0) return null;
+  if (jobs.length === 0)
+    return (
+      <Section theme="dark" className="pb-25">
+        <Eyebrow className="mb-8">{heading}</Eyebrow>
+        <NoPositions title={emptyTitle} body={emptyBody} />
+      </Section>
+    );
 
   return (
     <Section theme="dark" className="overflow-x-clip pb-25">

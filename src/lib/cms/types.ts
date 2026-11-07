@@ -651,6 +651,9 @@ export type CareersPageData = {
   experienceCards?: Array<{ image: string | null; title: string; body: string }>;
   positionsHeading?: string;
   applyLabel?: string;
+  /** Shown in place of the job list when there are no open roles. */
+  noPositionsTitle?: string;
+  noPositionsBody?: string;
   jobDetailsLabel?: string;
   applyNowLabel?: string;
   applyEmail?: string;
