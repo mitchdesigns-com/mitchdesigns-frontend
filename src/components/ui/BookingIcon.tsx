@@ -6,7 +6,7 @@ import { isLeadFunnelHref } from "@/config/nav";
  * funnel); renders nothing for any other link. Tilts a little on hover when
  * the button has the `group` class.
  */
-export function BookingIcon({ href, size = 18 }: { href?: string | null; size?: number }) {
+export function BookingIcon({ href, size = 18 }: { href?: string | null; size?: number | string }) {
   if (!isLeadFunnelHref(href)) return null;
   return (
     <CalendarCheckIcon
