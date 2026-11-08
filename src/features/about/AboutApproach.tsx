@@ -48,7 +48,7 @@ export function AboutApproach({ approach }: { approach: AboutContent["approach"]
           <div className="size-full bg-yellow" />
         </Parallax>
         <Parallax speed={-30} className="relative">
-          <ParallaxImage src={photo.url} alt={photo.alt} className="aspect-3/2 lg:aspect-21/9" />
+          <ParallaxImage src={photo.url} alt={photo.alt} sizes="100vw" className="aspect-3/2 lg:aspect-21/9" />
         </Parallax>
       </div>
     </Section>

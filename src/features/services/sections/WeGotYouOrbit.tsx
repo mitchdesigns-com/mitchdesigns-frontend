@@ -396,7 +396,7 @@ function OrbitScene({
           <div className={cn("grid w-full gap-3", shots.length > 1 && "grid-cols-2")}>
             {shots.map((s) => (
               <div key={s.src} className="relative aspect-4/3 overflow-hidden rounded-card">
-                <Image src={s.src} alt={s.alt} fill className="object-cover" sizes={shots.length > 1 ? "50vw" : "100vw"} />
+                <Image quality={90} src={s.src} alt={s.alt} fill className="object-cover" sizes={shots.length > 1 ? "50vw" : "100vw"} />
               </div>
             ))}
           </div>

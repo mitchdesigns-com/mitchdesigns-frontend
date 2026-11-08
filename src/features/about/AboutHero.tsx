@@ -65,7 +65,7 @@ type Photo = { url: string; alt: string };
 const HERO_PHOTOS: [Photo, Photo, Photo] = [
   { url: "/images/studio/about/hero-2.webp", alt: "Planning a campaign on a tablet next to handwritten notes" },
   { url: "/images/studio/about/hero-3.webp", alt: "MitchDesigns team members talking together" },
-  { url: "/images/studio/about/hero-1.webp", alt: "A MitchDesigns team meeting in the studio" },
+  { url: "/images/studio/about/hero-1.webp", alt: "The MitchDesigns team at work in the Cairo studio" },
 ];
 
 /** Slides a box from the top of its column to the bottom (or back) as `p`
