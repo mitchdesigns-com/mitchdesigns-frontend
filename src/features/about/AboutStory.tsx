@@ -126,7 +126,7 @@ function StoryPhoto({ photo, toward }: { photo: Photo; toward: Toward }) {
 /**
  * Our Story (yellow): the statement and the paragraphs under it write
  * themselves in word by word as you scroll, all in one style, and four
- * photos float past at different speeds, each growing, turning and gliding toward the text on hover.
+ * photos (two each side) float past at different speeds, each growing, turning and gliding toward the text on hover.
  */
 export function AboutStory({ story }: { story: AboutContent["story"] }) {
   const textRef = useRef<HTMLDivElement>(null);
@@ -155,17 +155,10 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
 
   return (
     <Section className="overflow-hidden bg-yellow py-24 md:py-32">
-      <div className="relative flex flex-col gap-16 md:gap-32">
-        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4">
-          <Parallax speed={-40} className="relative flex w-full justify-start md:justify-center md:pt-16 hover:z-20">
-            <StoryPhoto photo={photos[0]} toward={{ x: 1, y: 1 }} />
-          </Parallax>
-          <Parallax speed={-60} className="relative flex w-full justify-end md:justify-center md:pt-24 hover:z-20">
-            <StoryPhoto photo={photos[1]} toward={{ x: -1, y: 1 }} />
-          </Parallax>
-        </div>
-
-        <Reveal className="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
+      {/* From xl the photos flank the text, two a side; narrower screens put
+          the text first and the photos in a 2x2 grid under it. */}
+      <div className="grid grid-cols-2 items-center gap-x-4 gap-y-12 xl:grid-cols-5 xl:gap-x-12">
+        <Reveal className="relative z-10 col-span-2 flex flex-col items-center gap-4 text-center xl:col-span-3 xl:col-start-2 xl:row-start-1">
           <Eyebrow tone="dark">{story.eyebrow}</Eyebrow>
           <div ref={textRef} className="flex flex-col gap-8">
             {heading && <h2 className="text-hero-3 text-black lg:text-story">{renderWords(heading, 0)}</h2>}
@@ -177,11 +170,20 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
           </div>
         </Reveal>
 
-        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4">
-          <Parallax speed={40} className="relative flex w-full justify-start md:justify-center md:pt-24 hover:z-20">
+        <div className="flex flex-col items-end gap-8 xl:col-start-1 xl:row-start-1 xl:gap-24">
+          <Parallax speed={-40} className="relative flex w-full justify-end hover:z-20">
+            <StoryPhoto photo={photos[0]} toward={{ x: 1, y: 1 }} />
+          </Parallax>
+          <Parallax speed={-20} className="relative flex w-full justify-end hover:z-20">
             <StoryPhoto photo={photos[2]} toward={{ x: 1, y: -1 }} />
           </Parallax>
-          <Parallax speed={60} className="relative flex w-full justify-end md:justify-center hover:z-20">
+        </div>
+
+        <div className="flex flex-col items-start gap-8 xl:col-start-5 xl:row-start-1 xl:gap-24 xl:pt-32">
+          <Parallax speed={-60} className="relative flex w-full justify-start hover:z-20">
+            <StoryPhoto photo={photos[1]} toward={{ x: -1, y: 1 }} />
+          </Parallax>
+          <Parallax speed={-30} className="relative flex w-full justify-start hover:z-20">
             <StoryPhoto photo={photos[3]} toward={{ x: -1, y: -1 }} />
           </Parallax>
         </div>
