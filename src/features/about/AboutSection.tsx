@@ -50,8 +50,8 @@ const DEFAULT_SIGNATURE = "Mitch";
 // The place and the people behind the letter, shown under it (front-end only).
 const STUDIO = {
   main: { src: "/images/studio/office-wide.webp", alt: "The MitchDesigns team at work in the Cairo studio" },
-  side: { src: "/images/studio/meeting-square.webp", alt: "A MitchDesigns team member talking through a project" },
-  portrait: { src: "/images/studio/desk-portrait.webp", alt: "A MitchDesigns developer focused at his desk" },
+  side: { src: "/images/studio/happy-square.webp", alt: "MitchDesigns team members sharing a laugh in the studio" },
+  portrait: { src: "/images/studio/happy-portrait.webp", alt: "MitchDesigns team members laughing together in the studio" },
 };
 const BADGE_TEXT = "Since 2005 • Built in Egypt • ";
 
