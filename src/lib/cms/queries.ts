@@ -2,8 +2,8 @@
 import "server-only";
 import { getCollection, getCollectionAll, getSingle } from "./strapi";
 import { strapiMedia } from "./media";
-import { blocksToText } from "./blocks";
-import { LEADS_URL } from "@/config/nav";
+import { blocksToText, blocksBoldRuns } from "./blocks";
+import { LEADS_URL, MERGED_SERVICES } from "@/config/nav";
 import { SITE_SETTINGS_FALLBACK } from "./siteDefaults";
 import type {
   AboutContent,
@@ -236,14 +236,17 @@ export const getFAQs = async (
  * Services
  * ------------------------------------------------------------------ */
 export const getServices = async (): Promise<Array<Service & { id: number }>> => {
+  // Merged services (e.g. Google Ads → Media Buying) are left out of every list.
+  const listed = (s: Service) => !(s.slug in MERGED_SERVICES);
   try {
-    return await getCollection<Service>("/our-services", {
+    const services = await getCollection<Service>("/our-services", {
       revalidate: 300,
-      query: { populate: "icon", sort: "order:asc" },
+      query: { "populate[0]": "icon", "populate[1]": "hoverLogo", sort: "order:asc" },
     });
+    return services.filter(listed);
   } catch {
     const { fixtureServices } = await import("./fixtures");
-    return fixtureServices as Array<Service & { id: number }>;
+    return (fixtureServices as Array<Service & { id: number }>).filter(listed);
   }
 };
 
@@ -356,7 +359,7 @@ function mapAboutPage(raw: any): AboutContent {
       eyebrow: raw.story?.eyebrow ?? "",
       title: raw.story?.title ?? "",
       cards: (raw.story?.cards ?? []).map((c: any) => ({
-        body: blocksToText(c.body) ?? "",
+        body: c.body ?? "",
         image: aboutImage(c.image),
       })),
     },
@@ -451,14 +454,20 @@ export const getHomePage = async (): Promise<HomePageData> => {
               cta: raw.about.ctaLabel
                 ? { label: raw.about.ctaLabel, href: raw.about.ctaHref ?? "#" }
                 : undefined,
-              marks: Array.isArray(raw.about.marks) && raw.about.marks.length
-                ? raw.about.marks
-                    .filter((m: any) => m?.phrase)
-                    .map((m: any) => ({
-                      phrase: m.phrase,
-                      shape: m.shape === "strike" || m.shape === "swash" ? m.shape : "wave",
-                    }))
-                : undefined,
+              // Doodle marks from the CMS, plus any words bolded in the body.
+              marks: (() => {
+                const doodles = Array.isArray(raw.about.marks)
+                  ? raw.about.marks
+                      .filter((m: any) => m?.phrase)
+                      .map((m: any) => ({
+                        phrase: m.phrase as string,
+                        shape: (m.shape === "strike" || m.shape === "swash" ? m.shape : "wave") as "strike" | "swash" | "wave",
+                      }))
+                  : [];
+                const bold = blocksBoldRuns(raw.about.body).map((r) => ({ ...r, shape: "bold" as const }));
+                const all = [...doodles, ...bold];
+                return all.length ? all : undefined;
+              })(),
             }
           : undefined,
         orderbaseOverview: raw.orderbaseOverview
@@ -753,6 +762,7 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
       },
     });
     if (raw?.hero || (raw?.drives && raw.drives.length)) {
+      const { fixtureCareersPage: fx } = await import("./fixtures");
       return {
         hero: raw.hero
           ? {
@@ -767,6 +777,8 @@ export const getCareersPage = async (): Promise<CareersPageData> => {
         })),
         positionsHeading: str(raw.positionsHeading),
         applyLabel: str(raw.applyLabel),
+        noPositionsTitle: str(raw.noPositionsTitle) ?? fx.noPositionsTitle,
+        noPositionsBody: str(raw.noPositionsBody) ?? fx.noPositionsBody,
         jobDetailsLabel: str(raw.jobDetailsLabel),
         applyNowLabel: str(raw.applyNowLabel),
         applyEmail: str(raw.applyEmail),
@@ -1108,6 +1120,15 @@ function mapServicePage(raw: any): ServicePageData {
           cta: raw.weGotYou.cta ?? undefined,
           theme: raw.weGotYou.theme ?? undefined,
           imagePosition: raw.weGotYou.imagePosition ?? undefined,
+          tabs: Array.isArray(raw.weGotYou.tabs) && raw.weGotYou.tabs.length
+            ? raw.weGotYou.tabs.map((tab: any) => ({
+                label: tab.label,
+                title: tab.title,
+                description: tab.description,
+                logo: tab.logo ? mediaUrl(tab.logo) : undefined,
+                logoAlt: tab.logo ? mediaAlt(tab.logo) : undefined,
+              }))
+            : undefined,
           story: images(raw.weGotYou.story).length
             ? images(raw.weGotYou.story).map((m: any) => ({
                 src: mediaSrc(m)!,
@@ -1165,6 +1186,7 @@ function mapServicePage(raw: any): ServicePageData {
             imageAlt: mediaAlt(c.image),
             description: c.description,
             icon: c.icon ?? undefined,
+            label: c.label ?? undefined,
           })),
         }
       : undefined,
@@ -1259,7 +1281,11 @@ export async function getServicePageData(
           // Flat sections — one level of populate gets all their fields + media
           "populate[hero][populate]": "*",
           "populate[prototypes][populate]": "*",
-          "populate[weGotYou][populate]": "*",
+          // weGotYou: listed so its audience tabs' logos load too.
+          "populate[weGotYou][populate][image]": "true",
+          "populate[weGotYou][populate][cta]": "true",
+          "populate[weGotYou][populate][story]": "true",
+          "populate[weGotYou][populate][tabs][populate][logo]": "true",
           "populate[brief][populate]": "*",
           "populate[featuresSimplified][populate]": "*",
           "populate[accordion][populate]": "*",

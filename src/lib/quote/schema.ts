@@ -674,8 +674,8 @@ export const quoteFlows = {
             required: true,
             options: [
               { label: "Under 500 EGP", value: "under-500" },
-              { label: "500 — 2,000 EGP", value: "500-2000" },
-              { label: "2,000 — 5,000 EGP", value: "2000-5000" },
+              { label: "500 to 2,000 EGP", value: "500-2000" },
+              { label: "2,000 to 5,000 EGP", value: "2000-5000" },
               { label: "5,000 EGP+", value: "5000-plus" },
             ],
           },

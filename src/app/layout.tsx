@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OPENAI_ADS_PIXEL_SNIPPET } from "@/config/tracking";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -12,6 +13,8 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getSiteSettings } from "@/lib/cms/queries";
 import type { SiteSettings } from "@/lib/cms/types";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
+import { RouteProgress } from "@/components/layout/RouteProgress";
+import { LeadsLinkSource } from "@/components/layout/LeadsLinkSource";
 // import { UserbackWidget } from "@/components/Userback";
 
 const SITE_URL = "https://mitchdesigns.com";
@@ -23,7 +26,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   manifest: "/site.webmanifest",
   title: {
-    default: "MitchDesigns — Website & Mobile App Design Agency in Egypt",
+    default: "MitchDesigns - Website & Mobile App Design Agency in Egypt",
     template: "%s · MitchDesigns",
   },
   description: SITE_DESCRIPTION,
@@ -32,13 +35,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "en_US",
     url: SITE_URL,
-    title: "MitchDesigns — Website & Mobile App Design Agency in Egypt",
+    title: "MitchDesigns - Website & Mobile App Design Agency in Egypt",
     description: SITE_DESCRIPTION,
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MitchDesigns — Website & Mobile App Design Agency in Egypt",
+    title: "MitchDesigns - Website & Mobile App Design Agency in Egypt",
     description: SITE_DESCRIPTION,
   },
   robots: process.env.NEXT_PUBLIC_INDEXABLE === "true"
@@ -108,6 +111,8 @@ export default async function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <head>
+        {/* ChatGPT Ads pixel: first in <head>, once per page. */}
+        <script dangerouslySetInnerHTML={{ __html: OPENAI_ADS_PIXEL_SNIPPET }} />
         {/* Preload the LCP body/heading font so it isn't discovered late via CSS */}
         <link
           rel="preload"
@@ -118,8 +123,10 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-dvh antialiased">
+        <RouteProgress />
         <JsonLd data={siteGraph} />
         <SiteSettingsProvider settings={settings}>{children}</SiteSettingsProvider>
+        <LeadsLinkSource />
         {/* <UserbackWidget /> */}
       </body>
     </html>

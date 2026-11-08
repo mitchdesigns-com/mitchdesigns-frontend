@@ -21,6 +21,8 @@ export default async function CareersIndexPage() {
         jobs={jobs}
         heading={page.positionsHeading}
         applyLabel={page.applyLabel}
+        emptyTitle={page.noPositionsTitle}
+        emptyBody={page.noPositionsBody}
       />
     </main>
   );

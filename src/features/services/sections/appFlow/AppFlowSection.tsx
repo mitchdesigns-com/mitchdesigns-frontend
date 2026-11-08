@@ -2,13 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { AnimatePresence, motion, useInView, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { easeOutSoft } from "@/lib/motion";
 import { flowPosition } from "./flowPosition";
 import type { FlowStep } from "./screens";
 import { APP_SCREENS } from "./steps";
-import { noOrphan } from "@/lib/noOrphan";
+import { HighlightTitle, WrittenEyebrow } from "../WeGotYouOrbit";
 
 // three.js only loads (client-side) for this section.
 const PhoneScene = dynamic(() => import("./PhoneScene"), { ssr: false });
@@ -29,7 +29,11 @@ const pad = (n: number) => String(n).padStart(2, "0");
  */
 type Props = {
   steps: FlowStep[];
+  /** Yellow label above the section title (like "We Got You"). */
   eyebrow?: string;
+  /** Section title, shown before the phone scene pins. */
+  title?: string;
+  titleHighlights?: string[];
   /** Copy for the closing pose, after the last step. */
   closingTitle?: string;
   closingText?: string;
@@ -39,24 +43,39 @@ type Props = {
 
 export function AppFlowSection({
   steps,
-  eyebrow = "How we build your app",
+  eyebrow = "How we do it",
+  title,
+  titleHighlights,
   closingTitle = "Idea to App Store",
-  closingText = "Every stage, one accountable partner — from the first idea to an app in your customers' hands.",
+  closingText = "Every stage, one accountable partner, from the first idea to an app in your customers' hands.",
   screens = APP_SCREENS,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const [index, setIndex] = useState(0);
+  const headRef = useRef<HTMLDivElement>(null);
+  const headIn = useInView(headRef, { once: true, amount: 0.6 });
   useMotionValueEvent(scrollYProgress, "change", (p) => setIndex(flowPosition(p, steps.length).index));
 
   const done = index >= steps.length;
   const step = steps[Math.min(index, steps.length - 1)];
 
+  // Label and title, centred like the "We Got You" heading, before the scene pins.
+  const head = (
+    <Section theme="dark" className="pt-20 md:pt-28">
+      <div ref={headRef} className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
+        <WrittenEyebrow text={eyebrow} on={headIn || !!reduced} />
+        {title && <HighlightTitle title={title} highlights={titleHighlights} Tag="h2" />}
+      </div>
+    </Section>
+  );
+
   if (reduced) {
     return (
+      <>
+      {head}
       <Section theme="dark" className="py-20 md:py-28">
-        <p className="mb-6 text-sm font-medium uppercase tracking-1 text-yellow">{eyebrow}</p>
         <ol className="grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
             <li key={s.title} className="flex flex-col gap-2">
@@ -67,31 +86,36 @@ export function AppFlowSection({
           ))}
         </ol>
       </Section>
+      </>
     );
   }
 
   return (
+    <>
+    {head}
     <div ref={ref} className="relative" style={{ height: `${(steps.length + 1) * STOP_SVH + 100}svh` }}>
       <Section theme="dark" className="sticky top-0 h-svh overflow-hidden">
         {/* Copy sits behind the phone: title to its left, description to its
             right, both tucked in toward the middle so the phone overlaps them. */}
-        <div className="relative grid h-svh grid-rows-2 items-center md:grid-cols-2 md:grid-rows-1 md:gap-96">
-          <div className="flex flex-col gap-4 self-start pt-28 md:items-end md:self-center md:pt-0 md:text-right">
-            <p className="text-sm font-medium uppercase tracking-1 text-yellow">{eyebrow}</p>
+        {/* The gap is the phone's lane: wide enough for it lying flat at the end. */}
+        <div className="relative grid h-svh grid-rows-2 items-center md:grid-cols-2 md:grid-rows-1 md:gap-96 xl:gap-120">
+          <div className="flex min-w-0 flex-col gap-4 self-start pt-28 md:items-end md:self-center md:pt-0 md:text-right">
             <AnimatePresence mode="wait" initial={false}>
               <motion.h2
                 key={done ? "done" : index}
-                className="text-hero-3 font-bold text-balance md:text-hero-1"
+                // No word gluing here: at this size a glued pair ("Repeat Customers")
+                // is wider than the column and runs off the screen.
+                className="text-hero-3 font-bold text-balance xl:text-hero-2 2xl:text-hero-1"
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 40 }}
                 transition={{ duration: 0.45, ease: easeOutSoft }}
               >
-                {noOrphan(done ? closingTitle : step.title)}
+                {done ? closingTitle : step.title}
               </motion.h2>
             </AnimatePresence>
           </div>
-          <div className="flex flex-col gap-6 self-end pb-16 md:self-center md:pb-0">
+          <div className="flex min-w-0 flex-col gap-6 self-end pb-16 md:self-center md:pb-0">
             <div className="flex items-end gap-3 font-bold">
               <span className="text-hero-2 leading-none tabular-nums">{done ? pad(steps.length) : pad(index + 1)}</span>
               <span className="pb-1 text-xl text-grey-500">/ {pad(steps.length)}</span>
@@ -129,5 +153,6 @@ export function AppFlowSection({
         </div>
       </Section>
     </div>
+    </>
   );
 }

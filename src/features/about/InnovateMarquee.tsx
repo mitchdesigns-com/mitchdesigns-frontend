@@ -51,7 +51,7 @@ export function InnovateMarquee({
       <div className="py-10 overflow-hidden">
         <Marquee gap={120}>
           <span
-            className="shrink-0 font-bold text-innovate leading-none bg-gradient-to-t from-black to-yellow bg-clip-text text-transparent whitespace-nowrap"
+            className="shrink-0 font-bold uppercase text-innovate leading-none bg-gradient-to-t from-black to-yellow bg-clip-text text-transparent whitespace-nowrap"
             aria-hidden
           >
             {innovate.text}

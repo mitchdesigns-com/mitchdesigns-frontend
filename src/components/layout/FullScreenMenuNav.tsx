@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,8 +28,8 @@ export function FullScreenMenuNav({
    *  screen height instead of stacking tightly. */
   anchorY?: number;
 }) {
-  // One nav row = the label (1em of text-menu) + its py-3 padding.
-  const rowHalf = "(var(--text-menu) + 1.5rem) / 2";
+  // One nav row = the label (1em of text-menu) + its py-5 padding.
+  const rowHalf = "(var(--text-menu) + 2.5rem) / 2";
   const [showServices, setShowServices] = useState(false);
   const { primaryCta } = useSiteSettings();
   // The proposal item follows the CMS primary CTA.
@@ -61,12 +62,16 @@ export function FullScreenMenuNav({
           className={cn(
             "flex w-full flex-col transition-[width] duration-500 ease-out-soft",
             anchorY !== undefined && "justify-between",
+            // At least 3/4 of the screen; taller when the rows need it, so they
+            // never run into what follows. Phones drop it while the services
+            // list is open, so the list sits right under "Our Services".
+            anchorY !== undefined && (showServices ? "md:min-h-(--menu-h)" : "min-h-(--menu-h)"),
             showServices ? "md:w-1/2" : "md:w-full",
           )}
           style={
             anchorY === undefined
               ? undefined
-              : { height: `calc(75svh - ${anchorY}px + ${rowHalf})` }
+              : ({ "--menu-h": `calc(75svh - ${anchorY}px + ${rowHalf})` } as React.CSSProperties)
           }
         >
           {navLinks.map((item, i) => {
@@ -75,6 +80,12 @@ export function FullScreenMenuNav({
             return (
               <motion.li
                 key={item.label}
+                // Phones show the proposal as the black button below instead.
+                className={cn(
+                  item.href === primaryCta.href && "max-sm:hidden",
+                  // Phones: only "Our Services" stays while its list is open.
+                  dimmed && "max-md:hidden",
+                )}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.18 + i * 0.05, ease: EASE }}
@@ -98,8 +109,14 @@ export function FullScreenMenuNav({
                         showServices ? "inset-x-0" : "bleed-x",
                       )}
                     />
-                    <div className="relative flex items-center py-3">
-                      <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
+                    <div className="relative flex items-center py-5">
+                      {/* Plain string, not cn(): tailwind-merge reads the custom
+                          `text-menu` size as a colour and would drop it. */}
+                      <span
+                        className={`text-menu font-black uppercase leading-none tracking-[-0.01em] ${
+                          item.href === primaryCta.href ? "text-menu-cta" : "text-black"
+                        }`}
+                      >
                         <SlideLabel label={item.label} />
                       </span>
                     </div>
@@ -119,14 +136,16 @@ export function FullScreenMenuNav({
                         dimmed ? "bg-transparent!" : "",
                       )}
                     />
-                    <div className="relative flex items-center gap-4 py-3">
+                    <div className="relative flex items-center gap-4 py-5">
                       <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
                         <SlideLabel label={item.label} />
                       </span>
                       <motion.span
                         animate={{ x: showServices ? 8 : 0 }}
                         transition={{ duration: 0.3, ease: EASE }}
-                        className="shrink-0 text-black"
+                        // Phones: the open row moves up level with the close
+                        // button, so the arrow would run under it.
+                        className={cn("shrink-0 text-black", showServices && "max-md:hidden")}
                       >
                         <ArrowRight size={40} />
                       </motion.span>
@@ -185,8 +204,9 @@ export function FullScreenMenuNav({
         <Link
           href={primaryCta.href}
           onClick={onNavigate}
-          className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
+          className="group inline-flex items-center gap-2 whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
         >
+          <BookingIcon href={primaryCta.href} size={16} />
           {primaryCta.label}
         </Link>
       </div>

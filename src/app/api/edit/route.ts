@@ -45,7 +45,7 @@ export async function GET(request: Request) {
   });
   if (!r.ok) {
     return new NextResponse(
-      "This edit link is no longer valid — ask your agency for a new one.",
+      "This edit link is no longer valid, ask your agency for a new one.",
       { status: 401 },
     );
   }

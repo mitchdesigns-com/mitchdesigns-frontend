@@ -8,9 +8,13 @@ type Props = {
   title?: string;
   description?: string;
   highlight?: string;
+  /** Tools to leave out on this page, by name (case-insensitive). */
+  exclude?: string[];
+  /** Show only these tools, in this order, by name (case-insensitive). */
+  only?: string[];
 };
 
-export async function TechStackFetcher({ title, description, highlight }: Props) {
+export async function TechStackFetcher({ title, description, highlight, exclude = [], only }: Props) {
   let items;
   try {
     const data = await getTechStack();
@@ -19,6 +23,12 @@ export async function TechStackFetcher({ title, description, highlight }: Props)
     items = fixtureTechStack;
   }
 
+  const skip = new Set(exclude.map((n) => n.toLowerCase()));
+  items = items.filter((item) => !skip.has(item.name.toLowerCase()));
+  if (only) {
+    const pos = (name: string) => only.findIndex((n) => n.toLowerCase() === name.toLowerCase());
+    items = items.filter((item) => pos(item.name) >= 0).sort((a, b) => pos(a.name) - pos(b.name));
+  }
   if (!items.length) return null;
 
   // Explicit props win; otherwise fetch the single type, falling back to fixture.

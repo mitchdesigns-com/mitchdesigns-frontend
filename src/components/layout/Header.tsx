@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,6 +10,8 @@ import { useSectionTheme } from "@/hooks/useSectionTheme";
 import { HeaderConfigContext } from "@/context/HeaderConfigContext";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { FullScreenMenuNav } from "./FullScreenMenuNav";
+import { usePathname } from "next/navigation";
+import { isLeadsHref, leadsUrl } from "@/config/nav";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const HEADER_HEIGHT = 108;
@@ -21,6 +24,9 @@ const FAB_HIDE_IN_FOOTER = 0.6;
 export function Header() {
   const { sticky, showCta, ctaInView, immersive } = useContext(HeaderConfigContext);
   const { primaryCta } = useSiteSettings();
+  // On a service page the button opens the funnel with that service preselected.
+  const serviceSlug = usePathname().match(/^\/services\/([^/]+)/)?.[1];
+  const ctaHref = serviceSlug && isLeadsHref(primaryCta.href) ? leadsUrl(serviceSlug) : primaryCta.href;
   const sectionTheme = useSectionTheme(HEADER_HEIGHT);
   const [visible, setVisible] = useState(true);
   // Distance each bar travels to meet in the middle as an X (bars sit
@@ -124,6 +130,7 @@ export function Header() {
         inert={immersive}
         className={cn(
           "inset-x-0 top-0 z-60 transition-colors duration-300 ease-out-soft",
+          menuOpen && "pointer-events-none",
           sticky ? "fixed" : "absolute",
           // The blurred/opaque background only makes sense for a sticky header
           // that stays fixed on screen. Non-sticky headers (e.g. /orderbase)
@@ -138,7 +145,7 @@ export function Header() {
         )}
         style={{ height: HEADER_HEIGHT }}
       >
-        <div className="container-page flex h-full items-center justify-between">
+        <div className={cn("container-page flex h-full items-center justify-between", menuOpen && "pointer-events-none")}>
           <Link
             href="/"
             aria-label="MitchDesigns home"
@@ -160,12 +167,13 @@ export function Header() {
           <div className="flex items-center gap-6">
             {showCta && (
               <Link
-                href={primaryCta.href}
+                href={ctaHref}
                 className={cn(
-                  "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
+                  "group hidden items-center gap-2 whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
                   (menuOpen || ctaInView) && "opacity-0 pointer-events-none",
                 )}
               >
+                <BookingIcon href={ctaHref} size={16} />
                 {primaryCta.label}
               </Link>
             )}
@@ -178,6 +186,7 @@ export function Header() {
               // Phones: a smaller 48×28 icon; lg+: the full 75×40.
               className={cn(
                 "relative flex h-7 w-12 flex-col items-start justify-center transition-opacity hover:opacity-70 lg:h-10 lg:w-18.75",
+                menuOpen && "pointer-events-auto",
                 fabShown && "pointer-events-none opacity-0",
               )}
             >

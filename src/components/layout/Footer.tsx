@@ -4,8 +4,6 @@ import { Fragment, useRef, type ComponentType } from "react";
 import {
   motion,
   useInView,
-  useScroll,
-  useTransform,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
@@ -145,6 +143,9 @@ export function Footer({
   const contextSettings = useSiteSettings();
   const settings = settingsProp ?? contextSettings;
   const ref = useRef<HTMLElement>(null);
+  // The footer scrolls in plainly after the content on every page: no
+  // parallax drift or dimming (it read as cropped while revealing). Its copy
+  // still rises in, unless the visitor prefers reduced motion.
   const reduced = useReducedMotion();
 
   const social = settings?.socialLinks?.length ? settings.socialLinks : DEFAULT_SOCIAL;
@@ -158,16 +159,9 @@ export function Footer({
   const tagline = settings?.tagline ?? "Design. Technology. Performance.";
   const copyright =
     settings?.copyright ?? "© 2005-2026 Mitch Designs. All rights reserved.";
-  // Parallax reveal (à la whatmattersagency.com): as the footer scrolls in, its
-  // content drifts up from -25% to its resting position while a dark overlay
-  // lifts from 0.5 → 0 — both scrubbed to scroll progress over the window from
-  // "footer's top enters the viewport bottom" to "footer's top reaches the top".
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "start start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], reduced ? ["0%", "0%"] : ["-25%", "0%"]);
-  const overlay = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [0.5, 0]);
+  // No parallax: content sits at rest, no overlay.
+  const y = "0%";
+  const overlay = 0;
 
   // Entrance triggers — not "once", so leaving resets them for the next visit.
   const topRef = useRef<HTMLDivElement>(null);

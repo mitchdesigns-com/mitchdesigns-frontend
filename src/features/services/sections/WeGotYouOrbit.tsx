@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -60,7 +61,7 @@ const EMPTY: Box = { w: 0, h: 0, tx: 0, ty: 0, tw: 0, th: 0, cx: 0, cy: 0, pr: 0
  * hand-drawn yellow underline draws under it. Plays when `on` turns true,
  * reverses when off.
  */
-function HighlightTitle({
+export function HighlightTitle({
   title,
   highlights = [],
   Tag,
@@ -163,7 +164,7 @@ function HighlightTitle({
 
 /** Yellow pill eyebrow: the pill paints in left→right while the letters are
  *  written, then it tips into a slight tilt. Reverses when `on` turns off. */
-function WrittenEyebrow({ text, on }: { text: string; on: boolean }) {
+export function WrittenEyebrow({ text, on }: { text: string; on: boolean }) {
   const chars = Array.from(text);
   return (
     <motion.span
@@ -350,7 +351,8 @@ function OrbitScene({
   const ctaButton = cta && (
     <HeaderCtaInView active={isLeadsHref(cta.href)}>
       <Button size="lg" asChild>
-        <Link href={cta.href} className="flex items-center gap-2">
+        <Link href={cta.href} className="group flex items-center gap-2">
+          <BookingIcon href={cta.href} />
           {cta.label}
           <ArrowRight size={20} />
         </Link>

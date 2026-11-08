@@ -1,3 +1,4 @@
+import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
 import type {
   CaseStudy,
   FAQ,
@@ -5,8 +6,9 @@ import type {
   Service,
   ServicePageData,
 } from "@/lib/cms/types";
-import { isLeadFunnelHref, leadsUrl } from "@/config/nav";
+import { SERVICES, isLeadFunnelHref, leadsUrl } from "@/config/nav";
 import { ServiceHero } from "./sections/ServiceHero";
+import { ServiceSwitcher } from "./sections/ServiceSwitcher";
 import { CORPORATE_REEL, CUSTOM_REEL, MOBILE_REEL } from "@/config/serviceReels";
 import { EcommerceReel } from "./ecommerceReel/EcommerceReel";
 import { MediaBuyingScene } from "./mediaBuyingScene/MediaBuyingScene";
@@ -15,8 +17,18 @@ import { SeoScene } from "./seoScene/SeoScene";
 import { TabletVideoSection } from "./googleAdsScene/TabletVideoSection";
 import { MacbookVideoSection } from "./mediaBuyingScene/MacbookVideoSection";
 import { workStepSummary } from "./sections/workSteps";
+import { ClientWorkFetcher } from "./sections/ClientWorkFetcher";
+import { SupportStack } from "./sections/SupportStack";
+import { AppDemoSection } from "./sections/AppDemoSection";
 import { AppFlowSection } from "./sections/appFlow/AppFlowSection";
-import { appFlowSteps } from "./sections/appFlow/steps";
+import { MOBILE_FLOW_SCREENS, appFlowSteps } from "./sections/appFlow/steps";
+
+/** 3D icons for the eCommerce audience tabs (B2C, Food & Beverage, B2B). */
+const ECOMMERCE_MODEL_ICONS = [
+  { src: "/images/services/ecommerce-models/b2c.webp", alt: "Shopping bag and card, B2C online store" },
+  { src: "/images/services/ecommerce-models/food-beverage.webp", alt: "Delivery bag with burger and coffee, food ordering" },
+  { src: "/images/services/ecommerce-models/b2b.webp", alt: "Storefront, boxes on a pallet and an invoice, B2B wholesale" },
+];
 
 /** "We Got You" card on eCommerce: one order from tap to doorstep
  *  (fallback until `weGotYou.story` is filled in Strapi). */
@@ -26,6 +38,8 @@ const ECOMMERCE_ORDER_STORY = [
   { src: "/images/services/ecommerce/story-3-packing.webp", alt: "Staff packing the order for delivery" },
   { src: "/images/services/ecommerce/story-4-delivery.webp", alt: "Courier delivering the order to the customer" },
 ];
+import { WeGotYouTabs } from "./sections/WeGotYouTabs";
+import { FeatureGrid } from "./sections/FeatureGrid";
 import { WeGotYouOrbit } from "./sections/WeGotYouOrbit";
 import { WhyUsSection } from "./sections/WhyUsSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -50,10 +64,18 @@ function techStackCopy(
 }
 
 const PLATFORM_STACK = {
-  title: "Our Technology Stack",
+  title: "Our technology stack",
   description: "The tools and frameworks we use to build custom platforms that scale.",
-  highlight: "Technology Stack",
+  highlight: "technology stack",
 };
+
+const MOBILE_STACK = {
+  title: "The tech behind our apps",
+  description: "Flutter and React Native on the front, a secure and scalable backend behind them.",
+  highlight: "our apps",
+};
+/** Mobile page tools, in this order (CMS tech item names). */
+const MOBILE_TECH = ["React Native", "Flutter", "Laravel PHP", "PHP", "AWS", "Cloudflare", "Github"];
 
 function WorkSteps({ process }: { process: ProcessSectionProps }) {
   return (
@@ -62,6 +84,7 @@ function WorkSteps({ process }: { process: ProcessSectionProps }) {
       titleHighlights={process.titleHighlights}
       description={process.description}
       image=""
+      pageScroll
       featureCards={[...process.processCards]
         .sort((a, b) => a.stepNumber - b.stepNumber)
         .map((c) => ({ title: c.title, description: workStepSummary(c) }))}
@@ -126,6 +149,13 @@ export function ServicePageRenderer({
   } = data;
 
   const hero = withServiceLeadCta(rawHero, slug);
+  // Same services, labels and order as the main menu.
+  const switcher = (
+    <ServiceSwitcher
+      current={slug}
+      items={SERVICES.map((s) => ({ slug: s.slug, label: s.shortLabel, href: `/services/${s.slug}` }))}
+    />
+  );
 
   // The FAQ section shows this service's questions only (no category filter):
   // the CMS category for the service, or — if that comes back empty — any FAQ
@@ -139,19 +169,20 @@ export function ServicePageRenderer({
     case "corporate":
       return (
         <>
-          <ServiceHero {...hero} reel={heroReel ?? CORPORATE_REEL} />
+          <ServiceHero {...hero} switcher={switcher} reel={heroReel ?? CORPORATE_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/wgy-corporate.webp"}
               imageAlt="MitchDesigns team building a corporate website"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
           {process && <WorkSteps process={process} />}
-          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} />
+          {/* Websites only: no mobile app framework here. */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["React Native"]} />
           {support && <SupportSection {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -161,21 +192,43 @@ export function ServicePageRenderer({
     case "ecommerce":
       return (
         <>
-          <ServiceHero {...hero} scene={<EcommerceReel />} bleedScene />
-          {weGotYou && (
-            <WeGotYouOrbit
-              {...weGotYou}
-              // The CMS image is still a placeholder: the card tells an order's
-              // story instead — ordered, received, packed, delivered.
-              image="/images/services/ecommerce/we-got-you.webp"
-              imageAlt="Store owner managing orders on a tablet"
-              story={weGotYou.story ?? ECOMMERCE_ORDER_STORY}
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
-            />
-          )}
+          <ServiceHero {...hero} switcher={switcher} scene={<EcommerceReel />} bleedScene />
+          {weGotYou &&
+            (() => {
+              const ecommerceWeGotYou = {
+                ...weGotYou,
+                // The CMS image is still a placeholder: the card tells an order's
+                // story instead — ordered, received, packed, delivered.
+                image: "/images/services/ecommerce/we-got-you.webp",
+                imageAlt: "Store owner managing orders on a tablet",
+                story: weGotYou.story ?? ECOMMERCE_ORDER_STORY,
+                cta: { label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) },
+              };
+              // Audience tabs (B2C · Food & Beverage · B2B) when the CMS has them.
+              return weGotYou.tabs?.length ? (
+                <WeGotYouTabs {...ecommerceWeGotYou} icons={ECOMMERCE_MODEL_ICONS} />
+              ) : (
+                <WeGotYouOrbit {...ecommerceWeGotYou} />
+              );
+            })()}
+          {/* The brands we built stores for (CMS heading in `moreAbout`, projects from case studies). */}
+          {moreAbout && <ClientWorkFetcher category="eCommerce" title={moreAbout.title} description={moreAbout.description} />}
           {whyUs && <WhyUsSection {...whyUs} />}
-          {featuresSimplified && <FeaturesSimplified {...featuresSimplified} />}
-          {support && <SupportSection {...support} />}
+          {/* Every feature as a plain grid the page scrolls past (no inner scroll). */}
+          {featuresSimplified && <FeatureGrid {...featuresSimplified} />}
+          {/* Website + app: the app playing live on a coded phone (CMS `process` copy). */}
+          {process?.processCards?.length ? (
+            <AppDemoSection
+              eyebrow={process.eyebrow}
+              title={process.title}
+              steps={appFlowSteps(process)}
+              logo={{ src: "/images/orderbase/wordmark.svg", alt: "Orderbase" }}
+            />
+          ) : null}
+          {/* Same stack as Corporate, minus the CMS (stores run on their own engine). */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["Strapi"]} />
+          {/* "Why Brands Stay With Us" as a scroll stack of big cards. */}
+          {support && <SupportStack {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>
@@ -184,27 +237,27 @@ export function ServicePageRenderer({
     case "custom":
       return (
         <>
-          <ServiceHero {...hero} reel={heroReel ?? CUSTOM_REEL} />
+          <ServiceHero {...hero} switcher={switcher} reel={heroReel ?? CUSTOM_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/wgy-custom.webp"}
               imageAlt="MitchDesigns team reviewing a platform build across screens"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
-          {/* "Built on Solid Foundations" as the 3D tilt-card grid the other
-              service pages use for Why Us, with looping 3D icons. */}
-          {moreAbout && <WhyUsSection {...moreAbout} />}
-          {/* Device cards in the "We support you beyond launch" style
-              (animated line icons instead of shots). */}
-          {designsAdapt && <SupportSection {...designsAdapt} />}
+          {/* Logos of the brands running on our software (projects follow below). */}
+          {moreAbout && <ClientWorkFetcher category="Software" title={moreAbout.title} description={moreAbout.description} logosOnly />}
+          {/* "Why work with MitchDesigns?" as a carousel of reasons. */}
+          {whyUs && <WhyUsSection {...whyUs} />}
+          {/* "Designs that adapt" as the eCommerce scroll stack of big cards. */}
+          {designsAdapt && <SupportStack {...designsAdapt} />}
           {process && <WorkSteps process={process} />}
-          {caseStudies.length > 0 && (
-            <FeaturedProjects caseStudies={caseStudies} />
-          )}
-          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} />
+          {/* Software projects (main or second type), in the featured style. */}
+          {caseStudies.length > 0 && <FeaturedProjects caseStudies={caseStudies} />}
+          {/* No mobile frameworks on the software page. */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["React Native", "Flutter"]} />
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>
@@ -214,7 +267,7 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our live dashboard widgets, animated (front-end only). */}
-          <ServiceHero {...hero} scene={<MediaBuyingScene />} />
+          <ServiceHero {...hero} switcher={switcher} scene={<MediaBuyingScene />} />
           {numbers && <NumbersSection {...numbers} />}
           {/* The brief quote gives way to the scroll-written "We Got You"
               scene the other service pages open with. */}
@@ -224,11 +277,13 @@ export function ServicePageRenderer({
               // The CMS image is missing; our geography widget (front-end only).
               image={encodeURI("/images/media-buying/webp/Widgets [Marketing & Sales] [1.1].webp")}
               imageAlt="Audience geography dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
           <MacbookVideoSection video={deviceVideo} />
+          {/* Google Ads is part of media buying now: its tablet recording follows. */}
+          <TabletVideoSection />
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
@@ -239,7 +294,7 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our live dashboard widgets, animated (front-end only). */}
-          <ServiceHero {...hero} scene={<GoogleAdsScene />} />
+          <ServiceHero {...hero} switcher={switcher} scene={<GoogleAdsScene />} />
           {numbers && <NumbersSection {...numbers} />}
           {/* As on the other service pages: the scroll-written "We Got You"
               scene instead of the prototype shot, brief quote and old card. */}
@@ -249,7 +304,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our emotions radar widget (front-end only).
               image={encodeURI("/images/google ads/webp/radar.webp")}
               imageAlt="Audience emotions radar dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {/* Our Google Ads recording on a tablet that rises as you scroll. */}
@@ -264,7 +319,7 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our organic-clicks widget, animated (front-end only). */}
-          <ServiceHero {...hero} scene={<SeoScene />} />
+          <ServiceHero {...hero} switcher={switcher} scene={<SeoScene />} />
           {numbers && <NumbersSection {...numbers} />}
           {/* As on the other service pages: the scroll-written "We Got You"
               scene instead of the prototype shot, brief quote and old card. */}
@@ -274,7 +329,7 @@ export function ServicePageRenderer({
               // The CMS image is missing; our organic-clicks widget (front-end only).
               image="/images/SEO/seo-clicks.webp"
               imageAlt="Total organic clicks dashboard widget designed by MitchDesigns"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
           {whyUs && <WhyUsSection {...whyUs} />}
@@ -286,33 +341,34 @@ export function ServicePageRenderer({
     case "mobile-app":
       return (
         <>
-          <ServiceHero {...hero} reel={heroReel ?? MOBILE_REEL} />
+          <ServiceHero {...hero} switcher={switcher} reel={heroReel ?? MOBILE_REEL} />
           {weGotYou && (
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image, or our studio shoot until one is set.
               image={weGotYou.image || "/images/studio/wgy-mobile.webp"}
               imageAlt="MitchDesigns team testing a mobile app on a phone"
-              cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
+              cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
+          {/* The brands we built apps for, as on eCommerce (shows once there are Mobile App case studies). */}
+          {moreAbout && <ClientWorkFetcher category="Mobile App" title={moreAbout.title} description={moreAbout.description} />}
           {whyUs && <WhyUsSection {...whyUs} />}
+          {/* The common app features we build, as a plain grid. */}
+          {featuresSimplified && <FeatureGrid {...featuresSimplified} />}
           <AppFlowSection
             steps={appFlowSteps(process)}
             eyebrow={process?.eyebrow}
+            title={process?.title}
+            titleHighlights={process?.titleHighlights}
             closingTitle={process?.closingTitle}
             closingText={process?.closingText}
-            screens={process?.appScreens}
+            screens={process?.appScreens?.length ? process.appScreens : MOBILE_FLOW_SCREENS}
           />
-          <TechStackFetcher
-            {...techStackCopy(techStack, {
-              title: "Craft seamless digital platforms with our modern tech stack",
-              description:
-                "More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client.",
-              highlight: "modern tech stack",
-            })}
-          />
-          {support && <SupportSection {...support} />}
+          {/* Mobile tools and the backend behind them, no web-only tools. */}
+          <TechStackFetcher {...techStackCopy(techStack, MOBILE_STACK)} only={MOBILE_TECH} />
+          {/* "Why brands stay with us" as the same scroll stack as eCommerce. */}
+          {support && <SupportStack {...support} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>

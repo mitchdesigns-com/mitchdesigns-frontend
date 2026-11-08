@@ -98,7 +98,7 @@ export default async function HomePage() {
         "@type": "HowTo",
         name: "How to Start a Project with MitchDesigns",
         description:
-          "The step-by-step process for working with MitchDesigns — from first contact to product launch.",
+          "The step-by-step process for working with MitchDesigns, from first contact to product launch.",
         totalTime: "PT8W",
         step: [
           {
@@ -125,7 +125,7 @@ export default async function HomePage() {
             "@type": "HowToStep",
             position: 4,
             name: "Development",
-            text: "Engineers build the product using Next.js, React Native, or the right stack for your project — with regular demos throughout.",
+            text: "Engineers build the product using Next.js, React Native, or the right stack for your project, with regular demos throughout.",
           },
           {
             "@type": "HowToStep",

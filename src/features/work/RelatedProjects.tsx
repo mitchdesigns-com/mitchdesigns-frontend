@@ -7,10 +7,11 @@ import Link from "next/link";
 import { staggerChildren, itemFadeUp } from "@/components/motion/variants";
 import { useReveal } from "@/components/motion/useReveal";
 import type { CaseStudy } from "@/lib/cms/types";
+import { ProjectTypeTag } from "./ProjectTypeTag";
 
 type Study = Pick<
   CaseStudy,
-  "slug" | "title" | "tagline" | "services" | "cover" | "listCover" | "featuredThumbnail"
+  "slug" | "title" | "tagline" | "category" | "subcategory" | "services" | "cover" | "listCover" | "featuredThumbnail"
 > & { id: number };
 
 type Props = {
@@ -41,6 +42,7 @@ function RelatedCard({ study }: { study: Study }) {
 
       <div className="flex flex-col gap-3">
         <p className="text-hero-3 font-bold text-black leading-tight text-left! text-balance">{study.title}</p>
+        <ProjectTypeTag type={study.category} subcategory={study.subcategory} className="text-black" />
         {study.tagline && (
           <p className="text-xl font-medium text-black text-balance">{study.tagline}</p>
         )}

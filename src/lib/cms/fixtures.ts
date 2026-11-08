@@ -148,59 +148,66 @@ export const fixtureClientLogos: Array<WithId<ClientLogo>> = [
 export const fixtureServices: Array<WithId<Service>> = [
   {
     id: 1,
-    slug: "mobile-app",
-    title: "Build A Mobile App",
-    tagline: "Native and cross-platform apps designed for conversion.",
-    description:
-      "Every mobile app we build is tailored to your business goals — no templates, no shortcuts. We design native-feel experiences on iOS and Android using React Native, with animations that delight and flows that convert. Each app is built for performance, App Store approval, and post-launch growth.",
-  },
-  {
-    id: 2,
+    order: 1,
     slug: "corporate",
-    title: "Build A Corporate Website",
-    tagline: "Planning user journeys that drive engagement and clarity.",
+    title: "Launch a Corporate Website",
+    tagline: "A fast, credible website that turns visitors into enquiries.",
     description:
       "Every corporate website we build is tailored with no templates and brought to life with custom animations. We use a React frontend powered by Next.js and a headless CMS with Strapi.io to give businesses flexibility and control. Each project is designed to generate qualified leads with SEO-friendly structure, user-focused experience, and high performance speeds. After launch we provide full maintenance and technical support.",
   },
   {
-    id: 3,
+    id: 2,
+    order: 2,
     slug: "ecommerce",
-    title: "Build An eCommerce Platform",
-    tagline: "Crafting a responsive, fast, and scalable experience.",
+    title: "Build an eCommerce Platform",
+    tagline: "Web store and mobile app. You own the engine, data, transactions, payments and customers.",
     description:
-      "We build eCommerce platforms that turn browsers into buyers. Custom storefronts, seamless checkout flows, and performance-optimised pages designed to reduce drop-off at every step. Integrated with your payment gateway, inventory, and logistics — built to scale.",
+      "We build eCommerce platforms that turn browsers into buyers. Custom storefronts, seamless checkout flows, and performance-optimised pages designed to reduce drop-off at every step. Integrated with your payment gateway, inventory, and logistics, built to scale.",
+  },
+  {
+    id: 3,
+    order: 3,
+    slug: "mobile-app",
+    title: "Build a Mobile App",
+    tagline: "A mobile app built for your customers.",
+    description:
+      "Every mobile app we build is tailored to your business goals, no templates, no shortcuts. We design native-feel experiences on iOS and Android using React Native, with animations that delight and flows that convert. Each app is built for performance, App Store approval, and post-launch growth.",
   },
   {
     id: 4,
+    order: 4,
     slug: "custom",
-    title: "Build A Custom Platform",
-    tagline: "Continuous testing, optimization, and team training.",
+    title: "Build the Software",
+    tagline: "ERPs, booking, car rental, limousine, travel and payment platforms.",
     description:
-      "When off-the-shelf software doesn't cut it, we build exactly what you need. Booking systems, SaaS dashboards, internal tools, or client portals — architected for reliability, designed for the people who use them every day.",
+      "When off-the-shelf software doesn't cut it, we build exactly what you need. Booking systems, SaaS dashboards, internal tools, or client portals, architected for reliability, designed for the people who use them every day.",
   },
   {
     id: 5,
+    order: 5,
     slug: "media-buying",
     title: "Scale with Media Buying",
-    tagline: "Paid campaigns that reach the right audience at scale.",
+    tagline: "Meta, TikTok and Google Ads, built as full funnels with performance creative.",
     description:
-      "We run paid social and display campaigns that don't burn budget. Data-driven targeting, creative testing, and funnel optimisation across Meta, TikTok, and Snapchat — built around your cost-per-acquisition, not just impressions.",
+      "We run paid social and display campaigns that don't burn budget. Data-driven targeting, creative testing, and funnel optimisation across Meta, TikTok, and Snapchat, built around your cost-per-acquisition, not just impressions.",
   },
   {
     id: 6,
-    slug: "seo",
-    title: "Rank with SEO",
-    tagline: "Organic growth through technical and content excellence.",
-    description:
-      "We combine technical SEO, content strategy, and link building into a single growth engine. Audits, on-page fixes, and a publishing roadmap that compounds — so you rank for the searches that bring buyers, not just traffic.",
-  },
-  {
-    id: 7,
+    order: 6,
     slug: "google-ads",
     title: "Scale with Google Ads",
     tagline: "Search and Performance Max campaigns that convert.",
     description:
-      "We manage Google Ads accounts built around profitable keywords and tight negative lists. Search, Performance Max, and remarketing — continuously tested and optimised so every dirham in ad spend works harder.",
+      "We manage Google Ads accounts built around profitable keywords and tight negative lists. Search, Performance Max, and remarketing, continuously tested and optimised so every dirham in ad spend works harder.",
+  },
+  {
+    id: 7,
+    order: 7,
+    slug: "seo",
+    title: "Get Found on Google & AI",
+    tagline: "SEO and AEO so customers find you on Google and in AI answers.",
+    description:
+      "We combine technical SEO, content strategy, and link building into a single growth engine. Audits, on-page fixes, and a publishing roadmap that compounds, so you rank for the searches that bring buyers, not just traffic.",
   },
 ];
 
@@ -212,7 +219,7 @@ export const fixtureCaseStudies: Array<WithId<CaseStudy>> = [
     websiteUrl: "https://elgouna.com/",
     client: "Orascom Development",
     tagline: "Transforming Tourist Engagement through El Gouna's website design",
-    excerpt: "A renowned self-sufficient premier destination by the Red Sea, sought to unify its multiple service offerings—from hotels to community services—into one comprehensive website.",
+    excerpt: "A renowned self-sufficient premier destination by the Red Sea, sought to unify its multiple service offerings, from hotels to community services, into one comprehensive website.",
     services: [
       "Digital roadmap & strategy",
       "Website design & development",
@@ -375,7 +382,7 @@ export const fixtureTestimonials: Array<WithId<Testimonial>> = [
   {
     id: 5,
     quote:
-      "Best agency we've worked with — and we've tried a few. They care about outcomes, not just deliverables.",
+      "Best agency we've worked with, and we've tried a few. They care about outcomes, not just deliverables.",
     author: "Layla Farouk",
     role: "CMO",
     company: "Mountain View",
@@ -420,28 +427,28 @@ export const fixtureTrustReasons: Array<WithId<TrustReason>> = [
   {
     id: 1,
     title: "Expertise Led By The Founder",
-    body: "Every project is guided by direct founder insight — blending business strategy, UX design, and conversion logic to ensure every outcome feels intentional and high-performing.",
+    body: "Every project is guided by direct founder insight, blending business strategy, UX design, and conversion logic to ensure every outcome feels intentional and high-performing.",
     image: { url: "/images/trust-reasons/expertise.webp", alternativeText: "Expertise Led By The Founder" },
     order: 1,
   },
   {
     id: 2,
     title: "Tailor-Made Digital Systems",
-    body: "We don't rely on templates. We build from the ground up — fully custom platforms that match how your business operates, not the other way around.",
+    body: "We don't rely on templates. We build from the ground up, fully custom platforms that match how your business operates, not the other way around.",
     image: { url: "/images/trust-reasons/tailor-made.webp", alternativeText: "Tailor-Made Digital Systems" },
     order: 2,
   },
   {
     id: 3,
     title: "Smooth Tech Integration",
-    body: "From ERPs and CRMs to payments and logistics — we connect every moving part into a smooth, automated system.",
+    body: "From ERPs and CRMs to payments and logistics. We connect every moving part into a smooth, automated system.",
     image: { url: "/images/trust-reasons/smooth-tech.webp", alternativeText: "Smooth Tech Integration" },
     order: 3,
   },
   {
     id: 4,
     title: "Design That Drives Business",
-    body: "Our designs are not just beautiful — they're designed and built for growth, clarity, and conversion.",
+    body: "Our designs are not just beautiful. They're designed and built for growth, clarity, and conversion.",
     image: { url: "/images/trust-reasons/design.webp", alternativeText: "Design That Drives Business" },
     order: 4,
   },
@@ -455,7 +462,7 @@ export const fixtureTrustReasons: Array<WithId<TrustReason>> = [
   {
     id: 6,
     title: "Performance Mindset",
-    body: "We measure success by real impact — conversions, traffic, and operational efficiency — not vanity metrics.",
+    body: "We measure success by real impact, conversions, traffic, and operational efficiency, not vanity metrics.",
     image: { url: "/images/trust-reasons/performance.webp", alternativeText: "Performance Mindset" },
     order: 6,
   },
@@ -464,7 +471,7 @@ export const fixtureTrustReasons: Array<WithId<TrustReason>> = [
 export const fixtureTechStackSection: TechStackSection = {
   title: "Craft seamless digital platforms with our modern tech stack",
   description:
-    "More than a stack — it's how we build reliable, scalable, and secure digital ecosystems for every client.",
+    "More than a stack. It's how we build reliable, scalable, and secure digital ecosystems for every client.",
   highlight: "with our modern tech stack",
 };
 
@@ -550,7 +557,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Mobile Apps",
     question: "Do you build for iOS, Android, or both? LOCAL FIXTURE",
     answer:
-      "Both. We build cross-platform apps with React Native so you ship to iOS and Android from a single codebase — without sacrificing native feel.",
+      "Both. We build cross-platform apps with React Native so you ship to iOS and Android from a single codebase, without sacrificing native feel.",
     order: 1,
   },
   {
@@ -566,7 +573,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Mobile Apps",
     question: "How long does a typical mobile app take to build?",
     answer:
-      "An MVP usually takes 10–16 weeks. Full-featured apps with custom backends run 4–6 months. We share a phased timeline after discovery.",
+      "An MVP usually takes 10 to 16 weeks. Full-featured apps with custom backends run 4 to 6 months. We share a phased timeline after discovery.",
     order: 3,
   },
   {
@@ -574,7 +581,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Mobile Apps",
     question: "Do you handle App Store and Google Play submissions?",
     answer:
-      "Yes — we manage the full submission process, including app review guidelines, screenshots, metadata, and any compliance requirements.",
+      "Yes. We manage the full submission process, including app review guidelines, screenshots, metadata, and any compliance requirements.",
     order: 4,
   },
   {
@@ -592,7 +599,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Corporate Websites",
     question: "How long does it take to build a website with OJJA?",
     answer:
-      "It depends on the project scope. Most corporate websites take around 6–10 weeks from kickoff to launch, while e-commerce platforms can take 12–16 weeks, especially when integrations or custom features are involved. We work in clear, defined phases — design, development, testing, and launch — so you always know where your project stands.",
+      "It depends on the project scope. Most corporate websites take around 6 to 10 weeks from kickoff to launch, while e-commerce platforms can take 12 to 16 weeks, especially when integrations or custom features are involved. We work in clear, defined phases, design, development, testing, and launch, so you always know where your project stands.",
     order: 1,
   },
   {
@@ -601,7 +608,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     question:
       "What's the difference between your corporate websites and e-commerce platforms?",
     answer:
-      "Corporate websites focus on brand presentation, lead generation, and trust-building. E-commerce platforms are built around product catalogues, checkout flows, inventory, and conversion optimisation. Both are custom-built — we don't use off-the-shelf themes.",
+      "Corporate websites focus on brand presentation, lead generation, and trust-building. E-commerce platforms are built around product catalogues, checkout flows, inventory, and conversion optimisation. Both are custom-built. We don't use off-the-shelf themes.",
     order: 2,
   },
   {
@@ -609,7 +616,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Corporate Websites",
     question: "Do you work with small businesses or only big brands?",
     answer:
-      "Both. We've worked with startups, SMEs, and enterprise clients across Egypt and the region. What matters is that you're serious about growth — not the size of your company.",
+      "Both. We've worked with startups, SMEs, and enterprise clients across Egypt and the region. What matters is that you're serious about growth, not the size of your company.",
     order: 3,
   },
   {
@@ -625,9 +632,9 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     id: 10,
     category: "Corporate Websites",
     question:
-      "Do you handle everything — from design to development to content?",
+      "Do you handle everything, from design to development to content?",
     answer:
-      "Yes. Our team covers UX/UI design, frontend and backend development, CMS setup, copywriting, and post-launch support — all under one roof.",
+      "Yes. Our team covers UX/UI design, frontend and backend development, CMS setup, copywriting, and post-launch support, all under one roof.",
     order: 5,
   },
   {
@@ -670,7 +677,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "eCommerce",
     question: "Can you integrate local Egyptian payment gateways?",
     answer:
-      "Yes — Paymob, Fawry, Vodafone Cash, and card gateways are all supported. We handle the full payment flow including installment options.",
+      "Yes. Paymob, Fawry, Vodafone Cash, and card gateways are all supported. We handle the full payment flow including installment options.",
     order: 2,
   },
   {
@@ -686,7 +693,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "eCommerce",
     question: "Can you migrate my existing store to a new platform?",
     answer:
-      "Yes. We handle full data migrations — products, orders, customers, and SEO URLs — with zero downtime using staged cutover.",
+      "Yes. We handle full data migrations, products, orders, customers, and SEO URLs, with zero downtime using staged cutover.",
     order: 4,
   },
 
@@ -704,7 +711,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Booking Systems",
     question: "Can the system handle real-time availability?",
     answer:
-      "Yes. We build with real-time availability logic, conflict prevention, and instant confirmation — no double bookings.",
+      "Yes. We build with real-time availability logic, conflict prevention, and instant confirmation, no double bookings.",
     order: 2,
   },
   {
@@ -720,7 +727,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Booking Systems",
     question: "Can customers pay at the time of booking?",
     answer:
-      "Yes — we wire in payment gateways so deposits or full payments are collected at checkout, with automated receipts and reminders.",
+      "Yes. We wire in payment gateways so deposits or full payments are collected at checkout, with automated receipts and reminders.",
     order: 4,
   },
 
@@ -738,7 +745,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Custom Software",
     question: "Can you work with our existing team?",
     answer:
-      "Absolutely. We embed with in-house product, design, and engineering teams regularly — async-first, with regular syncs to keep momentum.",
+      "Absolutely. We embed with in-house product, design, and engineering teams regularly, async-first, with regular syncs to keep momentum.",
     order: 2,
   },
   {
@@ -746,7 +753,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Custom Software",
     question: "How do you handle scope changes mid-project?",
     answer:
-      "We work in defined sprints. Scope changes are logged, estimated, and approved before we build — no surprise invoices.",
+      "We work in defined sprints. Scope changes are logged, estimated, and approved before we build, no surprise invoices.",
     order: 3,
   },
   {
@@ -772,7 +779,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Media Buying",
     question: "Do you handle creative as well as buying?",
     answer:
-      "Yes. Our team covers ad creative, copy, A/B testing, and media buying — so the message and placement are aligned from the start.",
+      "Yes. Our team covers ad creative, copy, A/B testing, and media buying, so the message and placement are aligned from the start.",
     order: 2,
   },
   {
@@ -788,7 +795,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "Media Buying",
     question: "How do you report on performance?",
     answer:
-      "Weekly performance reports with ROAS, CPA, CTR, and spend breakdowns — plus a monthly strategy review to adjust targeting and creative.",
+      "Weekly performance reports with ROAS, CPA, CTR, and spend breakdowns, plus a monthly strategy review to adjust targeting and creative.",
     order: 4,
   },
 
@@ -798,7 +805,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "SEO / AGO",
     question: "Do you do technical SEO or just content?",
     answer:
-      "Both. We cover technical audits (Core Web Vitals, crawlability, structured data), on-page optimisation, and content strategy — all in one engagement.",
+      "Both. We cover technical audits (Core Web Vitals, crawlability, structured data), on-page optimisation, and content strategy, all in one engagement.",
     order: 1,
   },
   {
@@ -806,7 +813,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "SEO / AGO",
     question: "How long before we see results from SEO?",
     answer:
-      "For competitive keywords, expect meaningful movement in 3–5 months. Technical fixes and quick wins often show results within 4–6 weeks.",
+      "For competitive keywords, expect meaningful movement in 3 to 5 months. Technical fixes and quick wins often show results within 4 to 6 weeks.",
     order: 2,
   },
   {
@@ -822,7 +829,7 @@ export const fixtureFAQs: Array<WithId<FAQ>> = [
     category: "SEO / AGO",
     question: "What's AGO?",
     answer:
-      "AGO stands for AI-Generative Optimisation — structuring your content so it surfaces in AI-powered search results (Google SGE, ChatGPT, Perplexity). It's the next layer beyond traditional SEO.",
+      "AGO stands for AI-Generative Optimisation, structuring your content so it surfaces in AI-powered search results (Google SGE, ChatGPT, Perplexity). It's the next layer beyond traditional SEO.",
     order: 4,
   },
 ];
@@ -1061,19 +1068,18 @@ export const fixtureAboutPage: AboutContent = {
     },
     images: [
       { url: "/images/studio/about/story-1.webp", alt: "About MitchDesigns" },
-      { url: "/images/studio/about/approach.webp", alt: "About MitchDesigns" },
+      { url: "/images/studio/about/culture.webp", alt: "About MitchDesigns" },
     ],
   },
   metrics: [
     { value: "20+", label: "Years of experience," },
-    { value: "400+", label: "Projects Delivered" },
+    { value: "500+", label: "Projects Delivered" },
     { value: "30+", label: "Dedicated Experts" },
   ],
   approach: {
-    eyebrow: "How We Work",
-    title:
-      "Every project follows a structured framework designed to align business objectives.",
-    body: "At Mitch Designs, design is seen as the meeting point of a business’s goals and the customer’s needs. That’s why we put your customer at the center of our design process. We act as your customer advocates to design and develop digital products that help you scale your business.",
+    eyebrow: "Our Culture",
+    title: "A culture of continuous learning.",
+    body: "To innovate products and offer high-technology digital services to premium brands, it takes a culture of transparency, an open mind, flexibility, mutual respect, consultation first and consistency.\n\nOur people are encouraged to question, experiment and keep growing every single day.\n\nWe believe in these values inside the company, and the brands we work with feel them in everything we deliver. That is how innovation, sustainability and growth show up in their products, and why they keep building with us.",
     image: null,
   },
   innovate: {
@@ -1081,24 +1087,28 @@ export const fixtureAboutPage: AboutContent = {
     photos: [],
   },
   team: {
-    badge: "Our Team",
+    badge: "Our Success",
     heading:
-      "We believe that positive change comes from diverse minds working together to make a difference.",
+      "Our success is the work we do. It brings more brands to trust us with their digital presence and the technology behind it.",
+    caption:
+      "Trust, support and partnership shape how we work with every brand. MitchDesigns is a network of premium brands we are glad to work with.",
     groupPhoto: null,
   },
   story: {
     eyebrow: "Our Story",
     title:
-      "Since 2005, we’ve partnered with over 200 clients across 15 industries to innovate and transform the digital landscape in Egypt and the MENA region.",
+      "Since 2005, we’ve partnered with over 500 brands across 15 industries to innovate and transform the digital landscape in Egypt and the MENA region.",
     cards: [
       {
         image: null,
-        body: "We believe that positive change comes from diverse minds working together to make a difference.",
+        body: [{"type": "paragraph", "children": [{"type": "text", "text": "What began as a small design studio in 2005 has grown into a team of "}, {"type": "text", "text": "dedicated experts", "bold": true}, {"type": "text", "text": " building websites, mobile apps and platforms for "}, {"type": "text", "text": "premium brands", "bold": true}, {"type": "text", "text": " across the region. Every project taught us something, and we kept what worked."}]}],
       },
       {
         image: null,
-        body: "We act as your customer advocates to develop products that help you scale efficiently.",
+        body: [{"type": "paragraph", "children": [{"type": "text", "text": "We measure ourselves by "}, {"type": "text", "text": "the work", "bold": true}, {"type": "text", "text": " and by the brands that come back to us. They trust us with their digital presence, and we answer with support that continues "}, {"type": "text", "text": "long after launch", "bold": true}, {"type": "text", "text": "."}]}],
       },
+      { image: null, body: "" },
+      { image: null, body: "" },
     ],
   },
 };
@@ -1106,16 +1116,16 @@ export const fixtureAboutPage: AboutContent = {
 export const fixtureHomePage: HomePageData = {
   hero: {
     eyebrow:
-      "MitchDesigns — Website & Mobile App Design Company Based in Egypt",
+      "MitchDesigns - Website & Mobile App Design Company Based in Egypt",
     headline: "Start Building Digital Experiences that",
     rotatingWords: ["Convert", "Engage", "Interact", "Succeed", "Grow"],
   },
   about: {
-    body: "Since 2005, I've built Mitch Designs in Egypt with one belief, businesses deserve more than templates. As a website design company in Egypt, we craft custom design that turns into results. From mobile app development to e-commerce solutions, from custom platforms to booking systems, every project is built for conversions.\n\nWe don't chase “pretty” — we chase performance marketing, SEO, and measurable success. For us, it's always about the user, the customer, and their experience. That's why Mitch Designs has become the partner businesses trust when growth can't wait.",
+    body: "In 2005, we built our first corporate website in Egypt.\n\nBrands kept asking for more, so we built online stores, mobile apps, dashboards and ERPs, then the campaigns that brought them customers.\n\nTwenty years and 500 projects later, we learned that pretty was never the goal.\n\nOur mission is to transform successful brands digitally.\n\nWe give them systems that automate their work for the AI era, and experiences their customers love to use.\n\nWe connect design, data and marketing into one platform that works as hard as they do.\n\nSo they grow, scale and earn more.\n\nI still put my name on every project, because every one of them carries it.",
     signature: "Mitch",
     stats: [
       { value: "20+", unit: "Years", label: "Years of experience," },
-      { value: "400+", unit: "Projects", label: "Delivered with Impact" },
+      { value: "500+", unit: "Projects", label: "Delivered with Impact" },
       { value: "30+", unit: "Experts", label: "Dedicated Team Members" },
     ],
     cta: { label: "About Us", href: "/about" },
@@ -1160,8 +1170,8 @@ export const fixtureHomePage: HomePageData = {
 export const fixtureCtaBanner: CtaBannerData = {
   title: "Ready For Your Next Project?",
   description:
-    "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
-  cta: { label: "Get Detailed Proposal", href: LEADS_URL },
+    "Book a free 30-minute call with our team. Talk through your project and get clear direction on scope, timeline and budget.",
+  cta: { label: "Schedule Consultation Meeting", href: LEADS_URL },
   bgImage: "/images/cta-bg.webp",
 };
 
@@ -1178,11 +1188,13 @@ export const fixtureCareersPage: CareersPageData = {
     { label: "Full Ownership" },
     { label: "Innovative Culture" },
   ],
+  noPositionsTitle: "We currently don't have jobs",
+  noPositionsBody: "New roles show up here first, so check back soon.",
 };
 
 export const fixtureOrderbasePage: OrderbasePageData = {
   "meta": {
-    "title": "Orderbase — eCommerce Platform for Food Brands | Mitch Designs",
+    "title": "Orderbase | eCommerce Platform for Food Brands | Mitch Designs",
     "description": "Orderbase is the headless eCommerce operating system for multi-branch food brands. Sell, manage and fulfill orders across every branch from one platform. Built by Mitch Designs, Cairo."
   },
   "nav": {
@@ -1220,7 +1232,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
     "titleLead": "The eCommerce ",
     "titleAccent": "operating system",
     "titleTail": " for food brands",
-    "subtitle": "Built for multi-branch restaurants, bakeries and food stores selling directly to consumers — locally and internationally.",
+    "subtitle": "Built for multi-branch restaurants, bakeries and food stores selling directly to consumers, locally and internationally.",
     "primaryCta": {
       "label": "See pricing & plans",
       "href": "#pricing"
@@ -1295,7 +1307,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
   },
   "challenges": {
     "eyebrow": "Your daily challenges",
-    "title": "Selling direct is powerful — running it is hard",
+    "title": "Selling direct is powerful, running it is hard",
     "items": [
       {
         "text": "Orders from your website and mobile app aren't always centralized in one system."
@@ -1304,7 +1316,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
         "text": "Stock differs between branches because of real-time sales and walk-in customers."
       },
       {
-        "text": "Customers expect fast checkout and live order tracking — like the delivery apps."
+        "text": "Customers expect fast checkout and live order tracking, like the delivery apps."
       },
       {
         "text": "Aggregator platforms own your customer data and your marketing insights."
@@ -1395,7 +1407,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
       {
         "icon": "cube",
         "title": "Real-time stock across branches",
-        "description": "Never sell what you can't fulfill — inventory stays in sync."
+        "description": "Never sell what you can't fulfill, inventory stays in sync."
       },
       {
         "icon": "pin",
@@ -1617,27 +1629,27 @@ export const fixtureOrderbasePage: OrderbasePageData = {
   "payments": {
     "eyebrow": "Payments",
     "title": "Secure payments, saved for one-tap reorder",
-    "lead": "Give customers the frictionless checkout they expect — with cards saved safely in your mobile app for instant repeat orders.",
+    "lead": "Give customers the frictionless checkout they expect, with cards saved safely in your mobile app for instant repeat orders.",
     "features": [
       {
         "icon": "card",
         "title": "Save cards for one-tap reorder",
-        "description": "Cards are securely tokenized (PCI-compliant — no raw card data stored), so customers save a card once in your app and reorder in a single tap."
+        "description": "Cards are securely tokenized (PCI-compliant, no raw card data stored), so customers save a card once in your app and reorder in a single tap."
       },
       {
         "icon": "shield",
         "title": "Payment inside your platform",
-        "description": "Customers pay right inside your website or app via our direct MPGS / Crédit Agricole integration — no redirect to a third-party processor. One seamless, consistent experience end to end."
+        "description": "Customers pay right inside your website or app via our direct MPGS / Crédit Agricole integration, no redirect to a third-party processor. One seamless, consistent experience end to end."
       },
       {
         "icon": "wallet",
         "title": "Wallet, Apple Pay & cash",
-        "description": "In-app wallet and stored credit, Apple Pay, cards, and cash on delivery — whatever your customers prefer."
+        "description": "In-app wallet and stored credit, Apple Pay, cards, and cash on delivery, whatever your customers prefer."
       },
       {
         "icon": "globe",
         "title": "Multi-currency gateways",
-        "description": "Local and regional gateways across Egypt and the GCC, plus any local payment processor — ready for multiple markets and currencies."
+        "description": "Local and regional gateways across Egypt and the GCC, plus any local payment processor, ready for multiple markets and currencies."
       }
     ],
     "images": [
@@ -1725,12 +1737,12 @@ export const fixtureOrderbasePage: OrderbasePageData = {
         "description": "A team that speaks the language of your business, not just tech."
       }
     ],
-    "banner": "We don't just build systems — we help you grow your sales."
+    "banner": "We don't just build systems. We help you grow your sales."
   },
   "pricing": {
     "eyebrow": "Pricing",
     "title": "Start with Orderbase in 4 ways",
-    "lead": "Choose the plan that fits where your brand is today — and scale up anytime.",
+    "lead": "Choose the plan that fits where your brand is today, and scale up anytime.",
     "plans": [
       {
         "icon": "planStandard",
@@ -1855,7 +1867,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
     ],
     "gmv": {
       "title": "Monthly fee examples by GMV volume",
-      "lead": "Transparent scaling — the GMV component applies only above each plan's threshold.",
+      "lead": "Transparent scaling, the GMV component applies only above each plan's threshold.",
       "columns": [
         "Monthly GMV",
         "Standard",
@@ -1868,7 +1880,7 @@ export const fixtureOrderbasePage: OrderbasePageData = {
             "500,000 EGP",
             "18,000",
             "25,000",
-            "—"
+            ""
           ]
         },
         {
@@ -2400,16 +2412,16 @@ export const fixtureOrderbasePage: OrderbasePageData = {
     "formNote": "We'll reply via WhatsApp or email within one business day.",
     "planOptions": [
       "Not sure yet",
-      "Standard — Launch Fast",
-      "Pro — Custom & Scalable",
-      "Elite — Full Infrastructure",
-      "Custom — Bespoke"
+      "Standard, Launch Fast",
+      "Pro, Custom & Scalable",
+      "Elite, Full Infrastructure",
+      "Custom, Bespoke"
     ],
     "whatsappNumber": "201014430669",
     "submitLabel": "Send via WhatsApp"
   },
   "footer": {
-    "tagline": "The headless eCommerce operating system for multi-branch food brands. Built by Mitch Designs — Cairo, Egypt.",
+    "tagline": "The headless eCommerce operating system for multi-branch food brands. Built by Mitch Designs. Cairo, Egypt.",
     "columns": [
       {
         "title": "Explore",
@@ -2455,6 +2467,6 @@ export const fixtureOrderbasePage: OrderbasePageData = {
       }
     ],
     "bottomLeft": "Mitch Designs · Software House & Digital Agency · 22 El Horeya Street, Heliopolis, Cairo",
-    "bottomRight": "Orderbase™ — eCommerce for Food Brands"
+    "bottomRight": "Orderbase™, eCommerce for Food Brands"
   }
 };

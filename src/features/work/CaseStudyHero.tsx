@@ -5,10 +5,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { strapiMedia } from "@/lib/cms/media";
 import type { CaseStudy } from "@/lib/cms/types";
+import { ProjectTypeTag } from "./ProjectTypeTag";
 import { staggerChildren, itemFadeUp, scaleIn } from "@/components/motion/variants";
 
 type Props = {
-  study: Pick<CaseStudy, "title" | "services" | "tagline" | "excerpt" | "websiteUrl" | "heroMedia">;
+  study: Pick<CaseStudy, "title" | "category" | "subcategory" | "services" | "tagline" | "excerpt" | "websiteUrl" | "heroMedia">;
 };
 
 export function CaseStudyHero({ study }: Props) {
@@ -29,6 +30,7 @@ export function CaseStudyHero({ study }: Props) {
           {/* text-left! — the global mobile heading spec centres text-hero-2/3
               (unlayered, so a plain utility loses); this row is left-aligned. */}
           <h1 className="text-hero-3 font-black text-fg text-left! md:text-hero-2 lg:text-hero-1">{study.title}</h1>
+          <ProjectTypeTag type={study.category} subcategory={study.subcategory} className="text-fg" />
 
           {study.services.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">

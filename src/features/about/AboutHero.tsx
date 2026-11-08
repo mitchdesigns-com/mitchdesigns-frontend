@@ -26,10 +26,12 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
       <div className="grid gap-10 pt-10 md:pt-16 lg:grid-cols-12 lg:items-end">
         {/* Badge + headline, each line rising out of its own mask */}
         <div className="flex flex-col lg:col-span-7">
-          <Eyebrow immediate className="relative z-10 -mb-3">
+          {/* The sticker overlaps the headline from sm up; on phones that
+              covered the letters, so it sits just above instead. */}
+          <Eyebrow immediate className="relative z-10 mb-1 sm:-mb-3">
             {hero.badge}
           </Eyebrow>
-          <h1 className="text-5xl font-black leading-none text-space-grey sm:text-hero-1">
+          <h1 className="text-about-hero font-black leading-none text-space-grey sm:text-hero-1">
             {titleLines.map((line, i) => (
               <span key={i} className="-mb-2 block overflow-hidden pb-4">
                 <motion.span

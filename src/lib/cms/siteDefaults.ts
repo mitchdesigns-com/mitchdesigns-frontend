@@ -21,12 +21,12 @@ export const SITE_SETTINGS_FALLBACK: SiteSettings = {
     { platform: "linkedin", url: "https://linkedin.com/company/mitchdesigns" },
     { platform: "youtube", url: "https://youtube.com/@mitchdesigns" },
   ],
-  primaryCta: { label: "Get Detailed Proposal", href: LEADS_URL },
+  primaryCta: { label: "Schedule Consultation Meeting", href: LEADS_URL },
   legalLinks: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
   ],
   testimonialsHeading: "Loved By Clients",
   testimonialsIntro:
-    "Hear it from the brands and people who trusted us — genuine feedback that tells our story better than we can.",
+    "Hear it from the brands and people who trusted us, genuine feedback that tells our story better than we can.",
 };

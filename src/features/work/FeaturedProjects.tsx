@@ -10,6 +10,7 @@ import { Reveal } from "@/components/motion";
 import type { CaseStudy } from "@/lib/cms/types";
 import { LiquidCursor } from "@/components/ui/LiquidCursor";
 import { noOrphan } from "@/lib/noOrphan";
+import { ProjectTypeTag } from "./ProjectTypeTag";
 
 const DRAG_THRESHOLD = 50;
 /** Autoplay: time each project stays centred while the stage is on screen. */
@@ -77,24 +78,6 @@ function getSlot(idx: number, active: number, n: number): Slot {
   if (diff === 1) return "right";
   if (diff === n - 1) return "left";
   return diff < n / 2 ? "hiddenRight" : "hiddenLeft";
-}
-
-// ── Category pill ────────────────────────────────────────────────────────────
-function CategoryPill({
-  label,
-  theme,
-}: {
-  label: string;
-  theme: "dark" | "light";
-}) {
-  return (
-    <span
-      className={`inline-flex shrink-0 items-center rounded-full px-2 py-1.5 text-sm ${theme === "dark" ? "bg-card-border text-white" : "bg-border text-black"
-        }`}
-    >
-      {noOrphan(label)}
-    </span>
-  );
 }
 
 // ── Single card (renders in any slot) ───────────────────────────────────────
@@ -219,10 +202,8 @@ function Card({
           >
             {noOrphan(`${project.title}’s Website`)}
           </Link>
-          {project.services.length > 0 && (
-            <CategoryPill label={project.services[0]} theme={theme} />
-          )}
         </div>
+        <ProjectTypeTag type={project.category} subcategory={project.subcategory} className={titleColor} />
         {project.year && (
           <span className="text-base text-fg-muted">Since {project.year}</span>
         )}
@@ -392,7 +373,7 @@ export function FeaturedProjects({
             className={`text-center text-hero-2 font-bold ${theme === "dark" ? "text-white" : "text-black"
               }`}
           >
-            Featured Projects
+            Featured projects
           </h2>
         </Reveal>
 

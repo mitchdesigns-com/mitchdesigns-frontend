@@ -1,7 +1,7 @@
 import { Section } from "@/components/layout/Section";
 import { RevealStagger, RevealItem } from "@/components/motion";
 import type { AboutContent } from "@/lib/cms/types";
-import { CountUp } from "./CountUp";
+import { ScrollCount } from "./ScrollCount";
 
 /** Key numbers on a dark band: big yellow figures counting up, split by fine dividers. */
 export function AboutMetrics({ metrics }: { metrics: AboutContent["metrics"] }) {
@@ -12,7 +12,7 @@ export function AboutMetrics({ metrics }: { metrics: AboutContent["metrics"] }) 
           <RevealItem key={value} className="flex flex-col items-center gap-2 py-8 text-center md:py-2">
             {/* Size on a wrapper: CountUp's class merge would drop a size next to a colour. */}
             <span className="text-hero-1 font-black leading-none">
-              <CountUp value={value} className="text-yellow" duration={2.4} />
+              <ScrollCount value={value} className="text-yellow" duration={2.4} />
             </span>
             <span className="text-lg text-fg-muted">{label.replace(/,\s*$/, "")}</span>
           </RevealItem>

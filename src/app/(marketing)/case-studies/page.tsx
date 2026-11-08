@@ -6,13 +6,13 @@ import type { CaseStudy } from "@/lib/cms/types";
 import { CaseStudyGrid } from "@/features/work";
 
 export const metadata: Metadata = {
-  title: "Case Studies — Websites & Apps We've Built",
+  title: "Case Studies | Websites & Apps We've Built",
   description:
-    "Browse MitchDesigns' portfolio — websites, mobile apps, and custom platforms built for top Egyptian and regional brands including El Gouna, Lychee, and G Developments.",
+    "Browse MitchDesigns' portfolio, websites, mobile apps, and custom platforms built for top Egyptian and regional brands including El Gouna, Lychee, and G Developments.",
   openGraph: {
-    title: "Case Studies — Websites & Apps We've Built",
+    title: "Case Studies | Websites & Apps We've Built",
     description:
-      "Browse MitchDesigns' portfolio — websites, mobile apps, and custom platforms built for top Egyptian and regional brands.",
+      "Browse MitchDesigns' portfolio, websites, mobile apps, and custom platforms built for top Egyptian and regional brands.",
     url: "https://mitchdesigns.com/case-studies",
   },
   alternates: { canonical: "/case-studies" },

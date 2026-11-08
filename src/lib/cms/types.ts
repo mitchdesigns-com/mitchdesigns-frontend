@@ -56,6 +56,9 @@ export type CaseStudyBlock =
   | { __component: "blocks.case-point"; title: string; body: string }
   | { __component: "blocks.case-testimonial"; quote: string; author: string; role?: string; avatar?: StrapiImage };
 
+/** Project type — the Strapi `category` enum on a case study. */
+export type ProjectType = "Corporate" | "eCommerce" | "Mobile App" | "Software";
+
 export type CaseStudy = {
   slug: string;
   title: string;
@@ -75,9 +78,15 @@ export type CaseStudy = {
   featuredThumbnail?: StrapiImage;
   content?: CaseStudyBlock[];
   featured?: boolean;
+  /** Position in a service page's work section (lower first); unset sorts last. */
+  order?: number | null;
   publishedAt: string;
-  /** Filter category — e.g. "Corporate", "eCommerce", "Mobile App", "Booking Website" */
-  category?: string;
+  /** Project type — shown as a tag on cards and the project page, and used by the work filter. */
+  category?: ProjectType;
+  /** Free-text kind within the type, e.g. "Booking Website" or "ERP" under Software. */
+  subcategory?: string;
+  /** A second project type, for work that is both (e.g. an eCommerce store with an ERP). */
+  secondaryCategory?: ProjectType | null;
   /** Full-colour client logo for the white info panel on /case-studies. */
   logo?: StrapiImage;
   /** White logo for the homepage logos grid. */
@@ -165,6 +174,8 @@ export type Service = {
   tagline: string;
   description: RichText;
   icon?: StrapiImage;
+  /** Brand logo shown on hover in the homepage services list (e.g. Orderbase on eCommerce). */
+  hoverLogo?: StrapiImage | null;
 };
 
 export type Testimonial = {
@@ -236,7 +247,8 @@ export type AboutContent = {
     eyebrow: string;
     /** Rich text (Strapi blocks) so editors can bold/italic words. */
     title: RichText;
-    cards: Array<{ image?: AboutImage | null; body: string }>;
+    /** Each card gives a photo and, optionally, a paragraph (rich text, so bold words carry over). */
+    cards: Array<{ image?: AboutImage | null; body: RichText }>;
   };
   /** CMS SEO override; falls back to the hardcoded page metadata when unset. */
   seo?: SeoData;
@@ -310,6 +322,18 @@ export type WeGotYouProps = {
   imagePosition?: "left" | "right";
   /** Image sequence played in place of `image` (e.g. the eCommerce order story). */
   story?: Array<{ src: string; alt: string }>;
+  /** Audiences to switch between (e.g. B2C, Food & Beverage, B2B). When set,
+   *  the section shows a toggle instead of the scroll scene. */
+  tabs?: AudienceTab[];
+};
+
+export type AudienceTab = {
+  label: string;
+  title: string;
+  description: RichText;
+  /** Optional brand logo for this audience (e.g. Orderbase). */
+  logo?: string;
+  logoAlt?: string;
 };
 
 export type WhyUsCard = {
@@ -361,6 +385,8 @@ export type SupportCard = {
   description: RichText;
   /** Picks the card's line icon; unset → guessed from the title. */
   icon?: LineIconKey;
+  /** Optional badge on the card (e.g. Trending). */
+  label?: "New" | "Popular" | "Trending";
 };
 
 export type SupportSectionProps = {
@@ -524,8 +550,11 @@ export type HomeAboutSection = {
   signature?: string;
   stats: HomeStat[];
   cta?: { label: string; href: string };
-  /** Hand-drawn marks over phrases in `body`. */
-  marks?: Array<{ phrase: string; shape: "strike" | "wave" | "swash" }>;
+  /**
+   * Hand-drawn marks over phrases in `body`, or "bold" for words bolded in the
+   * CMS body (`at` pins the exact spot when the phrase appears more than once).
+   */
+  marks?: Array<{ phrase: string; shape: "strike" | "wave" | "swash" | "bold"; at?: number }>;
 };
 
 export type OrderbaseFeature = {
@@ -591,7 +620,7 @@ export type SiteSettings = {
   tagline?: string;
   copyright?: string;
   socialLinks: Array<{ platform: SocialPlatform; url: string }>;
-  /** Site-wide "Get Detailed Proposal" button. */
+  /** Site-wide primary button ("Schedule Consultation Meeting"). */
   primaryCta: CmsLink;
   legalLinks: CmsLink[];
   testimonialsHeading: string;
@@ -629,6 +658,9 @@ export type CareersPageData = {
   experienceCards?: Array<{ image: string | null; title: string; body: string }>;
   positionsHeading?: string;
   applyLabel?: string;
+  /** Shown in place of the job list when there are no open roles. */
+  noPositionsTitle?: string;
+  noPositionsBody?: string;
   jobDetailsLabel?: string;
   applyNowLabel?: string;
   applyEmail?: string;

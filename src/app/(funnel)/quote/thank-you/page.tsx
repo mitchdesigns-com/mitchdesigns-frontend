@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Thank you — MitchDesigns",
+  title: "Thank you | MitchDesigns",
   robots: { index: false, follow: false },
 };
 

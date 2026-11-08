@@ -1,31 +1,29 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
+import { cn } from "@/lib/cn";
+import { chipBase } from "@/lib/chip";
 import { Section } from "@/components/layout/Section";
 import { strapiMedia } from "@/lib/cms/media";
 import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
-import { noOrphan } from "@/lib/noOrphan";
+import { ProjectTypeTag } from "./ProjectTypeTag";
+import { inProjectType } from "@/lib/cms/projectType";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 3;
 
-/** Project-type tags under the logo (the CMS category for now). */
-function TypeTags({ types }: { types: string[] }) {
-  if (!types.length) return null;
-  return (
-    <ul className="flex flex-wrap gap-2">
-      {types.map((t) => (
-        <li key={t} className="rounded-pill bg-yellow-soft px-3 py-1 text-sm font-medium text-black">
-          {t}
-        </li>
-      ))}
-    </ul>
-  );
-}
+/** Filter chips, in order — Strapi `category` value and the label shown. */
+const FILTERS = [
+  { value: "All", label: "All" },
+  { value: "Corporate", label: "Corporate" },
+  { value: "eCommerce", label: "eCommerce" },
+  { value: "Mobile App", label: "Mobile Apps" },
+  { value: "Software", label: "Software" },
+] as const;
 
 // ── sub-components ─────────────────────────────────────────────────────────
 
@@ -42,32 +40,30 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
       href={`/case-studies/${cs.slug}`}
       className="flex w-full flex-col overflow-hidden rounded-2xs lg:flex-row"
     >
-      {/* Left — info panel: logo + type tags, then title and a short summary */}
+      {/* Left — info panel: logo + title grouped at the top */}
       <div className="flex w-full shrink-0 flex-col gap-5 bg-white p-6 lg:w-[30%]">
-        <div className="flex flex-col gap-4">
-          <div className="h-24 w-full">
-            {logoSrc ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={logoSrc}
-                alt={cs.logo?.alternativeText ?? cs.client}
-                className="h-full max-w-3/5 object-contain object-left"
-              />
-            ) : (
-              <span className="text-sm font-medium text-space-grey">{cs.client}</span>
-            )}
-          </div>
-          <TypeTags types={cs.category ? [cs.category] : []} />
+        {/* Logo */}
+        <div className="h-26 w-full">
+          {logoSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={logoSrc}
+              alt={cs.logo?.alternativeText ?? cs.client}
+              className="h-full max-w-45 object-contain object-left"
+            />
+          ) : (
+            <span className="text-sm font-medium text-space-grey">{cs.client}</span>
+          )}
         </div>
 
-        {/* Title + divider + summary */}
-        <div className="flex flex-col gap-5">
-          <h3 className="whitespace-pre-line text-hero-5 text-black text-balance lg:text-card-title">
+        {/* Title, type label + short summary of scope, challenge and what we did (CMS `excerpt`) */}
+        <div className="flex flex-col gap-3">
+          <h3 className="whitespace-pre-line text-hero-5 text-black text-balance">
             {cs.title}
           </h3>
-          <div className="h-px w-full bg-space-grey/20" />
+          <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} className="text-black" />
           {cs.excerpt && (
-            <p className="line-clamp-5 text-base text-grey-700 text-balance">{noOrphan(cs.excerpt, 32)}</p>
+            <p className="text-base text-space-grey text-balance lg:text-lg">{cs.excerpt}</p>
           )}
         </div>
       </div>
@@ -103,23 +99,30 @@ export type CaseStudyGridProps = {
 export function CaseStudyGrid({
   caseStudies,
   title = "Case Studies",
-  description = "We don't just promise results — we prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
+  description = "We don't just promise results. We prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
 }: CaseStudyGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Categories are derived from the data — every distinct category present,
-  // in first-seen order, with "All" pinned first.
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(caseStudies.map((cs) => cs.category).filter((c): c is string => !!c)))],
-    [caseStudies],
+  // A chip only shows while at least one project sits under it.
+  const filters = FILTERS.filter(
+    ({ value }) => value === "All" || caseStudies.some((cs) => inProjectType(cs, value)),
   );
+
+  // `?category=eCommerce` (e.g. from a service page) opens on that filter.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("category");
+    const match = wanted && filters.map((f) => f.value as string).find((c) => c.toLowerCase() === wanted.toLowerCase());
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match) setActiveCategory(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filtered = activeCategory === "All"
     ? caseStudies
     : caseStudies.filter(
-        (cs) => cs.category === activeCategory || cs.services.includes(activeCategory),
+        (cs) => inProjectType(cs, activeCategory) || cs.services.includes(activeCategory),
       );
 
   const visible = filtered.slice(0, visibleCount);
@@ -149,33 +152,38 @@ export function CaseStudyGrid({
   }, [hasMore, loadMore]);
 
   return (
-    <Section theme="dark" className="py-25">
+    <Section theme="dark" className="pt-32 pb-25 lg:py-25">
       <div className="flex flex-col gap-10 lg:gap-[60px]">
-        {/* Header */}
+        {/* Header + category chips, kept close together */}
+        <div className="flex flex-col gap-5">
         <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
           <h1 className="text-hero-3 text-white md:text-hero-2 lg:text-hero-1">{title}</h1>
           <p className="max-w-full text-lg text-white text-balance lg:max-w-[37%] lg:text-xl">{description}</p>
         </div>
 
         {/* Category filter — derived from the data */}
-        {categories.length > 1 && (
-          <div className="flex flex-wrap gap-4">
-            {categories.map((cat) => (
+        {(
+          // Phones: one row that scrolls sideways (like the service switcher).
+          // Sticky: pins to the top while the list scrolls, released at its end.
+          <div className="sticky top-0 z-40 -mx-(--container-padding) flex gap-2 overflow-x-auto bg-bg px-(--container-padding) py-4 scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
+            {filters.map(({ value: cat, label }) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setActiveCategory(cat)}
-                className={
+                className={cn(
+                  chipBase,
                   cat === activeCategory
-                    ? "whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-base font-medium text-black"
-                    : "whitespace-nowrap rounded-pill border border-grey-200 px-6 py-3 text-base font-medium text-grey-200"
-                }
+                    ? "border-yellow bg-yellow text-black"
+                    : "border-grey-200 text-grey-200",
+                )}
               >
-                {cat}
+                {label}
               </button>
             ))}
           </div>
         )}
+        </div>
 
         {/* Rows */}
         <div className="flex flex-col gap-[60px]">

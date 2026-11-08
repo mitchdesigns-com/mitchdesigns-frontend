@@ -1,4 +1,6 @@
 "use client";
+import { BookingIcon } from "@/components/ui/BookingIcon";
+import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -7,7 +9,6 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { Reveal, RevealItem, RevealStagger, useTilt } from "@/components/motion";
 import { ClientsTrustCard } from "./ClientsTrustCard";
-import { LEADS_URL } from "@/config/nav";
 import { noOrphan } from "@/lib/noOrphan";
 
 export type TrustReasonCard = {
@@ -34,7 +35,7 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
 
 const DEFAULT_INTRO =
   "Because choosing a digital partner shouldn’t feel risky, it should feel right.";
-const DEFAULT_CTA: Cta = { label: "Get Detailed Proposal", href: LEADS_URL };
+const DEFAULT_CTA: Cta = SITE_SETTINGS_FALLBACK.primaryCta;
 
 type Props = {
   reasons: TrustReasonCard[];
@@ -106,7 +107,8 @@ export function ClientsTrust({
       {cta && (
         <div className="relative flex justify-center">
           <Button size="lg" asChild className="max-md:w-full">
-            <Link href={cta.href}>
+            <Link href={cta.href} className="group">
+              <BookingIcon href={cta.href} />
               {cta.label}
               <ArrowRight size={20} />
             </Link>

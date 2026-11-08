@@ -1,10 +1,12 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
+import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/Button";
 import { useHeaderCtaInView } from "@/components/layout/HeaderCtaInView";
 import { isLeadsHref } from "@/config/nav";
@@ -48,7 +50,10 @@ export function ServiceHero({
   reel,
   scene,
   bleedScene = false,
+  switcher,
 }: ServiceHeroProps & {
+  /** Row for jumping to the other service pages, shown above the eyebrow. */
+  switcher?: ReactNode;
   /** Fast project montage shown instead of the CMS image (front-end only). */
   reel?: ReelShot[];
   /** Coded animated scene shown instead of the CMS image (front-end only). */
@@ -64,37 +69,49 @@ export function ServiceHero({
   const bleed = !!reel?.length || (!!scene && bleedScene);
   return (
     <Section
-      className={bleed ? "pt-32 pb-16 md:flex md:min-h-svh md:items-center md:py-32" : "pt-32 pb-16 md:pb-24"}
+      bleed
+      className={bleed ? "pt-32 pb-16 md:flex md:min-h-svh md:flex-col md:pb-32" : "pt-32 pb-16 md:pb-24"}
       theme="dark"
     >
+      <div className={cn("container-page", bleed && "md:flex md:flex-1 md:flex-col")}>
+      {/* Service switcher: pinned to the top of the hero, outside the
+          vertically-centred copy, so it sits in the same spot on every page. */}
+      {switcher && <div className="mb-10 md:w-1/2 md:pr-12">{switcher}</div>}
       <motion.div
         variants={stagger(0.1)}
         initial="hidden"
         animate="visible"
-        className={`flex flex-col gap-12 md:flex-row md:items-center ${reverseLayout ? "md:flex-row-reverse" : ""}`}
+        className={cn(
+          "flex flex-col gap-12 md:flex-row md:items-center",
+          bleed && "md:flex-1",
+          reverseLayout && "md:flex-row-reverse",
+        )}
       >
-        <div className={bleed ? "space-y-6 md:w-1/2 md:pr-12" : "flex-1 space-y-6"}>
+        <div className={bleed ? "min-w-0 space-y-6 md:w-1/2 md:pr-12" : "min-w-0 flex-1 space-y-6"}>
           {subTitle && (
             <motion.p
               variants={fadeUp}
-              className="whitespace-nowrap text-sm font-medium uppercase tracking-[0.18em] text-fg-muted"
+              className="text-balance text-sm font-medium uppercase tracking-[0.18em] text-fg-muted"
             >
               {subTitle}
             </motion.p>
           )}
           <motion.h1
             variants={fadeUp}
-            className="text-hero-3 font-bold text-balance md:text-hero-2"
+            className="text-hero-3 text-left font-bold text-balance md:text-hero-2"
           >
             {renderTitle(title, titleHighlights)}
           </motion.h1>
           <motion.div variants={fadeUp}>
-            <RichText content={description} className="max-w-xl text-lg text-fg-muted" />
+            <RichText content={description} className="text-lg text-fg-muted text-balance" />
           </motion.div>
           {cta && (
             <motion.div variants={fadeUp} ref={ctaRef}>
               <Button asChild size="lg">
-                <Link href={cta.href}>{cta.label}</Link>
+                <Link href={cta.href} className="group">
+                  <BookingIcon href={cta.href} />
+                  {cta.label}
+                </Link>
               </Button>
             </motion.div>
           )}
@@ -124,6 +141,7 @@ export function ServiceHero({
           )}
         </motion.div>
       </motion.div>
+      </div>
     </Section>
   );
 }

@@ -15,10 +15,11 @@ const HERO_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 const MOBILE_VIDEO = "/videos/Mitch_Showreel_2026_Portrait.mp4";
 const MOBILE_POSTER = "/videos/Mitch_Showreel_2026_Portrait-poster.webp";
 const ease = [0.65, 0, 0.35, 1] as const;
-/** The reel opens/closes over 1s; scrolling is held for most of that, and a
- *  still-running swipe is let through soon after. */
-const LOCK_MS = 700;
-const RELEASE_MS = 1000;
+/** The reel opens/closes over 1s; scrolling is held for all of it. */
+const MOVE_MS = 1000;
+/** A scroll is a new one only after the wheel has been still this long, so
+ *  trackpad momentum (however long it runs) stays part of the same swipe. */
+const QUIET_MS = 220;
 
 type Props = {
   eyebrow?: string;
@@ -126,13 +127,10 @@ function ReelExpandHero(p: Props) {
   useEffect(() => {
     let consumed = false;
     let lastWheel = 0;
-    let lastDelta = 0;
-    let lockedAt = 0;
     const lock = () => {
       busy.current = true;
       consumed = true;
-      lockedAt = performance.now();
-      window.setTimeout(() => (busy.current = false), LOCK_MS);
+      window.setTimeout(() => (busy.current = false), MOVE_MS);
     };
     const block = (e: Event) => {
       e.preventDefault();
@@ -156,17 +154,10 @@ function ReelExpandHero(p: Props) {
     };
     const onWheel = (e: WheelEvent) => {
       const now = performance.now();
-      const d = Math.abs(e.deltaY);
-      // A new gesture has started after a pause, or when the deltas grow
-      // again (momentum only ever fades). And never hold the page longer
-      // than the reel's own animation — continuous scrolling has no pause.
-      if (
-        now - lastWheel > 200 ||
-        d > lastDelta * 1.5 + 4 ||
-        now - lockedAt > RELEASE_MS
-      ) consumed = false;
+      // Only a pause makes a new gesture: the swipe that opened the reel,
+      // momentum included, never carries the page on to the next section.
+      if (now - lastWheel > QUIET_MS) consumed = false;
       lastWheel = now;
-      lastDelta = d;
       step(e.deltaY > 0, e);
     };
     let touchY = 0;

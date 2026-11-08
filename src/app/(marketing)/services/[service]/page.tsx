@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { inProjectType } from "@/lib/cms/projectType";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ServicePageRenderer } from "@/features/services/ServicePageRenderer";
@@ -15,6 +16,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import {
   SERVICES as NAV_SERVICES,
   SERVICE_FAQ_CATEGORY,
+  MERGED_SERVICES,
   type ServiceSlug,
 } from "@/config/nav";
 
@@ -26,27 +28,27 @@ const SERVICE_META: Record<ServiceSlug, { title: string; description: string }> 
   corporate: {
     title: "Corporate Website Design & Development",
     description:
-      "Custom corporate websites built on Next.js with headless CMS. No templates — designed for lead generation, brand clarity, and high performance. Based in Egypt, serving the MENA region.",
+      "Custom corporate websites built on Next.js with headless CMS. No templates, designed for lead generation, brand clarity, and high performance. Based in Egypt, serving the MENA region.",
   },
   "mobile-app": {
     title: "Mobile App Design & Development",
     description:
-      "Native-feel iOS and Android apps built with React Native. Designed for conversion, built for performance, and ready for App Store submission. MitchDesigns — Egypt.",
+      "Native-feel iOS and Android apps built with React Native. Designed for conversion, built for performance, and ready for App Store submission. MitchDesigns. Egypt.",
   },
   ecommerce: {
     title: "eCommerce Platform Design & Development",
     description:
-      "Custom eCommerce storefronts with seamless checkout, local payment gateway integration (Paymob, Fawry), and conversion-optimised UX. MitchDesigns — Egypt.",
+      "Custom eCommerce storefronts with seamless checkout, local payment gateway integration (Paymob, Fawry), and conversion-optimised UX. MitchDesigns. Egypt.",
   },
   custom: {
     title: "Custom Platform & Software Development",
     description:
-      "Booking systems, SaaS dashboards, internal tools, and client portals — custom-architected for reliability and designed for the people who use them daily.",
+      "Booking systems, SaaS dashboards, internal tools, and client portals, custom-architected for reliability and designed for the people who use them daily.",
   },
   "media-buying": {
-    title: "Media Buying & Paid Social Advertising",
+    title: "Media Buying: Meta, TikTok & Google Ads",
     description:
-      "Data-driven paid campaigns across Meta, TikTok, and Snapchat. Creative testing, audience targeting, and funnel optimisation built around your CPA — not just impressions.",
+      "Full-funnel paid campaigns on Meta, TikTok and Google Ads. Performance creative, audience targeting and conversion funnels built around your cost per acquisition.",
   },
   seo: {
     title: "SEO & AI-Generative Optimisation (AGO)",
@@ -100,13 +102,21 @@ export default async function ServicePage({
   const [data, faqs, caseStudies] = await Promise.all([
     getServicePageData(service),
     safe(getFAQs(), fixtureFAQs),
-    safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
+    // Software shows its own projects (main or second type); others the featured ones.
+    service === "custom"
+      ? safe(getCaseStudies(), fixtureCaseStudies).then((all) => all.filter((cs) => inProjectType(cs, "Software")))
+      : safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
   ]);
-  // The CMS can point a service at another FAQ category.
-  const accordionFaqs = await safe(
-    getFAQs(data.faqCategory ?? SERVICE_FAQ_CATEGORY[service]),
-    [],
-  );
+  // The CMS can point a service at another FAQ category. Services merged into
+  // this one (Google Ads → Media Buying) bring their questions along.
+  const mergedIn = (Object.keys(MERGED_SERVICES) as ServiceSlug[]).filter((s) => MERGED_SERVICES[s] === service);
+  const accordionFaqs = (
+    await Promise.all(
+      [data.faqCategory ?? SERVICE_FAQ_CATEGORY[service], ...mergedIn.map((s) => SERVICE_FAQ_CATEGORY[s])].map((c) =>
+        safe(getFAQs(c), []),
+      ),
+    )
+  ).flat();
 
   const meta = SERVICE_META[service];
   const title = data.seo?.metaTitle ?? meta.title;

@@ -7,13 +7,13 @@ import { fixtureFAQs } from "@/lib/cms/fixtures";
 import { blocksToText } from "@/lib/cms/blocks";
 
 export const metadata: Metadata = {
-  title: "FAQs — MitchDesigns Design & Development",
+  title: "FAQs | MitchDesigns Design & Development",
   description:
     "Get answers to common questions about website design, mobile app development, eCommerce, media buying, and SEO at MitchDesigns. Transparent pricing, timelines, and process.",
   openGraph: {
-    title: "FAQs — MitchDesigns Design & Development",
+    title: "FAQs | MitchDesigns Design & Development",
     description:
-      "Common questions about working with MitchDesigns — pricing, timelines, tech stack, and process.",
+      "Common questions about working with MitchDesigns, pricing, timelines, tech stack, and process.",
     url: "https://mitchdesigns.com/faqs",
   },
   alternates: { canonical: "/faqs" },

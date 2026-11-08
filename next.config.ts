@@ -36,6 +36,29 @@ const nextConfig: NextConfig = {
   // homepage. All three use IANA-registered relation types and point to
   // resources that actually exist. Relative URIs resolve against the request
   // host, so this works on staging and prod without env coupling.
+  // Merged services (MERGED_SERVICES in src/config/nav.ts) keep their old URL alive.
+  async redirects() {
+    return [
+      { source: "/services/google-ads", destination: "/services/media-buying", permanent: true },
+      // Titan was renamed Orderbase. Specific rules go first so the old slug lands on the renamed post in one hop.
+      { source: "/talks-website-design-and-development/titan-vs-other-headless-ecommerce-platforms", destination: "/talks/orderbase-vs-other-headless-ecommerce-platforms", permanent: true },
+      { source: "/talks/titan-vs-other-headless-ecommerce-platforms", destination: "/talks/orderbase-vs-other-headless-ecommerce-platforms", permanent: true },
+      { source: "/talks-website-design-and-development/mobile-checkout-ux-titan", destination: "/talks/mobile-checkout-ux-orderbase", permanent: true },
+      { source: "/talks/mobile-checkout-ux-titan", destination: "/talks/mobile-checkout-ux-orderbase", permanent: true },
+      { source: "/talks-website-design-and-development/titan-stop-sale-ecommerce-stock-sync", destination: "/talks/orderbase-stop-sale-ecommerce-stock-sync", permanent: true },
+      { source: "/talks/titan-stop-sale-ecommerce-stock-sync", destination: "/talks/orderbase-stop-sale-ecommerce-stock-sync", permanent: true },
+      { source: "/talks-website-design-and-development/laravel-react-ecommerce-platform-titan", destination: "/talks/laravel-react-ecommerce-platform-orderbase", permanent: true },
+      { source: "/talks/laravel-react-ecommerce-platform-titan", destination: "/talks/laravel-react-ecommerce-platform-orderbase", permanent: true },
+      { source: "/talks-website-design-and-development/solve-cart-abandonment-titan-ecommerce-platform", destination: "/talks/solve-cart-abandonment-orderbase-ecommerce-platform", permanent: true },
+      { source: "/talks/solve-cart-abandonment-titan-ecommerce-platform", destination: "/talks/solve-cart-abandonment-orderbase-ecommerce-platform", permanent: true },
+      { source: "/talks-website-design-and-development/titan-features-for-large-retailer", destination: "/talks/orderbase-features-for-large-retailer", permanent: true },
+      { source: "/talks/titan-features-for-large-retailer", destination: "/talks/orderbase-features-for-large-retailer", permanent: true },
+      { source: "/talks-website-design-and-development/titan-headless-ecommerce-platform-guide", destination: "/talks/orderbase-headless-ecommerce-platform-guide", permanent: true },
+      { source: "/talks/titan-headless-ecommerce-platform-guide", destination: "/talks/orderbase-headless-ecommerce-platform-guide", permanent: true },
+      // Old blog path on the previous site now lives under /talks.
+      { source: "/talks-website-design-and-development/:slug", destination: "/talks/:slug", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

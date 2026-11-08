@@ -1,10 +1,12 @@
+import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { RevealStagger, RevealItem } from "@/components/motion";
 import { HeaderCtaInView } from "@/components/layout/HeaderCtaInView";
-import { LEADS_URL, isLeadsHref } from "@/config/nav";
+import { isLeadsHref } from "@/config/nav";
 
 type CTABannerProps = {
   title?: React.ReactNode;
@@ -15,8 +17,8 @@ type CTABannerProps = {
 
 export function CTABanner({
   title = "Ready For Your Next Project?",
-  description = "Get a fully detailed proposal tailored to your business and users. After a short discovery meeting, our team prepares everything within 48 hours.",
-  cta = { label: "Get Detailed Proposal", href: LEADS_URL },
+  description = "Book a free 30-minute call with our team. Talk through your project and get clear direction on scope, timeline and budget.",
+  cta = SITE_SETTINGS_FALLBACK.primaryCta,
   bgImage = "/images/cta-bg.webp",
 }: CTABannerProps) {
   return (
@@ -69,7 +71,8 @@ export function CTABanner({
           <RevealItem>
             <HeaderCtaInView className="w-fit max-md:w-full" active={isLeadsHref(cta.href)}>
               <Button asChild size="lg" variant="primary" className="max-md:w-full">
-                <Link href={cta.href} className="flex items-center gap-2">
+                <Link href={cta.href} className="group flex items-center gap-2">
+                  <BookingIcon href={cta.href} />
                   {cta.label}
                   <ArrowRight />
                 </Link>
