@@ -15,11 +15,13 @@ const HERO_VIDEO = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
 const MOBILE_VIDEO = "/videos/Mitch_Showreel_2026_Portrait.mp4";
 const MOBILE_POSTER = "/videos/Mitch_Showreel_2026_Portrait-poster.webp";
 const ease = [0.65, 0, 0.35, 1] as const;
-/** The reel opens/closes over 1s; scrolling is held for all of it. */
-const MOVE_MS = 1000;
-/** A scroll is a new one only after the wheel has been still this long, so
- *  trackpad momentum (however long it runs) stays part of the same swipe. */
+/** The reel opens/closes over 1s; scrolling is held for the first 0.7s. */
+const MOVE_MS = 700;
+/** A scroll is a new one after the wheel has been still this long, or when
+ *  it speeds up again (a fresh swipe on top of fading trackpad momentum). */
 const QUIET_MS = 220;
+/** Never swallow a gesture for longer than this after the reel moved. */
+const MAX_HOLD_MS = 1800;
 
 type Props = {
   eyebrow?: string;
@@ -127,9 +129,12 @@ function ReelExpandHero(p: Props) {
   useEffect(() => {
     let consumed = false;
     let lastWheel = 0;
+    let lastDelta = 0;
+    let lockedAt = 0;
     const lock = () => {
       busy.current = true;
       consumed = true;
+      lockedAt = performance.now();
       window.setTimeout(() => (busy.current = false), MOVE_MS);
     };
     const block = (e: Event) => {
@@ -154,10 +159,15 @@ function ReelExpandHero(p: Props) {
     };
     const onWheel = (e: WheelEvent) => {
       const now = performance.now();
-      // Only a pause makes a new gesture: the swipe that opened the reel,
-      // momentum included, never carries the page on to the next section.
-      if (now - lastWheel > QUIET_MS) consumed = false;
+      const delta = Math.abs(e.deltaY);
+      // The swipe that opened the reel, momentum included, never carries the
+      // page on to the next section; a pause or a fresh (accelerating) swipe
+      // starts a new gesture, and nothing is held past MAX_HOLD_MS.
+      const quiet = now - lastWheel > QUIET_MS;
+      const freshSwipe = !busy.current && delta > lastDelta * 1.5 + 4;
+      if (quiet || freshSwipe || now - lockedAt > MAX_HOLD_MS) consumed = false;
       lastWheel = now;
+      lastDelta = delta;
       step(e.deltaY > 0, e);
     };
     let touchY = 0;
