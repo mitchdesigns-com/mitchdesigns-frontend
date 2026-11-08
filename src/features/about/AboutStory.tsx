@@ -155,12 +155,12 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
 
   return (
     <Section className="overflow-hidden bg-yellow py-24 md:py-32">
-      <div className="relative flex flex-col gap-12 md:gap-0">
-        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4 md:-mb-16">
-          <Parallax speed={-60} className="relative flex w-full justify-start md:justify-center md:pt-16 hover:z-20">
+      <div className="relative flex flex-col gap-16 md:gap-32">
+        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4">
+          <Parallax speed={-40} className="relative flex w-full justify-start md:justify-center md:pt-16 hover:z-20">
             <StoryPhoto photo={photos[0]} toward={{ x: 1, y: 1 }} />
           </Parallax>
-          <Parallax speed={-100} className="relative flex w-full justify-end md:justify-center md:pt-24 hover:z-20">
+          <Parallax speed={-60} className="relative flex w-full justify-end md:justify-center md:pt-24 hover:z-20">
             <StoryPhoto photo={photos[1]} toward={{ x: -1, y: 1 }} />
           </Parallax>
         </div>
@@ -177,11 +177,11 @@ export function AboutStory({ story }: { story: AboutContent["story"] }) {
           </div>
         </Reveal>
 
-        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4 md:-mt-16">
-          <Parallax speed={50} className="relative flex w-full justify-start md:justify-center md:pt-24 hover:z-20">
+        <div className="mx-auto flex w-full max-w-6xl justify-between gap-4">
+          <Parallax speed={40} className="relative flex w-full justify-start md:justify-center md:pt-24 hover:z-20">
             <StoryPhoto photo={photos[2]} toward={{ x: 1, y: -1 }} />
           </Parallax>
-          <Parallax speed={90} className="relative flex w-full justify-end md:justify-center hover:z-20">
+          <Parallax speed={60} className="relative flex w-full justify-end md:justify-center hover:z-20">
             <StoryPhoto photo={photos[3]} toward={{ x: -1, y: -1 }} />
           </Parallax>
         </div>
