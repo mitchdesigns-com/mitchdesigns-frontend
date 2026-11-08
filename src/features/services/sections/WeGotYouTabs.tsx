@@ -120,13 +120,13 @@ export function WeGotYouTabs({
                       animate={reduced ? undefined : { y: [0, -12, 0], rotate: [0, 2, 0] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
                     >
-                      <Image quality={90} src={shot.src} alt={shot.alt} fill priority={active === 0} className="object-contain drop-shadow-xl" sizes="18rem" />
+                      <Image quality={100} src={shot.src} alt={shot.alt} fill priority={active === 0} className="object-contain drop-shadow-xl" sizes="18rem" />
                     </motion.div>
                   </motion.div>
                 </div>
               ) : (
                 <div className="relative aspect-4/3 w-full overflow-hidden rounded-card shadow-soft-lg">
-                  <Image quality={90} src={shot.src} alt={shot.alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 42rem" />
+                  <Image quality={100} src={shot.src} alt={shot.alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 42rem" />
                 </div>
               )}
 

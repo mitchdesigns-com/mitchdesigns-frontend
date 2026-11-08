@@ -203,7 +203,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
               aria-hidden
               className="pointer-events-none absolute top-1/2 right-full z-20 mr-10 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
             >
-              <Image quality={90}
+              <Image quality={100}
                 src={imgSrc}
                 alt={`${label} | MitchDesigns service`}
                 width={176}
@@ -251,7 +251,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 220, damping: 24, delay: 0.05 }}
               >
-                <Image quality={90} src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes="(min-width: 1024px) 18rem, (min-width: 640px) 14rem, 100vw" className="object-cover" />
+                <Image quality={100} src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes="(min-width: 1024px) 18rem, (min-width: 640px) 14rem, 100vw" className="object-cover" />
               </motion.div>
               <motion.div
                 className="flex max-w-xl flex-col items-start gap-5"

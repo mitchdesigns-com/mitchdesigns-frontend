@@ -85,7 +85,7 @@ export function WeGotYou({
           )}
         </Reveal>
         <Reveal className="relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-96">
-          <Image quality={90}
+          <Image quality={100}
             src={image}
             alt={imageAlt ?? ""}
             fill

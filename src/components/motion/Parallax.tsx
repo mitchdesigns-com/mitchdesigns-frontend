@@ -81,7 +81,7 @@ export function ParallaxImage({
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
       <motion.div className="absolute inset-0" style={{ y, scale }}>
-        <Image quality={90} src={src} alt={alt} fill sizes={sizes} className={cn("object-cover", imageClassName)} priority={priority} />
+        <Image quality={100} src={src} alt={alt} fill sizes={sizes} className={cn("object-cover", imageClassName)} priority={priority} />
       </motion.div>
     </div>
   );

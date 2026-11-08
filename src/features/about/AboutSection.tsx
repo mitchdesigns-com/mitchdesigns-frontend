@@ -51,7 +51,7 @@ const DEFAULT_SIGNATURE = "Mitch";
 const STUDIO = {
   main: { src: "/images/studio/office-wide.webp", alt: "The MitchDesigns team at work in the Cairo studio" },
   side: { src: "/images/studio/happy-square.webp", alt: "MitchDesigns team members sharing a laugh in the studio" },
-  portrait: { src: "/images/studio/happy-portrait.webp", alt: "MitchDesigns team members laughing together in the studio" },
+  portrait: { src: "/images/studio/home-portrait.webp", alt: "A MitchDesigns team member focused at his desk" },
 };
 const BADGE_TEXT = "Since 2005 • Built in Egypt • ";
 

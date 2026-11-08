@@ -16,8 +16,8 @@ const CARD_GAP = 20; // px between cards
 
 // Our studio shoot, used until CMS photos are set.
 // Every studio shot with people in it that isn't used elsewhere on the page
-// (slot 08 moved to the hero); the two girls-team photos sit apart.
-const STRIP_PHOTOS: AboutImage[] = [1, 2, 15, 3, 4, 16, 5, 6, 17, 7, 9, 19, 10, 11, 18, 12, 13, 14].map((n) => ({
+// (slots 03 and 08 moved to the hero); the two girls-team photos sit apart.
+const STRIP_PHOTOS: AboutImage[] = [1, 2, 15, 4, 16, 5, 6, 17, 7, 9, 19, 10, 11, 18, 12, 13, 14].map((n) => ({
   url: `/images/studio/about/strip-${String(n).padStart(2, "0")}.webp`,
   alt: "",
 }));
@@ -26,7 +26,7 @@ function PhotoCard({ photo, tall, p }: { photo: AboutImage; tall: boolean; p: Mo
   const height = useTransform(p, [0, 1], tall ? [TALL, SHORT] : [SHORT, TALL]);
   return (
     <motion.div className="relative w-[286px] shrink-0 overflow-hidden bg-space-grey mt-auto" style={{ height }}>
-      <Image quality={90} src={photo.url} alt={photo.alt ?? ""} fill className="object-cover" sizes="286px" />
+      <Image quality={100} src={photo.url} alt={photo.alt ?? ""} fill className="object-cover" sizes="286px" />
     </motion.div>
   );
 }
