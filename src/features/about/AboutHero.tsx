@@ -64,7 +64,7 @@ type Photo = { url: string; alt: string };
 
 const HERO_PHOTOS: [Photo, Photo, Photo] = [
   { url: "/images/studio/about/hero-2.webp", alt: "Planning a campaign on a tablet next to handwritten notes" },
-  { url: "/images/studio/about/hero-3.webp", alt: "MitchDesigns team members talking together" },
+  { url: "/images/studio/about/hero-3.webp", alt: "Two MitchDesigns team members reviewing analytics on screen" },
   { url: "/images/studio/about/hero-1.webp", alt: "The MitchDesigns team at work in the Cairo studio" },
 ];
 

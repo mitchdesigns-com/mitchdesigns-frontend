@@ -15,8 +15,9 @@ const SHORT = 294;
 const CARD_GAP = 20; // px between cards
 
 // Our studio shoot, used until CMS photos are set.
-const STRIP_PHOTOS: AboutImage[] = Array.from({ length: 14 }, (_, i) => ({
-  url: `/images/studio/about/strip-${String(i + 1).padStart(2, "0")}.webp`,
+// (Slot 08 moved to the hero, so the page never repeats a shot.)
+const STRIP_PHOTOS: AboutImage[] = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14].map((n) => ({
+  url: `/images/studio/about/strip-${String(n).padStart(2, "0")}.webp`,
   alt: "",
 }));
 
