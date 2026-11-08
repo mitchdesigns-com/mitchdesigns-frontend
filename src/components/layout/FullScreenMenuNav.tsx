@@ -109,7 +109,12 @@ export function FullScreenMenuNav({
                       )}
                     />
                     <div className="relative flex items-center py-5">
-                      <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
+                      <span
+                        className={cn(
+                          "text-menu font-black uppercase leading-none tracking-[-0.01em]",
+                          item.href === primaryCta.href ? "text-menu-cta" : "text-black",
+                        )}
+                      >
                         <SlideLabel label={item.label} />
                       </span>
                     </div>
