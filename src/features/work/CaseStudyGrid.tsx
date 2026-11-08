@@ -7,17 +7,23 @@ import { Section } from "@/components/layout/Section";
 import { strapiMedia } from "@/lib/cms/media";
 import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
+import { noOrphan } from "@/lib/noOrphan";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 3;
 
-function ServiceBullet({ label }: { label: string }) {
+/** Project-type tags under the logo (the CMS category for now). */
+function TypeTags({ types }: { types: string[] }) {
+  if (!types.length) return null;
   return (
-    <li className="flex items-center gap-1">
-      <span className="size-1 shrink-0 rounded-full bg-space-grey" aria-hidden />
-      <span className="text-xs text-space-grey">{label}</span>
-    </li>
+    <ul className="flex flex-wrap gap-2">
+      {types.map((t) => (
+        <li key={t} className="rounded-pill bg-yellow-soft px-3 py-1 text-sm font-medium text-black">
+          {t}
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -36,33 +42,33 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
       href={`/case-studies/${cs.slug}`}
       className="flex w-full flex-col overflow-hidden rounded-2xs lg:flex-row"
     >
-      {/* Left — info panel: logo + title grouped at the top */}
+      {/* Left — info panel: logo + type tags, then title and a short summary */}
       <div className="flex w-full shrink-0 flex-col gap-5 bg-white p-6 lg:w-[30%]">
-        {/* Logo */}
-        <div className="h-[70px] w-full">
-          {logoSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={logoSrc}
-              alt={cs.logo?.alternativeText ?? cs.client}
-              className="h-full max-w-[120px] object-contain object-left"
-            />
-          ) : (
-            <span className="text-sm font-medium text-space-grey">{cs.client}</span>
-          )}
+        <div className="flex flex-col gap-4">
+          <div className="h-24 w-full">
+            {logoSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={logoSrc}
+                alt={cs.logo?.alternativeText ?? cs.client}
+                className="h-full max-w-3/5 object-contain object-left"
+              />
+            ) : (
+              <span className="text-sm font-medium text-space-grey">{cs.client}</span>
+            )}
+          </div>
+          <TypeTags types={cs.category ? [cs.category] : []} />
         </div>
 
-        {/* Title + divider + services */}
+        {/* Title + divider + summary */}
         <div className="flex flex-col gap-5">
           <h3 className="whitespace-pre-line text-hero-5 text-black text-balance lg:text-card-title">
             {cs.title}
           </h3>
           <div className="h-px w-full bg-space-grey/20" />
-          <ul className="flex flex-col gap-1">
-            {cs.services.map((s) => (
-              <ServiceBullet key={s} label={s} />
-            ))}
-          </ul>
+          {cs.excerpt && (
+            <p className="line-clamp-5 text-base text-grey-700 text-balance">{noOrphan(cs.excerpt, 32)}</p>
+          )}
         </div>
       </div>
 

@@ -13,7 +13,7 @@ import { noOrphan } from "@/lib/noOrphan";
  * scroll speed and drifts inside its frame, with a yellow block peeking out
  * behind it for depth.
  */
-const APPROACH_PHOTO = { url: "/images/studio/about/approach-meeting.webp", alt: "Two MitchDesigns team members working through a project" };
+const APPROACH_PHOTO = { url: "/images/studio/about/approach.webp", alt: "Two MitchDesigns team members working through a project" };
 
 export function AboutApproach({ approach }: { approach: AboutContent["approach"] }) {
   // The CMS image, or our studio shoot until one is set.

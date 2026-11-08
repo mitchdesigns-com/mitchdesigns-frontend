@@ -61,9 +61,9 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
 type Photo = { url: string; alt: string };
 
 const HERO_PHOTOS: [Photo, Photo, Photo] = [
-  { url: "/images/studio/about/hero-tablet.webp", alt: "A MitchDesigns designer working across laptop, tablet and screens" },
-  { url: "/images/studio/about/hero-logo-wall.webp", alt: "Two MitchDesigns team members talking by the logo wall" },
-  { url: "/images/studio/screens-review.webp", alt: "MitchDesigns team reviewing a website build across screens" },
+  { url: "/images/studio/about/hero-2.webp", alt: "A MitchDesigns developer focused at his desk" },
+  { url: "/images/studio/about/hero-3.webp", alt: "MitchDesigns team members talking together" },
+  { url: "/images/studio/about/hero-1.webp", alt: "A MitchDesigns team meeting in the studio" },
 ];
 
 /** Slides a box from the top of its column to the bottom (or back) as `p`

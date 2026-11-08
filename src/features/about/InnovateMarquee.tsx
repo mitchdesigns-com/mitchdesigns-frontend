@@ -15,15 +15,10 @@ const SHORT = 294;
 const CARD_GAP = 20; // px between cards
 
 // Our studio shoot, used until CMS photos are set.
-const STRIP_PHOTOS: AboutImage[] = [
-  { url: "/images/studio/about/strip-keyboard.webp", alt: "" },
-  { url: "/images/studio/about/strip-presenting.webp", alt: "" },
-  { url: "/images/studio/about/strip-phone.webp", alt: "" },
-  { url: "/images/studio/about/strip-chart.webp", alt: "" },
-  { url: "/images/studio/about/strip-dashboard.webp", alt: "" },
-  { url: "/images/studio/about/strip-store-app.webp", alt: "" },
-];
-const FALLBACK_COUNT = 6;
+const STRIP_PHOTOS: AboutImage[] = Array.from({ length: 11 }, (_, i) => ({
+  url: `/images/studio/about/strip-${String(i + 1).padStart(2, "0")}.webp`,
+  alt: "",
+}));
 
 function PhotoCard({ photo, tall, p }: { photo: AboutImage; tall: boolean; p: MotionValue<number> }) {
   const height = useTransform(p, [0, 1], tall ? [TALL, SHORT] : [SHORT, TALL]);
@@ -46,7 +41,7 @@ export function InnovateMarquee({
   const swap = useTransform(scrollYProgress, [0.15, 0.85], reduced ? [0, 0] : [0, 1], { clamp: true });
   const slots: AboutImage[] = innovate.photos.length
     ? innovate.photos
-    : Array.from({ length: FALLBACK_COUNT }, (_, i) => STRIP_PHOTOS[i % STRIP_PHOTOS.length]);
+    : STRIP_PHOTOS;
   // An even count keeps tall / short alternating across the marquee's seam.
   const strip = slots.length % 2 ? [...slots, ...slots] : slots;
 

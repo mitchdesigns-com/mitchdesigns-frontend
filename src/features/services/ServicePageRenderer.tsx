@@ -144,7 +144,7 @@ export function ServicePageRenderer({
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image, or our studio shoot until one is set.
-              image={weGotYou.image || "/images/studio/corporate-review.webp"}
+              image={weGotYou.image || "/images/studio/wgy-corporate.webp"}
               imageAlt="MitchDesigns team building a corporate website"
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
@@ -189,7 +189,7 @@ export function ServicePageRenderer({
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image, or our studio shoot until one is set.
-              image={weGotYou.image || "/images/studio/screens-review.webp"}
+              image={weGotYou.image || "/images/studio/wgy-custom.webp"}
               imageAlt="MitchDesigns team reviewing a platform build across screens"
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />
@@ -291,7 +291,7 @@ export function ServicePageRenderer({
             <WeGotYouOrbit
               {...weGotYou}
               // The CMS image, or our studio shoot until one is set.
-              image={weGotYou.image || "/images/studio/mobile-app.webp"}
+              image={weGotYou.image || "/images/studio/wgy-mobile.webp"}
               imageAlt="MitchDesigns team testing a mobile app on a phone"
               cta={{ label: "Get Proposal", href: leadsUrl(slug) }}
             />

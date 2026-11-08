@@ -21,7 +21,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       label: "Full-Service Delivery",
       description:
         "From discovery workshops and UX strategy to pixel-perfect build and post-launch support — we own every phase so you don't have to manage multiple vendors.",
-      image: "/images/studio/corporate-review.webp",
+      image: "/images/studio/wgy-corporate.webp",
       imageAlt: "MitchDesigns team building a corporate website",
       cta: { label: "See How We Work", href: "/about" },
       imagePosition: "right",
@@ -561,7 +561,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       label: "End-to-End Ownership",
       description:
         "From database schema to pixel-perfect UI — we own the full stack so you get a cohesive product, not stitched-together modules from different vendors.",
-      image: "/images/studio/screens-review.webp",
+      image: "/images/studio/wgy-custom.webp",
       imageAlt: "MitchDesigns team reviewing a platform build across screens",
       cta: { label: "Get a Proposal", href: LEADS_URL },
       imagePosition: "right",
@@ -892,7 +892,7 @@ export const fixtureServicePages: Record<Service["slug"], ServicePageData> = {
       label: "Full Lifecycle Delivery",
       description:
         "We handle design, development, testing, App Store submission, and post-launch analytics — so you have one accountable partner from the first wireframe to the first 10,000 downloads.",
-      image: "/images/studio/mobile-app.webp",
+      image: "/images/studio/wgy-mobile.webp",
       imageAlt: "MitchDesigns team testing a mobile app on a phone",
       cta: { label: "See Our Apps", href: "/case-studies" },
       imagePosition: "right",

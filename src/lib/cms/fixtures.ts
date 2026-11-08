@@ -1060,8 +1060,8 @@ export const fixtureAboutPage: AboutContent = {
       body: "Founded in 2005, MitchDesigns empowers businesses across industries with custom digital solutions tailored for long-term impact.",
     },
     images: [
-      { url: "/images/studio/studio-floor.webp", alt: "About MitchDesigns" },
-      { url: "/images/studio/team-review.webp", alt: "About MitchDesigns" },
+      { url: "/images/studio/about/story-1.webp", alt: "About MitchDesigns" },
+      { url: "/images/studio/about/approach.webp", alt: "About MitchDesigns" },
     ],
   },
   metrics: [
