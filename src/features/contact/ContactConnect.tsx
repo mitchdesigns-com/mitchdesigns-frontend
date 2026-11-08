@@ -118,7 +118,7 @@ export function ContactConnect({ copy }: { copy: ContactPageData }) {
             <span className="flex size-14 items-center justify-center rounded-full bg-yellow text-black">
               <CalendarCheckIcon size={26} />
             </span>
-            <h2 className="text-hero-3 font-bold text-fg text-balance">{noOrphan(copy.bookingHeading)}</h2>
+            <h2 className="text-left text-hero-3 font-bold text-fg text-balance">{noOrphan(copy.bookingHeading)}</h2>
           </div>
           {copy.bookingIntro && (
             <p className="flex items-start gap-3 text-lg text-fg-muted text-balance md:max-w-md">
