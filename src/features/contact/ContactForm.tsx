@@ -78,6 +78,7 @@ export function ContactForm({ copy, details, onDetailsChange }: Props) {
     topic: !topic,
     name: !details.name.trim(),
     email: !EMAIL_RE.test(details.email.trim()),
+    phone: phone.replace(/\D/g, "").length < 7,
     message: !message.trim(),
   };
   const invalid = Object.values(missing).some(Boolean);
@@ -201,12 +202,13 @@ export function ContactForm({ copy, details, onDetailsChange }: Props) {
                       onChange={(e) => onDetailsChange({ ...details, email: e.target.value })}
                     />
                   </Field>
-                  <Field label={copy.phoneFieldLabel} htmlFor={`${id}-phone`}>
+                  <Field label={copy.phoneFieldLabel} htmlFor={`${id}-phone`} error={tried && missing.phone}>
                     <Input
                       id={`${id}-phone`}
                       type="tel"
                       autoComplete="tel"
                       value={phone}
+                      invalid={tried && missing.phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </Field>

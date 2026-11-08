@@ -408,6 +408,15 @@
     background: var(--color-bg);
     color: var(--color-fg);
   }
+  /* Light surface nested inside a dark section (e.g. a form card in a dark hero). */
+  [data-theme="light"] {
+    --color-bg: var(--color-white);
+    --color-bg-alt: var(--color-bej);
+    --color-fg: var(--color-black);
+    --color-fg-muted: var(--color-grey-500);
+    --color-border: var(--color-grey-200);
+    color: var(--color-fg);
+  }
   [data-theme="beige"] {
     --color-bg: var(--color-bej);
     background: var(--color-bg);

@@ -25,20 +25,24 @@ export default async function ContactPage() {
 
   return (
     <main>
-      <ContactHero {...page.hero} />
-      <ContactInfo
-        phone={phone}
-        email={settings.contactEmail}
-        address={settings.officeAddress}
-        mapUrl={settings.officeMapUrl}
-        labels={{
-          phone: page.phoneLabel,
-          email: page.emailLabel,
-          address: page.addressLabel,
-          map: page.mapLabel,
-        }}
+      <ContactConnect
+        copy={page}
+        intro={<ContactHero {...page.hero} />}
+        info={
+          <ContactInfo
+            phone={phone}
+            email={settings.contactEmail}
+            address={settings.officeAddress}
+            mapUrl={settings.officeMapUrl}
+            labels={{
+              phone: page.phoneLabel,
+              email: page.emailLabel,
+              address: page.addressLabel,
+              map: page.mapLabel,
+            }}
+          />
+        }
       />
-      <ContactConnect copy={page} />
     </main>
   );
 }
