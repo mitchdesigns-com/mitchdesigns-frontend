@@ -1,4 +1,5 @@
 import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
@@ -70,7 +71,8 @@ export function CTABanner({
           <RevealItem>
             <HeaderCtaInView className="w-fit max-md:w-full" active={isLeadsHref(cta.href)}>
               <Button asChild size="lg" variant="primary" className="max-md:w-full">
-                <Link href={cta.href} className="flex items-center gap-2">
+                <Link href={cta.href} className="group flex items-center gap-2">
+                  <BookingIcon href={cta.href} />
                   {cta.label}
                   <ArrowRight />
                 </Link>

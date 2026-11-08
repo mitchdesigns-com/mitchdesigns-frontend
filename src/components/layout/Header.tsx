@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -168,10 +169,11 @@ export function Header() {
               <Link
                 href={ctaHref}
                 className={cn(
-                  "hidden whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
+                  "group hidden items-center gap-2 whitespace-nowrap rounded-pill bg-yellow px-6 py-3 text-sm font-semibold text-black transition-opacity duration-300 hover:opacity-80 sm:inline-flex",
                   (menuOpen || ctaInView) && "opacity-0 pointer-events-none",
                 )}
               >
+                <BookingIcon href={ctaHref} size={16} />
                 {primaryCta.label}
               </Link>
             )}

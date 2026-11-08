@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Section } from "@/components/layout/Section";
@@ -74,7 +75,8 @@ export function WeGotYou({
           {cta && (
             <HeaderCtaInView active={isLeadsHref(cta.href)}>
               <Button size="lg" asChild>
-                <Link href={cta.href} className="flex items-center gap-2">
+                <Link href={cta.href} className="group flex items-center gap-2">
+                  <BookingIcon href={cta.href} />
                   {cta.label}
                   <ArrowRight size={20} />
                 </Link>
