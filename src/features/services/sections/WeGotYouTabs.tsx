@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -151,7 +152,8 @@ export function WeGotYouTabs({
                 {cta && (
                   <HeaderCtaInView active={isLeadsHref(cta.href)}>
                     <Button asChild size="lg" className="mt-2">
-                      <Link href={cta.href}>
+                      <Link href={cta.href} className="group">
+                        <BookingIcon href={cta.href} />
                         {cta.label}
                         <ArrowRight size={20} />
                       </Link>

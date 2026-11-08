@@ -1,4 +1,5 @@
 "use client";
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { SITE_SETTINGS_FALLBACK } from "@/lib/cms/siteDefaults";
 
 import Link from "next/link";
@@ -106,7 +107,8 @@ export function ClientsTrust({
       {cta && (
         <div className="relative flex justify-center">
           <Button size="lg" asChild className="max-md:w-full">
-            <Link href={cta.href}>
+            <Link href={cta.href} className="group">
+              <BookingIcon href={cta.href} />
               {cta.label}
               <ArrowRight size={20} />
             </Link>

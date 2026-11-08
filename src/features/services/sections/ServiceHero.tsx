@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState, type ReactNode } from "react";
@@ -107,7 +108,10 @@ export function ServiceHero({
           {cta && (
             <motion.div variants={fadeUp} ref={ctaRef}>
               <Button asChild size="lg">
-                <Link href={cta.href}>{cta.label}</Link>
+                <Link href={cta.href} className="group">
+                  <BookingIcon href={cta.href} />
+                  {cta.label}
+                </Link>
               </Button>
             </motion.div>
           )}

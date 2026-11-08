@@ -1,5 +1,6 @@
 "use client";
 
+import { armTickFeedback, tap } from "@/lib/tickFeedback";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
@@ -84,6 +85,9 @@ function layoutPile(n: number, W: number, H: number, desktop: boolean): Layout {
   return { cw, ch, places };
 }
 
+/** About when a falling card first reaches its spot (spring 150 / 14). */
+const SETTLE_S = 0.22;
+
 export function TechPile({ items }: { items: PileItem[] }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<{ w: number; h: number; desktop: boolean } | null>(null);
@@ -134,6 +138,20 @@ export function TechPile({ items }: { items: PileItem[] }) {
     [items.length, size],
   );
   const landed = dropped || Boolean(reduced);
+
+  // A very quiet tap as each card lands (silent until the visitor has
+  // clicked or tapped somewhere, like the site's other sounds).
+  useEffect(() => armTickFeedback(), []);
+  useEffect(() => {
+    if (!dropped || reduced || !layout) return;
+    const timers = layout.places.map((p) =>
+      // Spring delay plus the time it takes to reach its spot.
+      window.setTimeout(() => tap(0.9 + ((p.order * 7) % 5) * 0.06), (p.order * 0.09 + SETTLE_S) * 1000),
+    );
+    return () => timers.forEach(clearTimeout);
+    // Only when the pile drops, not on every resize.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dropped, reduced]);
 
   return (
     <div ref={stageRef} className="relative h-120 w-full lg:absolute lg:inset-0 lg:h-auto">

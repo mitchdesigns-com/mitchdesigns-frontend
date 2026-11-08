@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -350,7 +351,8 @@ function OrbitScene({
   const ctaButton = cta && (
     <HeaderCtaInView active={isLeadsHref(cta.href)}>
       <Button size="lg" asChild>
-        <Link href={cta.href} className="flex items-center gap-2">
+        <Link href={cta.href} className="group flex items-center gap-2">
+          <BookingIcon href={cta.href} />
           {cta.label}
           <ArrowRight size={20} />
         </Link>

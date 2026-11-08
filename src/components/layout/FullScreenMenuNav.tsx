@@ -1,5 +1,6 @@
 "use client";
 
+import { BookingIcon } from "@/components/ui/BookingIcon";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -203,8 +204,9 @@ export function FullScreenMenuNav({
         <Link
           href={primaryCta.href}
           onClick={onNavigate}
-          className="inline-flex whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
+          className="group inline-flex items-center gap-2 whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
         >
+          <BookingIcon href={primaryCta.href} size={16} />
           {primaryCta.label}
         </Link>
       </div>
