@@ -63,7 +63,7 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
 type Photo = { url: string; alt: string };
 
 const HERO_PHOTOS: [Photo, Photo, Photo] = [
-  { url: "/images/studio/about/hero-2.webp", alt: "Planning a campaign on a tablet next to handwritten notes" },
+  { url: "/images/studio/about/hero-2.webp", alt: "The MitchDesigns team gathered on the studio sofa" },
   { url: "/images/studio/about/hero-3.webp", alt: "Two MitchDesigns team members reviewing analytics on screen" },
   { url: "/images/studio/about/hero-1.webp", alt: "The MitchDesigns team at work in the Cairo studio" },
 ];
@@ -77,8 +77,8 @@ function useGlide(p: MotionValue<number>, from: 0 | 1) {
 }
 
 /**
- * Three equal columns: the first photo starts aligned to the top of the tall
- * centre photo and the third photo to its bottom; scrolling through glides
+ * Three columns, the centre one twice as wide: the first photo starts aligned
+ * to the top of the larger centre photo and the third photo to its bottom; scrolling through glides
  * them past each other until the alignment is reversed (and back again on
  * the way up). Phones simply stack them.
  */
@@ -114,7 +114,7 @@ function HeroCollage({ lead, first, second }: { lead: Photo; first: Photo; secon
   const glide = wide && !reduced;
 
   const side = (box: React.ReactNode, style: ReturnType<typeof useGlide>, still: "top" | "bottom") => (
-    <div className="relative">
+    <div className="relative md:col-span-3">
       <motion.div
         className={glide ? "absolute inset-x-0" : still === "top" ? "md:absolute md:inset-x-0 md:top-0" : "md:absolute md:inset-x-0 md:bottom-0"}
         style={glide ? style : undefined}
@@ -125,15 +125,15 @@ function HeroCollage({ lead, first, second }: { lead: Photo; first: Photo; secon
   );
 
   return (
-    <div ref={ref} className="mt-16 grid grid-cols-1 gap-3 md:mt-24 md:grid-cols-3">
+    <div ref={ref} className="mt-16 grid grid-cols-1 gap-3 md:mt-24 md:grid-cols-12">
       {side(
-        <ParallaxImage src={lead.url} alt={lead.alt} priority className="aspect-5/4" imageClassName="object-top" sizes="(max-width: 768px) 100vw, 33vw" />,
+        <ParallaxImage src={lead.url} alt={lead.alt} priority className="aspect-5/4" imageClassName="object-top" sizes="(max-width: 768px) 100vw, 25vw" />,
         down,
         "top",
       )}
-      <ParallaxImage src={first.url} alt={first.alt} priority className="aspect-17/20" sizes="(max-width: 768px) 100vw, 33vw" />
+      <ParallaxImage src={first.url} alt={first.alt} priority className="aspect-4/3 md:col-span-6" sizes="(max-width: 768px) 100vw, 50vw" />
       {side(
-        <ParallaxImage src={second.url} alt={second.alt} className="aspect-10/9" sizes="(max-width: 768px) 100vw, 33vw" />,
+        <ParallaxImage src={second.url} alt={second.alt} className="aspect-10/9" sizes="(max-width: 768px) 100vw, 25vw" />,
         up,
         "bottom",
       )}
