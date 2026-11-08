@@ -69,7 +69,9 @@ export function ClientWork({
             <RevealItem
               as="li"
               key={s.slug}
-              className={cn("basis-1/2 p-1.5", SM_BASIS[balancedCols(withLogo.length, 4)], LG_BASIS[balancedCols(withLogo.length, 7)])}
+              // Tiles never grow past the full-row size (4 / 7 a row), so a few
+              // logos sit centred at the same size as a full wall.
+              className={cn("basis-1/2 p-1.5", SM_BASIS[balancedCols(Math.max(withLogo.length, 4), 4)], LG_BASIS[balancedCols(Math.max(withLogo.length, 7), 7)])}
             >
               <Link
                 href={`/case-studies/${s.slug}`}
