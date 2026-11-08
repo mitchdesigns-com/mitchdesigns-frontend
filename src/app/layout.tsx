@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OPENAI_ADS_PIXEL_SNIPPET } from "@/config/tracking";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -110,6 +111,8 @@ export default async function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <head>
+        {/* ChatGPT Ads pixel: first in <head>, once per page. */}
+        <script dangerouslySetInnerHTML={{ __html: OPENAI_ADS_PIXEL_SNIPPET }} />
         {/* Preload the LCP body/heading font so it isn't discovered late via CSS */}
         <link
           rel="preload"
