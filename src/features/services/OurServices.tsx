@@ -15,8 +15,7 @@ import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { Close } from "@/components/icons/Close";
 import type { Service as CmsService, RichText } from "@/lib/cms/types";
 import { RichText as RichTextRenderer } from "@/components/ui/RichText";
-import { useSiteSettings } from "@/context/SiteSettingsContext";
-import { isLeadsHref, leadsUrl } from "@/config/nav";
+import { ArrowRight } from "@/components/icons/ArrowRight";
 import { noOrphan } from "@/lib/noOrphan";
 import { strapiMedia } from "@/lib/cms/media";
 
@@ -26,20 +25,17 @@ interface ServiceItem {
   description: string;
   body: RichText;
   href: string;
-  leadsHref: string;
   imgSrc: string;
   hoverLogo: { src: string; alt: string } | null;
 }
 
 function toServiceItem(s: CmsService, index: number): ServiceItem {
   return {
-    num: `(${String(index + 1).padStart(2, "0")})`,
+    num: String(index + 1).padStart(2, "0"),
     label: s.title,
     description: s.tagline,
     body: s.description,
     href: `/services/${s.slug}`,
-    // The funnel opens with this service preselected.
-    leadsHref: leadsUrl(s.slug),
     // Our own team photographed doing each service (front-end only).
     imgSrc: `/images/studio/services/${s.slug}.webp`,
     hoverLogo: s.hoverLogo?.url
@@ -66,6 +62,12 @@ function useHasHover() {
   return hasHover;
 }
 
+/** Panel copy steps in under the photo's entrance. */
+const PANEL_ITEM = {
+  hidden: { opacity: 0, y: 16 },
+  shown: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 260, damping: 26 } },
+};
+
 interface ServiceRowProps {
   service: ServiceItem;
   isOpen: boolean;
@@ -73,8 +75,7 @@ interface ServiceRowProps {
 }
 
 function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
-  const { primaryCta } = useSiteSettings();
-  const { num, label, description, body, href, leadsHref, imgSrc, hoverLogo } = service;
+  const { num, label, description, body, href, imgSrc, hoverLogo } = service;
 
   const canHover = useHasHover();
   const [isHovered, setIsHovered] = useState(false);
@@ -148,7 +149,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
         {/* Number + label — always one line */}
         <div className="flex min-w-0 items-center gap-5 md:gap-15">
           <span
-            className={`shrink-0 font-medium text-base tabular-nums transition-colors duration-300 ${active ? "text-black" : "text-fg-muted"}`}
+            className={`shrink-0 text-base font-bold tabular-nums transition-colors duration-300 md:text-3xl ${active ? "text-black" : "text-fg-muted"}`}
           >
             {num}
           </span>
@@ -242,30 +243,42 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="relative z-10 overflow-hidden"
           >
-            <div className="flex gap-10 px-0 pb-6 md:px-10 md:pb-10">
-              <div
-                className="relative hidden w-88 shrink-0 overflow-hidden rounded-2xl lg:block"
-                style={{ aspectRatio: "345 / 519" }}
+            {/* Photo beside a short, bold story and one way on: the service page. */}
+            <div className="flex flex-col gap-6 px-0 pb-8 sm:flex-row sm:items-center sm:gap-10 md:px-10 md:pb-12 lg:gap-16">
+              <motion.div
+                className="relative aspect-4/3 w-full shrink-0 overflow-hidden rounded-card-sm sm:aspect-3/4 sm:w-56 lg:w-72"
+                initial={{ opacity: 0, scale: 0.94, rotate: -3 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 220, damping: 24, delay: 0.05 }}
               >
-                <Image src={imgSrc} alt={`${label} | MitchDesigns service`} fill className="object-cover" />
-              </div>
-              <div className="flex flex-1 flex-col justify-between gap-16">
-                <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />
-                <div className="flex flex-col gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-4 sm:self-end">
-                  <Link
-                    href={isLeadsHref(primaryCta.href) ? leadsHref : primaryCta.href}
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-yellow px-6 py-4 text-base font-medium text-black transition-opacity hover:opacity-80 md:px-9"
-                  >
-                    {primaryCta.label}
-                  </Link>
+                <Image src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes="(min-width: 1024px) 18rem, (min-width: 640px) 14rem, 100vw" className="object-cover" />
+              </motion.div>
+              <motion.div
+                className="flex max-w-xl flex-col items-start gap-5"
+                initial="hidden"
+                animate="shown"
+                variants={{ shown: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } } }}
+              >
+                {description && (
+                  <motion.p variants={PANEL_ITEM} className="text-2xl font-bold leading-tight text-black text-balance md:text-hero-5">
+                    {noOrphan(description)}
+                  </motion.p>
+                )}
+                <motion.div variants={PANEL_ITEM}>
+                  <RichTextRenderer content={body} className="text-lg leading-relaxed text-grey-600 text-balance" />
+                </motion.div>
+                <motion.div variants={PANEL_ITEM}>
                   <Link
                     href={href}
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-space-grey px-6 py-4 text-base font-medium text-white transition-opacity hover:opacity-80 md:px-9"
+                    className="group inline-flex items-center gap-3 whitespace-nowrap rounded-pill bg-black py-3 pr-3 pl-7 text-base font-medium text-white transition-colors hover:bg-space-grey"
                   >
-                    Learn More
+                    Learn more
+                    <span className="flex size-9 items-center justify-center rounded-full bg-yellow text-black transition-transform duration-300 group-hover:translate-x-1">
+                      <ArrowRight size={18} />
+                    </span>
                   </Link>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
           </motion.div>
         )}
