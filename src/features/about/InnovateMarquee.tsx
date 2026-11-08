@@ -15,7 +15,7 @@ const SHORT = 294;
 const CARD_GAP = 20; // px between cards
 
 // Our studio shoot, used until CMS photos are set.
-const STRIP_PHOTOS: AboutImage[] = Array.from({ length: 11 }, (_, i) => ({
+const STRIP_PHOTOS: AboutImage[] = Array.from({ length: 14 }, (_, i) => ({
   url: `/images/studio/about/strip-${String(i + 1).padStart(2, "0")}.webp`,
   alt: "",
 }));
@@ -24,7 +24,7 @@ function PhotoCard({ photo, tall, p }: { photo: AboutImage; tall: boolean; p: Mo
   const height = useTransform(p, [0, 1], tall ? [TALL, SHORT] : [SHORT, TALL]);
   return (
     <motion.div className="relative w-[286px] shrink-0 overflow-hidden bg-space-grey mt-auto" style={{ height }}>
-      <Image src={photo.url} alt={photo.alt ?? ""} fill className="object-cover" sizes="286px" />
+      <Image quality={90} src={photo.url} alt={photo.alt ?? ""} fill className="object-cover" sizes="286px" />
     </motion.div>
   );
 }

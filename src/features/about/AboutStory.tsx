@@ -34,7 +34,7 @@ function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; fr
 
 const STORY_PHOTOS = [
   { url: "/images/studio/about/story-1.webp", alt: "The MitchDesigns studio" },
-  { url: "/images/studio/about/story-2.webp", alt: "Hands at work on a design in the MitchDesigns studio" },
+  { url: "/images/studio/about/story-2.webp", alt: "Building a website across laptop and screens" },
 ];
 
 function StoryCard({ card, index }: { card: AboutContent["story"]["cards"][number]; index: number }) {

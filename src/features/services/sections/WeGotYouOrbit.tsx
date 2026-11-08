@@ -435,7 +435,7 @@ function OrbitScene({
                 animate={{ opacity: i <= shot ? 1 : 0, scale: i === shot ? 1 : 1.06 }}
                 transition={{ duration: 0.45, ease: easeOutSoft }}
               >
-                <Image src={s.src} alt={i === shot ? s.alt : ""} fill className="object-cover" sizes="22rem" />
+                <Image quality={90} src={s.src} alt={i === shot ? s.alt : ""} fill className="object-cover" sizes="22rem" />
               </motion.div>
             ))}
           </div>

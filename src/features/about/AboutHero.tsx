@@ -61,7 +61,7 @@ export function AboutHero({ hero }: { hero: AboutContent["hero"] }) {
 type Photo = { url: string; alt: string };
 
 const HERO_PHOTOS: [Photo, Photo, Photo] = [
-  { url: "/images/studio/about/hero-2.webp", alt: "A MitchDesigns developer focused at his desk" },
+  { url: "/images/studio/about/hero-2.webp", alt: "Planning a campaign on a tablet next to handwritten notes" },
   { url: "/images/studio/about/hero-3.webp", alt: "MitchDesigns team members talking together" },
   { url: "/images/studio/about/hero-1.webp", alt: "A MitchDesigns team meeting in the studio" },
 ];

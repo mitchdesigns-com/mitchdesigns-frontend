@@ -204,7 +204,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
             aria-hidden
             className="pointer-events-none absolute z-20 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
           >
-            <Image
+            <Image quality={90}
               src={imgSrc}
               alt={`${label} — MitchDesigns service`}
               width={176}
@@ -231,7 +231,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
                 className="relative hidden w-88 shrink-0 overflow-hidden rounded-2xl lg:block"
                 style={{ aspectRatio: "345 / 519" }}
               >
-                <Image src={imgSrc} alt={`${label} — MitchDesigns service`} fill className="object-cover" />
+                <Image quality={90} src={imgSrc} alt={`${label} — MitchDesigns service`} fill className="object-cover" />
               </div>
               <div className="flex flex-1 flex-col justify-between gap-16">
                 <RichTextRenderer content={body} className="text-lg leading-[1.4] text-black" />

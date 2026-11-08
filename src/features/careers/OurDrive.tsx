@@ -29,7 +29,7 @@ function DrivePhoto({ src, label, lean, p }: { src: string; label: string; lean:
       style={{ rotate }}
       className="relative aspect-22/25 min-w-3/4 shrink-0 snap-start overflow-hidden rounded-sm bg-card shadow-soft-lg sm:min-w-0 sm:flex-1 sm:shrink"
     >
-      <Image src={src} alt={label} fill className="object-cover" sizes="(max-width: 640px) 75vw, 25vw" />
+      <Image quality={90} src={src} alt={label} fill className="object-cover" sizes="(max-width: 640px) 75vw, 25vw" />
     </motion.div>
   );
 }
