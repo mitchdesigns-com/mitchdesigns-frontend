@@ -7,36 +7,24 @@ import { ArrowRight } from "@/components/icons/ArrowRight";
 import { RevealStagger, RevealItem } from "@/components/motion";
 import { HeaderCtaInView } from "@/components/layout/HeaderCtaInView";
 import { isLeadsHref } from "@/config/nav";
+import { SunriseBackdrop } from "./SunriseBackdrop";
 
 type CTABannerProps = {
   title?: React.ReactNode;
   description?: string;
   cta?: { label: string; href: string };
-  bgImage?: string;
 };
 
 export function CTABanner({
   title = "Ready For Your Next Project?",
   description = "Book a free 30-minute call with our team. Talk through your project and get clear direction on scope, timeline and budget.",
   cta = SITE_SETTINGS_FALLBACK.primaryCta,
-  bgImage = "/images/cta-bg.webp",
 }: CTABannerProps) {
   return (
     <Section theme="dark" bleed>
-      <div
-        className="relative flex min-h-[440px] items-center justify-center overflow-hidden bg-scroll py-16 sm:py-25 md:min-h-[560px] md:bg-fixed"
-        style={
-          bgImage
-            ? {
-                backgroundImage: `url(${bgImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }
-            : undefined
-        }
-      >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/35" />
+      <div className="relative flex min-h-[440px] items-center justify-center overflow-hidden py-16 sm:py-25 md:min-h-[560px]">
+        {/* Sunrise drawn in CSS: sharp at any size (no photo, no dots) */}
+        <SunriseBackdrop />
 
         {/* Content */}
         <RevealStagger
