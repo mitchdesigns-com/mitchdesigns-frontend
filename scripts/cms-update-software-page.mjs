@@ -24,11 +24,12 @@ const HERO = {
 };
 
 const WE_GOT_YOU = {
-  title: "Complex operations, made simple",
-  titleHighlights: "simple",
+  // "Digital transformation" is the key phrase here, beyond bookings and orders.
+  title: "Digital transformation for your whole operation",
+  titleHighlights: "Digital transformation",
   label: "We Got You",
   description: para(
-    "Behind every booking and every order sits a lot of logic. We engineer it properly, then hide it behind an interface your customers and your team find effortless.",
+    "Booking platforms, ERPs and dashboards that move your operations onto one smart system. We engineer the logic behind every booking, order, shift and invoice, then hide it behind an interface your customers and your team find effortless.",
   ),
 };
 
