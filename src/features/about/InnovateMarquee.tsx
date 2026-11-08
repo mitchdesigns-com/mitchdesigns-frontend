@@ -15,9 +15,9 @@ const SHORT = 294;
 const CARD_GAP = 20; // px between cards
 
 // Our studio shoot, used until CMS photos are set.
-// Faces and happy moments only (no screens or hands), happy shots spread
-// through; nothing here repeats a photo used elsewhere on the page.
-const STRIP_PHOTOS: AboutImage[] = [1, 16, 2, 6, 15, 4, 18, 5, 17, 9, 7].map((n) => ({
+// Faces and happy moments only (no screens or hands), as picked:
+// focus-01, focus-2, happy-02, girls-team-01, focus-3.
+const STRIP_PHOTOS: AboutImage[] = [2, 4, 6, 16, 5].map((n) => ({
   url: `/images/studio/about/strip-${String(n).padStart(2, "0")}.webp`,
   alt: "",
 }));
