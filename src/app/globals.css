@@ -49,6 +49,8 @@
   --color-ob-line: #e4e4e7;
   --color-ob-muted: #6b6b73;
   --color-ob-green: #27a85a;
+  /* Menu: the consultation link stands out in green (deep enough to read on yellow and white). */
+  --color-menu-cta: #08773a;
   --radius-ob: 22px;
   --shadow-ob: 0 24px 60px -22px rgba(14, 14, 16, 0.3);
   --shadow-ob-sm: 0 10px 30px -16px rgba(14, 14, 16, 0.35);
