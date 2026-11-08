@@ -1201,7 +1201,7 @@ export const fixtureContactPage: ContactPageData = {
   generalLabel: "Something else",
   nameLabel: "Full name",
   emailFieldLabel: "Email",
-  phoneFieldLabel: "Phone (optional)",
+  phoneFieldLabel: "Phone",
   companyLabel: "Brand or company (optional)",
   messageLabel: "How can we help",
   submitLabel: "Send message",

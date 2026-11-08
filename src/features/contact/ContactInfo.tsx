@@ -31,6 +31,11 @@ export function mapsSearchUrl(address: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
 
+/** Keyless Google Maps embed centred on the address (shown, not interactive). */
+function mapsEmbedUrl(address: string) {
+  return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=15&output=embed`;
+}
+
 /**
  * Phone, email and office address, with a map card that opens the office in
  * Google Maps. Rows without a value in Site Settings are left out.
@@ -58,7 +63,7 @@ export function ContactInfo({ phone, email, address, mapUrl, labels }: Props) {
   return (
     <Section className="py-20 md:py-28">
       <RevealStagger className="grid gap-10 lg:grid-cols-5 lg:items-stretch lg:gap-16">
-        <ul className="flex flex-col lg:col-span-3">
+        <ul className="flex min-w-0 flex-col lg:col-span-3">
           {rows.map((row) => (
             <RevealItem as="li" key={row.label} className="border-b border-border first:border-t">
               <a
@@ -71,7 +76,7 @@ export function ContactInfo({ phone, email, address, mapUrl, labels }: Props) {
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="text-base text-fg-muted">{row.label}</span>
-                  <span className="text-xl font-bold text-fg break-words md:text-hero-5">{row.value}</span>
+                  <span className="text-lg font-bold text-fg wrap-anywhere sm:text-xl md:text-hero-5">{row.value}</span>
                 </span>
                 <ArrowUpRight
                   size={28}
@@ -83,23 +88,34 @@ export function ContactInfo({ phone, email, address, mapUrl, labels }: Props) {
         </ul>
 
         {mapHref && (
-          <RevealItem className="lg:col-span-2">
+          <RevealItem className="relative min-h-80 overflow-clip rounded-card bg-black lg:col-span-2">
+            {address && (
+              <iframe
+                src={mapsEmbedUrl(address)}
+                title={labels.map}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                tabIndex={-1}
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 -top-1/3 h-5/3 w-full border-0 opacity-80 grayscale invert"
+              />
+            )}
+            <span className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent" aria-hidden />
             <a
               href={mapHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex h-full min-h-80 flex-col justify-between overflow-hidden rounded-card bg-black p-7 text-white md:p-9"
+              className="group relative flex h-full min-h-80 flex-col justify-between p-7 text-white md:p-9"
             >
-              <span className="footer-grid absolute inset-0 opacity-60" aria-hidden />
-              <span className="dots-pattern absolute inset-x-0 bottom-0 h-40 opacity-50" aria-hidden />
-              <span className="relative flex flex-1 items-center justify-center py-8">
-                <span className="relative flex size-20 items-center justify-center">
-                  <span className="absolute inset-0 animate-ping rounded-full bg-yellow/30 motion-reduce:animate-none" aria-hidden />
-                  <span className="relative flex size-16 items-center justify-center rounded-full bg-yellow text-black transition-transform duration-300 ease-out-soft group-hover:scale-110">
-                    <MapPinIcon size={30} />
-                  </span>
+              {/* Sits on the office: the embed centres the address, and the
+                  crop above keeps that centre in the middle of the card. */}
+              <span className="absolute left-1/2 top-1/2 flex size-20 -translate-x-1/2 -translate-y-full items-center justify-center">
+                <span className="absolute inset-0 animate-ping rounded-full bg-yellow/30 motion-reduce:animate-none" aria-hidden />
+                <span className="relative flex size-16 items-center justify-center rounded-full bg-yellow text-black shadow-lg transition-transform duration-300 ease-out-soft group-hover:scale-110">
+                  <MapPinIcon size={30} />
                 </span>
               </span>
+              <span aria-hidden />
               <span className="relative flex flex-col gap-4">
                 {address && <span className="text-lg text-white text-balance">{address}</span>}
                 <span className="flex items-center justify-between gap-4 border-t border-space-grey pt-4">

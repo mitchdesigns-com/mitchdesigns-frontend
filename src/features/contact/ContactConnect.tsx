@@ -97,23 +97,40 @@ function Booking({
 }
 
 /**
- * The form and the booking calendar. They share the visitor's name and
- * email, so whoever fills one in doesn't have to type them again.
+ * The whole page body. The top section pairs the hero copy (`intro`) with the
+ * form, so most of the form sits above the fold. `info` (phone, email, map)
+ * follows, then the booking calendar. Form and booking share the visitor's
+ * name and email, so whoever fills one in doesn't have to type them again.
  */
-export function ContactConnect({ copy }: { copy: ContactPageData }) {
+export function ContactConnect({
+  copy,
+  intro,
+  info,
+}: {
+  copy: ContactPageData;
+  intro: React.ReactNode;
+  info: React.ReactNode;
+}) {
   const [details, setDetails] = useState<ContactDetails>({ name: "", email: "" });
   const origin = useLeadsOrigin();
 
   return (
     <>
-      <Section className="pb-20 md:pb-28">
-        <Reveal>
-          <ContactForm copy={copy} details={details} onDetailsChange={setDetails} />
-        </Reveal>
+      <Section theme="dark" className="pb-20 pt-36 md:pb-25 md:pt-40">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
+          <div className="lg:sticky lg:top-40">{intro}</div>
+          <Reveal immediate delay={0.2}>
+            <div data-theme="light">
+              <ContactForm copy={copy} details={details} onDetailsChange={setDetails} />
+            </div>
+          </Reveal>
+        </div>
       </Section>
 
+      {info}
+
       <Section id="book" className="pb-24 md:pb-32">
-        <Reveal className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between md:gap-10">
+        <Reveal className="mx-auto mb-10 flex max-w-4xl flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between md:gap-10">
           <div className="flex flex-col gap-4">
             <span className="flex size-14 items-center justify-center rounded-full bg-yellow text-black">
               <CalendarCheckIcon size={26} />
@@ -127,7 +144,7 @@ export function ContactConnect({ copy }: { copy: ContactPageData }) {
             </p>
           )}
         </Reveal>
-        <Reveal delay={0.1}>
+        <Reveal delay={0.1} className="mx-auto max-w-4xl">
           <div className="rounded-card border border-border p-6 md:p-12">
             {origin ? (
               <Booking origin={origin} copy={copy} details={details} onDetailsChange={setDetails} />
