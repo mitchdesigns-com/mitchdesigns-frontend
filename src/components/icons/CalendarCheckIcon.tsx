@@ -1,4 +1,5 @@
-type Props = { size?: number; className?: string };
+/** `size` in px, or a CSS length such as "0.8em" to follow the text size. */
+type Props = { size?: number | string; className?: string };
 
 /** Calendar with a tick: booking a meeting. */
 export function CalendarCheckIcon({ size = 24, className }: Props) {
