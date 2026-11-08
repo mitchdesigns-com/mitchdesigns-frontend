@@ -85,6 +85,8 @@ export type CaseStudy = {
   category?: ProjectType;
   /** Free-text kind within the type, e.g. "Booking Website" or "ERP" under Software. */
   subcategory?: string;
+  /** A second project type, for work that is both (e.g. an eCommerce store with an ERP). */
+  secondaryCategory?: ProjectType | null;
   /** Full-colour client logo for the white info panel on /case-studies. */
   logo?: StrapiImage;
   /** White logo for the homepage logos grid. */

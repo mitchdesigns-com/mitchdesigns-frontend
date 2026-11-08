@@ -28,19 +28,22 @@ export function ClientWork({
   description,
   studies,
   category,
+  logosOnly = false,
 }: {
   title: string;
   description?: RichTextValue;
   studies: Study[];
   /** Case-study category, used for the "all work" link filter. */
   category: string;
+  /** Logo wall only, no project cards. */
+  logosOnly?: boolean;
 }) {
   const withLogo = studies.filter((s) => s.logo?.url);
   // Cards: projects with a proper card cover first.
   const cards = [...studies]
     .filter((s) => s.listCover?.url || s.cover?.url)
     .sort((a, b) => Number(!!b.listCover?.url) - Number(!!a.listCover?.url))
-    .slice(0, 6);
+    .slice(0, logosOnly ? 0 : 6);
   const allHref = `/case-studies?category=${encodeURIComponent(category)}`;
 
   return (

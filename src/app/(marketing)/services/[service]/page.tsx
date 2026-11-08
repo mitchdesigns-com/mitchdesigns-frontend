@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { inProjectType } from "@/lib/cms/projectType";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ServicePageRenderer } from "@/features/services/ServicePageRenderer";
@@ -101,7 +102,10 @@ export default async function ServicePage({
   const [data, faqs, caseStudies] = await Promise.all([
     getServicePageData(service),
     safe(getFAQs(), fixtureFAQs),
-    safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
+    // Software shows its own projects (main or second type); others the featured ones.
+    service === "custom"
+      ? safe(getCaseStudies(), fixtureCaseStudies).then((all) => all.filter((cs) => inProjectType(cs, "Software")))
+      : safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
   ]);
   // The CMS can point a service at another FAQ category. Services merged into
   // this one (Google Ads → Media Buying) bring their questions along.
