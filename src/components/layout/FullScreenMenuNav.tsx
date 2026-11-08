@@ -114,7 +114,7 @@ export function FullScreenMenuNav({
                           `text-menu` size as a colour and would drop it. */}
                       <span
                         className={`text-menu font-black uppercase leading-none tracking-[-0.01em] ${
-                          item.href === primaryCta.href ? "text-menu-cta" : "text-black"
+                          item.href === primaryCta.href ? "text-black transition-colors duration-300 group-hover:text-menu-cta" : "text-black"
                         }`}
                       >
                         <SlideLabel label={item.label} />
