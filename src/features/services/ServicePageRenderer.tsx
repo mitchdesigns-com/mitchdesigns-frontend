@@ -247,17 +247,17 @@ export function ServicePageRenderer({
               cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
-          {/* "Built on Solid Foundations" as the 3D tilt-card grid the other
-              service pages use for Why Us, with looping 3D icons. */}
-          {moreAbout && <WhyUsSection {...moreAbout} />}
-          {/* Device cards in the "We support you beyond launch" style
-              (animated line icons instead of shots). */}
-          {designsAdapt && <SupportSection {...designsAdapt} />}
+          {/* Logos of the brands running on our software (projects follow below). */}
+          {moreAbout && <ClientWorkFetcher category="Software" title={moreAbout.title} description={moreAbout.description} logosOnly />}
+          {/* "Why work with MitchDesigns?" as a carousel of reasons. */}
+          {whyUs && <WhyUsSection {...whyUs} />}
+          {/* "Designs that adapt" as the eCommerce scroll stack of big cards. */}
+          {designsAdapt && <SupportStack {...designsAdapt} />}
           {process && <WorkSteps process={process} />}
-          {caseStudies.length > 0 && (
-            <FeaturedProjects caseStudies={caseStudies} />
-          )}
-          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} />
+          {/* Software projects (main or second type), in the featured style. */}
+          {caseStudies.length > 0 && <FeaturedProjects caseStudies={caseStudies} />}
+          {/* No mobile frameworks on the software page. */}
+          <TechStackFetcher {...techStackCopy(techStack, PLATFORM_STACK)} exclude={["React Native", "Flutter"]} />
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
         </>

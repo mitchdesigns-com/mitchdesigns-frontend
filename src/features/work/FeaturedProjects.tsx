@@ -373,7 +373,7 @@ export function FeaturedProjects({
             className={`text-center text-hero-2 font-bold ${theme === "dark" ? "text-white" : "text-black"
               }`}
           >
-            Featured Projects
+            Featured projects
           </h2>
         </Reveal>
 

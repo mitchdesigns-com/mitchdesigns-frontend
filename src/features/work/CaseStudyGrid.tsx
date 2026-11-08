@@ -10,6 +10,7 @@ import { strapiMedia } from "@/lib/cms/media";
 import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
 import { ProjectTypeTag } from "./ProjectTypeTag";
+import { inProjectType } from "@/lib/cms/projectType";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -106,7 +107,7 @@ export function CaseStudyGrid({
 
   // A chip only shows while at least one project sits under it.
   const filters = FILTERS.filter(
-    ({ value }) => value === "All" || caseStudies.some((cs) => cs.category === value),
+    ({ value }) => value === "All" || caseStudies.some((cs) => inProjectType(cs, value)),
   );
 
   // `?category=eCommerce` (e.g. from a service page) opens on that filter.
@@ -121,7 +122,7 @@ export function CaseStudyGrid({
   const filtered = activeCategory === "All"
     ? caseStudies
     : caseStudies.filter(
-        (cs) => cs.category === activeCategory || cs.services.includes(activeCategory),
+        (cs) => inProjectType(cs, activeCategory) || cs.services.includes(activeCategory),
       );
 
   const visible = filtered.slice(0, visibleCount);
