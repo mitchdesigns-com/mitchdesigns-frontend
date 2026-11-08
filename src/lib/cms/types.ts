@@ -610,6 +610,10 @@ export type SocialPlatform = "facebook" | "instagram" | "linkedin" | "youtube";
 export type SiteSettings = {
   contactEmail?: string;
   contactPhone?: string;
+  /** Office address shown on /contact (multi-line allowed). */
+  officeAddress?: string;
+  /** Google Maps link for the office; built from the address when empty. */
+  officeMapUrl?: string;
   whatsappNumber?: string;
   whatsappLabel?: string;
   newsletterTitle?: string;
@@ -622,6 +626,41 @@ export type SiteSettings = {
   legalLinks: CmsLink[];
   testimonialsHeading: string;
   testimonialsIntro: string;
+};
+
+/* ------------------------------------------------------------------
+ * Contact Page (single type) — every label on /contact. Phone, email
+ * and address come from Site Settings.
+ * ------------------------------------------------------------------ */
+export type ContactPageData = {
+  hero: { eyebrow?: string; title: string; description?: string };
+  seo?: { title?: string; description?: string };
+  phoneLabel: string;
+  emailLabel: string;
+  addressLabel: string;
+  mapLabel: string;
+  formHeading: string;
+  formIntro?: string;
+  formToggleLabel: string;
+  topicLabel: string;
+  consultationLabel: string;
+  generalLabel: string;
+  nameLabel: string;
+  emailFieldLabel: string;
+  phoneFieldLabel: string;
+  companyLabel: string;
+  messageLabel: string;
+  submitLabel: string;
+  successTitle: string;
+  successBody: string;
+  errorText: string;
+  bookingHeading: string;
+  bookingIntro?: string;
+  bookingConfirmLabel: string;
+  bookingSuccessTitle: string;
+  bookingSuccessBody: string;
+  bookingEmptyText: string;
+  bookingUnavailableText: string;
 };
 
 /* ------------------------------------------------------------------
