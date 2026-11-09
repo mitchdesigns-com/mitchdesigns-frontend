@@ -12,6 +12,7 @@ import { leadsApiOrigin } from "@/config/nav";
 import type { ContactPageData } from "@/lib/cms/types";
 import { noOrphan } from "@/lib/noOrphan";
 import { BookingCalendar } from "./booking/BookingCalendar";
+import { BookingHostCard } from "./booking/BookingHostCard";
 import { useCalBooking } from "./booking/useCalBooking";
 import { ContactForm, type ContactDetails } from "./ContactForm";
 
@@ -62,6 +63,12 @@ function Booking({
 
   return (
     <div className="flex flex-col gap-10">
+      <BookingHostCard
+        name={copy.bookingHostName}
+        meetingTitle={copy.bookingMeetingTitle}
+        duration={copy.bookingDuration}
+        conferencing={copy.bookingConferencing}
+      />
       <div className="grid gap-6 md:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor={`${id}-name`} className="text-sm font-medium text-fg">{copy.nameLabel}</label>

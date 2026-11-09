@@ -656,6 +656,10 @@ export type ContactPageData = {
   errorText: string;
   bookingHeading: string;
   bookingIntro?: string;
+  bookingHostName?: string;
+  bookingMeetingTitle?: string;
+  bookingDuration?: string;
+  bookingConferencing?: string;
   bookingConfirmLabel: string;
   bookingSuccessTitle: string;
   bookingSuccessBody: string;

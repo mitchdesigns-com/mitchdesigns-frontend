@@ -1211,6 +1211,10 @@ export const fixtureContactPage: ContactPageData = {
   bookingHeading: "Book a call with our sales team",
   bookingIntro:
     "Pick a time that suits you for a 30 minute call. We’ll email you the meeting link.",
+  bookingHostName: "Christina Philip",
+  bookingMeetingTitle: "Schedule Project Brief Meeting",
+  bookingDuration: "30 min",
+  bookingConferencing: "Web conferencing details provided upon confirmation.",
   bookingConfirmLabel: "Confirm booking",
   bookingSuccessTitle: "You’re booked",
   bookingSuccessBody: "Check your inbox for the calendar invite and the meeting link.",
