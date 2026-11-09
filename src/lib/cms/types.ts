@@ -647,6 +647,7 @@ export type ContactPageData = {
   generalLabel: string;
   nameLabel: string;
   emailFieldLabel: string;
+  phoneSearchLabel?: string;
   phoneFieldLabel: string;
   companyLabel: string;
   messageLabel: string;
