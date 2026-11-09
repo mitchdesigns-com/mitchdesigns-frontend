@@ -41,6 +41,20 @@ export function leadsUrl(service?: string): string {
   return funnelService ? `${LEADS_URL}?service=${funnelService}&action=schedule-call` : LEADS_URL;
 }
 
+/**
+ * The md-leads origin the browser calls for the /contact form and the Cal.com
+ * booking. Production talks to production; anything else (the staging Worker,
+ * localhost) talks to md-leads staging, so tests never reach the real inbox.
+ */
+export function leadsApiOrigin(hostname: string): string {
+  // The live site (and its production Worker, until the domain moves) books
+  // and saves through production md-leads, the same Cal.com event as the funnel.
+  const production =
+    (/(^|\.)mitchdesigns\.com$/.test(hostname) && !hostname.includes("staging")) ||
+    hostname === "mitchdesigns-website.mitchdesigns.workers.dev";
+  return production ? "https://leads.mitchdesigns.com" : "https://staging-leads.mitchdesigns.com";
+}
+
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Our Services", href: null, hasChevron: true },
@@ -49,6 +63,7 @@ export const NAV_LINKS = [
   { label: "Talks", href: "/talks" },
   { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
+  { label: "Contact", href: "/contact" },
   { label: "Schedule Consultation Meeting", href: LEADS_URL },
 ] as const;
 
@@ -59,6 +74,7 @@ export const COMPANY_LINKS = [
   { label: "Talks", href: "/talks" },
   { label: "FAQ", href: "/faqs" },
   { label: "Jobs", href: "/careers" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 export type ServiceSlug =

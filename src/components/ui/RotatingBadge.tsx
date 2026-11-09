@@ -18,7 +18,9 @@ export function RotatingBadge({ text, className }: { text: string; className?: s
         </defs>
         <text fontSize="8.5" className="fill-current font-bold uppercase">
           <textPath href="#rotating-badge-rim" textLength="232" lengthAdjust="spacing">
-            {text}
+            {/* SVG collapses edge whitespace, which glued the last "•" to the
+                first word where the loop closes. Non breaking spaces keep it. */}
+            {text.replace(/ /g, "\u00A0")}
           </textPath>
         </text>
       </svg>

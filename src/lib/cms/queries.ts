@@ -12,6 +12,7 @@ import type {
   CaseStudy,
   Career,
   CareersPageData,
+  ContactPageData,
   CaseStudiesPageData,
   ClientLogo,
   CtaBannerData,
@@ -848,6 +849,8 @@ export const getSiteSettings = async (): Promise<SiteSettings> => {
       return {
         contactEmail: raw.contactEmail ?? SITE_SETTINGS_FALLBACK.contactEmail,
         contactPhone: raw.contactPhone ?? SITE_SETTINGS_FALLBACK.contactPhone,
+        officeAddress: str(raw.officeAddress) ?? SITE_SETTINGS_FALLBACK.officeAddress,
+        officeMapUrl: str(raw.officeMapUrl) ?? SITE_SETTINGS_FALLBACK.officeMapUrl,
         whatsappNumber: raw.whatsappNumber ?? SITE_SETTINGS_FALLBACK.whatsappNumber,
         whatsappLabel: raw.whatsappLabel ?? SITE_SETTINGS_FALLBACK.whatsappLabel,
         newsletterTitle:
@@ -875,6 +878,68 @@ export const getSiteSettings = async (): Promise<SiteSettings> => {
     /* fall through to fallback */
   }
   return SITE_SETTINGS_FALLBACK;
+};
+
+/* ------------------------------------------------------------------
+ * Contact Page (single type) — each label falls back to the fixture on
+ * its own, so a half-filled entry in Strapi still renders a whole page.
+ * ------------------------------------------------------------------ */
+export const getContactPage = async (): Promise<ContactPageData> => {
+  const { fixtureContactPage: fx } = await import("./fixtures");
+  try {
+    const raw = await getSingle<Record<string, any>>("/contact-page", {
+      revalidate: 300,
+      query: { "populate[hero]": "*", "populate[seo]": "*" },
+    });
+    if (!raw) return fx;
+    const label = (key: keyof ContactPageData) =>
+      str(raw[key]) ?? (fx[key] as string | undefined);
+    return {
+      hero: raw.hero?.title
+        ? {
+            eyebrow: str(raw.hero.eyebrow),
+            title: raw.hero.title,
+            description: blocksToText(raw.hero.description),
+          }
+        : fx.hero,
+      seo: raw.seo
+        ? { title: str(raw.seo.metaTitle), description: str(raw.seo.metaDescription) }
+        : fx.seo,
+      phoneLabel: label("phoneLabel")!,
+      emailLabel: label("emailLabel")!,
+      addressLabel: label("addressLabel")!,
+      mapLabel: label("mapLabel")!,
+      formHeading: label("formHeading")!,
+      formIntro: label("formIntro"),
+      formToggleLabel: label("formToggleLabel")!,
+      topicLabel: label("topicLabel")!,
+      consultationLabel: label("consultationLabel")!,
+      generalLabel: label("generalLabel")!,
+      nameLabel: label("nameLabel")!,
+      emailFieldLabel: label("emailFieldLabel")!,
+      phoneFieldLabel: label("phoneFieldLabel")!,
+      phoneSearchLabel: label("phoneSearchLabel"),
+      companyLabel: label("companyLabel")!,
+      messageLabel: label("messageLabel")!,
+      submitLabel: label("submitLabel")!,
+      successTitle: label("successTitle")!,
+      successBody: label("successBody")!,
+      errorText: label("errorText")!,
+      bookingHeading: label("bookingHeading")!,
+      bookingIntro: label("bookingIntro"),
+      bookingHostName: label("bookingHostName"),
+      bookingMeetingTitle: label("bookingMeetingTitle"),
+      bookingDuration: label("bookingDuration"),
+      bookingConferencing: label("bookingConferencing"),
+      bookingConfirmLabel: label("bookingConfirmLabel")!,
+      bookingSuccessTitle: label("bookingSuccessTitle")!,
+      bookingSuccessBody: label("bookingSuccessBody")!,
+      bookingEmptyText: label("bookingEmptyText")!,
+      bookingUnavailableText: label("bookingUnavailableText")!,
+    };
+  } catch {
+    return fx;
+  }
 };
 
 /* ------------------------------------------------------------------

@@ -8,6 +8,7 @@ import type {
   AboutContent,
   Career,
   CareersPageData,
+  ContactPageData,
   CaseStudy,
   ClientLogo,
   CtaBannerData,
@@ -1173,6 +1174,53 @@ export const fixtureCtaBanner: CtaBannerData = {
     "Book a free 30-minute call with our team. Talk through your project and get clear direction on scope, timeline and budget.",
   cta: { label: "Schedule Consultation Meeting", href: LEADS_URL },
   bgImage: "/images/cta-bg.webp",
+};
+
+export const fixtureContactPage: ContactPageData = {
+  hero: {
+    eyebrow: "Contact us",
+    title: "Let’s talk about your next project",
+    description:
+      "Send us a message, book a call with our sales team, or drop by the studio in Heliopolis.",
+  },
+  seo: {
+    title: "Contact MitchDesigns",
+    description:
+      "Call, email or visit the MitchDesigns studio in Cairo, send a message, or book a call with our sales team.",
+  },
+  phoneLabel: "Call us",
+  emailLabel: "Email us",
+  addressLabel: "Visit the studio",
+  mapLabel: "Open in Google Maps",
+  formHeading: "Send us a message",
+  formIntro:
+    "Not ready for a quote yet? Tell us what you have in mind and the right person on our team will get back to you.",
+  formToggleLabel: "Write a message",
+  topicLabel: "What’s this about",
+  consultationLabel: "Consultation only",
+  generalLabel: "Something else",
+  nameLabel: "Full name",
+  emailFieldLabel: "Email",
+  phoneFieldLabel: "Phone",
+  phoneSearchLabel: "Search countries",
+  companyLabel: "Brand or company (optional)",
+  messageLabel: "How can we help",
+  submitLabel: "Send message",
+  successTitle: "Message sent",
+  successBody: "Thanks for reaching out. We’ll reply to your email soon.",
+  errorText: "Something went wrong. Please try again or email us directly.",
+  bookingHeading: "Book a call with our sales team",
+  bookingIntro:
+    "Pick a time that suits you for a 30 minute call. We’ll email you the meeting link.",
+  bookingHostName: "Christina Philip",
+  bookingMeetingTitle: "Schedule Project Brief Meeting",
+  bookingDuration: "30 min",
+  bookingConferencing: "Web conferencing details provided upon confirmation.",
+  bookingConfirmLabel: "Confirm booking",
+  bookingSuccessTitle: "You’re booked",
+  bookingSuccessBody: "Check your inbox for the calendar invite and the meeting link.",
+  bookingEmptyText: "No open times this month. Try the next one.",
+  bookingUnavailableText: "We couldn’t load the calendar right now. Please try again.",
 };
 
 export const fixtureCareersPage: CareersPageData = {

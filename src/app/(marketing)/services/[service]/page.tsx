@@ -3,8 +3,10 @@ import { inProjectType } from "@/lib/cms/projectType";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ServicePageRenderer } from "@/features/services/ServicePageRenderer";
+import { CTABanner } from "@/features/cta";
 import {
   getCaseStudies,
+  getCtaBanner,
   getFAQs,
   getServicePageData,
 } from "@/lib/cms";
@@ -17,6 +19,8 @@ import {
   SERVICES as NAV_SERVICES,
   SERVICE_FAQ_CATEGORY,
   MERGED_SERVICES,
+  isLeadFunnelHref,
+  leadsUrl,
   type ServiceSlug,
 } from "@/config/nav";
 
@@ -99,13 +103,14 @@ export default async function ServicePage({
   const { service } = await params;
   if (!SERVICE_SLUGS.includes(service)) notFound();
 
-  const [data, faqs, caseStudies] = await Promise.all([
+  const [data, faqs, caseStudies, ctaBanner] = await Promise.all([
     getServicePageData(service),
     safe(getFAQs(), fixtureFAQs),
     // Software shows its own projects (main or second type); others the featured ones.
     service === "custom"
       ? safe(getCaseStudies(), fixtureCaseStudies).then((all) => all.filter((cs) => inProjectType(cs, "Software")))
       : safe(getCaseStudies({ featured: true, limit: 4 }), fixtureCaseStudies),
+    getCtaBanner(),
   ]);
   // The CMS can point a service at another FAQ category. Services merged into
   // this one (Google Ads → Media Buying) bring their questions along.
@@ -156,6 +161,12 @@ export default async function ServicePage({
         faqs={faqs}
         accordionFaqs={accordionFaqs}
         caseStudies={caseStudies}
+      />
+      {/* Same pre footer as the homepage; its booking link opens the funnel
+          with this service already picked. */}
+      <CTABanner
+        {...ctaBanner}
+        cta={ctaBanner.cta && isLeadFunnelHref(ctaBanner.cta.href) ? { ...ctaBanner.cta, href: leadsUrl(service) } : ctaBanner.cta}
       />
     </>
   );

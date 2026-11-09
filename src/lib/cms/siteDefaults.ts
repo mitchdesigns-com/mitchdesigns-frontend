@@ -9,6 +9,8 @@ import type { SiteSettings } from "./types";
 export const SITE_SETTINGS_FALLBACK: SiteSettings = {
   contactEmail: undefined,
   contactPhone: undefined,
+  officeAddress: "22 El Horeya Street, Heliopolis, Cairo, Egypt",
+  officeMapUrl: undefined,
   whatsappNumber: "+201014430669",
   whatsappLabel: "We’re on Whatsapp",
   newsletterTitle: "Join Our Newsletter",

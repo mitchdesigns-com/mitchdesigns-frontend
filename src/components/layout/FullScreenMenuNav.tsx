@@ -114,11 +114,18 @@ export function FullScreenMenuNav({
                           `text-menu` size as a colour and would drop it. */}
                       <span
                         className={`text-menu font-black uppercase leading-none tracking-[-0.01em] ${
-                          item.href === primaryCta.href ? "text-menu-cta" : "text-black"
+                          item.href === primaryCta.href ? "text-black transition-colors duration-300 group-hover:text-menu-cta" : "text-black"
                         }`}
                       >
                         <SlideLabel label={item.label} />
                       </span>
+                      {/* Calendar on the booking link, sized to the text and
+                          coloured with it (green on hover). */}
+                      {item.href === primaryCta.href && (
+                        <span className="text-menu ms-4 flex text-black transition-colors duration-300 group-hover:text-menu-cta">
+                          <BookingIcon href={item.href} size="0.8em" />
+                        </span>
+                      )}
                     </div>
                   </Link>
                 ) : (

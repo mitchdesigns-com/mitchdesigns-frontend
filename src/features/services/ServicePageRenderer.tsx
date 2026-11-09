@@ -267,7 +267,8 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our live dashboard widgets, animated (front-end only). */}
-          <ServiceHero {...hero} switcher={switcher} scene={<MediaBuyingScene />} />
+          {/* Full hero height like the other pages, so the camera never crops. */}
+          <ServiceHero {...hero} switcher={switcher} scene={<MediaBuyingScene />} bleedScene sceneUnderCopy />
           {numbers && <NumbersSection {...numbers} />}
           {/* The brief quote gives way to the scroll-written "We Got You"
               scene the other service pages open with. */}
@@ -282,8 +283,6 @@ export function ServicePageRenderer({
           )}
           {/* Our Ads Manager recording on a MacBook that opens as you scroll. */}
           <MacbookVideoSection video={deviceVideo} />
-          {/* Google Ads is part of media buying now: its tablet recording follows. */}
-          <TabletVideoSection />
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}

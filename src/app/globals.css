@@ -49,7 +49,7 @@
   --color-ob-line: #e4e4e7;
   --color-ob-muted: #6b6b73;
   --color-ob-green: #27a85a;
-  /* Menu: the consultation link stands out in green (deep enough to read on yellow and white). */
+  /* Menu: the consultation link turns this green on hover (reads on the white hover band). */
   --color-menu-cta: #08773a;
   --radius-ob: 22px;
   --shadow-ob: 0 24px 60px -22px rgba(14, 14, 16, 0.3);
@@ -267,6 +267,7 @@
   --spacing-media-max: 45rem; /* 720px — full-width case-study media never taller */
   --spacing-scene-laptop: 260svh; /* media-buying MacBook: pinned scroll length */
   --spacing-laptop-frame: 75vw; /* …on phones: no pin, just the laptop's own height */
+  --spacing-roas-gap: 40vw; /* media-buying "HIGH  ROAS": room for the laptop screen between the words */
   --spacing-hero-gap: clamp(2.5rem, 6svh, 3.5rem);
   --spacing-hero-end: clamp(1rem, 4svh, 2.5rem);
   --spacing-reel-min: 45vw;
@@ -408,6 +409,15 @@
     background: var(--color-bg);
     color: var(--color-fg);
   }
+  /* Light surface nested inside a dark section (e.g. a form card in a dark hero). */
+  [data-theme="light"] {
+    --color-bg: var(--color-white);
+    --color-bg-alt: var(--color-bej);
+    --color-fg: var(--color-black);
+    --color-fg-muted: var(--color-grey-500);
+    --color-border: var(--color-grey-200);
+    color: var(--color-fg);
+  }
   [data-theme="beige"] {
     --color-bg: var(--color-bej);
     background: var(--color-bg);
@@ -431,6 +441,15 @@
    and a 2-line title (or clamped excerpt) take the same space and card rows
    stay aligned. Pair with line-clamp-2. */
 /* Sideways-scrolling rows (service switcher on phones), no visible scrollbar. */
+/* Hero scene that runs under the copy: fades out on its left (under the
+   text) and at the top and bottom (under the header), no hard edges. */
+@utility mask-scene-fade {
+  mask-image: linear-gradient(to right, transparent, #000 22%),
+    linear-gradient(to bottom, transparent 4%, #000 20%, #000 88%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
 @utility scrollbar-none {
   scrollbar-width: none;
   &::-webkit-scrollbar {
