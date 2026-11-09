@@ -47,7 +47,11 @@ export function leadsUrl(service?: string): string {
  * localhost) talks to md-leads staging, so tests never reach the real inbox.
  */
 export function leadsApiOrigin(hostname: string): string {
-  const production = /(^|\.)mitchdesigns\.com$/.test(hostname) && !hostname.includes("staging");
+  // The live site (and its production Worker, until the domain moves) books
+  // and saves through production md-leads, the same Cal.com event as the funnel.
+  const production =
+    (/(^|\.)mitchdesigns\.com$/.test(hostname) && !hostname.includes("staging")) ||
+    hostname === "mitchdesigns-website.mitchdesigns.workers.dev";
   return production ? "https://leads.mitchdesigns.com" : "https://staging-leads.mitchdesigns.com";
 }
 
