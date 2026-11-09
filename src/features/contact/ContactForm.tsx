@@ -7,6 +7,7 @@ import { ChevronDown } from "@/components/icons/ChevronDown";
 import { Tick } from "@/components/icons/Tick";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 import { Textarea } from "@/components/ui/Textarea";
 import { EASE_LUXE } from "@/components/motion";
 import { leadsApiOrigin, SERVICES } from "@/config/nav";
@@ -62,6 +63,7 @@ export function ContactForm({ copy, details, onDetailsChange }: Props) {
   const [open, setOpen] = useState(true);
   const [topic, setTopic] = useState<string | null>(null);
   const [phone, setPhone] = useState("");
+  const [phoneValid, setPhoneValid] = useState(false);
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
@@ -78,7 +80,7 @@ export function ContactForm({ copy, details, onDetailsChange }: Props) {
     topic: !topic,
     name: !details.name.trim(),
     email: !EMAIL_RE.test(details.email.trim()),
-    phone: phone.replace(/\D/g, "").length < 7,
+    phone: !phoneValid,
     message: !message.trim(),
   };
   const invalid = Object.values(missing).some(Boolean);
@@ -203,13 +205,14 @@ export function ContactForm({ copy, details, onDetailsChange }: Props) {
                     />
                   </Field>
                   <Field label={copy.phoneFieldLabel} htmlFor={`${id}-phone`} error={tried && missing.phone}>
-                    <Input
+                    <PhoneInput
                       id={`${id}-phone`}
-                      type="tel"
-                      autoComplete="tel"
-                      value={phone}
                       invalid={tried && missing.phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      searchPlaceholder={copy.phoneSearchLabel}
+                      onChange={(value, valid) => {
+                        setPhone(value);
+                        setPhoneValid(valid);
+                      }}
                     />
                   </Field>
                   <Field label={copy.companyLabel} htmlFor={`${id}-company`}>

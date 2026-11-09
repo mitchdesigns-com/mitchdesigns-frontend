@@ -31,7 +31,7 @@ export function mapsSearchUrl(address: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
 
-/** Keyless Google Maps embed centred on the address (shown, not interactive). */
+/** Keyless Google Maps embed centred on the studio listing (shown, not interactive). */
 function mapsEmbedUrl(address: string) {
   return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=15&output=embed`;
 }
@@ -91,7 +91,7 @@ export function ContactInfo({ phone, email, address, mapUrl, labels }: Props) {
           <RevealItem className="relative min-h-80 overflow-clip rounded-card bg-black lg:col-span-2">
             {address && (
               <iframe
-                src={mapsEmbedUrl(address)}
+                src={mapsEmbedUrl(`MitchDesigns, ${address}`)}
                 title={labels.map}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

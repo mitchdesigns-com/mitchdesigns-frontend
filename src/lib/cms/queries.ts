@@ -916,6 +916,7 @@ export const getContactPage = async (): Promise<ContactPageData> => {
       nameLabel: label("nameLabel")!,
       emailFieldLabel: label("emailFieldLabel")!,
       phoneFieldLabel: label("phoneFieldLabel")!,
+      phoneSearchLabel: label("phoneSearchLabel"),
       companyLabel: label("companyLabel")!,
       messageLabel: label("messageLabel")!,
       submitLabel: label("submitLabel")!,
