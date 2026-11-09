@@ -41,7 +41,7 @@ function Word({ text, progress, from }: { text: string; progress: MotionValue<nu
 export function RoasWords({ progress }: { progress: MotionValue<number> }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
-      <div className="flex -translate-y-1/4 items-center gap-roas-gap font-black uppercase leading-none text-innovate text-yellow">
+      <div className="flex -translate-y-1/4 items-center gap-roas-gap font-black uppercase leading-none tracking-tight text-roas text-yellow">
         <Word text="High" progress={progress} from={-1} />
         <Word text="ROAS" progress={progress} from={1} />
       </div>

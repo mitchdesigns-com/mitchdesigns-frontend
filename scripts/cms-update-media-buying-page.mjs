@@ -26,9 +26,9 @@ const PAGE = {
         "Every campaign we run starts with analysis of your data, your audience and your creative. We manage ads for premium brands, with a long term strategy for growth and short term plans for this month's targets.",
       ),
       bullets(
-        "A full funnel plan, from the first view to the repeat purchase",
-        "Content and video made for each product and each audience",
-        "Clear monthly reports on spend, revenue and ROAS",
+        "Full funnel strategy",
+        "Video content for every audience",
+        "Monthly ROAS reports",
       ),
     ],
   },
@@ -58,7 +58,7 @@ const FAQ_CATEGORY = "Media Buying";
 // `match` finds an existing question to rewrite; without a match it's created.
 const FAQS = [
   {
-    match: /cost/i,
+    match: /cost|how do you charge/i,
     order: 9,
     question: "How do you charge for media buying?",
     answer: para(

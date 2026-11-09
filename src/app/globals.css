@@ -96,6 +96,8 @@
   --text-jumbo--line-height: 1;
   --text-innovate: clamp(2.5rem, 10vw, 13rem); /* "Innovate Or Die" — the whole phrase fits ~¾ of the viewport */
   --text-innovate--line-height: 1;
+  --text-roas: clamp(3.5rem, 14vw, 18.2rem); /* media-buying "HIGH ROAS", 1.4× the Innovate size */
+  --text-roas--line-height: 1;
   --text-hero-1: 5.75rem; /* 92px */
   --text-hero-1--line-height: 1.1;
   --text-hero-1--font-weight: 900;
@@ -267,7 +269,7 @@
   --spacing-media-max: 45rem; /* 720px — full-width case-study media never taller */
   --spacing-scene-laptop: 260svh; /* media-buying MacBook: pinned scroll length */
   --spacing-laptop-frame: 75vw; /* …on phones: no pin, just the laptop's own height */
-  --spacing-roas-gap: 40vw; /* media-buying "HIGH  ROAS": room for the laptop screen between the words */
+  --spacing-roas-gap: 23vw; /* media-buying "HIGH  ROAS": room for the laptop screen between the words */
   --spacing-hero-gap: clamp(2.5rem, 6svh, 3.5rem);
   --spacing-hero-end: clamp(1rem, 4svh, 2.5rem);
   --spacing-reel-min: 45vw;
