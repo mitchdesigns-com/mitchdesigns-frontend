@@ -50,6 +50,7 @@ export function ServiceHero({
   reel,
   scene,
   bleedScene = false,
+  sceneUnderCopy = false,
   switcher,
 }: ServiceHeroProps & {
   /** Row for jumping to the other service pages, shown above the eyebrow. */
@@ -60,6 +61,9 @@ export function ServiceHero({
   scene?: ReactNode;
   /** Give `scene` the reel's full-bleed treatment (it's a looping reel too). */
   bleedScene?: boolean;
+  /** With `bleedScene`: the scene takes more of the width and may pass under
+   *  the copy (which stays on top). */
+  sceneUnderCopy?: boolean;
 }) {
   // Swap to a local fallback image if the CMS image fails to load.
   const [imgSrc, setImgSrc] = useState(image);
@@ -87,7 +91,12 @@ export function ServiceHero({
           reverseLayout && "md:flex-row-reverse",
         )}
       >
-        <div className={bleed ? "min-w-0 space-y-6 md:w-1/2 md:pr-12" : "min-w-0 flex-1 space-y-6"}>
+        <div
+          className={cn(
+            bleed ? "min-w-0 space-y-6 md:w-1/2 md:pr-12" : "min-w-0 flex-1 space-y-6",
+            bleed && sceneUnderCopy && "relative z-10",
+          )}
+        >
           {subTitle && (
             <motion.p
               variants={fadeUp}
@@ -120,7 +129,7 @@ export function ServiceHero({
           variants={fadeUp}
           className={
             bleed
-              ? `relative -mx-4 aspect-video overflow-hidden md:absolute md:inset-y-0 md:mx-0 md:aspect-auto md:w-1/2 ${reverseLayout ? "md:left-0" : "md:right-0"}`
+              ? `relative -mx-4 aspect-video overflow-hidden md:absolute md:inset-y-0 md:mx-0 md:aspect-auto ${sceneUnderCopy ? "md:w-3/5 md:mask-scene-fade" : "md:w-1/2"} ${reverseLayout ? "md:left-0" : "md:right-0"}`
               : "relative min-h-72 flex-1 overflow-hidden rounded-card md:min-h-112"
           }
         >
