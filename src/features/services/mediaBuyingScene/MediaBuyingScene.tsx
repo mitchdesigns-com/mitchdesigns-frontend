@@ -32,9 +32,10 @@ const WIDGETS: Widget[] = [
 
 const shot = cameraShot(W, H);
 const OVERVIEW = shot(W / 2, H / 2, 1);
-const ON_CATEGORIES = shot(238, 137, 1.6);
-const ON_SEGMENTS = shot(223, 332, 1.6);
-const ON_MAP = shot(592, 283, 1.7);
+/** Close-up zoom per widget, before fitting it to the stage. */
+const ZOOM = { categories: 1.6, segments: 1.6, geo: 1.7 } as const;
+/** Share of the stage a close-up may fill, so it never touches the edges. */
+const FIT = 0.9;
 
 const YELLOW = "#FFDB00";
 const BAR_OFF = "#333333";
@@ -82,6 +83,23 @@ export function MediaBuyingScene() {
       if (!cat || !seg || !geo) return;
       [cat, seg, geo].forEach(fluidSvg);
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      // Close-ups centre each widget and zoom only as far as it still fits
+      // the stage, so no card is ever cropped (phones zoom in less).
+      const board = camera.current;
+      const box = stage.current;
+      const closeUp = (key: keyof typeof ZOOM) => {
+        const el = slots.current[key];
+        if (!el || !board || !box) return OVERVIEW;
+        const unit = W / board.offsetWidth; // board units per pixel
+        const cx = (el.offsetLeft + el.offsetWidth / 2) * unit;
+        const cy = (el.offsetTop + el.offsetHeight / 2) * unit;
+        const fit = Math.min((FIT * box.clientWidth) / el.offsetWidth, (FIT * box.clientHeight) / el.offsetHeight);
+        return shot(cx, cy, Math.max(1, Math.min(ZOOM[key], fit)));
+      };
+      const ON_CATEGORIES = closeUp("categories");
+      const ON_SEGMENTS = closeUp("segments");
+      const ON_MAP = closeUp("geo");
 
       // Parts to animate, found by their design attributes.
       const bars = Array.from(cat.querySelectorAll('rect[width="5.51351"]'));

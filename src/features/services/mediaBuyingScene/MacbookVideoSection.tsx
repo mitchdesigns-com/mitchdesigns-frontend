@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import type { DeviceVideo } from "@/lib/cms/types";
+import { RoasWords } from "./RoasWords";
 
 // three.js only loads (client-side) for this section.
 const MacbookScene = dynamic(() => import("./MacbookScene"), { ssr: false });
@@ -52,6 +53,9 @@ export function MacbookVideoSection({ video }: { video?: DeviceVideo }) {
   return (
     <div ref={ref} className="relative h-laptop-frame md:h-scene-laptop">
       <Section theme="light" className="h-full overflow-hidden md:sticky md:top-0 md:h-svh">
+        {/* Behind the laptop (the canvas is transparent). */}
+        <RoasWords progress={open} />
+        <p className="sr-only">High ROAS, return on ad spend</p>
         <div role="img" aria-label={label} className="absolute inset-0">
           <MacbookScene progress={open} src={src} />
         </div>
