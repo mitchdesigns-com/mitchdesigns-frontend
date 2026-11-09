@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { RichText as RichTextContent } from "@/lib/cms/types";
 import { normalizeRichTextHref } from "@/lib/richTextHref";
 import { noOrphanInline } from "@/lib/noOrphan";
+import { CheckIcon } from "@/components/icons/CheckIcon";
 
 type TextNode = {
   type: "text";
@@ -62,7 +63,7 @@ const HEADING: Record<number, string> = {
   6: "text-base font-semibold",
 };
 
-function renderBlock(block: BlockNode, key: number) {
+function renderBlock(block: BlockNode, key: number, checkList = false) {
   switch (block.type) {
     case "paragraph":
       return (
@@ -79,6 +80,19 @@ function renderBlock(block: BlockNode, key: number) {
       );
     }
     case "list": {
+      // Bulleted lists as yellow ticks (e.g. hero benefits).
+      if (checkList && block.format !== "ordered") {
+        return (
+          <ul key={key} className="flex flex-col gap-3">
+            {block.children.map((item, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <CheckIcon size={22} className="mt-0.5 shrink-0 text-yellow" />
+                <span>{noOrphanInline(item.children).map((c, j) => renderInline(c, j))}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      }
       const Tag = block.format === "ordered" ? "ol" : "ul";
       const listClass = block.format === "ordered" ? "list-decimal" : "list-disc";
       return (
@@ -121,9 +135,11 @@ function renderBlock(block: BlockNode, key: number) {
 type Props = {
   content: RichTextContent;
   className?: string;
+  /** Show bulleted lists as yellow ticks instead of dots. */
+  checkList?: boolean;
 };
 
-export function RichText({ content, className }: Props) {
+export function RichText({ content, className, checkList = false }: Props) {
   if (!content) return null;
 
   // Fixture fallback: plain string → single paragraph
@@ -139,7 +155,7 @@ export function RichText({ content, className }: Props) {
 
   return (
     <div className={`flex flex-col gap-4 ${className ?? ""}`}>
-      {(content as BlockNode[]).map((block, i) => renderBlock(block, i))}
+      {(content as BlockNode[]).map((block, i) => renderBlock(block, i, checkList))}
     </div>
   );
 }
