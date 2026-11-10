@@ -273,44 +273,6 @@ export function CaseStudyGrid({
   const sentinelRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
 
-  // The filter row floats as a blurred dark pill once it sticks to the top
-  // (like the service switcher), sitting just under the header when it shows.
-  const stickRef = useRef<HTMLDivElement>(null);
-  const [stuck, setStuck] = useState(false);
-  const [headerBottom, setHeaderBottom] = useState(0);
-  useEffect(() => {
-    const el = stickRef.current;
-    if (!el) return;
-    // Stuck = sitting at its sticky offset rather than in the page flow.
-    const check = () => {
-      const top = el.getBoundingClientRect().top;
-      setStuck(window.scrollY > 0 && top <= parseFloat(getComputedStyle(el).top) + 1);
-    };
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check);
-    return () => {
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
-    };
-  }, []);
-  useEffect(() => {
-    if (!stuck) return;
-    // Follow the header's own slide in/out frame by frame.
-    const header = document.querySelector("header");
-    let raf = 0;
-    let last = -1;
-    const loop = () => {
-      const bottom = Math.max(0, Math.round(header?.getBoundingClientRect().bottom ?? 0));
-      if (bottom !== last) {
-        last = bottom;
-        setHeaderBottom(bottom);
-      }
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [stuck]);
 
   // A chip only shows while at least one project sits under it.
   const filters = FILTERS.filter(
@@ -404,22 +366,14 @@ export function CaseStudyGrid({
         </motion.div>
 
         {/* Category filter (derived from the data) + view toggle.
-            Phones: one row that scrolls sideways (like the service switcher).
-            Sticky: once it reaches the top it floats as a blurred dark pill. */}
+            Phones: one row that scrolls sideways (like the service switcher). */}
         <motion.div
-          ref={stickRef}
           variants={headerIn}
           initial={reduced ? false : "hidden"}
           animate="visible"
-          className="sticky z-40 -mx-(--container-padding) -mt-5 px-(--container-padding) py-3 transition-[top] duration-300 ease-out-soft md:mx-0 md:px-0 lg:-mt-10"
-          style={{ top: stuck && headerBottom > 0 ? headerBottom : 12 }}
+          className="-mx-(--container-padding) -mt-5 px-(--container-padding) py-3 md:mx-0 md:px-0 lg:-mt-10"
         >
-          <div
-            className={cn(
-              "flex gap-2 overflow-x-auto rounded-pill scrollbar-none transition-[background-color,padding,box-shadow] duration-300 ease-out-soft md:flex-wrap md:gap-4 md:overflow-visible",
-              stuck && "bg-black/80 p-1.5 shadow-soft-lg ring-1 ring-white/10 backdrop-blur-md",
-            )}
-          >
+          <div className="flex gap-2 overflow-x-auto scrollbar-none md:flex-wrap md:gap-4 md:overflow-visible">
             {filters.map(({ value: cat, label }) => (
               <motion.button
                 variants={lineIn}
