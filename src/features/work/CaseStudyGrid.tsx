@@ -11,12 +11,52 @@ import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
 import { ProjectTypeTag } from "./ProjectTypeTag";
 import { inProjectType } from "@/lib/cms/projectType";
-import { motion, useInView, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll, useTransform, type MotionValue, type Variants } from "framer-motion";
 import { EASE_LUXE } from "@/components/motion";
+import { ViewListIcon } from "@/components/icons/ViewListIcon";
+import { ViewGridIcon } from "@/components/icons/ViewGridIcon";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
-const PAGE_SIZE = 3;
+/** Projects loaded per step: about one screenful in each view. */
+const PAGE_SIZE = { list: 3, grid: 6 } as const;
+
+type View = keyof typeof PAGE_SIZE;
+/** Each visitor's last choice of view (a convenience; defaults to list). */
+const VIEW_KEY = "md:case-studies-view";
+
+/** The cover shown for a project: the CMS list cover, the bundled mockup, or
+ *  the main cover, with its mime so videos play. */
+function coverOf(cs: CaseStudy) {
+  const listSrc = strapiMedia(cs.listCover?.url);
+  const bundledSrc = listSrc ? undefined : listCover(cs.slug);
+  const src = listSrc ?? bundledSrc ?? strapiMedia(cs.cover?.url);
+  // Either CMS field may hold a video; the bundled covers are always images.
+  const mime = listSrc ? cs.listCover?.mime : bundledSrc ? null : cs.cover?.mime;
+  return { src, mime };
+}
+
+/** The cover inside its zoom layers; fills its (relative) parent. */
+function CoverPicture({ cs, drift }: { cs: CaseStudy; drift?: MotionValue<string> }) {
+  const { src, mime } = coverOf(cs);
+  return (
+    // Parallax drift (scroll) → entry zoom → hover zoom, one layer each.
+    <motion.div className={drift ? "absolute inset-x-0 -inset-y-1/12" : "absolute inset-0"} style={drift ? { y: drift } : undefined}>
+      <motion.div variants={pictureIn} className="absolute inset-0">
+        <div className="absolute inset-0 transition-transform duration-700 ease-out-soft group-hover:scale-104">
+          {src && isVideo(src, mime) ? (
+            <Media src={src} mime={mime} alt={cs.title} className="object-cover" />
+          ) : src ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={src} alt={cs.cover?.alternativeText ?? cs.title} className="absolute inset-0 size-full object-cover" />
+          ) : (
+            <div className="absolute inset-0 bg-img-placeholder" />
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 /** Filter chips, in order — Strapi `category` value and the label shown. */
 const FILTERS = [
@@ -68,11 +108,6 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const drift = useTransform(scrollYProgress, [0, 1], reduced ? ["0%", "0%"] : ["-6%", "6%"]);
   const state = reduced || inView ? "visible" : "hidden";
-  const listSrc = strapiMedia(cs.listCover?.url);
-  const bundledSrc = listSrc ? undefined : listCover(cs.slug);
-  const coverSrc = listSrc ?? bundledSrc ?? strapiMedia(cs.cover?.url);
-  // Either CMS field may hold a video; the bundled covers are always images.
-  const coverMime = listSrc ? cs.listCover?.mime : bundledSrc ? null : cs.cover?.mime;
   const logoSrc = strapiMedia(cs.logo?.url);
 
   return (
@@ -116,28 +151,83 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
 
       {/* Cover image — always 940:580; the info panel stretches to its height */}
       <motion.div variants={coverIn} className="relative aspect-case-cover w-full overflow-hidden lg:w-auto lg:flex-1">
-        {/* Parallax drift (scroll) → entry zoom → hover zoom, one layer each. */}
-        <motion.div className="absolute inset-x-0 -inset-y-1/12" style={{ y: drift }}>
-        <motion.div variants={pictureIn} className="absolute inset-0">
-        <div className="absolute inset-0 transition-transform duration-700 ease-out-soft group-hover:scale-104">
-        {coverSrc && isVideo(coverSrc, coverMime) ? (
-          <Media src={coverSrc} mime={coverMime} alt={cs.title} className="object-cover" />
-        ) : coverSrc ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={coverSrc}
-            alt={cs.cover?.alternativeText ?? cs.title}
-            className="absolute inset-0 size-full object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-img-placeholder" />
-        )}
-        </div>
-        </motion.div>
-        </motion.div>
+        <CoverPicture cs={cs} drift={drift} />
       </motion.div>
 
     </MotionLink>
+  );
+}
+
+/** Grid view card: cover on top, then logo, title, type and a two-line summary. */
+function CaseStudyCard({ cs }: { cs: CaseStudy & { id: number } }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const reduced = useReducedMotion();
+  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const state = reduced || inView ? "visible" : "hidden";
+  const logoSrc = strapiMedia(cs.logo?.url);
+
+  return (
+    <MotionLink
+      ref={ref}
+      href={`/case-studies/${cs.slug}`}
+      className="group flex h-full flex-col overflow-hidden rounded-2xs bg-white"
+      variants={rowIn}
+      initial={reduced ? false : "hidden"}
+      animate={state}
+    >
+      <motion.div variants={coverIn} className="relative aspect-case-cover w-full overflow-hidden">
+        <CoverPicture cs={cs} />
+      </motion.div>
+      <div className="flex flex-1 flex-col gap-3 p-6">
+        <motion.div variants={lineIn} className="h-10">
+          {logoSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoSrc} alt={cs.logo?.alternativeText ?? cs.client} className="h-full max-w-36 object-contain object-left" />
+          ) : (
+            <span className="text-sm font-medium text-space-grey">{cs.client}</span>
+          )}
+        </motion.div>
+        <motion.h3 variants={lineIn} className="line-clamp-2 text-xl font-bold text-black text-balance">
+          {cs.title}
+        </motion.h3>
+        <motion.div variants={lineIn}>
+          <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} className="text-black" />
+        </motion.div>
+        {cs.excerpt && (
+          // Two lines in every card so the row's cards line up.
+          <motion.p variants={lineIn} className="line-clamp-2 text-base text-space-grey text-balance">
+            {cs.excerpt}
+          </motion.p>
+        )}
+      </div>
+    </MotionLink>
+  );
+}
+
+/** List / grid switch at the end of the filter row. */
+function ViewToggle({ view, onChange }: { view: View; onChange: (v: View) => void }) {
+  const options = [
+    { value: "list" as const, label: "List view", Icon: ViewListIcon },
+    { value: "grid" as const, label: "Grid view", Icon: ViewGridIcon },
+  ];
+  return (
+    <div role="group" aria-label="Project layout" className="ml-auto hidden shrink-0 items-center gap-1 rounded-pill border border-grey-200 p-1 md:flex">
+      {options.map(({ value, label, Icon }) => (
+        <button
+          key={value}
+          type="button"
+          aria-label={label}
+          aria-pressed={view === value}
+          onClick={() => onChange(value)}
+          className={cn(
+            "flex size-10 items-center justify-center rounded-full transition-colors",
+            view === value ? "bg-yellow text-black" : "text-grey-200 hover:text-white",
+          )}
+        >
+          <Icon size={18} />
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -155,7 +245,8 @@ export function CaseStudyGrid({
   description = "We don't just promise results. We prove them. These case studies show how we've helped businesses launch, grow, and succeed.",
 }: CaseStudyGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [view, setView] = useState<View>("list");
+  const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE.list);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
 
@@ -182,15 +273,32 @@ export function CaseStudyGrid({
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
+  // Open in the view this visitor picked last time.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(VIEW_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (saved === "grid" || saved === "list") setView(saved);
+    } catch {}
+  }, []);
+  const changeView = (v: View) => {
+    setView(v);
+    setVisibleCount((n) => Math.max(n, PAGE_SIZE[v]));
+    try {
+      localStorage.setItem(VIEW_KEY, v);
+    } catch {}
+  };
+
   // Reset visible count on filter change
   useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
+    setVisibleCount(PAGE_SIZE[view]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
 
   // Infinite scroll via IntersectionObserver
   const loadMore = useCallback(() => {
-    setVisibleCount((n) => n + PAGE_SIZE);
-  }, []);
+    setVisibleCount((n) => n + PAGE_SIZE[view]);
+  }, [view]);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -252,16 +360,25 @@ export function CaseStudyGrid({
                 {label}
               </motion.button>
             ))}
+            <ViewToggle view={view} onChange={changeView} />
           </div>
         )}
         </motion.div>
 
-        {/* Rows */}
-        <div className="flex flex-col gap-[60px]">
-          {visible.map((cs) => (
-            <CaseStudyRow key={cs.id} cs={cs} />
-          ))}
-        </div>
+        {/* Rows, or a three-up grid of cards */}
+        {view === "grid" ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            {visible.map((cs) => (
+              <CaseStudyCard key={cs.id} cs={cs} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-[60px]">
+            {visible.map((cs) => (
+              <CaseStudyRow key={cs.id} cs={cs} />
+            ))}
+          </div>
+        )}
 
         {/* Infinite scroll sentinel */}
         <div ref={sentinelRef} className="h-1" aria-hidden />

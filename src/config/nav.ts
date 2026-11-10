@@ -117,7 +117,7 @@ export const SERVICES: {
   },
   {
     slug: "custom",
-    title: "Custom Platform",
+    title: "Software",
     subtitle: "Design & Development",
     footerLabel: "Custom Web Apps Development",
     shortLabel: "Software",
