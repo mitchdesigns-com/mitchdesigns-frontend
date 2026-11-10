@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { Fragment, useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
@@ -11,6 +11,8 @@ import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
 import { ProjectTypeTag } from "./ProjectTypeTag";
 import { inProjectType } from "@/lib/cms/projectType";
+import { motion, useInView, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { EASE_LUXE } from "@/components/motion";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -25,9 +27,47 @@ const FILTERS = [
   { value: "Software", label: "Software" },
 ] as const;
 
+// ── motion ─────────────────────────────────────────────────────────────────
+
+const MotionLink = motion.create(Link);
+
+/** Row rises in; its children (info lines, cover) run off the same trigger. */
+const rowIn: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: EASE_LUXE, staggerChildren: 0.08, delayChildren: 0.2 } },
+};
+const lineIn: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_LUXE } },
+};
+/** Cover opens like a curtain from the bottom… */
+const coverIn: Variants = {
+  hidden: { clipPath: "inset(100% 0% 0% 0%)" },
+  visible: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 1.1, ease: EASE_LUXE, delay: 0.1 } },
+};
+/** …while the picture inside settles from a zoom. */
+const pictureIn: Variants = {
+  hidden: { scale: 1.3 },
+  visible: { scale: 1, transition: { duration: 1.5, ease: EASE_LUXE, delay: 0.1 } },
+};
+
+/** Header: title words rise out of a mask, then the copy and chips follow. */
+const headerIn: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
+const wordIn: Variants = {
+  hidden: { y: "110%" },
+  visible: { y: "0%", transition: { duration: 0.9, ease: EASE_LUXE } },
+};
+
 // ── sub-components ─────────────────────────────────────────────────────────
 
 function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const reduced = useReducedMotion();
+  const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
+  // Gentle parallax on the cover while the row crosses the screen.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const drift = useTransform(scrollYProgress, [0, 1], reduced ? ["0%", "0%"] : ["-6%", "6%"]);
+  const state = reduced || inView ? "visible" : "hidden";
   const listSrc = strapiMedia(cs.listCover?.url);
   const bundledSrc = listSrc ? undefined : listCover(cs.slug);
   const coverSrc = listSrc ?? bundledSrc ?? strapiMedia(cs.cover?.url);
@@ -36,14 +76,18 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
   const logoSrc = strapiMedia(cs.logo?.url);
 
   return (
-    <Link
+    <MotionLink
+      ref={ref}
       href={`/case-studies/${cs.slug}`}
-      className="flex w-full flex-col overflow-hidden rounded-2xs lg:flex-row"
+      className="group flex w-full flex-col overflow-hidden rounded-2xs lg:flex-row"
+      variants={rowIn}
+      initial={reduced ? false : "hidden"}
+      animate={state}
     >
       {/* Left — info panel: logo + title grouped at the top */}
       <div className="flex w-full shrink-0 flex-col gap-5 bg-white p-6 lg:w-[30%]">
         {/* Logo */}
-        <div className="h-26 w-full">
+        <motion.div variants={lineIn} className="h-26 w-full">
           {logoSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -54,22 +98,28 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
           ) : (
             <span className="text-sm font-medium text-space-grey">{cs.client}</span>
           )}
-        </div>
+        </motion.div>
 
         {/* Title, type label + short summary of scope, challenge and what we did (CMS `excerpt`) */}
         <div className="flex flex-col gap-3">
-          <h3 className="whitespace-pre-line text-hero-5 text-black text-balance">
+          <motion.h3 variants={lineIn} className="whitespace-pre-line text-hero-5 text-black text-balance">
             {cs.title}
-          </h3>
-          <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} className="text-black" />
+          </motion.h3>
+          <motion.div variants={lineIn}>
+            <ProjectTypeTag type={cs.category} subcategory={cs.subcategory} className="text-black" />
+          </motion.div>
           {cs.excerpt && (
-            <p className="text-base text-space-grey text-balance lg:text-lg">{cs.excerpt}</p>
+            <motion.p variants={lineIn} className="text-base text-space-grey text-balance lg:text-lg">{cs.excerpt}</motion.p>
           )}
         </div>
       </div>
 
       {/* Cover image — always 940:580; the info panel stretches to its height */}
-      <div className="relative aspect-case-cover w-full overflow-hidden lg:w-auto lg:flex-1">
+      <motion.div variants={coverIn} className="relative aspect-case-cover w-full overflow-hidden lg:w-auto lg:flex-1">
+        {/* Parallax drift (scroll) → entry zoom → hover zoom, one layer each. */}
+        <motion.div className="absolute inset-x-0 -inset-y-1/12" style={{ y: drift }}>
+        <motion.div variants={pictureIn} className="absolute inset-0">
+        <div className="absolute inset-0 transition-transform duration-700 ease-out-soft group-hover:scale-104">
         {coverSrc && isVideo(coverSrc, coverMime) ? (
           <Media src={coverSrc} mime={coverMime} alt={cs.title} className="object-cover" />
         ) : coverSrc ? (
@@ -82,9 +132,12 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         ) : (
           <div className="absolute inset-0 bg-img-placeholder" />
         )}
-      </div>
+        </div>
+        </motion.div>
+        </motion.div>
+      </motion.div>
 
-    </Link>
+    </MotionLink>
   );
 }
 
@@ -104,6 +157,7 @@ export function CaseStudyGrid({
   const [activeCategory, setActiveCategory] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
 
   // A chip only shows while at least one project sits under it.
   const filters = FILTERS.filter(
@@ -155,10 +209,26 @@ export function CaseStudyGrid({
     <Section theme="dark" className="pt-32 pb-25 lg:py-25">
       <div className="flex flex-col gap-10 lg:gap-[60px]">
         {/* Header + category chips, kept close together */}
-        <div className="flex flex-col gap-5">
+        <motion.div
+          className="flex flex-col gap-5"
+          variants={headerIn}
+          initial={reduced ? false : "hidden"}
+          animate="visible"
+        >
         <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
-          <h1 className="text-hero-3 text-white md:text-hero-2 lg:text-hero-1">{title}</h1>
-          <p className="max-w-full text-lg text-white text-balance lg:max-w-[37%] lg:text-xl">{description}</p>
+          <h1 className="text-hero-3 text-white md:text-hero-2 lg:text-hero-1">
+            {title.split(" ").map((word, i, all) => (
+              <Fragment key={i}>
+                <span className="inline-block overflow-hidden pb-1 align-bottom">
+                  <motion.span variants={wordIn} className="inline-block">
+                    {word}
+                  </motion.span>
+                </span>
+                {i < all.length - 1 && " "}
+              </Fragment>
+            ))}
+          </h1>
+          <motion.p variants={lineIn} className="max-w-full text-lg text-white text-balance lg:max-w-[37%] lg:text-xl">{description}</motion.p>
         </div>
 
         {/* Category filter — derived from the data */}
@@ -167,7 +237,8 @@ export function CaseStudyGrid({
           // Sticky: pins to the top while the list scrolls, released at its end.
           <div className="sticky top-0 z-40 -mx-(--container-padding) flex gap-2 overflow-x-auto bg-bg px-(--container-padding) py-4 scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
             {filters.map(({ value: cat, label }) => (
-              <button
+              <motion.button
+                variants={lineIn}
                 key={cat}
                 type="button"
                 onClick={() => setActiveCategory(cat)}
@@ -179,11 +250,11 @@ export function CaseStudyGrid({
                 )}
               >
                 {label}
-              </button>
+              </motion.button>
             ))}
           </div>
         )}
-        </div>
+        </motion.div>
 
         {/* Rows */}
         <div className="flex flex-col gap-[60px]">
