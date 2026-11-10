@@ -72,10 +72,10 @@ function InkWord({ word, p, from, to }: { word: Word; p: MotionValue<number>; fr
 }
 
 const STORY_PHOTOS = [
-  { url: "/images/studio/about/story-1.webp", alt: "The MitchDesigns studio" },
-  { url: "/images/studio/about/story-2.webp", alt: "Building a website across laptop and screens" },
-  { url: "/images/studio/about/story-3.webp", alt: "A MitchDesigns strategist presenting campaign results to the team" },
-  { url: "/images/studio/about/story-4.webp", alt: "Working on a booking dashboard built by MitchDesigns" },
+  { url: "/images/studio/about/story-1.webp", alt: "Two MitchDesigns developers focused at their desks" },
+  { url: "/images/studio/about/story-2.webp", alt: "Reviewing campaign billing and analytics on a tablet" },
+  { url: "/images/studio/about/story-3.webp", alt: "MitchDesigns team members chatting on the studio balcony" },
+  { url: "/images/studio/about/story-4.webp", alt: "Marking up an analytics report with a stylus" },
 ];
 
 type Photo = { url: string; alt: string };

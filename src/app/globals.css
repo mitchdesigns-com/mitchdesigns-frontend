@@ -198,6 +198,10 @@
   --text-blog-quote: 2.5rem;           /* 40px blockquote */
   --text-blog-quote--line-height: 1.2;
   --text-blog-quote--font-weight: 700;
+  /* case-study testimonial — long client reviews, 20px → 28px */
+  --text-case-quote: clamp(1.25rem, 0.9rem + 1.1vw, 1.75rem);
+  --text-case-quote--line-height: 1.45;
+  --text-case-quote--font-weight: 500;
   --text-code-inline: 0.85em;          /* inline <code> — relative to parent */
   --text-lg--line-height: 1.3;
   --text-base: 1rem; /* 16px */
