@@ -11,7 +11,7 @@ import { listCover } from "./listCovers";
 import { Media, isVideo } from "@/components/ui/Media";
 import { ProjectTypeTag } from "./ProjectTypeTag";
 import { inProjectType } from "@/lib/cms/projectType";
-import { motion, useInView, useReducedMotion, useScroll, useTransform, type MotionValue, type Variants } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform, type MotionValue, type Variants } from "framer-motion";
 import { EASE_LUXE } from "@/components/motion";
 import { ViewListIcon } from "@/components/icons/ViewListIcon";
 import { ViewGridIcon } from "@/components/icons/ViewGridIcon";
@@ -204,29 +204,52 @@ function CaseStudyCard({ cs }: { cs: CaseStudy & { id: number } }) {
   );
 }
 
-/** List / grid switch at the end of the filter row. */
+/** List / grid switch at the end of the filter row. The yellow circle
+ *  shrinks away from the old choice and springs up behind the new one. */
 function ViewToggle({ view, onChange }: { view: View; onChange: (v: View) => void }) {
+  const reduced = useReducedMotion();
   const options = [
     { value: "list" as const, label: "List view", Icon: ViewListIcon },
     { value: "grid" as const, label: "Grid view", Icon: ViewGridIcon },
   ];
   return (
     <div role="group" aria-label="Project layout" className="ml-auto hidden shrink-0 items-center gap-1 rounded-pill border border-grey-200 p-1 md:flex">
-      {options.map(({ value, label, Icon }) => (
-        <button
-          key={value}
-          type="button"
-          aria-label={label}
-          aria-pressed={view === value}
-          onClick={() => onChange(value)}
-          className={cn(
-            "flex size-10 items-center justify-center rounded-full transition-colors",
-            view === value ? "bg-yellow text-black" : "text-grey-200 hover:text-white",
-          )}
-        >
-          <Icon size={18} />
-        </button>
-      ))}
+      {options.map(({ value, label, Icon }) => {
+        const on = view === value;
+        return (
+          <button
+            key={value}
+            type="button"
+            aria-label={label}
+            aria-pressed={on}
+            onClick={() => onChange(value)}
+            className={cn(
+              "relative flex size-10 items-center justify-center rounded-full transition-colors duration-300",
+              on ? "text-black" : "text-grey-200 hover:text-white",
+            )}
+          >
+            <AnimatePresence initial={false}>
+              {on && (
+                <motion.span
+                  aria-hidden
+                  className="absolute inset-0 rounded-full bg-yellow"
+                  initial={reduced ? { opacity: 0 } : { scale: 0 }}
+                  animate={reduced ? { opacity: 1 } : { scale: 1 }}
+                  exit={reduced ? { opacity: 0 } : { scale: 0, transition: { duration: 0.2, ease: "easeIn" } }}
+                  transition={{ type: "spring", stiffness: 420, damping: 22 }}
+                />
+              )}
+            </AnimatePresence>
+            <motion.span
+              className="relative"
+              animate={on && !reduced ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            >
+              <Icon size={18} />
+            </motion.span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -249,6 +272,45 @@ export function CaseStudyGrid({
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE.list);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+
+  // The filter row floats as a blurred dark pill once it sticks to the top
+  // (like the service switcher), sitting just under the header when it shows.
+  const stickRef = useRef<HTMLDivElement>(null);
+  const [stuck, setStuck] = useState(false);
+  const [headerBottom, setHeaderBottom] = useState(0);
+  useEffect(() => {
+    const el = stickRef.current;
+    if (!el) return;
+    // Stuck = sitting at its sticky offset rather than in the page flow.
+    const check = () => {
+      const top = el.getBoundingClientRect().top;
+      setStuck(window.scrollY > 0 && top <= parseFloat(getComputedStyle(el).top) + 1);
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    return () => {
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, []);
+  useEffect(() => {
+    if (!stuck) return;
+    // Follow the header's own slide in/out frame by frame.
+    const header = document.querySelector("header");
+    let raf = 0;
+    let last = -1;
+    const loop = () => {
+      const bottom = Math.max(0, Math.round(header?.getBoundingClientRect().bottom ?? 0));
+      if (bottom !== last) {
+        last = bottom;
+        setHeaderBottom(bottom);
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [stuck]);
 
   // A chip only shows while at least one project sits under it.
   const filters = FILTERS.filter(
@@ -339,11 +401,25 @@ export function CaseStudyGrid({
           <motion.p variants={lineIn} className="max-w-full text-lg text-white text-balance lg:max-w-[37%] lg:text-xl">{description}</motion.p>
         </div>
 
-        {/* Category filter — derived from the data */}
-        {(
-          // Phones: one row that scrolls sideways (like the service switcher).
-          // Sticky: pins to the top while the list scrolls, released at its end.
-          <div className="sticky top-0 z-40 -mx-(--container-padding) flex gap-2 overflow-x-auto bg-bg px-(--container-padding) py-4 scrollbar-none md:mx-0 md:flex-wrap md:gap-4 md:overflow-visible md:px-0">
+        </motion.div>
+
+        {/* Category filter (derived from the data) + view toggle.
+            Phones: one row that scrolls sideways (like the service switcher).
+            Sticky: once it reaches the top it floats as a blurred dark pill. */}
+        <motion.div
+          ref={stickRef}
+          variants={headerIn}
+          initial={reduced ? false : "hidden"}
+          animate="visible"
+          className="sticky z-40 -mx-(--container-padding) -mt-5 px-(--container-padding) py-3 transition-[top] duration-300 ease-out-soft md:mx-0 md:px-0 lg:-mt-10"
+          style={{ top: stuck && headerBottom > 0 ? headerBottom : 12 }}
+        >
+          <div
+            className={cn(
+              "flex gap-2 overflow-x-auto rounded-pill scrollbar-none transition-[background-color,padding,box-shadow] duration-300 ease-out-soft md:flex-wrap md:gap-4 md:overflow-visible",
+              stuck && "bg-black/80 p-1.5 shadow-soft-lg ring-1 ring-white/10 backdrop-blur-md",
+            )}
+          >
             {filters.map(({ value: cat, label }) => (
               <motion.button
                 variants={lineIn}
@@ -362,7 +438,6 @@ export function CaseStudyGrid({
             ))}
             <ViewToggle view={view} onChange={changeView} />
           </div>
-        )}
         </motion.div>
 
         {/* Rows, or a three-up grid of cards */}

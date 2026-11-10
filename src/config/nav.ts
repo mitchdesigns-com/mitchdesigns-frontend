@@ -131,7 +131,7 @@ export const SERVICES: {
   },
   {
     slug: "seo",
-    title: "Get Found on Google & AI",
+    title: "SEO & AEO",
     subtitle: "SEO / AEO",
     footerLabel: "SEO & AEO",
     shortLabel: "SEO & AEO",
