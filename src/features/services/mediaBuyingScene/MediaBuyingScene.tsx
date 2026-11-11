@@ -24,10 +24,21 @@ const H = 460;
 type Widget = { key: string; src: string; x: number; y: number; w: number; alt: string };
 
 const dir = "/images/media-buying/";
+/** Space between every pair of neighbouring cards (board units). */
+const GAP = 16;
+/** Card sizes, from the exports' viewBoxes. */
+const CAT = { w: 352, h: 179 };
+const SEG = { w: 352, h: 178 };
+const GEO = { w: 356, h: 385 };
+// Two stacked cards on the left, the map on the right, the whole group
+// centred on the board; the left stack is centred against the map.
+const LEFT = (W - (CAT.w + GAP + GEO.w)) / 2;
+const GEO_TOP = (H - GEO.h) / 2;
+const STACK_TOP = GEO_TOP + (GEO.h - (CAT.h + GAP + SEG.h)) / 2;
 const WIDGETS: Widget[] = [
-  { key: "categories", src: `${dir}Widgets [Marketing & Sales] 3.svg`, x: 62, y: 48, w: 352, alt: "Product categories widget: 58% of goal" },
-  { key: "segments", src: `${dir}Widgets [Marketing & Sales] 2.svg`, x: 47, y: 243, w: 352, alt: "Customer segments donut chart" },
-  { key: "geo", src: `${dir}Widgets [Marketing & Sales] [1.1].svg`, x: 414, y: 33, w: 356, alt: "Audience geography map, focused on Egypt" },
+  { key: "categories", src: `${dir}Widgets [Marketing & Sales] 3.svg`, x: LEFT, y: STACK_TOP, w: CAT.w, alt: "Product categories widget: 58% of goal" },
+  { key: "segments", src: `${dir}Widgets [Marketing & Sales] 2.svg`, x: LEFT, y: STACK_TOP + CAT.h + GAP, w: SEG.w, alt: "Customer segments donut chart" },
+  { key: "geo", src: `${dir}Widgets [Marketing & Sales] [1.1].svg`, x: LEFT + CAT.w + GAP, y: GEO_TOP, w: GEO.w, alt: "Audience geography map, focused on Egypt" },
 ];
 
 const shot = cameraShot(W, H);
