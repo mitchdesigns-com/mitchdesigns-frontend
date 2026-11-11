@@ -319,7 +319,8 @@ export function ServicePageRenderer({
       return (
         <>
           {/* Our organic-clicks widget, animated (front-end only). */}
-          <ServiceHero {...hero} switcher={switcher} scene={<SeoScene />} />
+          {/* Full hero height like media buying, so the camera never crops. */}
+          <ServiceHero {...hero} switcher={switcher} scene={<SeoScene />} bleedScene sceneUnderCopy />
           {numbers && <NumbersSection {...numbers} />}
           {/* As on the other service pages: the scroll-written "We Got You"
               scene instead of the prototype shot, brief quote and old card. */}

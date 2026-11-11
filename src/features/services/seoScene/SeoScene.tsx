@@ -24,7 +24,14 @@ const CARD = { x: 60, y: 70, w: 700, h: 294 };
 /** The card's resting tilt (deg). */
 const TILT = -3;
 const shot = cameraShot(W, H);
-const OVERVIEW = shot(W / 2, H / 2, 1);
+/** Close-ups zoom in this far at most, and only while the card still fits. */
+const ZOOM = 1.45;
+/** Share of the stage the card may fill in a close-up. */
+const FIT = 0.92;
+/** The overview sits this far back from the close-ups, so they still read as zooming in. */
+const PULL_BACK = 0.8;
+/** Room for the tilt and the sway around the card (board units). */
+const SWAY = { x: 40, y: 60 };
 /** Card-local x → board point, for the camera to follow the line. */
 const onCard = (x: number, y: number) => ({ x: CARD.x + x, y: CARD.y + y });
 
@@ -75,6 +82,27 @@ export function SeoScene() {
     };
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // Every shot keeps the whole card on the stage: the zoom stops where the
+    // card still fits, and the camera only pans as far as the card's edges.
+    const board = camera.current;
+    const box = stage.current;
+    const unit = board && box ? W / board.offsetWidth : 1; // board units per pixel
+    const boxW = box ? box.clientWidth * unit : W;
+    const boxH = box ? box.clientHeight * unit : H;
+    const left = CARD.x - SWAY.x;
+    const right = CARD.x + CARD.w + SWAY.x;
+    const top = CARD.y - SWAY.y;
+    const bottom = CARD.y + CARD.h + SWAY.y;
+    const fit = Math.min((FIT * boxW) / (right - left), (FIT * boxH) / (bottom - top));
+    const clamp = (v: number, a: number, b: number) => (a > b ? (a + b) / 2 : Math.min(b, Math.max(a, v)));
+    const fitShot = (cx: number, cy: number, zoom: number) => {
+      const s = Math.min(zoom, fit);
+      const halfW = boxW / (2 * s);
+      const halfH = boxH / (2 * s);
+      return shot(clamp(cx, right - halfW, left + halfW), clamp(cy, bottom - halfH, top + halfH), s);
+    };
+    const OVERVIEW = fitShot(W / 2, H / 2, Math.min(1, fit) * PULL_BACK);
+
     const ctx = gsap.context(() => {
       gsap.set(camera.current, { ...OVERVIEW, transformOrigin: "0 0" });
       gsap.set(card.current, { transformPerspective: 900, rotation: TILT });
@@ -105,9 +133,9 @@ export function SeoScene() {
 
       // 1 — Close in on the start of the week, then follow the line as it draws.
       loop
-        .to(camera.current, { ...shot(start.x, start.y, 1.45), duration: 0.9 }, 0.6)
+        .to(camera.current, { ...fitShot(start.x, start.y, ZOOM), duration: 0.9 }, 0.6)
         .to(line, { strokeDashoffset: 0, duration: DRAW, ease: "none" }, 1.5)
-        .to(camera.current, { ...shot(end.x, end.y, 1.45), duration: DRAW, ease: "none" }, 1.5)
+        .to(camera.current, { ...fitShot(end.x, end.y, ZOOM), duration: DRAW, ease: "none" }, 1.5)
         .fromTo(dot1, { opacity: 1, scale: 0, svgOrigin: `${PEAK.x} ${PEAK.y}` }, { scale: 1, svgOrigin: `${PEAK.x} ${PEAK.y}`, duration: 0.45, ease: "back.out(3)", immediateRender: false }, 1.5 + DRAW * PEAK.at)
         .fromTo(tip1, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(2)", immediateRender: false }, 1.6 + DRAW * PEAK.at)
         .fromTo(dot2, { opacity: 1, scale: 0, svgOrigin: `${DIP.x} ${DIP.y}` }, { scale: 1, svgOrigin: `${DIP.x} ${DIP.y}`, duration: 0.45, ease: "back.out(3)", immediateRender: false }, 1.5 + DRAW * DIP.at)
@@ -117,7 +145,7 @@ export function SeoScene() {
       const head = onCard(120, 50);
       loop
         .add("total", 1.5 + DRAW + 0.2)
-        .to(camera.current, { ...shot(head.x + 60, head.y + 40, 1.45), duration: 0.8 }, "total")
+        .to(camera.current, { ...fitShot(head.x + 60, head.y + 40, ZOOM), duration: 0.8 }, "total")
         .to(counter, { value: TOTAL, duration: 1.4, ease: "power2.out", onUpdate: show }, "total+=0.4")
         .fromTo(badge, { opacity: 0, scale: 0.4, svgOrigin: "125 56" }, { opacity: 1, scale: 1, svgOrigin: "125 56", duration: 0.5, ease: "back.out(3)", immediateRender: false }, "total+=1.6");
 
