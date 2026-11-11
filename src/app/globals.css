@@ -103,6 +103,8 @@
   --text-roas--line-height: 1;
   --text-roas-phone: 14vw;
   --text-roas-phone--line-height: 1;
+  --text-2xs: 0.625rem; /* 10px — tiny labels inside coded phone mockups */
+  --text-2xs--line-height: 1.2;
   --text-hero-1: 5.75rem; /* 92px */
   --text-hero-1--line-height: 1.1;
   --text-hero-1--font-weight: 900;

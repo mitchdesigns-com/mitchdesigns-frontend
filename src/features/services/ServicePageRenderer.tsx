@@ -14,6 +14,7 @@ import { EcommerceReel } from "./ecommerceReel/EcommerceReel";
 import { MediaBuyingScene } from "./mediaBuyingScene/MediaBuyingScene";
 import { GoogleAdsScene } from "./googleAdsScene/GoogleAdsScene";
 import { SeoScene } from "./seoScene/SeoScene";
+import { SearchShowcase } from "./seoScene/SearchShowcase";
 import { TabletVideoSection } from "./googleAdsScene/TabletVideoSection";
 import { MacbookVideoSection } from "./mediaBuyingScene/MacbookVideoSection";
 import { workStepSummary } from "./sections/workSteps";
@@ -331,6 +332,11 @@ export function ServicePageRenderer({
               cta={{ label: weGotYou.cta?.label ?? SITE_SETTINGS_FALLBACK.primaryCta.label, href: leadsUrl(slug) }}
             />
           )}
+          {/* SEO for Google, then AEO for AI answers, each on a coded phone
+              (CMS `designsAdapt`: heading plus one card per engine). */}
+          {designsAdapt?.cards?.length ? <SearchShowcase {...designsAdapt} /> : null}
+          {/* "What we do exactly", the corporate work-steps scroll. */}
+          {process && <WorkSteps process={process} />}
           {whyUs && <WhyUsSection {...whyUs} />}
           <TestimonialMarqueeFetcher />
           {serviceFaqs.length > 0 && <FAQSection faqs={serviceFaqs} categories={[]} />}
