@@ -13,14 +13,14 @@ Mirrors the Figma V10 page set. Route groups in parentheses are App Router segme
 - `/case-studies/[slug]` — Single Case Study (e.g. El Gouna)
 - `/careers` — Careers index
 - `/careers/[slug]` — Single Career
-- `/services/[service]` — Service lander
-  - corporate-website
+- `/services/[service]` — Service lander (slugs come from Strapi `our-services`)
+  - corporate
   - mobile-app
   - ecommerce
-  - custom-platform
+  - custom
   - media-buying
   - seo
-  - google-ads
+  - google-ads — merged into media-buying (`MERGED_SERVICES` in `src/config/nav.ts`), kept as a 301
 
 ## Quote funnel — `(funnel)` group
 
@@ -39,7 +39,13 @@ Mirrors the Figma V10 page set. Route groups in parentheses are App Router segme
 
 - `/404` (not-found)
 
-## Footer-only / legal (to add)
+## Footer-only / legal
 
 - `/privacy`
 - `/terms`
+
+## Legacy URLs
+
+Redirects for the previous site and its WordPress-era URLs live in
+`next.config.ts` (`LEGACY_TALK_SLUGS`, `PAGE_MOVES`, and the wildcards below
+them). Add a rule there, not a page, when an old URL needs to resolve.

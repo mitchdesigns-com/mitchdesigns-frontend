@@ -23,6 +23,7 @@ import {
   leadsUrl,
   type ServiceSlug,
 } from "@/config/nav";
+import { SITE_URL } from "@/config/site";
 
 const SERVICE_SLUGS = NAV_SERVICES.map((s) => s.slug);
 
@@ -131,9 +132,9 @@ export default async function ServicePage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://mitchdesigns.com" },
-      { "@type": "ListItem", position: 2, name: "Services", item: "https://mitchdesigns.com/services" },
-      { "@type": "ListItem", position: 3, name: title, item: `https://mitchdesigns.com/services/${service}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` },
+      { "@type": "ListItem", position: 3, name: title, item: `${SITE_URL}/services/${service}` },
     ],
   };
 
@@ -145,10 +146,10 @@ export default async function ServicePage({
     provider: {
       "@type": "Organization",
       name: "MitchDesigns",
-      url: "https://mitchdesigns.com",
+      url: SITE_URL,
     },
     areaServed: { "@type": "Country", name: "Egypt" },
-    url: `https://mitchdesigns.com/services/${service}`,
+    url: `${SITE_URL}/services/${service}`,
   };
 
   return (

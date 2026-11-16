@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getCaseStudies, getServices, getTalks } from "@/lib/cms/queries";
 import { fixtureCaseStudies, fixtureServices, fixtureTalks } from "@/lib/cms/fixtures";
+import { SITE_URL } from "@/config/site";
 
-const BASE = "https://mitchdesigns.com";
+const BASE = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

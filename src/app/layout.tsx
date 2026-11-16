@@ -15,9 +15,9 @@ import type { SiteSettings } from "@/lib/cms/types";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 import { RouteProgress } from "@/components/layout/RouteProgress";
 import { LeadsLinkSource } from "@/components/layout/LeadsLinkSource";
+import { SITE_URL } from "@/config/site";
 // import { UserbackWidget } from "@/components/Userback";
 
-const SITE_URL = "https://mitchdesigns.com";
 const SITE_NAME = "MitchDesigns";
 const SITE_DESCRIPTION =
   "MitchDesigns is a website and mobile app design agency based in Egypt. We design, build, and grow premium digital products for ambitious brands across Egypt and the MENA region.";

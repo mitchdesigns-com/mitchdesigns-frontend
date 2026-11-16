@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { SITE_URL } from "@/config/site";
 
 export const dynamic = "force-static";
 
@@ -17,7 +18,7 @@ User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=no
 ${INDEXABLE ? "Allow: /" : "Disallow: /"}
 
-Sitemap: https://mitchdesigns.com/sitemap.xml
+Sitemap: ${SITE_URL}/sitemap.xml
 `;
 
 export function GET() {

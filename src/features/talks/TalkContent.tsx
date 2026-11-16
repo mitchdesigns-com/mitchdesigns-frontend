@@ -6,6 +6,7 @@ import { TocSidebar } from "./TocSidebar";
 import { BlockImage } from "./BlockImage";
 import { normalizeRichTextHref } from "@/lib/richTextHref";
 import { noOrphanInline } from "@/lib/noOrphan";
+import { SITE_URL } from "@/config/site";
 
 // ── Strapi Blocks types ────────────────────────────────────────────────────
 
@@ -389,7 +390,7 @@ export function TalkContent({
   toc = [],
   prev,
   next,
-  pageUrl = `https://mitchdesigns.com/talks/${talk.slug}`,
+  pageUrl = `${SITE_URL}/talks/${talk.slug}`,
 }: TalkContentProps) {
   return (
     <Section className="py-10">

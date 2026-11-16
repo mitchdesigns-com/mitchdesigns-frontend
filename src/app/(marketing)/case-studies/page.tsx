@@ -4,6 +4,7 @@ import { getCaseStudies, getCaseStudiesPage } from "@/lib/cms";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
 import { CaseStudyGrid } from "@/features/work";
+import { SITE_URL } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Case Studies | Websites & Apps We've Built",
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
     title: "Case Studies | Websites & Apps We've Built",
     description:
       "Browse MitchDesigns' portfolio, websites, mobile apps, and custom platforms built for top Egyptian and regional brands.",
-    url: "https://mitchdesigns.com/case-studies",
+    url: `${SITE_URL}/case-studies`,
   },
   alternates: { canonical: "/case-studies" },
 };
@@ -41,7 +42,7 @@ export default async function CaseStudiesIndexPage() {
     itemListElement: caseStudies.map((study, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `https://mitchdesigns.com/case-studies/${study.slug}`,
+      url: `${SITE_URL}/case-studies/${study.slug}`,
       name: study.title,
     })),
   };
