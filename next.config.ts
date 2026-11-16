@@ -165,7 +165,6 @@ const PAGE_MOVES: Record<string, string> = {
   // WordPress portfolio entries that map to surviving case studies
   "/portfolio/sally-helmy": "/case-studies/sally-helmy",
   "/portfolio/abu-auf": "/case-studies/abu-auf",
-  "/portfolio/abdelrahim-koueider": "/case-studies/kouider",
   "/egypt-foods": "/case-studies",
 };
 
