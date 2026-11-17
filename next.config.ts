@@ -73,6 +73,12 @@ const LEGACY_TALK_SLUGS = [
 // /feed/ variants that still get crawled.
 const LEGACY_TALK_ALIASES: Record<string, string> = {
   "/5-reasons-why-website-maintenance-is-vita": "5-reasons-why-website-maintenance-is-vital",
+  // Two malformed URLs Google has indexed (1 impression each, found in the
+  // Search Console export): a slug missing "in-", and one with a stray ")"
+  // from a broken markdown link. Both hit the /talks-.../:slug wildcard and
+  // landed on a 404, so point them at the posts they meant.
+  "/talks-website-design-and-development/how-to-maximize-your-sales-with-media-buying-2025": "how-to-maximize-your-sales-with-media-buying-in-2025",
+  "/talks-website-design-and-development/seasonal-media-buying-strategies-egypt-2025)": "seasonal-media-buying-strategies-egypt-2025",
   "/building-an-ecommerce-online-store-in-egypt/feed": "building-an-ecommerce-online-store-in-egypt",
   "/custom-website-design-vs-template-design/feed": "custom-website-design-vs-template-design",
   "/five-digital-marketing-channels-to-increase-sales": "digital-marketing-channels-to-increase-sales",
