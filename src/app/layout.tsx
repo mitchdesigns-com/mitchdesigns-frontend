@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { OPENAI_ADS_PIXEL_SNIPPET } from "@/config/tracking";
+import { GTM_NOSCRIPT_SRC, GTM_SNIPPET, OPENAI_ADS_PIXEL_SNIPPET } from "@/config/tracking";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -18,6 +18,8 @@ import { LeadsLinkSource } from "@/components/layout/LeadsLinkSource";
 import { SITE_URL } from "@/config/site";
 // import { UserbackWidget } from "@/components/Userback";
 
+// Production only: the same switch that opens indexing opens analytics.
+const ANALYTICS_ON = process.env.NEXT_PUBLIC_INDEXABLE === "true";
 const SITE_NAME = "MitchDesigns";
 const SITE_DESCRIPTION =
   "MitchDesigns is a website and mobile app design agency based in Egypt. We design, build, and grow premium digital products for ambitious brands across Egypt and the MENA region.";
@@ -113,6 +115,10 @@ export default async function RootLayout({
       <head>
         {/* ChatGPT Ads pixel: first in <head>, once per page. */}
         <script dangerouslySetInnerHTML={{ __html: OPENAI_ADS_PIXEL_SNIPPET }} />
+        {/* Google Tag Manager, as high in <head> as the pixel allows. Gated on
+            the same flag as indexability so staging and branch previews never
+            report into the production container. */}
+        {ANALYTICS_ON && <script dangerouslySetInnerHTML={{ __html: GTM_SNIPPET }} />}
         {/* Preload the LCP body/heading font so it isn't discovered late via CSS */}
         <link
           rel="preload"
@@ -123,6 +129,17 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-dvh antialiased">
+        {/* GTM's noscript fallback belongs immediately inside <body>. */}
+        {ANALYTICS_ON && (
+          <noscript>
+            <iframe
+              src={GTM_NOSCRIPT_SRC}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
         <RouteProgress />
         <JsonLd data={siteGraph} />
         <SiteSettingsProvider settings={settings}>{children}</SiteSettingsProvider>
