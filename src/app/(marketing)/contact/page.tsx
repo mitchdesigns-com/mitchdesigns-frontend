@@ -4,6 +4,7 @@ import { ContactConnect } from "@/features/contact/ContactConnect";
 import { ContactHero } from "@/features/contact/ContactHero";
 import { ContactInfo } from "@/features/contact/ContactInfo";
 import { getContactPage, getSiteSettings } from "@/lib/cms/queries";
+import { SITE_URL } from "@/config/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getContactPage();
@@ -12,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    openGraph: { title, description, url: "https://mitchdesigns.com/contact" },
+    openGraph: { title, description, url: `${SITE_URL}/contact` },
     alternates: { canonical: "/contact" },
   };
 }

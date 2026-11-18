@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { isOptimizableImage } from "@/config/site";
 
 interface Props {
   url: string;
@@ -11,10 +12,13 @@ interface Props {
 
 export function BlockImage({ url, alt, caption }: Props) {
   const [errored, setErrored] = useState(false);
+  // A host next/image cannot optimize would throw during render and take the
+  // whole post with it, so treat it as a failed image up front.
+  const unusable = errored || !isOptimizableImage(url);
 
   return (
     <figure className="flex flex-col items-center gap-2">
-      {errored ? (
+      {unusable ? (
         <div className="w-full aspect-video rounded-xs bg-img-placeholder" aria-label={alt} />
       ) : (
         <Image

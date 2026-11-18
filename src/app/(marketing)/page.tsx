@@ -34,6 +34,7 @@ import {
 } from "@/lib/cms/fixtures";
 import { blocksToText } from "@/lib/cms/blocks";
 import { pickFeatured } from "@/features/work/listCovers";
+import { SITE_URL } from "@/config/site";
 
 async function safe<T>(p: Promise<T[]>, fallback: T[]): Promise<T[]> {
   try {
@@ -67,7 +68,7 @@ export default async function HomePage() {
       {
         "@type": "Organization",
         name: "MitchDesigns",
-        url: "https://mitchdesigns.com",
+        url: SITE_URL,
         ...(googleReviews.length > 0
           ? {
               aggregateRating: {

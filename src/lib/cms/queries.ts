@@ -61,7 +61,13 @@ function normalizeCaseStudy<T extends CaseStudyRaw>(raw: T): T & { services: str
 
 export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number }): Promise<Array<CaseStudy & { id: number }>> => {
   try {
-    const results = await getCollection<CaseStudyRaw>("/case-studies", {
+    // No explicit limit means "every case study" — the sitemap and the
+    // /case-studies index both call it that way. Strapi's default pageSize is
+    // 25, so getCollection silently dropped the oldest entry once the
+    // collection passed 25; getCollectionAll pages through the lot, same as
+    // getTalks.
+    const fetchFn = opts?.limit ? getCollection : getCollectionAll;
+    const results = await fetchFn<CaseStudyRaw>("/case-studies", {
       revalidate: 60,
       query: {
         "populate[cover]": "true",
@@ -89,6 +95,7 @@ export const getCaseStudies = async (opts?: { featured?: boolean; limit?: number
 export const getCaseStudy = async (
   slug: string,
 ): Promise<(CaseStudy & { id: number }) | null> => {
+  let cmsFailed = false;
   const results = await getCollection<CaseStudyRaw>("/case-studies", {
     revalidate: 60,
     query: {
@@ -104,7 +111,10 @@ export const getCaseStudy = async (
       "populate[seo][populate]": "*",
       "pagination[limit]": 1,
     },
-  }).catch(() => [] as CaseStudyRaw[]);
+  }).catch(() => {
+    cmsFailed = true;
+    return [] as CaseStudyRaw[];
+  });
 
   const raw = results[0];
   if (raw) {
@@ -112,6 +122,11 @@ export const getCaseStudy = async (
     study.seo = mapSeo((raw as any).seo);
     return study;
   }
+  // Fixtures are an OUTAGE fallback, not a content source: a healthy CMS that
+  // simply has no entry for this slug must yield null so the route 404s.
+  // Falling back on an empty result made every demo fixture slug a live,
+  // indexable page that no sitemap listed.
+  if (!cmsFailed) return null;
   const { fixtureCaseStudies } = await import("./fixtures");
   const fx = fixtureCaseStudies.find((c) => c.slug === slug);
   return fx ? ({ ...fx, id: 0 } as CaseStudy & { id: number }) : null;
@@ -156,6 +171,7 @@ export const getRelatedTalks = async (
 export const getTalk = async (
   slug: string,
 ): Promise<(Talk & { id: number }) | null> => {
+  let cmsFailed = false;
   const results = await getCollection<Talk>("/blogs", {
     revalidate: 120,
     query: {
@@ -166,12 +182,16 @@ export const getTalk = async (
       "populate[seo][populate]": "*",
       "pagination[limit]": 1,
     },
-  }).catch(() => [] as Array<Talk & { id: number }>);
+  }).catch(() => {
+    cmsFailed = true;
+    return [] as Array<Talk & { id: number }>;
+  });
   if (results[0]) {
     const talk = results[0];
     talk.seo = mapSeo((talk as any).seo);
     return talk;
   }
+  if (!cmsFailed) return null;
   const { fixtureTalks } = await import("./fixtures");
   return (fixtureTalks.find((t) => t.slug === slug) ?? null) as
     | (Talk & { id: number })
@@ -206,7 +226,8 @@ export const getCareer = async (
       },
     });
     if (results[0]) return results[0];
-  } catch { /* fall through to fixtures */ }
+    return null;
+  } catch { /* CMS unreachable — fall through to fixtures */ }
   const { fixtureCareers } = await import("./fixtures");
   return fixtureCareers.find((c) => c.slug === slug) ?? null;
 };
@@ -254,6 +275,7 @@ export const getServices = async (): Promise<Array<Service & { id: number }>> =>
 export const getService = async (
   slug: Service["slug"],
 ): Promise<(Service & { id: number }) | null> => {
+  let cmsFailed = false;
   const results = await getCollection<Service>("/our-services", {
     revalidate: 300,
     query: {
@@ -261,8 +283,12 @@ export const getService = async (
       populate: "icon",
       "pagination[limit]": 1,
     },
-  }).catch(() => [] as Array<Service & { id: number }>);
+  }).catch(() => {
+    cmsFailed = true;
+    return [] as Array<Service & { id: number }>;
+  });
   if (results[0]) return results[0];
+  if (!cmsFailed) return null;
   const { fixtureServices } = await import("./fixtures");
   return (fixtureServices.find((s) => s.slug === slug) ?? null) as
     | (Service & { id: number })

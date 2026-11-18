@@ -53,6 +53,10 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           NEXT_PUBLIC_STRAPI_URL: https://cms.mitchdesigns.com
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+          # Opens BOTH the <meta robots> tag and robots.txt (see
+          # src/app/layout.tsx and src/app/robots.txt/route.ts). Production only —
+          # preview.yml deliberately leaves it unset so previews stay noindex.
+          NEXT_PUBLIC_INDEXABLE: "true"
 
       # Runtime secrets must live on the Worker, not just in the build env.
       - name: Sync runtime secrets to Worker

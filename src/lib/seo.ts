@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { SeoData } from "@/lib/cms/types";
+import { SITE_URL } from "@/config/site";
 
 type Fallback = {
   title: string;
@@ -25,7 +26,7 @@ export function buildPageMetadata(fallback: Fallback, cms?: SeoData): Metadata {
     openGraph: {
       title: ogTitle,
       description: ogDescription,
-      url: `https://mitchdesigns.com${canonical}`,
+      url: `${SITE_URL}${canonical}`,
       ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
   };

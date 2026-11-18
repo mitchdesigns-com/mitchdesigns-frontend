@@ -19,15 +19,20 @@ import { buildPageMetadata } from "@/lib/seo";
 import { blocksToText } from "@/lib/cms/blocks";
 import { fixtureCaseStudies } from "@/lib/cms/fixtures";
 import type { CaseStudy } from "@/lib/cms/types";
+import { SITE_URL } from "@/config/site";
 
 type Params = { slug: string };
 
 async function resolveStudy(slug: string): Promise<CaseStudy | null> {
   try {
     const cms = await getCaseStudy(slug);
-    if (cms) return cms;
-  } catch { /* fall through */ }
-  return fixtureCaseStudies.find((s) => s.slug === slug) ?? null;
+    return cms;
+  } catch {
+    // Only an outright failure reaches here: getCaseStudy already returns its
+    // own fixture fallback when the CMS is unreachable, and null when the CMS
+    // is healthy but has no such slug (which must stay a 404, not a demo page).
+    return fixtureCaseStudies.find((s) => s.slug === slug) ?? null;
+  }
 }
 
 export async function generateStaticParams(): Promise<Params[]> {
@@ -90,9 +95,9 @@ export default async function SingleCaseStudyPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://mitchdesigns.com" },
-      { "@type": "ListItem", position: 2, name: "Case Studies", item: "https://mitchdesigns.com/case-studies" },
-      { "@type": "ListItem", position: 3, name: study.title, item: `https://mitchdesigns.com/case-studies/${slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Case Studies", item: `${SITE_URL}/case-studies` },
+      { "@type": "ListItem", position: 3, name: study.title, item: `${SITE_URL}/case-studies/${slug}` },
     ],
   };
 
@@ -101,9 +106,9 @@ export default async function SingleCaseStudyPage({
     "@type": "CreativeWork",
     name: study.title,
     description: study.tagline,
-    creator: { "@type": "Organization", name: "MitchDesigns", url: "https://mitchdesigns.com" },
+    creator: { "@type": "Organization", name: "MitchDesigns", url: SITE_URL },
     datePublished: study.publishedAt,
-    url: `https://mitchdesigns.com/case-studies/${slug}`,
+    url: `${SITE_URL}/case-studies/${slug}`,
   };
 
   return (

@@ -6,6 +6,7 @@ import { fixtureTalks } from "@/lib/cms/fixtures";
 import { TalkHero, TalkContent, RelatedTalks } from "@/features/talks";
 import { extractToc } from "@/features/talks/TalkContent";
 import type { Talk } from "@/lib/cms/types";
+import { SITE_URL } from "@/config/site";
 
 type Params = { slug: string };
 
@@ -13,12 +14,12 @@ type Params = { slug: string };
 const AUTHOR = {
   "@type": "Person",
   name: "Mitch",
-  url: "https://mitchdesigns.com/about",
+  url: `${SITE_URL}/about`,
   jobTitle: "Founder & Creative Director",
   worksFor: {
     "@type": "Organization",
     name: "MitchDesigns",
-    url: "https://mitchdesigns.com",
+    url: SITE_URL,
   },
   sameAs: [
     "https://www.linkedin.com/company/mitchdesigns",
@@ -29,10 +30,10 @@ const AUTHOR = {
 const PUBLISHER = {
   "@type": "Organization",
   name: "MitchDesigns",
-  url: "https://mitchdesigns.com",
+  url: SITE_URL,
   logo: {
     "@type": "ImageObject",
-    url: "https://mitchdesigns.com/images/logo-black.webp",
+    url: `${SITE_URL}/images/logo-black.webp`,
   },
 };
 
@@ -47,9 +48,11 @@ export async function generateStaticParams(): Promise<Params[]> {
 async function resolveTalk(slug: string): Promise<Talk | null> {
   try {
     const cms = await getTalk(slug);
-    if (cms) return cms;
-  } catch { /* fall through */ }
-  return fixtureTalks.find((t) => t.slug === slug) ?? null;
+    return cms;
+  } catch {
+    // See the note in getTalk: fixtures cover a CMS outage, not an unknown slug.
+    return fixtureTalks.find((t) => t.slug === slug) ?? null;
+  }
 }
 
 export async function generateMetadata({
@@ -73,15 +76,15 @@ export async function generateMetadata({
     title,
     description,
     ...(seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
-    authors: [{ name: talk.author?.name ?? "Mitch", url: "https://mitchdesigns.com/about" }],
+    authors: [{ name: talk.author?.name ?? "Mitch", url: `${SITE_URL}/about` }],
     alternates: { canonical },
     openGraph: {
       title: seo?.ogTitle ?? title,
       description: seo?.ogDescription ?? description,
-      url: `https://mitchdesigns.com${canonical}`,
+      url: `${SITE_URL}${canonical}`,
       type: "article",
       publishedTime: talk.publishedAt ?? talk.date,
-      authors: ["https://mitchdesigns.com/about"],
+      authors: [`${SITE_URL}/about`],
       ...(ogImageUrl
         ? {
             images: [
@@ -134,19 +137,19 @@ export default async function SingleTalkPage({
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://mitchdesigns.com",
+        item: SITE_URL,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Talks",
-        item: "https://mitchdesigns.com/talks",
+        item: `${SITE_URL}/talks`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: talk.title,
-        item: `https://mitchdesigns.com/talks/${slug}`,
+        item: `${SITE_URL}/talks/${slug}`,
       },
     ],
   };
@@ -160,7 +163,7 @@ export default async function SingleTalkPage({
     dateModified: talk.publishedAt ?? talk.date,
     author: AUTHOR,
     publisher: PUBLISHER,
-    url: `https://mitchdesigns.com/talks/${slug}`,
+    url: `${SITE_URL}/talks/${slug}`,
     inLanguage: "en",
     about: talk.category
       ? [{ "@type": "Thing", name: talk.category }]
@@ -169,7 +172,7 @@ export default async function SingleTalkPage({
       ? {
           image: {
             "@type": "ImageObject",
-            url: `https://mitchdesigns.com${talk.cover.url}`,
+            url: `${SITE_URL}${talk.cover.url}`,
             description: talk.cover.alternativeText ?? talk.title,
           },
         }

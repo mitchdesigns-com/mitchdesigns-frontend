@@ -5,6 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { getFAQs, getFaqsPage } from "@/lib/cms/queries";
 import { fixtureFAQs } from "@/lib/cms/fixtures";
 import { blocksToText } from "@/lib/cms/blocks";
+import { SITE_URL } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "FAQs | MitchDesigns Design & Development",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     title: "FAQs | MitchDesigns Design & Development",
     description:
       "Common questions about working with MitchDesigns, pricing, timelines, tech stack, and process.",
-    url: "https://mitchdesigns.com/faqs",
+    url: `${SITE_URL}/faqs`,
   },
   alternates: { canonical: "/faqs" },
 };

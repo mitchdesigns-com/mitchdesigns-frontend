@@ -3,6 +3,7 @@ import { TalksList, TalksHero } from "@/features/talks";
 import { getTalks, getTalksPage } from "@/lib/cms";
 import { fixtureTalks } from "@/lib/cms/fixtures";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Talks & Articles | MitchDesigns",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
     title: "Talks & Articles | MitchDesigns",
     description:
       "Insights on UX, product design, and digital growth from the MitchDesigns team.",
-    url: "https://mitchdesigns.com/talks",
+    url: `${SITE_URL}/talks`,
   },
   alternates: { canonical: "/talks" },
 };
@@ -44,7 +45,7 @@ export default async function TalksIndexPage() {
     itemListElement: talks.map((talk, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `https://mitchdesigns.com/talks/${talk.slug}`,
+      url: `${SITE_URL}/talks/${talk.slug}`,
       name: talk.title,
     })),
   };
