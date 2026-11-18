@@ -1,6 +1,21 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "mitchdesigns-website",
+
+  // ── GO-LIVE SWITCH ───────────────────────────────────────────────────────
+  // Deploying with these two keys IS the cutover: Cloudflare attaches
+  // www.mitchdesigns.com to this Worker (replacing the DNS record that points
+  // at the old site) and drops the workers.dev route.
+  //
+  // workers_dev is false because the preview URL serves the whole site with
+  // `Allow: /`, so once www is live it is an indexable duplicate.
+  //
+  // Rollback: detach the custom domain in the dashboard and restore the www
+  // DNS record captured before the cutover.
+  "routes": [
+    { "pattern": "www.mitchdesigns.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-05-11",
   "compatibility_flags": [
