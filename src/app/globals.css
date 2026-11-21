@@ -219,7 +219,7 @@
      always fits with breathing room (20px → 32px). */
   --text-about-body: clamp(1.25rem, min(1.9vw, 2.6svh), 2rem); /* sized so the letter fits a laptop screen */
   --text-about-body--line-height: 1.3;
-  --text-review-sm: 0.8125rem; /* 13px — compact testimonial quote (mobile) */
+  --text-review-sm: 0.9375rem; /* 15px — testimonial quote on phones */
   --text-sm: 0.875rem; /* 14px */
   --text-sm--line-height: 1.3;
   --text-xs: 0.75rem; /* 12px */
@@ -248,7 +248,7 @@
 
   /* ---------------- Widths ---------------- */
   --width-card-review: 24.5625rem; /* 393px — testimonial card */
-  --width-card-review-sm: 10rem; /* 160px — compact testimonial card (mobile: ~2¼ in view) */
+  --width-card-review-sm: min(20rem, 80vw); /* testimonial card on phones: one card in view, the next peeking */
   --width-blog-sidebar: 27.4375rem; /* 439px — blog TOC sidebar */
   --width-orbit-card: clamp(12rem, 16vw, 18rem); /* WeGotYou travelling image card */
 

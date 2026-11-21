@@ -19,12 +19,12 @@ type TestimonialMarqueeProps = {
   testimonials: Array<Testimonial & { id: number }>;
 };
 
-// Below `sm` the cards shrink to a compact size so 2–3 fit on screen.
+// Below `sm` one card fills most of the screen with the next peeking in.
 function ReviewCard({ t, compact }: { t: Testimonial & { id: number }; compact: boolean }) {
   const logo = strapiMedia(t.companyLogo?.url);
 
   return (
-    <article className="flex w-card-review-sm shrink-0 flex-col justify-between rounded-card-sm border border-card-border bg-card p-3.5 sm:w-card-review sm:rounded-card-md sm:p-5">
+    <article className="flex w-card-review-sm shrink-0 flex-col justify-between rounded-card-sm border border-card-border bg-card p-5 sm:w-card-review sm:rounded-card-md">
       <div className="flex flex-col gap-3 sm:gap-8 md:gap-5">
         {/* Header: name/role + Google badge */}
         <div className="flex items-start justify-between gap-2">
@@ -68,7 +68,9 @@ function ReviewCard({ t, compact }: { t: Testimonial & { id: number }; compact: 
   );
 }
 
-export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
+export function TestimonialMarquee({ testimonials: all }: TestimonialMarqueeProps) {
+  // Each person once, even if the CMS holds two entries for them.
+  const testimonials = all.filter((t, i) => all.findIndex((x) => x.author === t.author) === i);
   const { testimonialsHeading, testimonialsIntro } = useSiteSettings();
   // Compact cards + tighter gap on phones (the Marquee gap is a px value).
   const [compact, setCompact] = useState(false);
@@ -79,7 +81,7 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
-  const gap = compact ? 14 : 40;
+  const gap = compact ? 16 : 40;
 
   // Desktop: the elastic drag cursor follows the pointer over the rows.
   const [finePointer, setFinePointer] = useState(false);
@@ -95,8 +97,7 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
   const cursorY = useMotionValue(0);
   const [hovering, setHovering] = useState(false);
 
-  // One drag / swipe over the rows scrubs both at once, in opposite
-  // directions (like the scroll drift). A soft spring makes them glide just
+  // A drag / swipe over the row scrubs it. A soft spring makes it glide just
   // behind the pointer rather than jumping with every mouse move.
   const { offset: scrub, dragging, bind } = useDragScrub(rowsRef);
   const scrubSmooth = useSpring(scrub, { stiffness: 140, damping: 24, mass: 0.6 });
@@ -123,8 +124,8 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
         </p>
       </Reveal>
 
-      {/* Marquee rows — both use all testimonials so neither row ever runs short.
-          Drag / swipe anywhere over them to browse every testimonial. */}
+      {/* One row, each review once (a second row repeated the same reviews
+          side by side). Drag / swipe over it to browse every testimonial. */}
       <div
         ref={rowsRef}
         className={cn(
@@ -142,11 +143,6 @@ export function TestimonialMarquee({ testimonials }: TestimonialMarqueeProps) {
         <Marquee gap={gap} offset={scrubSmooth}>
           {testimonials.map((t) => (
             <ReviewCard key={`a-${t.id}`} t={t} compact={compact} />
-          ))}
-        </Marquee>
-        <Marquee gap={gap} direction="right" offset={scrubSmooth}>
-          {testimonials.map((t) => (
-            <ReviewCard key={`b-${t.id}`} t={t} compact={compact} />
           ))}
         </Marquee>
 
