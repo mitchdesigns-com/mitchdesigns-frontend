@@ -80,6 +80,28 @@ export function ServiceSwitcher({
     return () => cancelAnimationFrame(raf);
   }, [show]);
 
+  // Floating row: soft fades on whichever end has more services to swipe to.
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [fade, setFade] = useState({ left: false, right: false });
+  useEffect(() => {
+    if (!show) return;
+    const el = rowRef.current;
+    if (!el) return;
+    // Phones: start the row scrolled to the current service.
+    const on = el.querySelector<HTMLElement>("[aria-current=page]");
+    if (on) el.scrollLeft = on.offsetLeft - 28;
+    const sync = () =>
+      setFade({ left: el.scrollLeft > 2, right: el.scrollLeft + el.clientWidth < el.scrollWidth - 2 });
+    sync();
+    el.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    return () => {
+      el.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
+    };
+  }, [show]);
+  const mask = `linear-gradient(to right, ${fade.left ? "transparent, black 1.5rem" : "black"}, ${fade.right ? "black calc(100% - 1.5rem), transparent" : "black"})`;
+
   return (
     <>
       {/* Phones: one row that scrolls sideways out to the screen edge.
@@ -98,7 +120,9 @@ export function ServiceSwitcher({
         {show && (
           <motion.nav
             aria-label="Switch service"
-            className="pointer-events-none fixed inset-x-0 top-8 z-40 flex px-4 pr-24 md:justify-center md:px-28"
+            // Phones: the full width (the floating menu button stays hidden there
+            // while this bar shows). md+: clear of the menu button on the right.
+            className="pointer-events-none fixed inset-x-0 top-8 z-40 flex px-4 md:justify-center md:px-28"
             initial={{ y: -80, opacity: 0 }}
             // Under the header while it shows (its bottom, less the bar's own top gap).
             animate={{ y: drop > 0 ? drop - 16 : 0, opacity: 1 }}
@@ -106,12 +130,9 @@ export function ServiceSwitcher({
             transition={{ duration: 0.4, ease: easeOutSoft }}
           >
             <div
-              // Phones: start the row scrolled to the current service.
-              ref={(el) => {
-                const on = el?.querySelector<HTMLElement>("[aria-current=page]");
-                if (el && on) el.scrollLeft = on.offsetLeft - 8;
-              }}
+              ref={rowRef}
               className="pointer-events-auto max-w-full overflow-x-auto rounded-pill bg-black/85 p-1 shadow-soft-lg backdrop-blur-md scrollbar-none"
+              style={{ maskImage: mask, WebkitMaskImage: mask }}
             >
               <Pills items={items} current={current} floating />
             </div>
