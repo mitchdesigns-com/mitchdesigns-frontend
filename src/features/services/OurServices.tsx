@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import {
   useMotionValue,
   motion,
@@ -62,6 +63,9 @@ function useHasHover() {
   }, []);
   return hasHover;
 }
+
+/** The open card's photo; also what the list preloads ahead of a tap. */
+const PANEL_SIZES = "(min-width: 1024px) 18rem, (min-width: 640px) 14rem, 100vw";
 
 /** Panel copy steps in under the photo's entrance. */
 const PANEL_ITEM = {
@@ -208,7 +212,7 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
               aria-hidden
               className="pointer-events-none absolute top-1/2 right-full z-20 mr-10 w-44 overflow-hidden rounded-2xl shadow-soft-lg"
             >
-              <Image quality={100}
+              <Image quality={75}
                 src={imgSrc}
                 alt={`${label} | MitchDesigns service`}
                 width={176}
@@ -259,7 +263,7 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
                 className="relative w-20 shrink-0 overflow-hidden rounded-xl shadow-soft-lg"
                 style={{ aspectRatio: "170 / 245" }}
               >
-                <Image quality={90} src={imgSrc} alt="" fill sizes="5rem" className="object-cover" />
+                <Image quality={75} src={imgSrc} alt="" fill sizes="5rem" className="object-cover" />
               </motion.div>
               <motion.div
                 className="flex min-w-0 flex-col items-start gap-2"
@@ -299,7 +303,7 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 220, damping: 24, delay: 0.05 }}
               >
-                <Image quality={100} src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes="(min-width: 1024px) 18rem, (min-width: 640px) 14rem, 100vw" className="object-cover" />
+                <Image quality={75} src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes={PANEL_SIZES} className="object-cover" />
               </motion.div>
               <motion.div
                 className="flex max-w-xl flex-col items-start gap-5"
@@ -385,6 +389,34 @@ export function OurServices({ services }: OurServicesProps) {
       window.removeEventListener("resize", onScroll);
     };
   }, [canHover]);
+
+  // Load each card's photo before it's opened: once the list is near the
+  // screen, preload the exact image the open card asks for (same sizes and
+  // quality), so expanding shows it at once.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        items.forEach((s) => {
+          const { props } = getImageProps({ src: s.imgSrc, alt: "", fill: true, sizes: PANEL_SIZES, quality: 75 });
+          preload(props.src, { as: "image", imageSrcSet: props.srcSet, imageSizes: props.sizes, fetchPriority: "low" });
+          // Desktop: the small photo that pops out on hover.
+          if (canHover) {
+            const hover = getImageProps({ src: s.imgSrc, alt: "", width: 176, height: 253, quality: 75 }).props;
+            preload(hover.src, { as: "image", imageSrcSet: hover.srcSet, fetchPriority: "low" });
+          }
+        });
+      },
+      { rootMargin: "600px 0px" },
+    );
+    io.observe(list);
+    return () => io.disconnect();
+    // The list of photos only changes with the CMS services.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [services, canHover]);
 
   // A soft tick (and a buzz where phones allow it) as the spotlight moves on;
   // silent until the visitor has tapped somewhere, as browsers require.

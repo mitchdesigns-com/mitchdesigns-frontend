@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { RichText } from "@/components/ui/RichText";
@@ -78,12 +79,15 @@ export function ClientWork({
                 aria-label={`${s.client} case study`}
                 className="group flex aspect-3/2 items-center justify-center rounded-card-sm border border-border bg-white p-3 transition-colors duration-300 hover:border-black"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={strapiMedia(s.logo!.url) ?? undefined}
-                  alt={s.logo?.alternativeText || s.client}
-                  className="size-full object-contain grayscale transition duration-300 group-hover:grayscale-0"
-                />
+                <span className="relative size-full">
+                  <Image
+                    src={strapiMedia(s.logo!.url) ?? ""}
+                    alt={s.logo?.alternativeText || s.client}
+                    fill
+                    sizes="(min-width: 1024px) 12rem, 45vw"
+                    className="object-contain grayscale transition duration-300 group-hover:grayscale-0"
+                  />
+                </span>
               </Link>
             </RevealItem>
           ))}
@@ -105,8 +109,9 @@ export function ClientWork({
                     {src && isVideo(src, mime) ? (
                       <Media src={src} mime={mime} alt={s.title} className="object-cover" />
                     ) : src ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={src} alt={s.title} className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      // Optimized (resized to the card, AVIF/WebP): the raw CMS
+                      // files run up to ~0.9 MB each.
+                      <Image src={src} alt={s.title} fill sizes="(min-width: 768px) 24rem, 20rem" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : null}
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-6">

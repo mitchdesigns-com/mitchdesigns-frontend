@@ -185,9 +185,10 @@ const nextConfig: NextConfig = {
     // Invalid src prop (http://localhost:1337/images/case-studies/el-gouna.webp) on `next/image`, hostname "localhost" is not configured under images in your `next.config.js`
     // pub-aa7546047e2b40c9810cb247ee90e22d.r2.dev
     formats: ["image/avif", "image/webp"],
-    // 90 for case-study media (screens with fine UI text), 100 for the studio
-    // photography; 75 everywhere else.
-    qualities: [75, 90, 100],
+    // 90 for case-study media and product shots (screens with fine UI text);
+    // 75 for photography and everywhere else (q100 made phone-size photos
+    // 0.5 to 1.2 MB each and slow to load).
+    qualities: [75, 90],
     // Cache optimized images for 31 days (report flagged /_next/image as "None").
     minimumCacheTTL: 2678400,
     remotePatterns: [
