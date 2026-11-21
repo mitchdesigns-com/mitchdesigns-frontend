@@ -103,25 +103,28 @@ function ReelExpandHero(p: Props) {
   // crowds the headline.
   const sectionRef = useRef<HTMLElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
-  const [box, setBox] = useState({ w: 0, h: 0, left: 0, top: 0, cardW: 0, cardH: 0 });
+  const textRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState({ w: 0, h: 0, left: 0, top: 0, cardW: 0, cardH: 0, headH: 0 });
   useEffect(() => {
     const measure = () => {
       const sec = sectionRef.current?.getBoundingClientRect();
       const headEl = headRef.current;
       if (!sec || !headEl) return;
-      const head = headEl.getBoundingClientRect();
+      const textH = textRef.current?.offsetHeight ?? 0;
       const pad = parseFloat(getComputedStyle(headEl).paddingLeft) || 0;
       const cardW = sec.width - pad * 2;
       const cardH = (cardW * 9) / 16;
-      // Breathing room under the headline grows with the screen height.
-      const gap = Math.max(72, sec.height * 0.09);
-      const top = Math.max(sec.height - cardH / 2, head.bottom - sec.top + gap);
-      setBox({ w: sec.width, h: sec.height, left: pad, top, cardW, cardH });
+      // The headline sits midway between the header and the card, so the space
+      // above it equals the space below it. The wrapper starts under the header.
+      const gap = Math.max(48, sec.height * 0.05);
+      const wrapTop = headEl.offsetTop;
+      const top = Math.max(sec.height - cardH / 2, wrapTop + textH + gap * 2);
+      setBox({ w: sec.width, h: sec.height, left: pad, top, cardW, cardH, headH: top - wrapTop });
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (sectionRef.current) ro.observe(sectionRef.current);
-    if (headRef.current) ro.observe(headRef.current);
+    if (textRef.current) ro.observe(textRef.current);
     return () => ro.disconnect();
   }, []);
 
@@ -258,12 +261,15 @@ function ReelExpandHero(p: Props) {
       {/* Headline — steps up and away as the reel takes the screen */}
       <motion.div
         ref={headRef}
-        className="container-page absolute inset-x-0 top-header pt-8"
+        className="container-page absolute inset-x-0 top-header flex items-center"
+        style={{ height: box.headH || undefined }}
         initial={false}
         animate={expanded ? { opacity: 0, y: -40 } : { opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease }}
       >
-        <Headline {...p} />
+        <div ref={textRef}>
+          <Headline {...p} />
+        </div>
       </motion.div>
 
       {/* The reel: half-visible content-width card → the whole screen */}
