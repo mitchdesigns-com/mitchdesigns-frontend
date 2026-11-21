@@ -129,6 +129,21 @@ const statVariants: Variants = {
   }),
 };
 
+/** Phones: the same rise without the blur (a filter animation is heavy on
+ *  mobile GPUs and stutters the scroll). */
+const statVariantsLight: Variants = {
+  hidden: ([i, n]: [number, number]) => ({
+    opacity: 0,
+    y: 32,
+    transition: { delay: (n - 1 - i) * 0.06, duration: 0.4, ease: "easeIn" },
+  }),
+  shown: ([i]: [number, number]) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: STATS_START + i * STAT_STAGGER, duration: 0.8, ease: easeOutSoft },
+  }),
+};
+
 function BodyChar({
   char,
   write,
@@ -329,7 +344,7 @@ export function AboutSection({
                   <motion.li
                     key={value}
                     custom={[i, stats.length]}
-                    variants={statVariants}
+                    variants={pinned ? statVariants : statVariantsLight}
                     initial={reduced ? false : "hidden"}
                     animate={shown ? "shown" : "hidden"}
                     className="flex flex-col items-start"

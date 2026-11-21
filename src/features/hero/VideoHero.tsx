@@ -445,12 +445,13 @@ export function VideoHero({
               onClick={openReel}
               className="absolute inset-0 outline-none lg:hidden"
             >
-              {/* Half above the reel, half on it, aligned to the page gutter. */}
+              {/* Centred on the reel, with a soft pulse inviting the tap. */}
               <span
                 aria-hidden
-                className="absolute right-4 top-0 flex size-16 -translate-y-1/2 items-center justify-center rounded-full bg-yellow text-black"
+                className="absolute top-1/2 left-1/2 flex size-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-yellow text-black"
               >
-                <Play size={28} />
+                <span className="absolute inset-0 animate-ping rounded-full bg-yellow/40" />
+                <Play size={36} className="relative" />
               </span>
             </button>
           )}

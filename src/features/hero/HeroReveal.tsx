@@ -33,13 +33,24 @@ export function HeroReveal({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(true);
+  // Phones and tablets: no scroll lock (iOS momentum fights it and the page
+  // jumps). The content slides up over the pinned hero with the finger.
+  const [slide, setSlide] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setEnabled(!mq.matches);
+    const small = window.matchMedia("(max-width: 1023.98px)");
+    const sync = () => {
+      setEnabled(!mq.matches);
+      setSlide(small.matches);
+    };
     sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    small.addEventListener("change", sync);
+    return () => {
+      mq.removeEventListener("change", sync);
+      small.removeEventListener("change", sync);
+    };
   }, []);
 
   // Scroll position through the pinned screen — only used to keep the
@@ -55,12 +66,22 @@ export function HeroReveal({
   // entrances (and reverse them) off this rather than off in-view checks.
   const [opened, setOpened] = useState(false);
   useMotionValueEvent(open, "change", (o) => {
+    if (slide) return;
     if (o >= 0.85) setOpened(true);
     else if (o < 0.7) setOpened(false);
   });
+  // Slide mode: "opened" follows how far the content has covered the hero.
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    if (!slide) return;
+    if (p >= 0.85) setOpened(true);
+    else if (p < 0.7) setOpened(false);
+  });
+  // Behind the sliding content the hero eases back and dims a little.
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroDim = useTransform(scrollYProgress, [0, 1], [0, 0.6]);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || slide) return;
     const track = trackRef.current;
     if (!track) return;
 
@@ -121,7 +142,7 @@ export function HeroReveal({
       window.removeEventListener("touchmove", block);
       window.removeEventListener("keydown", blockKeys);
     };
-  }, [enabled, open]);
+  }, [enabled, slide, open]);
 
   // Keep the content at the top of the viewport wherever the scroll sits in
   // the pinned screen. Dropped to "none" once past it — any transform would
@@ -143,6 +164,25 @@ export function HeroReveal({
         {hero}
         {children}
       </>
+    );
+  }
+
+  if (slide) {
+    return (
+      <HeroRevealContext.Provider value={opened}>
+        <div ref={trackRef} className="relative" style={{ height: "200svh" }}>
+          <div className="sticky top-0 h-svh overflow-hidden bg-black">
+            <motion.div className="h-full origin-top" style={{ scale: heroScale }}>
+              {hero}
+            </motion.div>
+            <motion.div aria-hidden className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: heroDim }} />
+          </div>
+        </div>
+        {/* Plain document flow (no transform, no clip): native momentum scroll. */}
+        <div className="relative z-10 overflow-clip rounded-t-card bg-bg" style={{ marginTop: "-100svh" }}>
+          {children}
+        </div>
+      </HeroRevealContext.Provider>
     );
   }
 
