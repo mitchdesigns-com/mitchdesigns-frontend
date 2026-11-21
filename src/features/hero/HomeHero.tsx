@@ -25,6 +25,8 @@ const MAX_HOLD_MS = 1800;
 
 type Props = {
   eyebrow?: string;
+  /** Phones and tablets: shorter tagline in place of `eyebrow`. */
+  eyebrowMobile?: string;
   headline?: string;
   rotatingWords?: string[];
   video?: string;
@@ -324,7 +326,7 @@ function ReelExpandHero(p: Props) {
  * Until the screen size is known (first paint) a plain black hero holds
  * the space.
  */
-export function HomeHero({ videoMobile, videoMobilePoster, ...props }: Props) {
+export function HomeHero({ videoMobile, videoMobilePoster, eyebrowMobile, ...props }: Props) {
   const [screenSize, setScreenSize] = useState<"phone" | "tablet" | "desktop" | null>(null);
   useEffect(() => {
     const desktopMq = window.matchMedia("(min-width: 1024px)");
@@ -341,10 +343,13 @@ export function HomeHero({ videoMobile, videoMobilePoster, ...props }: Props) {
 
   if (screenSize === null) return <section data-theme="dark" className="h-svh bg-black" />;
   if (screenSize === "desktop") return <ReelExpandHero {...props} />;
-  if (screenSize === "tablet") return <VideoHero {...props} />;
+  // Below lg the hero carries the shorter CMS tagline when there is one.
+  const eyebrow = eyebrowMobile ?? props.eyebrow;
+  if (screenSize === "tablet") return <VideoHero {...props} eyebrow={eyebrow} />;
   return (
     <VideoHero
       {...props}
+      eyebrow={eyebrow}
       video={videoMobile ?? MOBILE_VIDEO}
       videoPoster={videoMobilePoster ?? (videoMobile ? undefined : MOBILE_POSTER)}
       portraitReel

@@ -522,6 +522,8 @@ export type ServicePageData = {
  * ------------------------------------------------------------------ */
 export type HomeHero = {
   eyebrow?: string;
+  /** Shorter tagline for phones and tablets; unset → `eyebrow`. */
+  eyebrowMobile?: string;
   headline: string;
   rotatingWords?: string[];
   /** Showreel; falls back to the bundled webm. */

@@ -459,6 +459,7 @@ export const getHomePage = async (): Promise<HomePageData> => {
         hero: raw.hero
           ? {
               eyebrow: raw.hero.eyebrow ?? undefined,
+              eyebrowMobile: str(raw.hero.eyebrowMobile),
               headline: raw.hero.headline,
               rotatingWords: parseWords(raw.hero.rotatingWords),
               video: mediaSrc(raw.hero.video),
