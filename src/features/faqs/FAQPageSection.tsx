@@ -40,10 +40,13 @@ export function FAQPageSection({
     return (
         <Section theme="light" className="py-24 md:py-32">
             <div className="grid gap-10 lg:grid-cols-[minmax(280px,420px)_1fr]">
-                <div className="sticky top-24 self-start">
+                {/* Pinned beside the questions only on desktop; below lg the column
+                    stacks above the list, so it scrolls away with the page. */}
+                <div className="min-w-0 self-start lg:sticky lg:top-24">
                     <h1 className="text-hero-2 font-black text-white">{title}</h1>
 
-                    <div className="mt-10 flex flex-wrap gap-3">
+                    {/* Below lg: one swipeable row out to the screen edges. */}
+                    <div className="-mx-(--container-padding) mt-10 flex gap-3 overflow-x-auto px-(--container-padding) scrollbar-none lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0">
                         {categories.map((category) => {
                             const isActive = activeCategory === category;
                             return (
