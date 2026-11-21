@@ -88,7 +88,10 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
   const [isHovered, setIsHovered] = useState(false);
   const hovering = canHover && isHovered;
   const lit = !canHover && spotlit && !isOpen;
-  const active = hovering || isOpen || lit;
+  // White row: desktop hover and the opened card only. The phone spotlight
+  // stays dark (brighter title, yellow number and underline) so it never
+  // looks like an opened row.
+  const active = hovering || isOpen;
   const charVariant = (hovering || lit) && !isOpen ? "hovered" : "idle";
 
   const rowRef = useRef<HTMLButtonElement>(null);
@@ -144,6 +147,17 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
         }}
       />
 
+      {/* Phone spotlight: a yellow line draws along the lit row's bottom edge. */}
+      {!canHover && (
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-0.5 origin-left bg-yellow"
+          initial={false}
+          animate={{ scaleX: lit ? 1 : 0 }}
+          transition={{ type: "spring", stiffness: 140, damping: 24 }}
+        />
+      )}
+
       {/* Row header */}
       <button
         ref={rowRef}
@@ -158,7 +172,7 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
         {/* Number + label — always one line */}
         <div className="flex min-w-0 items-center gap-5 md:gap-15">
           <span
-            className={`shrink-0 text-base font-bold tabular-nums transition-colors duration-300 md:text-3xl ${active ? "text-black" : "text-fg-muted"}`}
+            className={`shrink-0 text-base font-bold tabular-nums transition-colors duration-300 md:text-3xl ${active ? "text-black" : lit ? "text-yellow" : "text-fg-muted"}`}
           >
             {num}
           </span>
@@ -171,7 +185,7 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
               staggerChildren: 0.08,
               delayChildren: 0.05,
             }}
-            className={`block whitespace-nowrap font-black transition-colors duration-300 text-service md:text-service-md ${active ? "text-black" : "text-fg-muted"}`}
+            className={`block whitespace-nowrap font-black transition-colors duration-300 text-service md:text-service-md ${active ? "text-black" : lit ? "text-white" : "text-fg-muted"}`}
           >
             {label.split(" ").map((word, i) => (
               <motion.span
@@ -254,30 +268,27 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
             className="relative z-10 overflow-hidden"
             onClick={onToggle}
           >
-            <div className="flex items-center gap-5 pb-6">
+            <div className="flex items-center justify-between gap-5 pb-6">
               <motion.div
-                initial={{ scale: 0, rotate: -12 }}
-                animate={{ scale: 1, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.05 }}
+                className="flex min-w-0 flex-col items-start gap-2"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.08 }}
+              >
+                <p className="text-base leading-snug text-fg-muted text-balance">{noOrphan(description)}</p>
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-yellow">
+                  Tap to explore <ArrowRight size={14} />
+                </span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 40, rotate: 14 }}
+                animate={{ opacity: 1, x: 0, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.1 }}
                 aria-hidden
                 className="relative w-20 shrink-0 overflow-hidden rounded-xl shadow-soft-lg"
                 style={{ aspectRatio: "170 / 245" }}
               >
                 <Image quality={75} src={imgSrc} alt="" fill sizes="5rem" className="object-cover" />
-              </motion.div>
-              <motion.div
-                className="flex min-w-0 flex-col items-start gap-2"
-                initial={{ opacity: 0, x: 16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.12 }}
-              >
-                {hoverLogo && (
-                  <Image src={hoverLogo.src} alt={hoverLogo.alt} width={124} height={22} unoptimized className="h-5 w-auto" />
-                )}
-                <p className="text-base leading-snug text-black text-balance">{noOrphan(description)}</p>
-                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-black">
-                  Tap to explore <ArrowRight size={14} />
-                </span>
               </motion.div>
             </div>
           </motion.div>
