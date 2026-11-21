@@ -39,7 +39,7 @@ const DEFAULT_CTA: Cta = SITE_SETTINGS_FALLBACK.primaryCta;
 
 type Props = {
   reasons: TrustReasonCard[];
-  /** Defaults to the homepage "N Reasons Clients Trust" heading. */
+  /** Defaults to the homepage "N reasons brands trust" heading. */
   heading?: React.ReactNode;
   /** Lead paragraph beside the heading. Pass `null` to hide it. */
   intro?: string | null;
@@ -78,7 +78,7 @@ export function ClientsTrust({
         <h2 className="text-hero-3 font-bold text-fg text-balance">
           {typeof heading === "string"
             ? noOrphan(heading)
-            : (heading ?? noOrphan(`${reasons.length} Reasons Clients Trust MitchDesigns`))}
+            : (heading ?? noOrphan(`${reasons.length} reasons brands trust MitchDesigns`))}
         </h2>
         {intro && (
           <p className="max-w-[506px] text-xl text-fg-muted text-balance max-md:text-center">

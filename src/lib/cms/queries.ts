@@ -1054,7 +1054,7 @@ export async function getCaseStudyLogos(): Promise<Array<{ src: string; alt: str
 }
 
 /* ------------------------------------------------------------------
- * Trust reasons ("Reasons Clients Trust MitchDesigns")
+ * Trust reasons ("Reasons brands trust MitchDesigns")
  * ------------------------------------------------------------------ */
 export const getTrustReasons = async () => {
   try {
