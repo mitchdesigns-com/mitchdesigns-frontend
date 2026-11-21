@@ -7,7 +7,9 @@ import { noOrphan } from "@/lib/noOrphan";
  *  the fold, so it plays on mount rather than waiting for a scroll. */
 export function ContactHero({ eyebrow, title, description }: ContactPageData["hero"]) {
   return (
-    <div className="flex flex-col gap-6">
+    // Below lg the heading is centred (mobile heading spec), so the badge and
+    // the line under it centre with it.
+    <div className="flex flex-col gap-6 max-lg:items-center max-lg:text-center">
       {eyebrow && <Eyebrow immediate>{eyebrow}</Eyebrow>}
       <Reveal immediate delay={0.1}>
         <h1 className="text-hero-3 font-black leading-tight text-fg text-balance md:text-hero-1">
