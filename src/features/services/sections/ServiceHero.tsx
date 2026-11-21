@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "@/components/icons/ArrowRight";
 import { BookingIcon } from "@/components/ui/BookingIcon";
 import Image from "next/image";
 import Link from "next/link";
@@ -116,10 +117,12 @@ export function ServiceHero({
           </motion.div>
           {cta && (
             <motion.div variants={fadeUp} ref={ctaRef}>
-              <Button asChild size="lg">
+              {/* Phones: full width, like the CTAs elsewhere it carries the arrow. */}
+              <Button asChild size="lg" className="max-md:w-full">
                 <Link href={cta.href} className="group">
                   <BookingIcon href={cta.href} />
                   {cta.label}
+                  <ArrowRight />
                 </Link>
               </Button>
             </motion.div>
