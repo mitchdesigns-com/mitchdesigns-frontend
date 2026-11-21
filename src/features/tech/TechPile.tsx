@@ -38,14 +38,22 @@ function rng(seed: number) {
  * so every logo stays readable, with a slight natural tilt.
  * Desktop: rows of cap, cap, cap-1, … hugging the bottom-right. Mobile: 2-wide.
  */
+/** Card height on phones (px), and how much of it each row rises by. */
+const MOBILE_CH = 76;
+const RISE = 0.96;
+
+/** Phones: a stage just tall enough for every row of the 2-wide pile, plus
+ *  room for the tilt, so the top card never spills onto the heading. */
+const mobileStageH = (n: number) => Math.ceil(MOBILE_CH + (Math.ceil(n / 2) - 1) * MOBILE_CH * RISE + 16);
+
 function layoutPile(n: number, W: number, H: number, desktop: boolean): Layout {
   const rand = rng(20261002);
   const jitter = (amp: number) => (rand() * 2 - 1) * amp;
 
   const cw = desktop ? Math.min(290, Math.max(220, W * 0.2)) : Math.min(185, W * 0.49);
-  const ch = desktop ? cw * 0.42 : 76;
+  const ch = desktop ? cw * 0.42 : MOBILE_CH;
   const step = cw * 0.99; // cards just touch side by side
-  const rise = ch * 0.96; // and overlap a sliver vertically
+  const rise = ch * RISE; // and overlap a sliver vertically
   // Even rows (4-4-4 on desktop, 2-wide on mobile) — no lone card on top.
   const cap = desktop ? Math.max(2, Math.min(4, Math.floor((W * 0.9) / step))) : 2;
 
@@ -154,7 +162,11 @@ export function TechPile({ items }: { items: PileItem[] }) {
   }, [dropped, reduced]);
 
   return (
-    <div ref={stageRef} className="relative h-120 w-full lg:absolute lg:inset-0 lg:h-auto">
+    <div
+      ref={stageRef}
+      className="relative h-(--pile-h) w-full lg:absolute lg:inset-0 lg:h-auto"
+      style={{ "--pile-h": `${mobileStageH(items.length)}px` } as React.CSSProperties}
+    >
       {layout &&
         items.map((t, i) => {
           const p = layout.places[i];
