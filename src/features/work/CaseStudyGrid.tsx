@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
@@ -47,8 +48,8 @@ function CoverPicture({ cs, drift }: { cs: CaseStudy; drift?: MotionValue<string
           {src && isVideo(src, mime) ? (
             <Media src={src} mime={mime} alt={cs.title} className="object-cover" />
           ) : src ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={src} alt={cs.cover?.alternativeText ?? cs.title} className="absolute inset-0 size-full object-cover" />
+            // Optimized to the card's size (the raw covers are large files).
+            <Image src={src} alt={cs.cover?.alternativeText ?? cs.title} fill quality={90} sizes="(min-width: 768px) 60vw, 100vw" className="object-cover" />
           ) : (
             <div className="absolute inset-0 bg-img-placeholder" />
           )}
@@ -124,11 +125,13 @@ function CaseStudyRow({ cs }: { cs: CaseStudy & { id: number } }) {
         {/* Logo */}
         <motion.div variants={lineIn} className="h-26 w-full">
           {logoSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={logoSrc}
               alt={cs.logo?.alternativeText ?? cs.client}
-              className="h-full max-w-45 object-contain object-left"
+              width={cs.logo?.width ?? 680}
+              height={cs.logo?.height ?? 548}
+              sizes="12rem"
+              className="h-full w-auto max-w-45 object-contain object-left"
             />
           ) : (
             <span className="text-sm font-medium text-space-grey">{cs.client}</span>
@@ -181,8 +184,14 @@ function CaseStudyCard({ cs }: { cs: CaseStudy & { id: number } }) {
       <div className="flex flex-1 flex-col gap-3 p-6">
         <motion.div variants={lineIn} className="h-10">
           {logoSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoSrc} alt={cs.logo?.alternativeText ?? cs.client} className="h-full max-w-36 object-contain object-left" />
+            <Image
+              src={logoSrc}
+              alt={cs.logo?.alternativeText ?? cs.client}
+              width={cs.logo?.width ?? 680}
+              height={cs.logo?.height ?? 548}
+              sizes="10rem"
+              className="h-full w-auto max-w-36 object-contain object-left"
+            />
           ) : (
             <span className="text-sm font-medium text-space-grey">{cs.client}</span>
           )}

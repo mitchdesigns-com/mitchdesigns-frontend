@@ -26,7 +26,7 @@ function PhotoCard({ photo, tall, p }: { photo: AboutImage; tall: boolean; p: Mo
   const height = useTransform(p, [0, 1], tall ? [TALL, SHORT] : [SHORT, TALL]);
   return (
     <motion.div className="relative w-[286px] shrink-0 overflow-hidden bg-space-grey mt-auto" style={{ height }}>
-      <Image quality={100} src={photo.url} alt={photo.alt ?? ""} fill className="object-cover" sizes="286px" />
+      <Image quality={75} src={photo.url} alt={photo.alt ?? ""} fill className="object-cover" sizes="286px" />
     </motion.div>
   );
 }
