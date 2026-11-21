@@ -386,7 +386,8 @@ export function VideoHero({
       {/* Mobile: 16:9 frame holding the reel's place; lg+: the whole hero. */}
       <div
         ref={frameRef}
-        className="relative order-2 min-h-reel-min w-full flex-1 lg:absolute lg:inset-0 lg:min-h-0"
+        // Below lg: a rounded card inside the page gutters, clear of the edges.
+        className="relative order-2 mx-4 mb-6 min-h-reel-min flex-1 overflow-hidden rounded-card lg:absolute lg:inset-0 lg:m-0 lg:min-h-0 lg:w-full lg:overflow-visible lg:rounded-none"
       >
         <div
           className={cn(
@@ -483,7 +484,7 @@ export function VideoHero({
       />
 
       <motion.div
-        className="pointer-events-none order-1 shrink-0 pb-hero-gap lg:absolute lg:inset-x-0 lg:bottom-0 lg:z-20 lg:pb-0"
+        className="pointer-events-none order-1 shrink-0 pt-10 pb-hero-gap lg:absolute lg:inset-x-0 lg:bottom-0 lg:z-20 lg:pt-0 lg:pb-0"
         initial={false}
         animate={playing ? { y: 64, opacity: 0 } : { y: 0, opacity: 1 }}
         transition={{
@@ -496,7 +497,8 @@ export function VideoHero({
         <div className="container-page w-full lg:pb-15">
           <div className="flex flex-col gap-4 text-white lg:gap-6">
             {eyebrow ? (
-              <p className="text-base font-medium uppercase tracking-1 text-balance md:text-lg">{eyebrow}</p>
+              // Below lg: a small muted label so the headline leads.
+              <p className="text-sm font-semibold uppercase tracking-widest text-fg-muted text-balance lg:text-lg lg:font-medium lg:tracking-1 lg:text-white">{eyebrow}</p>
             ) : null}
             <h1 ref={headlineRef} className="text-hero-mobile text-balance lg:text-hero-video">
               {lead ? (
