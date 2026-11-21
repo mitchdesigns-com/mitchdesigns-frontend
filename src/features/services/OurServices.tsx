@@ -18,6 +18,7 @@ import { RichText as RichTextRenderer } from "@/components/ui/RichText";
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { noOrphan } from "@/lib/noOrphan";
 import { strapiMedia } from "@/lib/cms/media";
+import { armTickFeedback, buzz, tick } from "@/lib/tickFeedback";
 
 interface ServiceItem {
   num: string;
@@ -72,16 +73,19 @@ interface ServiceRowProps {
   service: ServiceItem;
   isOpen: boolean;
   onToggle: () => void;
+  /** Phones: the row crossing the middle of the screen, lit like a hover. */
+  spotlit?: boolean;
 }
 
-function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
+function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowProps) {
   const { num, label, description, body, href, imgSrc, hoverLogo } = service;
 
   const canHover = useHasHover();
   const [isHovered, setIsHovered] = useState(false);
   const hovering = canHover && isHovered;
-  const active = hovering || isOpen;
-  const charVariant = hovering && !isOpen ? "hovered" : "idle";
+  const lit = !canHover && spotlit && !isOpen;
+  const active = hovering || isOpen || lit;
+  const charVariant = (hovering || lit) && !isOpen ? "hovered" : "idle";
 
   const rowRef = useRef<HTMLButtonElement>(null);
   const x = useMotionValue(0);
@@ -139,6 +143,7 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
       {/* Row header */}
       <button
         ref={rowRef}
+        data-service-head
         type="button"
         aria-expanded={isOpen}
         onClick={onToggle}
@@ -232,6 +237,49 @@ function ServiceRow({ service, isOpen, onToggle }: ServiceRowProps) {
 
       </button>
 
+      {/* Phones: the spotlight's peek, the hover's tagline and tilted photo
+          under the title (tap the row for the full card). */}
+      <AnimatePresence initial={false}>
+        {lit && (
+          <motion.div
+            key="peek"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 30 }}
+            className="relative z-10 overflow-hidden"
+            onClick={onToggle}
+          >
+            <div className="flex items-center gap-5 pb-6">
+              <motion.div
+                initial={{ scale: 0, rotate: -12 }}
+                animate={{ scale: 1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.05 }}
+                aria-hidden
+                className="relative w-20 shrink-0 overflow-hidden rounded-xl shadow-soft-lg"
+                style={{ aspectRatio: "170 / 245" }}
+              >
+                <Image quality={90} src={imgSrc} alt="" fill sizes="5rem" className="object-cover" />
+              </motion.div>
+              <motion.div
+                className="flex min-w-0 flex-col items-start gap-2"
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.12 }}
+              >
+                {hoverLogo && (
+                  <Image src={hoverLogo.src} alt={hoverLogo.alt} width={124} height={22} unoptimized className="h-5 w-auto" />
+                )}
+                <p className="text-base leading-snug text-black text-balance">{noOrphan(description)}</p>
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-black">
+                  Tap to explore <ArrowRight size={14} />
+                </span>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Expanding panel */}
       <AnimatePresence initial={false}>
         {isOpen && (
@@ -295,6 +343,61 @@ export function OurServices({ services }: OurServicesProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const items = services.map(toServiceItem);
 
+  // Phones (no hover): the row whose title has crossed the line just above
+  // the middle of the screen is "spotlit", like a hover on desktop. Picking
+  // the last title above the line (not the nearest) keeps it steady while a
+  // row's peek opens and pushes the rows under it down.
+  const canHover = useHasHover();
+  const listRef = useRef<HTMLDivElement>(null);
+  const [spot, setSpot] = useState<number | null>(null);
+  useEffect(() => {
+    if (canHover) {
+      setSpot(null);
+      return;
+    }
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const list = listRef.current;
+      if (!list) return;
+      const line = window.innerHeight * 0.45;
+      const box = list.getBoundingClientRect();
+      if (box.top > line || box.bottom < line) {
+        setSpot(null);
+        return;
+      }
+      const heads = Array.from(list.querySelectorAll<HTMLElement>("[data-service-head]"));
+      let pick: number | null = null;
+      heads.forEach((h, i) => {
+        if (h.getBoundingClientRect().top <= line) pick = i;
+      });
+      setSpot(pick);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [canHover]);
+
+  // A soft tick (and a buzz where phones allow it) as the spotlight moves on;
+  // silent until the visitor has tapped somewhere, as browsers require.
+  useEffect(() => armTickFeedback(), []);
+  const lastSpot = useRef<number | null>(null);
+  useEffect(() => {
+    if (spot !== null && lastSpot.current !== null && spot !== lastSpot.current) {
+      tick();
+      buzz();
+    }
+    lastSpot.current = spot;
+  }, [spot]);
+
   return (
     <Section theme="dark" bleed>
       <div className="container-page pt-20 pb-0 md:pb-20">
@@ -308,16 +411,19 @@ export function OurServices({ services }: OurServicesProps) {
           <h2 className="text-hero-2 font-bold text-white">I want to..</h2>
         </Reveal>
 
-        <RevealStagger className="overflow-visible" stagger={0.08}>
-          {items.map((s, i) => (
-            <ServiceRow
-              key={s.num}
-              service={s}
-              isOpen={openIndex === i}
-              onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-            />
-          ))}
-        </RevealStagger>
+        <div ref={listRef}>
+          <RevealStagger className="overflow-visible" stagger={0.08}>
+            {items.map((s, i) => (
+              <ServiceRow
+                key={s.num}
+                service={s}
+                isOpen={openIndex === i}
+                spotlit={spot === i}
+                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              />
+            ))}
+          </RevealStagger>
+        </div>
       </div>
     </Section>
   );
