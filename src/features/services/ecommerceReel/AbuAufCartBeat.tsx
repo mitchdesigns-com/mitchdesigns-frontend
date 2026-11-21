@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBagIcon } from "@/components/icons/ShoppingBagIcon";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";

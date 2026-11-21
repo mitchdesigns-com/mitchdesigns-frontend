@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { motion } from "framer-motion";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";
 import { BeatFrame, WIDE, pct, useBeatSteps } from "./BeatFrame";

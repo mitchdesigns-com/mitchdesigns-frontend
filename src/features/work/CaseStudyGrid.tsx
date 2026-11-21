@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState, useEffect, useCallback } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import type { CaseStudy } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";

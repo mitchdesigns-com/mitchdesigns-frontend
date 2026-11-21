@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useMotionValue, useSpring } from "framer-motion";
 import { LiquidCursor } from "@/components/ui/LiquidCursor";
 import { useDragScrub } from "@/components/ui/useDragScrub";
