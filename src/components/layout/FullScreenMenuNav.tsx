@@ -132,6 +132,7 @@ export function FullScreenMenuNav({
                   <button
                     type="button"
                     aria-expanded={showServices}
+                    aria-label={showServices ? `Back to menu from ${item.label}` : undefined}
                     onClick={() => setShowServices((v) => !v)}
                     className="group relative flex w-full text-left"
                   >
@@ -144,7 +145,19 @@ export function FullScreenMenuNav({
                       )}
                     />
                     <div className="relative flex items-center gap-4 py-5">
-                      <span className="text-menu font-black uppercase leading-none tracking-[-0.01em] text-black">
+                      {/* Phones, list open: a back arrow, and the label shrinks to a
+                          small heading so the services below lead. */}
+                      {showServices && (
+                        <span className="shrink-0 rotate-180 text-black md:hidden">
+                          <ArrowRight size={24} />
+                        </span>
+                      )}
+                      {/* Plain string, not cn(): tailwind-merge would drop `text-menu`. */}
+                      <span
+                        className={`text-menu font-black uppercase leading-none tracking-[-0.01em] text-black ${
+                          showServices ? "max-md:text-base max-md:tracking-1" : ""
+                        }`}
+                      >
                         <SlideLabel label={item.label} />
                       </span>
                       <motion.span
@@ -211,9 +224,9 @@ export function FullScreenMenuNav({
         <Link
           href={primaryCta.href}
           onClick={onNavigate}
-          className="group inline-flex items-center gap-2 whitespace-nowrap rounded-pill bg-black px-6 py-3 text-sm font-semibold text-yellow"
+          className="group flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-pill bg-black px-6 py-4 text-lg font-semibold text-yellow"
         >
-          <BookingIcon href={primaryCta.href} size={16} />
+          <BookingIcon href={primaryCta.href} size={20} />
           {primaryCta.label}
         </Link>
       </div>
