@@ -71,10 +71,12 @@ export function HeroReveal({
     else if (o < 0.7) setOpened(false);
   });
   // Slide mode: "opened" follows how far the content has covered the hero.
+  // It switches on early, while the section is still sliding up, so its
+  // content is already writing in instead of an empty dark panel arriving.
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     if (!slide) return;
-    if (p >= 0.85) setOpened(true);
-    else if (p < 0.7) setOpened(false);
+    if (p >= 0.3) setOpened(true);
+    else if (p < 0.15) setOpened(false);
   });
   // Behind the sliding content the hero eases back and dims a little.
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
