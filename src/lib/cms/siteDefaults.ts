@@ -28,7 +28,7 @@ export const SITE_SETTINGS_FALLBACK: SiteSettings = {
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
   ],
-  testimonialsHeading: "Loved By Clients",
+  testimonialsHeading: "Loved by brands",
   testimonialsIntro:
     "Hear it from the brands and people who trusted us, genuine feedback that tells our story better than we can.",
 };

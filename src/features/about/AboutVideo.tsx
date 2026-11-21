@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Play } from "@/components/icons/Play";
 import { easeOutSoft } from "@/lib/motion";
@@ -14,15 +14,32 @@ export function AboutVideo({
   src,
   title,
   poster,
+  phoneSrc,
+  phonePoster,
 }: {
   src: string;
   title: string;
+  /** Portrait cut for the portrait frame on phones (mp4, so iPhones play it). */
+  phoneSrc?: string;
+  phonePoster?: string;
   /** Still shown before play; without one the frame at 1s is used. */
   poster?: string;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const reduced = useReducedMotion();
+  // Phones show the frame in portrait (4:5): use the portrait cut there.
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    if (!phoneSrc) return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    const sync = () => setPhone(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, [phoneSrc]);
+  const film = phone && phoneSrc ? phoneSrc : src;
+  const still = phone && phoneSrc ? (phonePoster ?? poster) : poster;
 
   const play = () => {
     const v = video.current;
@@ -37,9 +54,10 @@ export function AboutVideo({
       {/* "#t=1" makes the browser load and show the frame at 1s as a still. */}
       <video
         ref={video}
-        src={poster ? src : `${src}#t=1`}
-        poster={poster}
-        preload="metadata"
+        key={film}
+        src={still ? film : `${film}#t=1`}
+        poster={still}
+        preload={still ? "none" : "metadata"}
         playsInline
         controls={playing}
         onEnded={() => setPlaying(false)}

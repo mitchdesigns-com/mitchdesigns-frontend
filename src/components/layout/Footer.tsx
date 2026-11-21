@@ -8,6 +8,7 @@ import {
   type Variants,
 } from "framer-motion";
 import Link from "next/link";
+import { formatPhone } from "@/lib/phone";
 import { NewsletterForm } from "@/components/layout/NewsletterForm";
 import { Facebook } from "@/components/icons/Facebook";
 import { Instagram } from "@/components/icons/Instagram";
@@ -230,7 +231,7 @@ export function Footer({
                 <WhatsApp size={80} className="hidden shrink-0 lg:block lg:short:size-14" />
                 <div className="flex flex-col">
                   <span className="text-lg text-white">{waLabel}</span>
-                  <span className="text-2xl font-medium text-white">{waNumber}</span>
+                  <span className="text-2xl font-medium text-white">{formatPhone(waNumber)}</span>
                 </div>
               </motion.a>
 

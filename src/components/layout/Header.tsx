@@ -32,12 +32,23 @@ export function Header() {
   // Distance each bar travels to meet in the middle as an X (bars sit
   // 15px apart on phones, 22px from lg up).
   const [barShift, setBarShift] = useState(11);
+  // Phones: no floating menu button while scrolling down, so it never sits on
+  // top of what's being read; the header (with its menu) returns on scroll up.
+  const [phone, setPhone] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setBarShift(mq.matches ? 11 : 7.5);
+    const mqPhone = window.matchMedia("(max-width: 767px)");
+    const sync = () => {
+      setBarShift(mq.matches ? 11 : 7.5);
+      setPhone(mqPhone.matches);
+    };
     sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    mqPhone.addEventListener("change", sync);
+    return () => {
+      mq.removeEventListener("change", sync);
+      mqPhone.removeEventListener("change", sync);
+    };
   }, []);
   const [atTop, setAtTop] = useState(true);
   const [scrolledPast, setScrolledPast] = useState(false);
@@ -110,12 +121,13 @@ export function Header() {
     ? "/images/logo-white.webp"
     : "/images/logo-black.webp";
 
-  // Sticky floating menu button: shown once scrolled (and the inline header
+  // Sticky floating menu button: shown once scrolled (not on phones, where the
+  // header comes back on scroll up instead), unless the inline header
   // menu isn't already on screen), hidden over the footer (which lists every
   // link). While the menu is open it's always the close (X) — one black
   // circle in one place, however the menu was opened.
   const fabShown =
-    menuOpen || (scrolledPast && !inFooter && (sticky ? !visible : true));
+    menuOpen || (scrolledPast && !inFooter && (sticky ? !visible && !phone : true));
 
   return (
     <>

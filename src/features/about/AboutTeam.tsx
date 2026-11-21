@@ -6,6 +6,10 @@ import { Eyebrow } from "./Eyebrow";
 
 /** Fallback company film until `team.video` is uploaded in Strapi. */
 const ABOUT_FILM = "/videos/Mitch_Showreel_2026_Final_25MB.webm";
+const ABOUT_FILM_POSTER = "/videos/Mitch_Showreel_2026-poster.webp";
+/** Portrait cut and still for phones (same as the home hero's). */
+const ABOUT_FILM_PHONE = "/videos/Mitch_Showreel_2026_Portrait.mp4";
+const ABOUT_FILM_PHONE_POSTER = "/videos/Mitch_Showreel_2026_Portrait-poster.webp";
 
 /** Fallback line under the film when `team.caption` is empty. */
 const FILM_CAPTION =
@@ -27,7 +31,10 @@ export function AboutTeam({ team }: { team: AboutContent["team"] }) {
       <div className="mt-14 md:mt-20">
         <AboutVideo
           src={team.video ?? ABOUT_FILM}
-          poster={team.videoPoster}
+          poster={team.videoPoster ?? (team.video ? undefined : ABOUT_FILM_POSTER)}
+          // Our portrait cut only goes with our own film.
+          phoneSrc={team.video ? undefined : ABOUT_FILM_PHONE}
+          phonePoster={team.video ? undefined : ABOUT_FILM_PHONE_POSTER}
           title={team.videoTitle ?? "the MitchDesigns company film"}
         />
       </div>

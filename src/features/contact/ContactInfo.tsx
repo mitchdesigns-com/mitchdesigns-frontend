@@ -6,8 +6,9 @@ import { MapPinIcon } from "@/components/icons/MapPinIcon";
 import { PhoneIcon } from "@/components/icons/PhoneIcon";
 import { Section } from "@/components/layout/Section";
 import { RevealItem, RevealStagger } from "@/components/motion";
+import { formatPhone } from "@/lib/phone";
 
-type Row = { label: string; value: string; href: string; icon: React.ReactNode; external?: boolean };
+type Row = { label: string; value: React.ReactNode; href: string; icon: React.ReactNode; external?: boolean };
 
 type Props = {
   phone?: string;
@@ -16,15 +17,6 @@ type Props = {
   mapUrl?: string;
   labels: { phone: string; email: string; address: string; map: string };
 };
-
-/** "+20 101 443 0669" from however the number is stored ("201014430669",
- *  "+201014430669"). Numbers in another shape are shown as entered. */
-export function formatPhone(raw: string) {
-  const digits = raw.replace(/\D/g, "");
-  const eg = digits.match(/^20(\d{3})(\d{3})(\d{4})$/);
-  if (eg) return `+20 ${eg[1]} ${eg[2]} ${eg[3]}`;
-  return raw.trim().startsWith("+") || !/^\d+$/.test(raw.trim()) ? raw.trim() : `+${raw.trim()}`;
-}
 
 /** Google Maps search link for an address (used when Strapi has no map URL). */
 export function mapsSearchUrl(address: string) {
@@ -49,7 +41,21 @@ export function ContactInfo({ phone, email, address, mapUrl, labels }: Props) {
       href: `tel:+${phone.replace(/\D/g, "")}`,
       icon: <PhoneIcon size={24} />,
     },
-    email && { label: labels.email, value: email, href: `mailto:${email}`, icon: <MailIcon size={24} /> },
+    email && {
+      label: labels.email,
+      // Breaks after the @ on narrow screens, never mid-word.
+      value: email.includes("@") ? (
+        <>
+          {email.slice(0, email.indexOf("@") + 1)}
+          <wbr />
+          {email.slice(email.indexOf("@") + 1)}
+        </>
+      ) : (
+        email
+      ),
+      href: `mailto:${email}`,
+      icon: <MailIcon size={24} />,
+    },
     address &&
       mapHref && {
         label: labels.address,

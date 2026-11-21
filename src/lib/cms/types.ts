@@ -274,7 +274,7 @@ export type ClientLogo = {
   order?: number;
 };
 
-/** Reason cards in the "Reasons Clients Trust MitchDesigns" section. */
+/** Reason cards in the "Reasons brands trust MitchDesigns" section. */
 export type TrustReason = {
   title: string;
   body: string;
