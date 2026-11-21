@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image, { getImageProps } from "next/image";
+import Image from "@/components/ui/Image";
+import { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import {
   useMotionValue,
@@ -314,7 +315,7 @@ function ServiceRow({ service, isOpen, onToggle, spotlit = false }: ServiceRowPr
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 220, damping: 24, delay: 0.05 }}
               >
-                <Image quality={75} src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes={PANEL_SIZES} className="object-cover" />
+                <Image quality={75} src={imgSrc} alt={`${label} | MitchDesigns service`} fill sizes={PANEL_SIZES} loading="eager" fetchPriority="high" className="object-cover" />
               </motion.div>
               <motion.div
                 className="flex max-w-xl flex-col items-start gap-5"

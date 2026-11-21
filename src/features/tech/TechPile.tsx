@@ -2,7 +2,7 @@
 
 import { armTickFeedback, tap } from "@/lib/tickFeedback";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { motion, useReducedMotion } from "framer-motion";
 
 export type PileItem = { id: number; name: string; category: string; logo?: string };

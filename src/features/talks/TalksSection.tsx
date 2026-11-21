@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import type { CmsLink, Talk } from "@/lib/cms/types";
 import { Section } from "@/components/layout/Section";
 import { Reveal, RevealItem, RevealStagger } from "@/components/motion";

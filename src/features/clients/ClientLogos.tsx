@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { useMotionValue, animate, motion, useInView } from "framer-motion";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { Section } from "@/components/layout/Section";
 import { Reveal, RevealStagger, itemFadeUp } from "@/components/motion";
 import { agencyLogos } from "@/config/agencyLogos";

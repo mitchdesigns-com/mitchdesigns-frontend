@@ -3,7 +3,7 @@
 import { BookingIcon } from "@/components/ui/BookingIcon";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { motion, AnimatePresence, animate, useMotionTemplate, useMotionValue } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { useSectionTheme } from "@/hooks/useSectionTheme";

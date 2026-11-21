@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { easeOutSoft, fadeUp, stagger } from "@/lib/motion";

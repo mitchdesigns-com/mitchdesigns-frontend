@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import type { ReelShot } from "@/config/serviceReels";

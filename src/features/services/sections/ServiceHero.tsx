@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "@/components/icons/ArrowRight";
 import { BookingIcon } from "@/components/ui/BookingIcon";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import { Fragment, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";

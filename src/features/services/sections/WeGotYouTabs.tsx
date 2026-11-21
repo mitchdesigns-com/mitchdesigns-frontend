@@ -1,7 +1,7 @@
 "use client";
 
 import { BookingIcon } from "@/components/ui/BookingIcon";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";

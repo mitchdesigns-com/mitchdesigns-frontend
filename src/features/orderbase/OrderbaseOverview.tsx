@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useTransform, useScroll, MotionValue } from "framer-motion";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { CountUp } from "@/components/ui/CountUp";

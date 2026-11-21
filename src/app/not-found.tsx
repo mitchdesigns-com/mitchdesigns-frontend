@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { BookingIcon } from "@/components/ui/BookingIcon";
 import Link from "next/link";
 import { Fragment } from "react";
